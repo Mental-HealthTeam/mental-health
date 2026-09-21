@@ -1,0 +1,94 @@
+// ======================================================
+// Header colors
+// ======================================================
+
+$color-header-background: #faf9f1;
+$color-divider: #d9dbd0;
+
+
+// ======================================================
+// Header breakpoints
+// ======================================================
+
+$breakpoint-header-compact: 1024px;
+
+
+// ======================================================
+// Header layout
+// ======================================================
+
+$header-padding-block: 10px;
+$header-padding-inline: clamp(12px, 1.5vw, 30px);
+
+$header-container-min-height: 100px;
+$header-container-min-height-compact: 68px;
+
+$header-container-padding-inline: clamp(20px, 3vw, 48px);
+$header-container-padding-desktop: 28px;
+$header-container-padding-mobile: 18px;
+
+$header-content-gap: clamp(24px, 4vw, 72px);
+$header-content-gap-desktop: 32px;
+
+$header-actions-gap: clamp(8px, 0.8vw, 14px);
+$header-actions-margin: clamp(20px, 3vw, 48px);
+$header-actions-margin-desktop: 24px;
+
+
+// ======================================================
+// Header logo
+// ======================================================
+
+$logo-width: clamp(150px, 12vw, 220px);
+$logo-min-width: 140px;
+$logo-width-desktop: 170px;
+$logo-width-mobile: 145px;
+
+
+// ======================================================
+// Header navigation
+// ======================================================
+
+$font-size-navigation: clamp(14px, 1vw, 16px);
+
+$navigation-gap: clamp(18px, 1.8vw, 34px);
+
+$navigation-link-padding-top: 30px;
+$navigation-link-padding-bottom: 27px;
+$navigation-link-mobile-padding: 12px 4px;
+
+$navigation-underline-bottom: 21px;
+$navigation-underline-height: 1px;
+
+
+// ======================================================
+// Header divider
+// ======================================================
+
+$divider-width: 1px;
+$divider-height: 20px;
+$divider-margin-inline: clamp(4px, 0.8vw, 14px);
+$divider-margin-desktop: 4px;
+
+
+// ======================================================
+// Header mobile menu
+// ======================================================
+
+$menu-button-size: 42px;
+$menu-button-padding: 10px;
+
+$mobile-menu-offset: 12px;
+$mobile-menu-padding: 28px;
+$mobile-menu-padding-small: 22px 18px;
+$mobile-actions-margin-top: 20px;
+
+$border-radius-menu: 32px;
+
+
+// ======================================================
+// Header shadows
+// ======================================================
+
+$shadow-header: 0 10px 20px rgb(35 40 31 / 10%);
+$shadow-menu: 0 12px 28px rgb(35 40 31 / 14%);

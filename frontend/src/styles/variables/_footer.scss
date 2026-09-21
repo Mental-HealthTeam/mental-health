@@ -1,0 +1,131 @@
+@use './base' as base;
+
+
+// ======================================================
+// Footer colors
+// ======================================================
+
+$color-footer-background: #293923;
+$color-footer-text: rgb(255 255 255 / 58%);
+$color-footer-text-hover: base.$color-white;
+$color-footer-border: rgb(255 255 255 / 10%);
+$color-footer-warning: #ca8c68;
+
+
+// ======================================================
+// Footer breakpoint
+// ======================================================
+
+$breakpoint-footer-tablet: 1000px;
+
+
+// ======================================================
+// Footer typography
+// ======================================================
+
+$font-size-tiny: 10px;
+$font-size-caption: 11px;
+$font-size-footer-link: 13px;
+$font-size-footer-description: 14px;
+
+$line-height-footer: 1.6;
+
+
+// ======================================================
+// Footer border radius
+// ======================================================
+
+$border-radius-footer: 28px;
+$border-radius-footer-mobile: 24px;
+
+
+// ======================================================
+// Footer layout
+// ======================================================
+
+$footer-padding-top: 10px;
+$footer-padding-inline: clamp(12px, 1.5vw, 30px);
+$footer-padding-inline-mobile: 12px;
+$footer-padding-bottom: 14px;
+
+$footer-container-padding-block-start: clamp(48px, 5vw, 72px);
+$footer-container-padding-inline: clamp(36px, 5vw, 88px);
+$footer-container-padding-block-end: clamp(36px, 4vw, 56px);
+$footer-container-padding-mobile: 40px 24px 32px;
+
+$footer-information-column-min-width: 260px;
+$footer-column-min-width: 150px;
+
+$footer-columns-gap: clamp(40px, 6vw, 100px);
+$footer-columns-gap-mobile: 38px;
+
+$footer-information-max-width: 410px;
+
+
+// ======================================================
+// Footer logo and description
+// ======================================================
+
+$footer-logo-width: 190px;
+$footer-logo-width-mobile: 170px;
+$footer-logo-margin-bottom: 24px;
+
+$footer-description-margin-bottom: 24px;
+
+
+// ======================================================
+// Footer contacts
+// ======================================================
+
+$footer-contacts-gap: 14px;
+$footer-contact-icon-size: 16px;
+$footer-contact-content-gap: 12px;
+
+
+// ======================================================
+// Footer navigation
+// ======================================================
+
+$footer-title-margin-bottom: 24px;
+$footer-title-margin-bottom-mobile: 16px;
+
+$footer-links-gap: 16px;
+$footer-link-hover-opacity: 0.7;
+
+
+// ======================================================
+// Footer legal section
+// ======================================================
+
+$footer-legal-margin-top: clamp(44px, 5vw, 68px);
+$footer-legal-padding-block: 22px;
+$footer-legal-column-gap: 22px;
+$footer-legal-row-gap: 12px;
+$footer-legal-gap-mobile: 14px;
+$footer-legal-separator-opacity: 0.5;
+
+$footer-border-width: 1px;
+
+
+// ======================================================
+// Footer bottom
+// ======================================================
+
+$footer-bottom-padding-top: 28px;
+$footer-bottom-gap: 40px;
+$footer-bottom-gap-tablet: 20px;
+
+$footer-warning-max-width: 850px;
+
+
+// ======================================================
+// Footer decorations
+// ======================================================
+
+$footer-leaf-width: clamp(96px, 10%, 174px);
+$footer-leaf-top: 0;
+$footer-leaf-right: 0;
+
+$footer-circle-width: clamp(130px, 13%, 217px);
+$footer-circle-bottom: clamp(12px, 1vw, 18px);
+$footer-circle-left: 0;

@@ -1,0 +1,56 @@
+// ======================================================
+// Colors
+// ======================================================
+
+$color-primary: #617656;
+$color-primary-hover: #526549;
+
+$color-text: #272b25;
+$color-white: #ffffff;
+$color-background: $color-white;
+
+
+// ======================================================
+// Container
+// ======================================================
+
+$container-max-width: 1820px;
+
+
+// ======================================================
+// Breakpoints
+// ======================================================
+
+$breakpoint-desktop: 1500px;
+$breakpoint-tablet: 1250px;
+$breakpoint-mobile: 600px;
+
+
+// ======================================================
+// Typography
+// ======================================================
+
+$font-family-primary: Inter, Arial, sans-serif;
+
+$font-size-small: 12px;
+$font-size-body: 16px;
+
+$font-weight-regular: 400;
+$font-weight-semibold: 600;
+
+$line-height-default: 1.5;
+
+
+// ======================================================
+// Border radius
+// ======================================================
+
+$border-radius-pill: 999px;
+
+
+// ======================================================
+// Transitions
+// ======================================================
+
+$transition-duration: 0.2s;
+$transition-default: $transition-duration ease;
