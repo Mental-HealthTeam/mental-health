@@ -1,23 +1,35 @@
-type Tags = {
+import { BrainIcon, FireIcon, HeartIcon, StarIcon } from "../components/UI/Icons";
+
+type Tag = {
+  id: string;
   text: string;
   description: string;
+  icon: React.ComponentType;
 };
 
-export const tags: Tags[] = [
+export const tags: Tag[] = [
   {
-    text: '🧠 Тривожність',
-    description: 'Проблеми з тривожністю',
+    id: 'anxiety',
+    text: "Тривожність",
+    description: "Проблеми з тривожністю",
+    icon: BrainIcon,
   },
   {
-    text: '🔥 Вигорання',
-    description: 'Проблеми з вигоранням',
+    id: 'burnout',
+    text: "Вигорання",
+    description: "Проблеми з вигоранням",
+    icon: FireIcon,
   },
   {
-    text: '💔 Стосунки',
-    description: 'Проблеми з стосунками',
+    id: 'relationships',
+    text: "Стосунки",
+    description: "Проблеми у стосунках",
+    icon: HeartIcon,
   },
   {
-    text: '✨ Самооцінка',
-    description: 'Проблеми з самооцінкою',
+    id: 'self-esteem',
+    text: "Самооцінка",
+    description: "Проблеми з самооцінкою",
+    icon: StarIcon,
   }
-]
+];

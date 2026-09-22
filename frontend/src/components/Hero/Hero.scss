@@ -32,7 +32,9 @@
   &__badge {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     gap: v.$hero-badge-gap;
+    color: v.$hero-color-text-light;
     background-color: v.$hero-color-pill-bg;
     border: v.$hero-badge-border-width solid v.$hero-color-pill-border;
     border-radius: v.$hero-radius-pill;
@@ -130,22 +132,6 @@
     justify-content: center;
     flex-wrap: wrap;
     gap: 16px;
-  }
-
-  &__tag {
-    background-color: #faf8ee25;
-    border: 1px solid #faf8ee40;
-    min-width: 0;
-    border-radius: v.$hero-radius-pill;
-    padding: v.$hero-tag-padding-block v.$hero-tag-padding-inline;
-    color: v.$hero-color-text-light;
-
-    cursor: pointer;
-    transition: transform v.$hero-tag-transition-duration ease;
-
-    &:hover {
-      transform: scale(v.$hero-tag-hover-scale);
-    }
   }
 
   @include up(md) {

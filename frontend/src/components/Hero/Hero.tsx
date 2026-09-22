@@ -1,34 +1,24 @@
 import "./Hero.scss";
-import heroSparkle from "../../assets/decorations/hero-sparkle.svg";
-import heroSearch from "../../assets/decorations/hero-search.svg";
 import { Button } from "../UI/Button";
-import { ArrowRightIcon } from "../UI/Icons";
+import { ArrowRightIcon, SearchIcon, SparkIcon } from "../UI/Icons";
 import { useRef, useState } from "react";
 import { tags } from "../../constants/tags";
 
 export const Hero = () => {
   const [inputValue, setInputValue] = useState("");
-  const reff = useRef<null | HTMLInputElement>(null);
-  const startSelectionProcess = () => {
-    if (inputValue) {
-      setInputValue("");
-    }
+  const inputRef = useRef<null | HTMLInputElement>(null);
+  const handleSubmit = (event: React.SubmitEvent<HTMLFormElement>) => {
+    event.preventDefault();
   };
 
   return (
     <section className="hero">
       <div className="hero__container">
         <div className="hero__region-title">
-          <span className="hero__badge">
-            <img
-              src={heroSparkle}
-              alt="hero-sparkle"
-              className="hero__badge-icon"
-            />
-            <h3 className="hero__badge-text">
-              Розумний підбір за допомогою ШІ
-            </h3>
-          </span>
+          <div className="hero__badge">
+            <SparkIcon />
+            <p className="hero__badge-text">Розумний підбір за допомогою ШІ</p>
+          </div>
 
           <h1 className="hero__title">Знайди свого психолога</h1>
 
@@ -37,55 +27,51 @@ export const Hero = () => {
           </p>
         </div>
 
-        <form
-          className="hero__search"
-          action="#"
-          onSubmit={(e) => {
-            e.preventDefault();
-            startSelectionProcess();
-          }}
-        >
+        <form className="hero__search" onSubmit={(e) => handleSubmit(e)}>
           <div className="hero__search-field">
             <input
               type="text"
-              ref={reff}
+              ref={inputRef}
+              aria-label="Опишіть свій стан або запит"
               className="hero__search-input"
-              placeholder="Опишіть свою проблему, або стан самопочуття..."
+              placeholder="Опишіть свій стан або запит..."
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
             />
             <Button
+              type="submit"
               className="hero__search-button"
-              href="#ai-search"
               variant="primary"
               size="large"
               endIcon={<ArrowRightIcon />}
-              onClick={startSelectionProcess}
             >
               Підібрати
             </Button>
-            <img
-              src={heroSearch}
-              alt="hero-search"
-              className="hero__search-icon"
-            />
+            <SearchIcon className="hero__search-icon" />
           </div>
         </form>
 
         <div className="hero__region-tags">
           <h3 className="hero__tags-title">Популярні запити:</h3>
           <div className="hero__tags">
-            {tags.map((item) => (
-              <button
-                className="hero__tag"
-                onClick={() => {
-                  setInputValue(item.description);
-                  reff.current?.focus();
-                }}
-              >
-                {item.text}
-              </button>
-            ))}
+            {tags.map((item) => {
+              const Icon = item.icon;
+
+              return (
+                <Button
+                  className="hero__tag"
+                  variant="tag"
+                  startIcon={<Icon />}
+                  key={item.id}
+                  onClick={() => {
+                    setInputValue(item.description);
+                    inputRef.current?.focus();
+                  }}
+                >
+                  {item.text}
+                </Button>
+              );
+            })}
           </div>
         </div>
       </div>
