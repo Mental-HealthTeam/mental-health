@@ -6,8 +6,8 @@ import { tags } from "../../constants/tags";
 
 export const Hero = () => {
   const [inputValue, setInputValue] = useState("");
-  const inputRef = useRef<null | HTMLInputElement>(null);
-  const handleSubmit = (event: React.SubmitEvent<HTMLFormElement>) => {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
   };
 
@@ -27,7 +27,7 @@ export const Hero = () => {
           </p>
         </div>
 
-        <form className="hero__search" onSubmit={(e) => handleSubmit(e)}>
+        <form className="hero__search" onSubmit={handleSubmit}>
           <div className="hero__search-field">
             <input
               type="text"
@@ -61,6 +61,7 @@ export const Hero = () => {
                 <Button
                   className="hero__tag"
                   variant="tag"
+                  type="button"
                   startIcon={<Icon />}
                   key={item.id}
                   onClick={() => {

@@ -110,7 +110,7 @@
     z-index: 10;
     line-height: 100%;
     right: v.$hero-search-button-offset-right;
-    height: calc(100% - v.$hero-search-button-inset-block);
+    height: calc(100% - #{v.$hero-search-button-inset-block});
   }
 
   &__region-tags {

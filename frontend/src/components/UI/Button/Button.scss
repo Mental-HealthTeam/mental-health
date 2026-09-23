@@ -69,6 +69,16 @@
     }
   }
 
+  &--small {
+    min-height: v.$button-min-height;
+    padding: 0 v.$button-padding-inline;
+  }
+
+  &--large {
+    min-height: v.$button-large-min-height;
+    padding: 0 v.$button-large-padding-inline;
+  }
+
   &--tag {
     color: v.$hero-color-text-light;
     background-color: v.$hero-color-pill-bg;
@@ -80,16 +90,6 @@
     &:hover {
       transform: scale(v.$hero-tag-hover-scale);
     }
-  }
-
-  &--small {
-    min-height: v.$button-min-height;
-    padding: 0 v.$button-padding-inline;
-  }
-
-  &--large {
-    min-height: v.$button-large-min-height;
-    padding: 0 v.$button-large-padding-inline;
   }
 
   &--full-width {
