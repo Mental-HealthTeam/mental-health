@@ -1,3 +1,8 @@
 export { SparkIcon } from './SparkIcon'
 export { ArrowRightIcon } from './ArrowRightIcon'
 export { MenuIcon } from './MenuIcon'
+export { SearchIcon } from './SearchIcon'
+export { FireIcon } from './FireIcon'
+export { BrainIcon } from './BrainIcon'
+export { HeartIcon } from './HeartIcon'
+export { StarIcon } from './StarIcon'
