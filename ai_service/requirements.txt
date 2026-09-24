@@ -1,0 +1,6 @@
+fastapi==0.141.1
+uvicorn==0.53.0
+redis==8.1.0
+python-dotenv==1.2.3
+google-genai==2.25.0
+gunicorn==26.2.0
