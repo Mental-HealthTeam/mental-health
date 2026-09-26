@@ -6,7 +6,7 @@ import type {
 import classNames from 'classnames'
 import './Button.scss'
 
-type ButtonVariant = 'primary' | 'outline'
+type ButtonVariant = 'primary' | 'outline' | 'tag'
 type ButtonSize = 'small' | 'large'
 
 type Props = {

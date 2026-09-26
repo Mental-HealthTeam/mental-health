@@ -79,6 +79,19 @@
     padding: 0 v.$button-large-padding-inline;
   }
 
+  &--tag {
+    color: v.$hero-color-text-light;
+    background-color: v.$hero-color-pill-bg;
+    border: 1px solid v.$hero-color-pill-border;
+    border-radius: v.$hero-radius-pill;
+    padding: v.$hero-tag-padding-block v.$hero-tag-padding-inline;
+    transition: transform v.$hero-tag-transition-duration ease;
+
+    &:hover {
+      transform: scale(v.$hero-tag-hover-scale);
+    }
+  }
+
   &--full-width {
     width: 100%;
   }

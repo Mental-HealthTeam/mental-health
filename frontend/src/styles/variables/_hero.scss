@@ -1,0 +1,86 @@
+// ======================================================
+// Hero - Layout
+// ======================================================
+
+$hero-padding-inline: clamp(12px, 1.5vw, 30px);
+$hero-container-gap: 48px;
+$hero-container-height: 785px;
+$hero-overlay-color: rgba(29, 30, 29, 0.64);
+
+$hero-region-title-gap: 24px;
+$hero-region-title-max-width: 1000px;
+$hero-radius-border: 32px;
+
+
+// ======================================================
+// Hero - Shared colors
+// ======================================================
+
+$hero-color-text-light: #fff;
+$hero-color-text-muted: #ecece3;
+$hero-color-pill-bg: #faf8ee25;
+$hero-color-pill-border: #faf8ee40;
+$hero-radius-pill: 100px;
+
+
+// ======================================================
+// Hero - Badge
+// ======================================================
+
+$hero-badge-gap: 8px;
+$hero-badge-border-width: 1px;
+$hero-badge-padding-block: 8px;
+$hero-badge-padding-inline: 16px;
+$hero-badge-icon-width: 14px;
+$hero-badge-text-font-size: 14px;
+
+
+// ======================================================
+// Hero - Title & subtitle
+// ======================================================
+
+$hero-title-font-size: 42px;
+$hero-title-font-size-md: 56px;
+$hero-title-line-height: 68px;
+$hero-title-padding-inline: 20px;
+
+$hero-subtitle-font-size: 18px;
+$hero-subtitle-font-size-md: 20px;
+$hero-subtitle-line-height: 30px;
+$hero-subtitle-padding-inline: 20px;
+
+
+// ======================================================
+// Hero - Search
+// ======================================================
+
+$hero-search-field-width: 80%;
+
+$hero-search-input-padding-block: 24px;
+$hero-search-input-padding-left: 65px;
+$hero-search-input-padding-right: 146px;
+$hero-search-font-size: 18px;
+
+$hero-search-hover-outline-width: 2px;
+$hero-search-hover-outline-offset: 2px;
+
+$hero-search-icon-offset-left: 25px;
+
+$hero-search-button-offset-right: 8px;
+$hero-search-button-inset-block: 16px;
+
+
+// ======================================================
+// Hero - Tags
+// ======================================================
+
+$hero-tags-gap: 16px;
+$hero-region-tags-padding-inline: 20px;
+
+$hero-tags-title-font-size: 14px;
+$hero-tags-title-line-height: 30px;
+
+$hero-tag-padding-block: 8px;
+$hero-tag-padding-inline: 16px;
+$hero-tag-hover-scale: 1.1;
+$hero-tag-transition-duration: 0.3s;
