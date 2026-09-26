@@ -4,5 +4,9 @@ from abc import ABC, abstractmethod
 class AIClientInterface(ABC):
 
     @abstractmethod
-    def generate_reply(self, message: str):
+    async def generate_reply(self, messages: list[dict], model: str = ...):
+        pass
+
+    @abstractmethod
+    async def stream_reply(self, messages: list[dict], model: str = ...) -> str:
         pass

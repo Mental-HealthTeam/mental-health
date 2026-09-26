@@ -6,6 +6,7 @@ from ai_model.groq_client import GroqClient
 from config.settings import Settings
 from fastapi import Depends
 from pydantic_settings import BaseSettings
+from redis_storage.redis_storage import RedisSessionStorage
 
 
 def get_settings():
@@ -33,4 +34,14 @@ def get_groq_client(
 ):
     return GroqClient(
         api_key=settings.GROQ_API_KEY
+    )
+
+
+def get_redis_storage(
+    settings: Annotated[BaseSettings, Depends(get_settings)]
+):
+    return RedisSessionStorage(
+        redis_url=settings.REDIS_URL,
+        session_ttl=settings.SESSION_TTL,
+        max_messages=settings.MAX_MESSAGES
     )
