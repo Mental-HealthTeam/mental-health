@@ -1,15 +1,18 @@
-FROM python:3.12
+FROM python:3.12-slim
 
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
-COPY ./requirements.txt requirements.txt
-
-RUN pip install -r requirements.txt
-
 WORKDIR /usr/ai_service_app
 
+COPY ./requirements.txt .
+
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt
+
 COPY ./app .
+
+EXPOSE 8001
 
 CMD [ "uvicorn", "main:app", "--host=0.0.0.0" , "--port=8001", "--reload", "--reload-dir", "/usr/ai_service_app" ]
 
