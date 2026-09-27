@@ -2,7 +2,7 @@ from fastapi import FastAPI
 
 app = FastAPI()
 
-@app.get("/")
-def get_page():
-    pass
+@app.get("/health")
+def health():
+    return {"status": "ok"}
 

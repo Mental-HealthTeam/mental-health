@@ -1,7 +1,7 @@
 import datetime
 import uuid
 
-from db import Base
+from database.session_postgresql import Base
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy import ForeignKey, String, Text, Numeric, DateTime, Boolean, Integer
 
