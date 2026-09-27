@@ -4,12 +4,17 @@ from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, EmailStr
 
-from database.models.models import Gender, SymptomCode
+from database.models.models import (
+    BookingStatus,
+    Gender,
+    SymptomCode,
+    UserRole,
+)
 
 
 class UserCreate(BaseModel):
     email: EmailStr
-    role: str
+    role: UserRole
 
 
 class UserUpdate(BaseModel):
@@ -21,7 +26,7 @@ class UserResponse(BaseModel):
 
     user_id: UUID
     email: EmailStr
-    role: str
+    role: UserRole
     created_at: datetime
 
 
@@ -59,7 +64,7 @@ class BookingResponse(BaseModel):
     client_id: UUID
     psychologist_id: UUID
     selected_time: str
-    status: str
+    status: BookingStatus
     payment_status: str
     price: Decimal
     currency: str
@@ -76,7 +81,7 @@ class BookingCreate(BaseModel):
 
 
 class BookingUpdate(BaseModel):
-    status: str | None = None
+    status: BookingStatus | None = None
     payment_status: str | None = None
 
 
