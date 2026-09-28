@@ -1,27 +1,23 @@
 export type NavigationItem = {
-    label: string
+    key: 'about' | 'psychologists' | 'howItWorks' | 'contact'
     href: string
 }
 
 export const navigationItems: NavigationItem[] = [
     {
-        label: 'Головна',
-        href: '#home',
-    },
-    {
-        label: 'Про нас',
+        key: 'about',
         href: '#about',
     },
     {
-        label: 'Наші психологи',
+        key: 'psychologists',
         href: '#psychologists',
     },
     {
-        label: 'Як це працює',
+        key: 'howItWorks',
         href: '#how-it-works',
     },
     {
-        label: 'Контакт',
+        key: 'contact',
         href: '#contact',
     },
 ]

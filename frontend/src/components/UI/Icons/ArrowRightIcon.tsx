@@ -2,11 +2,7 @@ import type { SVGProps } from 'react'
 
 type Props = SVGProps<SVGSVGElement>
 
-export const ArrowRightIcon = ({
-                                   width = 11,
-                                   height = 11,
-                                   ...props
-                               }: Props) => {
+export const ArrowRightIcon = ({ width = 11, height = 11, ...props }: Props) => {
     return (
         <svg
             width={width}

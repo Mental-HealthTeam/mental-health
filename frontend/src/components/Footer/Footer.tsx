@@ -1,10 +1,6 @@
 import { Container } from '../Container'
 import { navigationItems } from '../../constants/navigation'
-import {
-    clientLinks,
-    legalLinks,
-    specialistLinks,
-} from '../../constants/footerLinks'
+import { clientLinks, legalLinks, specialistLinks } from '../../constants/footerLinks'
 import logo from '../../assets/mental-health-logo.png'
 import footerLeaf from '../../assets/decorations/footer-leaf.svg'
 import footerCircle from '../../assets/decorations/footer-circle.svg'
@@ -36,16 +32,12 @@ export const Footer = () => {
                             href="#home"
                             aria-label="Mental Health — головна"
                         >
-                            <img
-                                src={logo}
-                                alt="Mental Health Platform"
-                            />
+                            <img src={logo} alt="Mental Health Platform" />
                         </a>
 
                         <p className="footer__description">
-                            Професійна психологічна підтримка онлайн.
-                            Знайдіть свого психолога та почніть шлях до
-                            ментального здоров’я.
+                            Професійна психологічна підтримка онлайн. Знайдіть свого психолога та
+                            почніть шлях до ментального здоров’я.
                         </p>
 
                         <address className="footer__contacts">
@@ -54,11 +46,7 @@ export const Footer = () => {
                                 support@platform.com
                             </a>
 
-                            <a
-                                href="https://www.instagram.com"
-                                target="_blank"
-                                rel="noreferrer"
-                            >
+                            <a href="https://www.instagram.com" target="_blank" rel="noreferrer">
                                 <span aria-hidden="true">◎</span>
                                 @support_bot
                             </a>
@@ -71,23 +59,19 @@ export const Footer = () => {
                     </div>
 
                     <div className="footer__column">
-                        <h2 className="footer__title">
-                            Навігація
-                        </h2>
+                        <h2 className="footer__title">Навігація</h2>
 
                         <ul className="footer__links">
-                            {navigationItems.map(({ label, href }) => (
+                            {navigationItems.map(({ href }) => (
                                 <li key={href}>
-                                    <a href={href}>{label}</a>
+                                    <a href={href}></a>
                                 </li>
                             ))}
                         </ul>
                     </div>
 
                     <div className="footer__column">
-                        <h2 className="footer__title">
-                            Для клієнтів
-                        </h2>
+                        <h2 className="footer__title">Для клієнтів</h2>
 
                         <ul className="footer__links">
                             {clientLinks.map(({ label, href }) => (
@@ -99,9 +83,7 @@ export const Footer = () => {
                     </div>
 
                     <div className="footer__column">
-                        <h2 className="footer__title">
-                            Для фахівців
-                        </h2>
+                        <h2 className="footer__title">Для фахівців</h2>
 
                         <ul className="footer__links">
                             {specialistLinks.map(({ label, href }) => (
@@ -116,32 +98,27 @@ export const Footer = () => {
                 <div className="footer__legal">
                     {legalLinks.map(({ label, href }, index) => (
                         <span className="footer__legal-item" key={href}>
-              <a href={href}>{label}</a>
+                            <a href={href}>{label}</a>
 
                             {index < legalLinks.length - 1 && (
-                                <span
-                                    className="footer__legal-separator"
-                                    aria-hidden="true"
-                                >
-                  •
-                </span>
+                                <span className="footer__legal-separator" aria-hidden="true">
+                                    •
+                                </span>
                             )}
-            </span>
+                        </span>
                     ))}
                 </div>
 
                 <div className="footer__bottom">
                     <p className="footer__warning">
-                        <strong>⚠ Увага:</strong> Mental Health Platform
-                        надає консультативні психологічні послуги та не є
-                        службою екстреної медичної або психіатричної
-                        допомоги. У разі загрози життю зверніться за номером
-                        103 або на гарячу лінію з питань психічного здоров’я.
+                        <strong>⚠ Увага:</strong> Mental Health Platform надає консультативні
+                        психологічні послуги та не є службою екстреної медичної або психіатричної
+                        допомоги. У разі загрози життю зверніться за номером 103 або на гарячу лінію
+                        з питань психічного здоров’я.
                     </p>
 
                     <p className="footer__copyright">
-                        © {currentYear} Mental Health Platform. Усі права
-                        захищені.
+                        © {currentYear} Mental Health Platform. Усі права захищені.
                     </p>
                 </div>
             </Container>
