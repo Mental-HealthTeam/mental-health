@@ -25,11 +25,11 @@ sync_database_engine = create_engine(sync_database_url, echo=False)
 
 
 async def get_postgresql_db() -> AsyncGenerator[AsyncSession, None]:
-    async with AsyncPostgresqlSessionLocal as session:
+    async with AsyncPostgresqlSessionLocal() as session:
         yield session
 
 
 @asynccontextmanager
 async def get_postgresql_db_contextmanager() -> AsyncGenerator[AsyncSession, None]:
-    async with AsyncPostgresqlSessionLocal as session:
+    async with AsyncPostgresqlSessionLocal() as session:
         yield session
