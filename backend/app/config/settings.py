@@ -8,6 +8,7 @@ class BaseAppSettings(BaseSettings):
     DB_NAME: str = "DB_NAME"
     DB_PASSWORD: str = "DB_PASSWORD"
     DB_PORT: int = 5432
+    DB_HOST: str = "db"
     REDIS_URL: str = "redis://redis:6379/0"
 
 

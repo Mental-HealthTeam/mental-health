@@ -3,7 +3,7 @@ import uuid
 from decimal import Decimal
 from enum import Enum
 
-from database.session_postgresql import Base
+from database.models.base import Base
 from sqlalchemy import (
     DateTime,
     Enum as SAEnum,
@@ -95,7 +95,7 @@ class Psychologist(Base):
         nullable=False,
     )
     price_per_hour: Mapped[Decimal] = mapped_column(
-        Numeric(10, 2),
+        Decimal(10, 2),
         nullable=False,
     )
     profile_status: Mapped[str] = mapped_column(
