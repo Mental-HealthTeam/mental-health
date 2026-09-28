@@ -5,3 +5,4 @@ pydantic-settings==2.15.0
 SQLAlchemy==2.0.44
 psycopg2-binary==2.9.13
 alembic==1.16.5
+redis==8.1.0
