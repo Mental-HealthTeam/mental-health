@@ -26,8 +26,13 @@ services:
       context: ./ai_service
     container_name: ${PROJECT_NAME}_ai_service
     restart: always
+    env_file:
+      - ./ai_service/.env
     ports:
       - "${AI_SERVICE_PORT}:8001"
+    depends_on:
+      redis:
+        condition: service_started
 
   # Backend
   backend:
@@ -37,11 +42,15 @@ services:
     restart: always
     environment:
       DATABASE_URL: postgresql://${DB_USER}:${DB_PASSWORD}@db:5432/${DB_NAME}
+    env_file:
+      - ./backend/.env
     ports:
       - "${BACKEND_PORT}:8000"
     depends_on:
       db:
         condition: service_healthy
+      redis:
+        condition: service_started
 
   # Frontend
   frontend:
@@ -53,6 +62,17 @@ services:
       - "${FRONTEND_PORT}:80"
     depends_on:
       - backend
+
+  # Redis for AI_Service
+  redis:
+    image: redis:7-alpine
+    container_name: ${PROJECT_NAME}_redis
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - "${REDIS_PORT}:6379"
+
 
 volumes:
   postgres_data:

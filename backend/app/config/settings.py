@@ -6,8 +6,9 @@ class BaseAppSettings(BaseSettings):
     PROJECT_NAME: str = "PROJECT_NAME"
     DB_USER: str = "DB_USER"
     DB_NAME: str = "DB_NAME"
-    POSTGRES_PASSWORD: str = "DB_PASSWORD"
+    DB_PASSWORD: str = "DB_PASSWORD"
     DB_PORT: int = 5432
+    REDIS_URL: str = "redis://redis:6379/0"
 
 
 class Settings(BaseAppSettings):
