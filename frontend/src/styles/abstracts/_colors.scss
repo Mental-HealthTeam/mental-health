@@ -1,0 +1,62 @@
+// ======================================================
+// Brand colors
+// ======================================================
+
+$color-background: #fcfcfc;
+
+$color-primary: #1b1c1c;
+
+$color-secondary-start: #25e956;
+$color-secondary-middle: #0cbb7f;
+$color-secondary-end: #0ec673;
+
+$color-secondary-gradient: linear-gradient(
+                135deg,
+                $color-secondary-start,
+                $color-secondary-middle,
+                $color-secondary-end
+);
+
+$color-optional: #2b563e;
+
+// ======================================================
+// Gray scale
+// ======================================================
+
+$color-gray-100: #080808;
+$color-gray-80: #343536;
+$color-gray-60: #656768;
+$color-gray-40: #a7aaac;
+$color-gray-20: #ced0d1;
+$color-gray-0: #f9f9f9;
+
+// ======================================================
+// Status colors
+// ======================================================
+
+$color-error: #fa2424;
+$color-process: #306be1;
+$color-warning: #edcb22;
+$color-success: #29b647;
+
+// ======================================================
+// Semantic colors
+// ======================================================
+
+$color-text-primary: $color-primary;
+$color-text-secondary: $color-gray-60;
+$color-text-muted: $color-gray-40;
+
+$color-border: $color-gray-20;
+$color-divider: $color-gray-20;
+
+$color-surface: $color-background;
+$color-surface-muted: $color-gray-0;
+
+$color-white: #ffffff;
+
+// ======================================================
+// Backward-compatible aliases
+// ======================================================
+
+$color-text: $color-text-primary;

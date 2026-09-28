@@ -1,0 +1,46 @@
+// ======================================================
+// Button layout
+// ======================================================
+
+$button-border-width: 1px;
+$button-content-gap: 10px;
+
+// ======================================================
+// Primary / Secondary
+// ======================================================
+
+$button-large-height: 44px;
+$button-large-padding-inline: 20px;
+
+$button-medium-height: 44px;
+$button-medium-padding-inline: 16px;
+
+$button-small-height: 32px;
+$button-small-padding-inline: 12px;
+
+// ======================================================
+// Arrow button
+// ======================================================
+
+$button-arrow-size: 48px;
+$button-arrow-icon-size: 18px;
+
+// ======================================================
+// Labels
+// ======================================================
+
+$label-large-height: 32px;
+$label-large-padding-inline: 14px;
+
+$label-medium-height: 24px;
+$label-medium-padding-inline: 8px;
+
+$label-small-height: 20px;
+$label-small-padding-inline: 6px;
+
+// ======================================================
+// Header auth buttons
+// ======================================================
+
+$login-button-min-width: 69px;
+$register-button-min-width: 134px;
