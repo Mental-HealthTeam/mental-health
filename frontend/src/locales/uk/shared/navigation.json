@@ -1,7 +1,9 @@
 {
     "ariaLabel": "Головна навігація",
+    "home": "Головна",
     "about": "Про нас",
     "psychologists": "Наші психологи",
     "howItWorks": "Як це працює",
+    "reviews": "Відгуки",
     "contact": "Контакти"
 }

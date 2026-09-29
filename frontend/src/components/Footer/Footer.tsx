@@ -1,104 +1,100 @@
+import { useTranslation } from 'react-i18next'
+
 import { Container } from '../Container'
-import { navigationItems } from '../../constants/navigation'
+import { LogoIcon } from '../UI/Icons/LogoIcon'
+
+import { footerNavigationItems } from '../../constants/navigation'
 import { clientLinks, legalLinks, specialistLinks } from '../../constants/footerLinks'
-import logo from '../../assets/mental-health-logo.png'
-import footerLeaf from '../../assets/decorations/footer-leaf.svg'
-import footerCircle from '../../assets/decorations/footer-circle.svg'
+
 import './Footer.scss'
 
 export const Footer = () => {
     const currentYear = new Date().getFullYear()
 
-    return (
-        <footer className="footer">
-            <Container className="footer__container">
-                <img
-                    className="footer__decoration footer__decoration--leaf"
-                    src={footerLeaf}
-                    alt=""
-                    aria-hidden="true"
-                />
+    const { t: tAccessibility } = useTranslation('accessibility')
+    const { t: tNavigation } = useTranslation('navigation')
+    const { t: tFooter } = useTranslation('footer')
 
-                <img
-                    className="footer__decoration footer__decoration--circle"
-                    src={footerCircle}
-                    alt=""
-                    aria-hidden="true"
-                />
+    return (
+        <footer className="footer" aria-label={tAccessibility('footer')}>
+            <Container className="footer__container">
                 <div className="footer__top">
                     <div className="footer__information">
                         <a
                             className="footer__logo"
                             href="#home"
-                            aria-label="Mental Health — головна"
+                            aria-label={tAccessibility('homeLink')}
                         >
-                            <img src={logo} alt="Mental Health Platform" />
+                            <LogoIcon
+                                textColor="#FFFFFF"
+                                className="footer__logo-icon"
+                                aria-hidden="true"
+                            />
                         </a>
 
-                        <p className="footer__description">
-                            Професійна психологічна підтримка онлайн. Знайдіть свого психолога та
-                            почніть шлях до ментального здоров’я.
-                        </p>
-
-                        <address className="footer__contacts">
-                            <a href="mailto:support@platform.com">
-                                <span aria-hidden="true">✉</span>
-                                support@platform.com
-                            </a>
-
-                            <a href="https://www.instagram.com" target="_blank" rel="noreferrer">
-                                <span aria-hidden="true">◎</span>
-                                @support_bot
-                            </a>
-
-                            <a href="tel:+380441234567">
-                                <span aria-hidden="true">⌕</span>
-                                +380 (44) 123-45-67
-                            </a>
-                        </address>
+                        <p className="footer__description">{tFooter('description')}</p>
                     </div>
 
-                    <div className="footer__column">
-                        <h2 className="footer__title">Навігація</h2>
+                    <nav className="footer__column" aria-labelledby="footer-navigation-title">
+                        <h2 className="footer__title" id="footer-navigation-title">
+                            {tFooter('sections.navigation')}
+                        </h2>
 
                         <ul className="footer__links">
-                            {navigationItems.map(({ href }) => (
+                            {footerNavigationItems.map(({ href, key }) => (
                                 <li key={href}>
-                                    <a href={href}></a>
+                                    <a href={href}>{tNavigation(key)}</a>
                                 </li>
                             ))}
                         </ul>
-                    </div>
+                    </nav>
 
-                    <div className="footer__column">
-                        <h2 className="footer__title">Для клієнтів</h2>
+                    <nav className="footer__column" aria-labelledby="footer-clients-title">
+                        <h2 className="footer__title" id="footer-clients-title">
+                            {tFooter('sections.clients')}
+                        </h2>
 
                         <ul className="footer__links">
-                            {clientLinks.map(({ label, href }) => (
+                            {clientLinks.map(({ key, href }) => (
                                 <li key={href}>
-                                    <a href={href}>{label}</a>
+                                    <a href={href}>{tFooter(`clients.${key}`)}</a>
                                 </li>
                             ))}
                         </ul>
-                    </div>
+                    </nav>
 
-                    <div className="footer__column">
-                        <h2 className="footer__title">Для фахівців</h2>
+                    <nav className="footer__column" aria-labelledby="footer-specialists-title">
+                        <h2 className="footer__title" id="footer-specialists-title">
+                            {tFooter('sections.specialists')}
+                        </h2>
 
                         <ul className="footer__links">
-                            {specialistLinks.map(({ label, href }) => (
+                            {specialistLinks.map(({ key, href }) => (
                                 <li key={href}>
-                                    <a href={href}>{label}</a>
+                                    <a href={href}>{tFooter(`specialists.${key}`)}</a>
                                 </li>
                             ))}
                         </ul>
-                    </div>
+                    </nav>
+
+                    <nav
+                        className="footer__mobile-legal"
+                        aria-label={tAccessibility('footerLegalNavigation')}
+                    >
+                        <ul className="footer__links">
+                            {legalLinks.map(({ key, href }) => (
+                                <li key={href}>
+                                    <a href={href}>{tFooter(`legal.${key}`)}</a>
+                                </li>
+                            ))}
+                        </ul>
+                    </nav>
                 </div>
 
-                <div className="footer__legal">
-                    {legalLinks.map(({ label, href }, index) => (
+                <nav className="footer__legal" aria-label={tAccessibility('footerLegalNavigation')}>
+                    {legalLinks.map(({ key, href }, index) => (
                         <span className="footer__legal-item" key={href}>
-                            <a href={href}>{label}</a>
+                            <a href={href}>{tFooter(`legal.${key}`)}</a>
 
                             {index < legalLinks.length - 1 && (
                                 <span className="footer__legal-separator" aria-hidden="true">
@@ -107,18 +103,20 @@ export const Footer = () => {
                             )}
                         </span>
                     ))}
-                </div>
+                </nav>
 
                 <div className="footer__bottom">
                     <p className="footer__warning">
-                        <strong>⚠ Увага:</strong> Mental Health Platform надає консультативні
-                        психологічні послуги та не є службою екстреної медичної або психіатричної
-                        допомоги. У разі загрози життю зверніться за номером 103 або на гарячу лінію
-                        з питань психічного здоров’я.
+                        <strong>
+                            <span aria-hidden="true">⚠ </span>
+                            {tFooter('warning.title')}
+                        </strong>{' '}
+                        {tFooter('warning.text')}
                     </p>
 
                     <p className="footer__copyright">
-                        © {currentYear} Mental Health Platform. Усі права захищені.
+                        <span aria-hidden="true">© </span>
+                        {currentYear} {tFooter('copyright')}
                     </p>
                 </div>
             </Container>

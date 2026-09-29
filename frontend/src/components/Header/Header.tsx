@@ -8,9 +8,9 @@ import { LanguageSwitcher } from '../LanguageSwitcher'
 import { Button } from '../UI/Button'
 import { ArrowRightIcon, MenuIcon, SparkIcon } from '../UI/Icons'
 
-import desktopLogo from '../../assets/mental-health-logo.png'
-
 import './Header.scss'
+import { LogoIcon } from '../UI/Icons/LogoIcon.tsx'
+import { headerNavigationItems } from '../../constants/navigation.ts'
 
 export const Header = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -49,10 +49,9 @@ export const Header = () => {
                     aria-label={tAccessibility('homeLink')}
                     onClick={closeMenu}
                 >
-                    <img src={desktopLogo} alt={tAccessibility('logoAlt')} />
+                    <LogoIcon aria-hidden="true" />
                 </a>
-
-                <Navigation className="header__navigation" />
+                <Navigation items={headerNavigationItems} className="header__navigation" />
 
                 <div className="header__actions">
                     <Button
@@ -112,7 +111,7 @@ export const Header = () => {
                     })}
                     id="header-mobile-menu"
                 >
-                    <Navigation onNavigate={closeMenu} />
+                    <Navigation items={headerNavigationItems} onNavigate={closeMenu} />
 
                     <Button
                         href="#register"

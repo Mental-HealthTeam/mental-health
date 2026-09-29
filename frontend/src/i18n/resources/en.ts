@@ -6,6 +6,7 @@ import accessibility from '../../locales/en/shared/accessibility.json'
 import home from '../../locales/en/features/home.json'
 import psychologists from '../../locales/en/features/psychologists.json'
 import auth from '../../locales/en/features/auth.json'
+import footer from '../../locales/en/features/footer.json'
 
 export const enResources = {
     common,
@@ -15,4 +16,5 @@ export const enResources = {
     home,
     psychologists,
     auth,
+    footer,
 } as const
