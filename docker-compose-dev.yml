@@ -10,6 +10,8 @@ services:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: ${DB_NAME}
+    env_file:
+      - ./backend/.env
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
@@ -19,20 +21,23 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+    networks:
+      - mental_health_network
 
-  redis:
-    image: redis:7-alpine
-    container_name: ${PROJECT_NAME}_redis
-    restart: always
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: ${PROJECT_NAME}_pgadmin
     ports:
-      - "${REDIS_PORT}:6379"
+      - "3333:80"
+    env_file:
+      - ./backend/.env
+    depends_on:
+      db:
+        condition: service_healthy
     volumes:
-      - redis_data:/data
-    healthcheck:
-      test: [ "CMD", "redis-cli", "ping" ]
-      interval: 5s
-      timeout: 3s
-      retries: 5
+      - pgadmin_data:/var/lib/pgadmin
+    networks:
+      - mental_health_network
 
   # AI_Service
   ai_service:
@@ -44,9 +49,13 @@ services:
       - ./ai_service/.env
     ports:
       - "${AI_SERVICE_PORT}:8001"
+    volumes:
+      - ./ai_service/app:/usr/ai_service_app
     depends_on:
       redis:
         condition: service_started
+    networks:
+      - mental_health_network
 
   # Backend
   backend:
@@ -54,27 +63,32 @@ services:
       context: ./backend
     container_name: ${PROJECT_NAME}_backend
     restart: always
-    environment:
-      DATABASE_URL: postgresql://${DB_USER}:${DB_PASSWORD}@db:5432/${DB_NAME}
-      REDIS_URL: redis://redis:6379/0
+#    environment:
+#      DATABASE_URL: postgresql://${DB_USER}:${DB_PASSWORD}@db:5432/${DB_NAME}
+    env_file:
+      - ./backend/.env
     ports:
       - "${BACKEND_PORT}:8000"
+    volumes:
+      - ./backend/app/database/migrations/versions:/app/database/migrations/versions
     depends_on:
       db:
         condition: service_healthy
       redis:
-        condition: service_healthy
+        condition: service_started
+    networks:
+      - mental_health_network
 
-  # Frontend
-  frontend:
-    build:
-      context: ./frontend
-    container_name: ${PROJECT_NAME}_frontend
-    restart: always
-    ports:
-      - "${FRONTEND_PORT}:80"
-    depends_on:
-      - backend
+#  # Frontend
+#  frontend:
+#    build:
+#      context: ./frontend
+#    container_name: ${PROJECT_NAME}_frontend
+#    restart: always
+#    ports:
+#      - "${FRONTEND_PORT}:80"
+#    depends_on:
+#      - backend
 
   # Redis for AI_Service
   redis:
@@ -85,8 +99,15 @@ services:
       - .env
     ports:
       - "${REDIS_PORT}:6379"
+    networks:
+      - mental_health_network
 
 
 volumes:
   postgres_data:
-  redis_data:
+    driver: local
+  pgadmin_data:
+    driver: local
+
+networks:
+  mental_health_network:
