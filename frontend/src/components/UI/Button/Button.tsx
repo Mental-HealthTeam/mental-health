@@ -1,51 +1,55 @@
-import type {
-    MouseEvent,
-    MouseEventHandler,
-    ReactNode,
-} from 'react'
+import type { MouseEvent, MouseEventHandler, ReactNode } from 'react'
 import classNames from 'classnames'
+
 import './Button.scss'
 
-type ButtonVariant = 'primary' | 'outline' | 'tag'
-type ButtonSize = 'small' | 'large'
+type ButtonVariant = 'primary' | 'secondary' | 'arrow' | 'label'
+
+type ButtonSize = 'small' | 'medium' | 'large'
 
 type Props = {
-    children: ReactNode
+    children?: ReactNode
     className?: string
+
     href?: string
+
     startIcon?: ReactNode
     endIcon?: ReactNode
+
     variant?: ButtonVariant
     size?: ButtonSize
+
     fullWidth?: boolean
-    type?: 'button' | 'submit' | 'reset'
     disabled?: boolean
+
+    type?: 'button' | 'submit' | 'reset'
+
     ariaLabel?: string
-    onClick?: MouseEventHandler<
-        HTMLAnchorElement | HTMLButtonElement
-    >
+
+    onClick?: MouseEventHandler<HTMLAnchorElement | HTMLButtonElement>
 }
 
 export const Button = ({
-                           children,
-                           className,
-                           href,
-                           startIcon,
-                           endIcon,
-                           variant = 'primary',
-                           size = 'small',
-                           fullWidth = false,
-                           type = 'button',
-                           disabled = false,
-                           ariaLabel,
-                           onClick,
-                       }: Props) => {
+    children,
+    className,
+    href,
+    startIcon,
+    endIcon,
+    variant = 'primary',
+    size = 'medium',
+    fullWidth = false,
+    disabled = false,
+    type = 'button',
+    ariaLabel,
+    onClick,
+}: Props) => {
     const buttonClassName = classNames(
         'button',
         `button--${variant}`,
         `button--${size}`,
         {
             'button--full-width': fullWidth,
+            'button--icon-only': !children && (startIcon || endIcon),
             'button--disabled': disabled,
         },
         className,
@@ -54,35 +58,26 @@ export const Button = ({
     const content = (
         <>
             {startIcon && (
-                <span
-                    className="button__icon button__icon--start"
-                    aria-hidden="true"
-                >
-          {startIcon}
-        </span>
+                <span className="button__icon button__icon--start" aria-hidden="true">
+                    {startIcon}
+                </span>
             )}
 
-            <span className="button__label">
-        {children}
-      </span>
+            {children && <span className="button__label">{children}</span>}
 
             {endIcon && (
-                <span
-                    className="button__icon button__icon--end"
-                    aria-hidden="true"
-                >
-          {endIcon}
-        </span>
+                <span className="button__icon button__icon--end" aria-hidden="true">
+                    {endIcon}
+                </span>
             )}
         </>
     )
 
     if (href) {
-        const handleLinkClick = (
-            event: MouseEvent<HTMLAnchorElement>,
-        ) => {
+        const handleLinkClick = (event: MouseEvent<HTMLAnchorElement>) => {
             if (disabled) {
                 event.preventDefault()
+
                 return
             }
 

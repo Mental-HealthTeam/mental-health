@@ -1,106 +1,170 @@
-@use '../../../styles/variables' as v;
+@use '../../../styles/abstracts' as a;
+@use '../../../styles/components' as c;
 
 .button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: v.$button-content-gap;
-  border: v.$button-border-width solid transparent;
-  border-radius: v.$border-radius-pill;
-  font-size: v.$font-size-small;
-  font-weight: v.$font-weight-semibold;
-  line-height: 1;
-  text-decoration: none;
-  white-space: nowrap;
-  cursor: pointer;
-  transition:
-          color v.$transition-default,
-          border-color v.$transition-default,
-          background-color v.$transition-default,
-          transform v.$transition-default,
-          opacity v.$transition-default;
-
-  &:hover {
-    transform: translateY(-1px);
-  }
-
-  &:focus-visible {
-    outline: 2px solid v.$color-primary;
-    outline-offset: 2px;
-  }
-
-  &__label {
-    display: inline-flex;
-    align-items: center;
-  }
-
-  &__icon {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    flex: 0 0 auto;
+    gap: c.$button-content-gap;
 
-    svg {
-      display: block;
+    border: c.$button-border-width solid transparent;
+    border-radius: a.$border-radius-pill;
+
+    font-family: a.$font-family-primary;
+    text-decoration: none;
+    white-space: nowrap;
+
+    cursor: pointer;
+
+    transition:
+            color a.$transition-default,
+            border-color a.$transition-default,
+            background-color a.$transition-default,
+            opacity a.$transition-default;
+
+    &__label {
+        display: inline-flex;
+        align-items: center;
     }
-  }
 
-  &--primary {
-    color: v.$color-white;
-    background-color: v.$color-primary;
+    &__icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        flex: 0 0 auto;
 
-    &:hover {
-      background-color: v.$color-primary-hover;
+        svg {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+    }
+
+    &--primary {
+        color: a.$color-white;
+        background-color: a.$color-primary;
+
+        &:hover {
+            opacity: 0.92;
+        }
+
+        &:active {
+            color: a.$color-primary;
+            background: a.$color-secondary-gradient;
+        }
+    }
+
+    &--secondary {
+        border-color: a.$color-primary;
+        color: a.$color-primary;
+        background-color: transparent;
+
+        &:hover {
+            background-color: a.$color-gray-0;
+        }
+
+        &:active {
+            color: a.$color-white;
+            background-color: a.$color-primary;
+        }
+    }
+
+    &--arrow {
+        width: c.$button-arrow-size;
+        height: c.$button-arrow-size;
+        padding: 0;
+
+        border-color: a.$color-primary;
+        border-radius: 50%;
+
+        color: a.$color-primary;
+        background-color: transparent;
+
+        .button__icon {
+            width: c.$button-arrow-icon-size;
+            height: c.$button-arrow-icon-size;
+        }
+
+        &:hover {
+            background-color: a.$color-gray-0;
+        }
+
+        &:active {
+            color: a.$color-white;
+            background-color: a.$color-primary;
+        }
+    }
+
+    &--label {
+        border-color: a.$color-primary;
+        color: a.$color-primary;
+        background-color: transparent;
+
+        &:hover {
+            background-color: a.$color-gray-0;
+        }
+
+        &:active {
+            color: a.$color-white;
+            background-color: a.$color-primary;
+        }
+    }
+
+    &--large {
+        height: c.$button-large-height;
+        padding-inline: c.$button-large-padding-inline;
+
+        font-size: a.$font-size-button-large;
+        font-weight: a.$font-weight-button-large;
+        line-height: a.$line-height-button-large;
+    }
+
+    &--medium {
+        height: c.$button-medium-height;
+        padding-inline: c.$button-medium-padding-inline;
+
+        font-size: a.$font-size-button-medium;
+        font-weight: a.$font-weight-button-medium;
+        line-height: a.$line-height-button-medium;
+    }
+
+    &--small {
+        height: c.$button-small-height;
+        padding-inline: c.$button-small-padding-inline;
+
+        font-size: a.$font-size-button-small;
+        font-weight: a.$font-weight-button-small;
+        line-height: a.$line-height-button-small;
+    }
+
+    &--label#{&}--large {
+        height: c.$label-large-height;
+        padding-inline: c.$label-large-padding-inline;
+    }
+
+    &--label#{&}--medium {
+        height: c.$label-medium-height;
+        padding-inline: c.$label-medium-padding-inline;
+    }
+
+    &--label#{&}--small {
+        height: c.$label-small-height;
+        padding-inline: c.$label-small-padding-inline;
     }
 
     &:focus-visible {
-      outline-color: v.$color-primary-hover;
+        outline: 2px solid a.$color-process;
+        outline-offset: 2px;
     }
-  }
 
-  &--outline {
-    border-color: v.$color-primary;
-    color: v.$color-primary;
-    background-color: transparent;
-
-    &:hover {
-      color: v.$color-white;
-      background-color: v.$color-primary;
+    &--full-width {
+        width: 100%;
     }
-  }
 
-  &--small {
-    min-height: v.$button-min-height;
-    padding: 0 v.$button-padding-inline;
-  }
-
-  &--large {
-    min-height: v.$button-large-min-height;
-    padding: 0 v.$button-large-padding-inline;
-  }
-
-  &--tag {
-    color: v.$hero-color-text-light;
-    background-color: v.$hero-color-pill-bg;
-    border: 1px solid v.$hero-color-pill-border;
-    border-radius: v.$hero-radius-pill;
-    padding: v.$hero-tag-padding-block v.$hero-tag-padding-inline;
-    transition: transform v.$hero-tag-transition-duration ease;
-
-    &:hover {
-      transform: scale(v.$hero-tag-hover-scale);
+    &--disabled,
+    &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        pointer-events: none;
     }
-  }
-
-  &--full-width {
-    width: 100%;
-  }
-
-  &--disabled,
-  &:disabled {
-    pointer-events: none;
-    cursor: not-allowed;
-    opacity: 0.5;
-    transform: none;
-  }
 }

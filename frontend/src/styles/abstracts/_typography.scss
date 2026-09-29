@@ -1,0 +1,78 @@
+// ======================================================
+// Font family
+// ======================================================
+
+$font-family-primary: 'Manrope', Arial, sans-serif;
+
+// ======================================================
+// Font weights
+// ======================================================
+
+$font-weight-medium: 500;
+$font-weight-semibold: 600;
+$font-weight-bold: 700;
+
+// ======================================================
+// Headings
+// ======================================================
+
+$font-size-h1: 75px;
+$line-height-h1: 110px;
+$letter-spacing-h1: -0.04em;
+$font-weight-h1: $font-weight-semibold;
+
+$font-size-h2: 55px;
+$line-height-h2: 68px;
+$letter-spacing-h2: -0.04em;
+$font-weight-h2: $font-weight-semibold;
+
+$font-size-h3: 46px;
+$line-height-h3: 52px;
+$letter-spacing-h3: -0.04em;
+$font-weight-h3: $font-weight-semibold;
+
+// ======================================================
+// Main / Body
+// ======================================================
+
+$font-size-main: 18px;
+$line-height-main: 20px;
+$letter-spacing-main: -0.02em;
+$font-weight-main: $font-weight-bold;
+
+$font-size-body: 16px;
+$line-height-body: 22px;
+$letter-spacing-body: 0;
+$font-weight-body: $font-weight-medium;
+
+// ======================================================
+// Captions
+// ======================================================
+
+$font-size-caption-primary: 14px;
+$line-height-caption-primary: 16px;
+$font-weight-caption-primary: $font-weight-bold;
+
+$font-size-caption-secondary: 14px;
+$line-height-caption-secondary: 16px;
+$font-weight-caption-secondary: $font-weight-medium;
+
+$font-size-caption-third: 12px;
+$line-height-caption-third: 14px;
+$font-weight-caption-third: $font-weight-medium;
+
+// ======================================================
+// Buttons
+// ======================================================
+
+$font-size-button-large: 16px;
+$line-height-button-large: 22px;
+$font-weight-button-large: $font-weight-bold;
+
+$font-size-button-medium: 14px;
+$line-height-button-medium: 19px;
+$font-weight-button-medium: $font-weight-semibold;
+
+$font-size-button-small: 11px;
+$line-height-button-small: 15px;
+$font-weight-button-small: $font-weight-bold;

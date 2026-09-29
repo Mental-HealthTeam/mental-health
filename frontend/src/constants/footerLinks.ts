@@ -1,61 +1,63 @@
-export type FooterLink = {
-    label: string
+export type ClientLinkKey = 'consultation' | 'faq' | 'blog' | 'loyalty'
+
+export type SpecialistLinkKey = 'becomeSpecialist' | 'requirements' | 'account'
+
+export type LegalLinkKey = 'privacy' | 'publicOffer' | 'userAgreement' | 'cookiePolicy'
+
+export type FooterLink<T extends string> = {
+    key: T
     href: string
 }
 
-export const clientLinks: FooterLink[] = [
+export const clientLinks: FooterLink<ClientLinkKey>[] = [
     {
-        label: 'Записатися на консультацію',
+        key: 'consultation',
         href: '#consultation',
     },
     {
-        label: 'Часті запитання',
+        key: 'faq',
         href: '#faq',
     },
     {
-        label: 'Блог про ментальне здоров’я',
+        key: 'blog',
         href: '#blog',
     },
     {
-        label: 'Програма лояльності',
+        key: 'loyalty',
         href: '#loyalty',
     },
 ]
 
-export const specialistLinks: FooterLink[] = [
+export const specialistLinks: FooterLink<SpecialistLinkKey>[] = [
     {
-        label: 'Стати психологом платформи',
+        key: 'becomeSpecialist',
         href: '#become-specialist',
     },
     {
-        label: 'Вимоги до спеціалістів',
+        key: 'requirements',
         href: '#specialist-requirements',
     },
     {
-        label: 'Кабінет психолога',
+        key: 'account',
         href: '#specialist-account',
     },
 ]
 
-export const legalLinks: FooterLink[] = [
+export const legalLinks: FooterLink<LegalLinkKey>[] = [
     {
-        label: 'Політика приватності (GDPR)',
+        key: 'privacy',
         href: '#privacy',
     },
     {
-        label: 'Публічна оферта',
+        key: 'publicOffer',
         href: '#public-offer',
     },
     {
-        label: 'Угода користувача',
+        key: 'userAgreement',
         href: '#user-agreement',
     },
     {
-        label: 'Політика Cookie',
+        key: 'cookiePolicy',
         href: '#cookie-policy',
-    },
-    {
-        label: 'Регламент платформи',
-        href: '#platform-policy',
     },
 ]

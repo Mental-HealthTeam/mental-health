@@ -1,27 +1,53 @@
+export type NavigationKey =
+    'home' | 'about' | 'psychologists' | 'howItWorks' | 'reviews' | 'contact'
+
 export type NavigationItem = {
-    label: string
+    key: NavigationKey
     href: string
 }
 
-export const navigationItems: NavigationItem[] = [
+export const headerNavigationItems: NavigationItem[] = [
     {
-        label: 'Головна',
-        href: '#home',
-    },
-    {
-        label: 'Про нас',
+        key: 'about',
         href: '#about',
     },
     {
-        label: 'Наші психологи',
+        key: 'psychologists',
         href: '#psychologists',
     },
     {
-        label: 'Як це працює',
+        key: 'howItWorks',
         href: '#how-it-works',
     },
     {
-        label: 'Контакт',
+        key: 'contact',
+        href: '#contact',
+    },
+]
+
+export const footerNavigationItems: NavigationItem[] = [
+    {
+        key: 'home',
+        href: '#home',
+    },
+    {
+        key: 'about',
+        href: '#about',
+    },
+    {
+        key: 'psychologists',
+        href: '#psychologists',
+    },
+    {
+        key: 'howItWorks',
+        href: '#how-it-works',
+    },
+    {
+        key: 'reviews',
+        href: '#reviews',
+    },
+    {
+        key: 'contact',
         href: '#contact',
     },
 ]
