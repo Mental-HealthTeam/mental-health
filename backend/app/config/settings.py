@@ -29,4 +29,3 @@ class TestSettings(BaseAppSettings):
             "PATH_TO_JSON",
             Path(self.BASE_DIR / "database" / "seed_data" / "test_data.json")
         )
-
