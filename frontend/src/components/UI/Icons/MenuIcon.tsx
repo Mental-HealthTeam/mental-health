@@ -3,16 +3,13 @@ type Props = {
     className?: string
 }
 
-export const MenuIcon = ({
-                             isOpen = false,
-                             className,
-                         }: Props) => {
+export const MenuIcon = ({ isOpen = false, className }: Props) => {
     return (
         <svg
             className={className}
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
+            width="28"
+            height="28"
+            viewBox="0 0 28 28"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
             aria-hidden="true"
@@ -20,14 +17,14 @@ export const MenuIcon = ({
             {isOpen ? (
                 <>
                     <path
-                        d="M6 6L18 18"
+                        d="M8 8L20 20"
                         stroke="currentColor"
                         strokeWidth="2"
                         strokeLinecap="round"
                     />
 
                     <path
-                        d="M18 6L6 18"
+                        d="M20 8L8 20"
                         stroke="currentColor"
                         strokeWidth="2"
                         strokeLinecap="round"
@@ -36,21 +33,21 @@ export const MenuIcon = ({
             ) : (
                 <>
                     <path
-                        d="M4 7H20"
+                        d="M8 10H20"
                         stroke="currentColor"
                         strokeWidth="2"
                         strokeLinecap="round"
                     />
 
                     <path
-                        d="M4 12H20"
+                        d="M8 14H20"
                         stroke="currentColor"
                         strokeWidth="2"
                         strokeLinecap="round"
                     />
 
                     <path
-                        d="M4 17H20"
+                        d="M8 18H20"
                         stroke="currentColor"
                         strokeWidth="2"
                         strokeLinecap="round"

@@ -1,0 +1,28 @@
+@use './reset';
+@use '../abstracts/fonts';
+@use '../abstracts' as a;
+
+:root {
+    color: a.$color-text;
+    font-family: a.$font-family-primary;
+    font-weight: a.$font-weight-body;
+    line-height: a.$line-height-body;
+    background-color: a.$color-background;
+
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+}
+
+html,
+body,
+#root {
+    min-height: 100%;
+}
+
+body {
+    min-width: 320px;
+    min-height: 100vh;
+
+    color: a.$color-text;
+    background-color: a.$color-background;
+}

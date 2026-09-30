@@ -2,11 +2,7 @@ import type { SVGProps } from 'react'
 
 type Props = SVGProps<SVGSVGElement>
 
-export const SparkIcon = ({
-                              width = 16,
-                              height = 16,
-                              ...props
-                          }: Props) => {
+export const SparkIcon = ({ width = 16, height = 16, ...props }: Props) => {
     return (
         <svg
             width={width}

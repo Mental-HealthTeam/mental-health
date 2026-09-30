@@ -1,0 +1,30 @@
+{
+    "description": "Professional psychological support online. Find your psychologist and start your journey toward better mental health.",
+    "sections": {
+        "navigation": "Navigation",
+        "clients": "For clients",
+        "specialists": "For specialists"
+    },
+    "clients": {
+        "consultation": "Book a consultation",
+        "faq": "Frequently asked questions",
+        "blog": "Mental health blog",
+        "loyalty": "Loyalty program"
+    },
+    "specialists": {
+        "becomeSpecialist": "Become a platform psychologist",
+        "requirements": "Specialist requirements",
+        "account": "Psychologist account"
+    },
+    "legal": {
+        "privacy": "Privacy Policy (GDPR)",
+        "publicOffer": "Public offer",
+        "userAgreement": "User agreement",
+        "cookiePolicy": "Cookie Policy"
+    },
+    "warning": {
+        "title": "Attention:",
+        "text": "Mental Health Platform provides psychological consultation services and is not an emergency medical or psychiatric service. If there is a threat to life, call 103 or contact a mental health hotline."
+    },
+    "copyright": "Mental Health Platform. All rights reserved."
+}
