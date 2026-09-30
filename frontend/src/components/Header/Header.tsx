@@ -71,25 +71,27 @@ export const Header = () => {
 
                         <span className="header__divider" aria-hidden="true" />
 
-                        <Button
-                            className="header__login-button"
-                            href="#login"
-                            variant="secondary"
-                            size="medium"
-                            onClick={closeMenu}
-                        >
-                            {tActions('login')}
-                        </Button>
+                        <div className="header__auth">
+                            <Button
+                                className="header__login-button"
+                                href="#login"
+                                variant="secondary"
+                                size="medium"
+                                onClick={closeMenu}
+                            >
+                                {tActions('login')}
+                            </Button>
 
-                        <Button
-                            className="header__register-button"
-                            href="#register"
-                            variant="primary"
-                            size="medium"
-                            onClick={closeMenu}
-                        >
-                            {tActions('register')}
-                        </Button>
+                            <Button
+                                className="header__register-button"
+                                href="#register"
+                                variant="primary"
+                                size="medium"
+                                onClick={closeMenu}
+                            >
+                                {tActions('register')}
+                            </Button>
+                        </div>
 
                         <button
                             className={classNames('header__menu-button', {
@@ -105,7 +107,7 @@ export const Header = () => {
                             aria-controls="header-mobile-menu"
                             onClick={toggleMenu}
                         >
-                            <MenuIcon isOpen={isMenuOpen} />
+                            <MenuIcon />
                         </button>
                     </div>
                 </div>

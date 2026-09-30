@@ -28,6 +28,7 @@
 
     &__logo {
         display: block;
+
         flex: 0 0 c.$logo-width-desktop;
 
         width: c.$logo-width-desktop;
@@ -66,6 +67,13 @@
         gap: c.$header-actions-gap;
     }
 
+    &__auth {
+        display: flex;
+        align-items: center;
+
+        gap: c.$header-auth-gap;
+    }
+
     &__ai-button,
     &__login-button,
     &__register-button {
@@ -86,8 +94,6 @@
         width: c.$divider-width;
         height: c.$divider-height;
 
-        margin-inline: c.$divider-margin-inline;
-
         background-color: a.$color-divider;
     }
 
@@ -103,18 +109,34 @@
 
         padding: 0;
 
-        border: 0;
+        border: c.$menu-button-border-width solid a.$color-gray-40;
+        border-radius: c.$menu-button-border-radius;
 
-        color: a.$color-optional;
-        background-color: transparent;
+        color: a.$color-primary;
+        background-color: a.$color-background;
 
         cursor: pointer;
+
+        transition:
+                border-color a.$transition-default,
+                color a.$transition-default;
 
         svg {
             display: block;
 
             width: c.$menu-icon-size;
             height: c.$menu-icon-size;
+        }
+
+        &:hover {
+            border-color: a.$color-gray-60;
+        }
+
+        &:active,
+        &--open {
+            border-color: a.$color-optional;
+
+            color: a.$color-optional;
         }
 
         &:focus-visible {
@@ -149,10 +171,6 @@
         &__actions {
             gap: c.$header-actions-gap-desktop;
         }
-
-        &__divider {
-            margin-inline: c.$divider-margin-desktop;
-        }
     }
 }
 
@@ -170,7 +188,14 @@
             gap: c.$header-actions-gap-mobile;
         }
 
-        &__divider,
+        &__divider {
+            display: none;
+        }
+
+        &__auth {
+            gap: c.$header-auth-gap-mobile;
+        }
+
         &__register-button {
             display: none;
         }
@@ -277,18 +302,12 @@
 
             padding-inline: c.$login-button-padding-mobile;
         }
-
-        &__menu-button {
-            flex-basis: c.$menu-button-size;
-
-            width: c.$menu-button-size;
-            height: c.$menu-button-size;
-        }
     }
 }
 
 @media (prefers-reduced-motion: reduce) {
     .header {
+        &__menu-button,
         &__mobile-menu {
             transition: none;
         }
