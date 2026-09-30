@@ -3,14 +3,14 @@ import { useTranslation } from 'react-i18next'
 import classNames from 'classnames'
 
 import { Container } from '../Container'
-import { Navigation } from '../Navigation'
 import { LanguageSwitcher } from '../LanguageSwitcher'
+import { Navigation } from '../Navigation'
 import { Button } from '../UI/Button'
-import { ArrowRightIcon, MenuIcon, SparkIcon } from '../UI/Icons'
+import { ArrowRightIcon, LogoIcon, MenuIcon, SparkIcon } from '../UI/Icons'
+
+import { headerNavigationItems } from '../../constants/navigation'
 
 import './Header.scss'
-import { LogoIcon } from '../UI/Icons/LogoIcon.tsx'
-import { headerNavigationItems } from '../../constants/navigation.ts'
 
 export const Header = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -49,60 +49,65 @@ export const Header = () => {
                     aria-label={tAccessibility('homeLink')}
                     onClick={closeMenu}
                 >
-                    <LogoIcon aria-hidden="true" />
+                    <LogoIcon className="header__logo-icon" />
                 </a>
-                <Navigation items={headerNavigationItems} className="header__navigation" />
 
-                <div className="header__actions">
-                    <Button
-                        className="header__ai-button"
-                        href="#ai-search"
-                        variant="primary"
-                        size="large"
-                        startIcon={<SparkIcon />}
-                        endIcon={<ArrowRightIcon />}
-                        ariaLabel={tActions('findPsychologist')}
-                        onClick={closeMenu}
-                    >
-                        {tActions('findPsychologist')}
-                    </Button>
+                <div className="header__content">
+                    <Navigation items={headerNavigationItems} className="header__navigation" />
 
-                    <span className="header__divider" aria-hidden="true" />
+                    <div className="header__actions">
+                        <Button
+                            className="header__ai-button"
+                            href="#ai-search"
+                            variant="primary"
+                            size="large"
+                            startIcon={<SparkIcon />}
+                            endIcon={<ArrowRightIcon />}
+                            ariaLabel={tActions('findPsychologist')}
+                            onClick={closeMenu}
+                        >
+                            {tActions('findPsychologist')}
+                        </Button>
 
-                    <Button
-                        className="header__login-button"
-                        href="#login"
-                        variant="secondary"
-                        size="medium"
-                        onClick={closeMenu}
-                    >
-                        {tActions('login')}
-                    </Button>
+                        <span className="header__divider" aria-hidden="true" />
 
-                    <Button
-                        className="header__register-button"
-                        href="#register"
-                        variant="primary"
-                        size="medium"
-                        onClick={closeMenu}
-                    >
-                        {tActions('register')}
-                    </Button>
+                        <Button
+                            className="header__login-button"
+                            href="#login"
+                            variant="secondary"
+                            size="medium"
+                            onClick={closeMenu}
+                        >
+                            {tActions('login')}
+                        </Button>
 
-                    <button
-                        className={classNames('header__menu-button', {
-                            'header__menu-button--open': isMenuOpen,
-                        })}
-                        type="button"
-                        aria-label={
-                            isMenuOpen ? tAccessibility('closeMenu') : tAccessibility('openMenu')
-                        }
-                        aria-expanded={isMenuOpen}
-                        aria-controls="header-mobile-menu"
-                        onClick={toggleMenu}
-                    >
-                        <MenuIcon isOpen={isMenuOpen} />
-                    </button>
+                        <Button
+                            className="header__register-button"
+                            href="#register"
+                            variant="primary"
+                            size="medium"
+                            onClick={closeMenu}
+                        >
+                            {tActions('register')}
+                        </Button>
+
+                        <button
+                            className={classNames('header__menu-button', {
+                                'header__menu-button--open': isMenuOpen,
+                            })}
+                            type="button"
+                            aria-label={
+                                isMenuOpen
+                                    ? tAccessibility('closeMenu')
+                                    : tAccessibility('openMenu')
+                            }
+                            aria-expanded={isMenuOpen}
+                            aria-controls="header-mobile-menu"
+                            onClick={toggleMenu}
+                        >
+                            <MenuIcon isOpen={isMenuOpen} />
+                        </button>
+                    </div>
                 </div>
 
                 <div

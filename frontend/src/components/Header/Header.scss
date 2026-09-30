@@ -28,22 +28,33 @@
 
     &__logo {
         display: block;
-        flex: 0 0 auto;
+        flex: 0 0 c.$logo-width-desktop;
 
         width: c.$logo-width-desktop;
+    }
 
-        img {
-            display: block;
+    &__logo-icon {
+        display: block;
 
-            width: 100%;
-            height: auto;
+        width: 100%;
+        height: auto;
+    }
 
-            object-fit: contain;
-        }
+    &__content {
+        display: flex;
+        align-items: center;
+
+        gap: c.$header-navigation-actions-gap;
+
+        min-width: 0;
+
+        margin-left: auto;
     }
 
     &__navigation {
-        margin-left: c.$header-content-gap;
+        flex: 0 1 auto;
+
+        min-width: 0;
     }
 
     &__actions {
@@ -53,8 +64,6 @@
         flex: 0 0 auto;
 
         gap: c.$header-actions-gap;
-
-        margin-left: auto;
     }
 
     &__ai-button,
@@ -133,8 +142,8 @@
             padding-inline: c.$header-container-padding-desktop;
         }
 
-        &__logo {
-            width: c.$logo-width-tablet;
+        &__content {
+            gap: c.$header-navigation-actions-gap-desktop;
         }
 
         &__actions {
@@ -151,6 +160,10 @@
     .header {
         &__navigation {
             display: none;
+        }
+
+        &__content {
+            gap: 0;
         }
 
         &__actions {
@@ -217,20 +230,8 @@
     }
 }
 
-@media (max-width: a.$breakpoint-mobile) {
+@media (max-width: c.$header-ai-button-breakpoint) {
     .header {
-        padding-inline: 12px;
-
-        &__container {
-            height: c.$header-height-mobile;
-
-            padding-inline: c.$header-container-padding-mobile;
-        }
-
-        &__actions {
-            gap: c.$header-actions-gap-mobile;
-        }
-
         &__ai-button {
             width: c.$mobile-ai-button-width;
             height: c.$mobile-ai-button-height;
@@ -248,18 +249,40 @@
                 margin: 0;
             }
         }
+    }
+}
+
+@media (max-width: a.$breakpoint-mobile) {
+    .header {
+        padding-inline: c.$header-padding-inline-mobile;
+
+        &__container {
+            height: c.$header-height-mobile;
+
+            padding-inline: c.$header-container-padding-mobile;
+        }
+
+        &__logo {
+            flex-basis: c.$logo-width-mobile;
+
+            width: c.$logo-width-mobile;
+        }
+
+        &__actions {
+            gap: c.$header-actions-gap-mobile;
+        }
 
         &__login-button {
             height: c.$mobile-ai-button-height;
 
-            padding-inline: 16px;
+            padding-inline: c.$login-button-padding-mobile;
         }
 
         &__menu-button {
+            flex-basis: c.$menu-button-size;
+
             width: c.$menu-button-size;
             height: c.$menu-button-size;
-
-            flex-basis: c.$menu-button-size;
         }
     }
 }
