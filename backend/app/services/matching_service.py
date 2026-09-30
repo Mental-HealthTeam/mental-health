@@ -17,13 +17,10 @@ from database.models.models import (
     PsychologistStatus,
 )
 from sqlalchemy.orm import selectinload
-from config.dependencies import get_redis_storage
-from redis_storage.redis_interface import SessionStorageInterface
 
 
 async def find_matching_psychologists(
     db: Annotated[AsyncSession, Depends(get_db)],
-    redis_storage: Annotated[SessionStorageInterface, Depends(get_redis_storage)],
     request: MatchingSearchRequest
 ):
     if request.matching_info is None:
@@ -83,19 +80,12 @@ async def find_matching_psychologists(
             languages=psychologist.languages,
             mock_slots=psychologist.mock_slots,
             matched_symptom_codes=list(
-                set(request.matching_info.symptom_codes) & {s.symptom_code
-                for s in psychologist.psychologist_specializations}
+                set(request.matching_info.symptom_codes) & {
+                    s.symptom_code for s in psychologist.psychologist_specializations
+                }
             )
         )
         for psychologist, _ in rows
     ]
-    try:
-
 
     return MatchingSearchResponse(result=result)
-
-
-
-
-
-

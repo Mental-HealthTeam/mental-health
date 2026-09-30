@@ -18,6 +18,7 @@ app.include_router(
     tags=["Matching Psychologists wit AI"]
 )
 
+
 @app.get("/health")
 def health():
     return {"status": "ok"}

@@ -11,7 +11,6 @@ from sqlalchemy import (
     ForeignKey,
     JSON,
     String,
-    Text,
     func, Numeric,
 )
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -264,8 +263,7 @@ class Booking(Base):
     )
 
 
-
-class AI_Session(Base):
+class AI_Session(Base):  # noqa: N801
     __tablename__ = "ai_session_logs"
 
     id: Mapped[uuid.UUID] = mapped_column(

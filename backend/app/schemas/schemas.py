@@ -85,7 +85,7 @@ class BookingUpdate(BaseModel):
     payment_status: str | None = None
 
 
-class AI_SessionResponse(BaseModel):
+class AI_SessionResponse(BaseModel):  # noqa: N801
     model_config = ConfigDict(from_attributes=True)
 
     log_id: UUID
