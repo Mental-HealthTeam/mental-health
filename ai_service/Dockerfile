@@ -14,6 +14,6 @@ COPY ./app .
 
 EXPOSE 8001
 
-CMD [ "uvicorn", "main:app", "--host=0.0.0.0" , "--port=8001", "--reload", "--reload-dir", "/usr/ai_service_app" ]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8001", "--workers", "2"]
 
 #TODO: When docker compose will be added, CMD has to be moved from dockerfile to docker compose file
