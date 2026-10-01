@@ -1,18 +1,22 @@
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import classNames from 'classnames'
+
 import { Container } from '../Container'
+import { LanguageSwitcher } from '../LanguageSwitcher'
 import { Navigation } from '../Navigation'
 import { Button } from '../UI/Button'
-import {
-    ArrowRightIcon,
-    MenuIcon,
-    SparkIcon,
-} from '../UI/Icons'
-import logo from '../../assets/mental-health-logo.png'
+import { ArrowRightIcon, LogoIcon, MenuIcon, SparkIcon } from '../UI/Icons'
+
+import { headerNavigationItems } from '../../constants/navigation'
+
 import './Header.scss'
 
 export const Header = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false)
+
+    const { t: tActions } = useTranslation('actions')
+    const { t: tAccessibility } = useTranslation('accessibility')
 
     const toggleMenu = () => {
         setIsMenuOpen((currentValue) => !currentValue)
@@ -42,48 +46,14 @@ export const Header = () => {
                 <a
                     className="header__logo"
                     href="#home"
-                    aria-label="Mental Health — головна"
+                    aria-label={tAccessibility('homeLink')}
                     onClick={closeMenu}
                 >
-                    <img
-                        src={logo}
-                        alt="Mental Health Platform"
-                    />
+                    <LogoIcon className="header__logo-icon" />
                 </a>
 
-                <button
-                    className={classNames(
-                        'header__menu-button',
-                        {
-                            'header__menu-button--open': isMenuOpen,
-                        },
-                    )}
-                    type="button"
-                    aria-label={
-                        isMenuOpen
-                            ? 'Закрити меню'
-                            : 'Відкрити меню'
-                    }
-                    aria-expanded={isMenuOpen}
-                    aria-controls="header-content"
-                    onClick={toggleMenu}
-                >
-                    <MenuIcon isOpen={isMenuOpen} />
-                </button>
-
-                <div
-                    className={classNames(
-                        'header__content',
-                        {
-                            'header__content--open': isMenuOpen,
-                        },
-                    )}
-                    id="header-content"
-                >
-                    <Navigation
-                        className="header__navigation"
-                        onNavigate={closeMenu}
-                    />
+                <div className="header__content">
+                    <Navigation items={headerNavigationItems} className="header__navigation" />
 
                     <div className="header__actions">
                         <Button
@@ -93,35 +63,75 @@ export const Header = () => {
                             size="large"
                             startIcon={<SparkIcon />}
                             endIcon={<ArrowRightIcon />}
+                            ariaLabel={tActions('findPsychologist')}
                             onClick={closeMenu}
                         >
-                            Знайди свого психолога з AI
+                            {tActions('findPsychologist')}
                         </Button>
 
-                        <span
-                            className="header__divider"
-                            aria-hidden="true"
-                        />
+                        <span className="header__divider" aria-hidden="true" />
 
-                        <Button
-                            className="header__login-button"
-                            href="#login"
-                            variant="outline"
-                            onClick={closeMenu}
+                        <div className="header__auth">
+                            <Button
+                                className="header__login-button"
+                                href="#login"
+                                variant="secondary"
+                                size="medium"
+                                onClick={closeMenu}
+                            >
+                                {tActions('login')}
+                            </Button>
+
+                            <Button
+                                className="header__register-button"
+                                href="#register"
+                                variant="primary"
+                                size="medium"
+                                onClick={closeMenu}
+                            >
+                                {tActions('register')}
+                            </Button>
+                        </div>
+
+                        <button
+                            className={classNames('header__menu-button', {
+                                'header__menu-button--open': isMenuOpen,
+                            })}
+                            type="button"
+                            aria-label={
+                                isMenuOpen
+                                    ? tAccessibility('closeMenu')
+                                    : tAccessibility('openMenu')
+                            }
+                            aria-expanded={isMenuOpen}
+                            aria-controls="header-mobile-menu"
+                            onClick={toggleMenu}
                         >
-                            Увійти
-                        </Button>
-
-                        <Button
-                            className="header__register-button"
-                            href="#register"
-                            variant="primary"
-                            onClick={closeMenu}
-                        >
-                            Зареєструватися
-                        </Button>
+                            <MenuIcon />
+                        </button>
                     </div>
                 </div>
+
+                <div
+                    className={classNames('header__mobile-menu', {
+                        'header__mobile-menu--open': isMenuOpen,
+                    })}
+                    id="header-mobile-menu"
+                >
+                    <Navigation items={headerNavigationItems} onNavigate={closeMenu} />
+
+                    <Button
+                        href="#register"
+                        variant="primary"
+                        size="medium"
+                        fullWidth
+                        onClick={closeMenu}
+                    >
+                        {tActions('register')}
+                    </Button>
+                </div>
+
+                <LanguageSwitcher className="header__language-switcher" />
             </Container>
         </header>
     )

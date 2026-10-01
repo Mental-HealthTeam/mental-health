@@ -1,0 +1,94 @@
+// ======================================================
+// Header layout
+// ======================================================
+
+$header-height: 86px;
+$header-height-mobile: 72px;
+
+$header-padding-top: 20px;
+$header-padding-bottom: 30px;
+
+$header-padding-inline: 30px;
+$header-padding-inline-mobile: 12px;
+
+$header-container-padding-inline: 30px;
+$header-container-padding-desktop: 24px;
+$header-container-padding-mobile: 16px;
+
+$header-navigation-actions-gap: 32px;
+$header-navigation-actions-gap-desktop: 32px;
+
+$header-actions-gap: 32px;
+$header-actions-gap-desktop: 32px;
+$header-actions-gap-mobile: 12px;
+
+$header-auth-gap: 16px;
+$header-auth-gap-mobile: 12px;
+
+$header-ai-button-breakpoint: 740px;
+
+// ======================================================
+// Header border
+// ======================================================
+
+$header-border-width: 1px;
+$header-border-radius: 24px;
+
+// ======================================================
+// Header logo
+// ======================================================
+
+$logo-width-desktop: 79px;
+$logo-width-mobile: 44px;
+
+// ======================================================
+// Header navigation
+// ======================================================
+
+$navigation-gap: 20px;
+$navigation-link-mobile-padding: 12px 4px;
+
+// ======================================================
+// Header divider
+// ======================================================
+
+$divider-width: 1px;
+$divider-height: 28px;
+
+// ======================================================
+// Header language switcher
+// ======================================================
+
+$language-switcher-right: 0;
+$language-switcher-bottom: -30px;
+
+// ======================================================
+// Header mobile controls
+// ======================================================
+
+$mobile-ai-button-width: 48px;
+$mobile-ai-button-height: 44px;
+$mobile-ai-button-radius: 12px;
+
+$login-button-padding-mobile: 16px;
+
+$menu-button-size: 44px;
+$menu-icon-size: 28px;
+
+$menu-button-border-width: 1px;
+$menu-button-border-radius: 14px;
+
+// ======================================================
+// Header mobile menu
+// ======================================================
+
+$mobile-menu-offset: 10px;
+$mobile-menu-padding: 20px;
+$mobile-menu-gap: 12px;
+$mobile-menu-translate-y: -10px;
+
+// ======================================================
+// Header shadows
+// ======================================================
+
+$shadow-menu: 0 12px 28px rgb(8 8 8 / 12%);

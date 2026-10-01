@@ -1,146 +1,195 @@
-@use "../../styles/variables.scss" as v;
-@use "../../styles/mixin.scss" as *;
+@use '../../styles/abstracts' as a;
+@use '../../styles/components' as c;
+@use '../../styles/abstracts/mixins' as *;
 
 .hero {
-  width: 100%;
-  padding: v.$hero-padding-inline;
-
-  &__container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: v.$hero-container-gap;
-    background-image:
-      linear-gradient(v.$hero-overlay-color),
-      url("../../assets/background-hero.jpg");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    height: v.$hero-container-height;
-    border-radius: v.$hero-radius-border;
-  }
-
-  &__region-title {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: v.$hero-region-title-gap;
-    max-width: v.$hero-region-title-max-width;
-  }
-
-  &__badge {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: v.$hero-badge-gap;
-    color: v.$hero-color-text-light;
-    background-color: v.$hero-color-pill-bg;
-    border: v.$hero-badge-border-width solid v.$hero-color-pill-border;
-    border-radius: v.$hero-radius-pill;
-    padding: v.$hero-badge-padding-block v.$hero-badge-padding-inline;
-  }
-
-  &__badge-icon {
-    width: v.$hero-badge-icon-width;
-  }
-
-  &__badge-text {
-    font-size: v.$hero-badge-text-font-size;
-    text-transform: uppercase;
-    color: v.$hero-color-text-light;
-  }
-
-  &__title {
-    font-size: v.$hero-title-font-size;
-    line-height: v.$hero-title-line-height;
-    color: v.$hero-color-text-light;
-    text-align: center;
-    padding-inline: v.$hero-title-padding-inline;
-  }
-
-  &__subtitle {
-    font-size: v.$hero-subtitle-font-size;
-    line-height: v.$hero-subtitle-line-height;
-    color: v.$hero-color-text-muted;
-    text-align: center;
-    padding-inline: v.$hero-subtitle-padding-inline;
-  }
-
-  &__search {
-    display: flex;
-    justify-content: center;
     width: 100%;
-  }
+    padding: c.$hero-padding-inline;
 
-  &__search-field {
-    display: flex;
-    align-items: center;
-    width: v.$hero-search-field-width;
-    position: relative;
-  }
+    &__container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
 
-  &__search-input {
-    width: 100%;
-    background-color: v.$hero-color-text-light;
-    padding: v.$hero-search-input-padding-block
-      v.$hero-search-input-padding-right v.$hero-search-input-padding-block
-      v.$hero-search-input-padding-left;
-    border-radius: v.$hero-radius-pill;
-    font-size: v.$hero-search-font-size;
+        gap: c.$hero-container-gap;
 
-    &:focus-visible {
-      outline: v.$hero-search-hover-outline-width solid v.$color-primary;
-      outline-offset: v.$hero-search-hover-outline-offset;
+        height: c.$hero-container-height;
+
+        background-image:
+                linear-gradient(c.$hero-overlay-color),
+                url('../../assets/background-hero.jpg');
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+
+        border-radius: a.$border-radius-hero;
     }
-  }
 
-  &__search-icon {
-    position: absolute;
-    z-index: 1;
-    top: 50%;
-    left: v.$hero-search-icon-offset-left;
-    transform: translateY(-50%);
-    pointer-events: none;
-  }
+    &__region-title {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
 
-  &__search-button {
-    position: absolute;
-    font-size: 16px;
-    z-index: 10;
-    line-height: 100%;
-    right: v.$hero-search-button-offset-right;
-    height: calc(100% - #{v.$hero-search-button-inset-block});
-  }
+        gap: c.$hero-region-title-gap;
 
-  &__region-tags {
-    display: flex;
-    flex-direction: column;
-    gap: v.$hero-tags-gap;
-    padding-inline: v.$hero-region-tags-padding-inline;
-  }
+        max-width: c.$hero-region-title-max-width;
+    }
 
-  &__tags-title {
-    font-size: v.$hero-tags-title-font-size;
-    line-height: v.$hero-tags-title-line-height;
-    color: v.$hero-color-text-muted;
-    text-align: center;
-  }
+    &__badge {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
 
-  &__tags {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 16px;
-  }
+        gap: c.$hero-badge-gap;
 
-  @include up(md) {
+        padding:
+                c.$hero-badge-padding-block
+                c.$hero-badge-padding-inline;
+
+        border: c.$hero-badge-border-width solid c.$hero-color-pill-border;
+        border-radius: a.$border-radius-pill;
+
+        color: c.$hero-color-text-light;
+        background-color: c.$hero-color-pill-bg;
+    }
+
+    &__badge-icon {
+        width: c.$hero-badge-icon-width;
+    }
+
+    &__badge-text {
+        color: c.$hero-color-text-light;
+
+        font-size: a.$font-size-caption-secondary;
+        font-weight: a.$font-weight-caption-secondary;
+        line-height: a.$line-height-caption-secondary;
+
+        text-transform: uppercase;
+    }
+
     &__title {
-      font-size: v.$hero-title-font-size-md;
+        padding-inline: c.$hero-title-padding-inline;
+
+        color: c.$hero-color-text-light;
+
+        font-size: a.$font-size-h2;
+        font-weight: a.$font-weight-h2;
+        line-height: a.$line-height-h2;
+        letter-spacing: a.$letter-spacing-h2;
+
+        text-align: center;
     }
 
     &__subtitle {
-      font-size: v.$hero-subtitle-font-size-md;
+        padding-inline: c.$hero-subtitle-padding-inline;
+
+        color: c.$hero-color-text-muted;
+
+        font-size: a.$font-size-main;
+        font-weight: a.$font-weight-main;
+        line-height: a.$line-height-main;
+        letter-spacing: a.$letter-spacing-main;
+
+        text-align: center;
     }
-  }
+
+    &__search {
+        display: flex;
+        justify-content: center;
+
+        width: 100%;
+    }
+
+    &__search-field {
+        position: relative;
+
+        display: flex;
+        align-items: center;
+
+        width: c.$hero-search-field-width;
+    }
+
+    &__search-input {
+        width: 100%;
+
+        padding:
+                c.$hero-search-input-padding-block
+                c.$hero-search-input-padding-right
+                c.$hero-search-input-padding-block
+                c.$hero-search-input-padding-left;
+
+        border-radius: a.$border-radius-pill;
+
+        color: a.$color-text;
+        background-color: c.$hero-color-text-light;
+
+        font-size: a.$font-size-body;
+        font-weight: a.$font-weight-body;
+        line-height: a.$line-height-body;
+
+        &:focus-visible {
+            outline: c.$hero-search-hover-outline-width solid a.$color-primary;
+            outline-offset: c.$hero-search-hover-outline-offset;
+        }
+    }
+
+    &__search-icon {
+        position: absolute;
+        z-index: 1;
+        top: 50%;
+        left: c.$hero-search-icon-offset-left;
+
+        transform: translateY(-50%);
+
+        pointer-events: none;
+    }
+
+    &__search-button {
+        position: absolute;
+        z-index: 10;
+        right: c.$hero-search-button-offset-right;
+
+        height: calc(100% - #{c.$hero-search-button-inset-block});
+
+        font-size: a.$font-size-button-large;
+        font-weight: a.$font-weight-button-large;
+        line-height: a.$line-height-button-large;
+    }
+
+    &__region-tags {
+        display: flex;
+        flex-direction: column;
+
+        gap: c.$hero-tags-gap;
+
+        padding-inline: c.$hero-region-tags-padding-inline;
+    }
+
+    &__tags-title {
+        color: c.$hero-color-text-muted;
+
+        font-size: a.$font-size-caption-secondary;
+        font-weight: a.$font-weight-caption-secondary;
+        line-height: a.$line-height-caption-secondary;
+
+        text-align: center;
+    }
+
+    &__tags {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+
+        gap: c.$hero-tags-gap;
+    }
+
+    @include up(md) {
+        &__title {
+            font-size: a.$font-size-h1;
+            font-weight: a.$font-weight-h1;
+            line-height: a.$line-height-h1;
+            letter-spacing: a.$letter-spacing-h1;
+        }
+    }
 }

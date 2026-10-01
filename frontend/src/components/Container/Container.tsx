@@ -6,13 +6,6 @@ type Props = PropsWithChildren<{
     className?: string
 }>
 
-export const Container = ({
-                              className,
-                              children,
-                          }: Props) => {
-    return (
-        <div className={classNames('container', className)}>
-            {children}
-        </div>
-    )
+export const Container = ({ className, children }: Props) => {
+    return <div className={classNames('container', className)}>{children}</div>
 }

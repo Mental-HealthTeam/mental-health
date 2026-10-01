@@ -1,71 +1,43 @@
-@use '../../styles/variables' as v;
+@use '../../styles/abstracts' as a;
+@use '../../styles/components' as c;
 
 .navigation {
-  display: flex;
-  align-items: center;
-  gap: v.$navigation-gap;
-
-  &__link {
-    position: relative;
-    padding:
-            v.$navigation-link-padding-top
-            0
-            v.$navigation-link-padding-bottom;
-    color: v.$color-text;
-    font-size: v.$font-size-navigation;
-    font-weight: v.$font-weight-regular;
-    line-height: 1;
-    text-decoration: none;
-    white-space: nowrap;
-    transition: color v.$transition-default;
-
-    &::after {
-      position: absolute;
-      right: 0;
-      bottom: v.$navigation-underline-bottom;
-      left: 0;
-      height: v.$navigation-underline-height;
-      background-color: v.$color-primary;
-      content: '';
-      opacity: 0;
-      transform: scaleX(0);
-      transition:
-              opacity v.$transition-default,
-              transform v.$transition-default;
-    }
-
-    &:hover,
-    &--active {
-      color: v.$color-primary;
-    }
-
-    &:hover::after,
-    &--active::after {
-      opacity: 1;
-      transform: scaleX(1);
-    }
-
-    &--active {
-      font-weight: v.$font-weight-semibold;
-    }
-  }
-}
-
-@media (max-width: v.$breakpoint-tablet) {
-  .navigation {
-    flex-direction: column;
-    align-items: stretch;
-    width: 100%;
-    gap: 0;
+    display: flex;
+    align-items: center;
+    gap: c.$navigation-gap;
 
     &__link {
-      width: 100%;
-      padding: v.$navigation-link-mobile-padding;
-      font-size: v.$font-size-body;
+        display: inline-flex;
+        align-items: center;
 
-      &::after {
-        display: none;
-      }
+        height: c.$header-height;
+
+        color: a.$color-primary;
+
+        font-family: a.$font-family-primary;
+        font-size: a.$font-size-button-medium;
+        font-weight: a.$font-weight-button-medium;
+        line-height: a.$line-height-button-medium;
+
+        text-decoration: none;
+        text-transform: uppercase;
+        white-space: nowrap;
     }
-  }
+}
+
+@media (max-width: a.$breakpoint-tablet) {
+    .navigation {
+        flex-direction: column;
+        align-items: stretch;
+
+        width: 100%;
+        gap: 0;
+
+        &__link {
+            width: 100%;
+            height: auto;
+
+            padding: c.$navigation-link-mobile-padding;
+        }
+    }
 }

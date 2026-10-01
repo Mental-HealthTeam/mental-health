@@ -1,0 +1,69 @@
+@use '../../styles/abstracts' as a;
+
+.language-switcher {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+
+    font-family: a.$font-family-primary;
+    font-size: a.$font-size-button-large;
+    font-weight: a.$font-weight-button-large;
+    line-height: a.$line-height-button-large;
+
+    &__label {
+        display: inline-flex;
+        align-items: center;
+
+        color: a.$color-primary;
+
+        transition: color a.$transition-default;
+
+        &--active {
+            color: a.$color-optional;
+        }
+    }
+
+    &__toggle {
+        position: relative;
+
+        flex: 0 0 auto;
+
+        width: 44px;
+        height: 24px;
+
+        padding: 1px;
+
+        border: 1px solid a.$color-optional;
+        border-radius: 6px;
+
+        background-color: transparent;
+
+        cursor: pointer;
+
+        transition: border-color a.$transition-default;
+
+        &:focus-visible {
+            outline: 2px solid a.$color-process;
+            outline-offset: 2px;
+        }
+    }
+
+    &__thumb {
+        display: block;
+
+        width: 20px;
+        height: 20px;
+
+        border-radius: 4px;
+
+        background-color: a.$color-optional;
+
+        transform: translateX(0);
+
+        transition: transform a.$transition-default;
+
+        &[data-active='true'] {
+            transform: translateX(20px);
+        }
+    }
+}
