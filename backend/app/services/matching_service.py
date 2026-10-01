@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Annotated
 
 from fastapi import Depends, HTTPException, status
@@ -69,6 +70,16 @@ async def find_matching_psychologists(
         rows = [
             (psychologist, count) for psychologist, count in rows
             if set(psychologist.languages) & client_languages
+        ]
+    if request.matching_info.min_range_suitable_time is not None:
+        rows = [
+            (psychologist, _) for psychologist, _ in rows
+            if any([datetime.fromisoformat(time_slot["datetime"]) >= request.matching_info.min_range_suitable_time for time_slot in psychologist.mock_slots])
+        ]
+    if request.matching_info.max_range_suitable_time is not None:
+        rows = [
+            (psychologist, _) for psychologist, _ in rows
+            if any([datetime.fromisoformat(time_slot["datetime"]) <= request.matching_info.max_range_suitable_time for time_slot in psychologist.mock_slots])
         ]
     result = [
         PsychologistMatchResult(

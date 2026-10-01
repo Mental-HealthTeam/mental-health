@@ -1,5 +1,6 @@
 import json
 import uuid
+from datetime import datetime, timedelta
 from pathlib import Path
 
 from sqlalchemy.orm import sessionmaker
@@ -88,6 +89,22 @@ def resolve_gender(full_name: str) -> Gender:
     return GENDER_BY_FIRST_NAME[first_name]
 
 
+DAY_OFFSET = {
+    "Сьогодні": 0,
+    "Завтра": 1,
+}
+
+
+def parse_mock_slot(label: str) -> dict:
+    day_word, time_str = label.split(" ", 1)
+    hour, minute = map(int, time_str.split(":"))
+    offset = DAY_OFFSET[day_word]
+    slot_dt = datetime.now().replace(
+        hour=hour, minute=minute, second=0, microsecond=0
+    ) + timedelta(days=offset)
+    return {"label": label, "datetime": slot_dt.isoformat()}
+
+
 def populate_psychologists() -> None:
     with open(SEED_FILE, encoding="utf-8") as f:
         dataset = json.load(f)
@@ -118,7 +135,7 @@ def populate_psychologists() -> None:
                 full_name=entry["name"],
                 title=entry["title"],
                 avatar_url=entry["avatar_url"],
-                mock_slots=entry["mock_slots"],
+                mock_slots=[parse_mock_slot(s) for s in entry["mock_slots"]],
                 certificates=entry["certificates"],
                 bio=entry["bio"],
                 reviews=entry["reviews"],
