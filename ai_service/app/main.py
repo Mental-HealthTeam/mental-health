@@ -1,3 +1,4 @@
+from datetime import datetime, timezone
 import json
 from typing import Annotated
 
@@ -21,6 +22,9 @@ def health():
     return {"status": "ok"}
 
 
+async def today_datetime():
+    return str(datetime.now(timezone.utc))
+
 async def event_generator(
     ai_client: AIClientInterface,
     redis_storage: SessionStorageInterface,
@@ -40,23 +44,27 @@ async def event_generator(
                     symptom_codes_str += chunk.partition(MATCH_DATA_MARKER_START)[1]
                     symptom_codes_str += chunk.partition(MATCH_DATA_MARKER_START)[2]
                     if content_for_user:
-                        payload = json.dumps({"content": content_for_user})
-                        yield f"data: {payload}\n\n"
+                        # payload = json.dumps({"content": content_for_user})
+                        # yield f"data: {payload}\n\n"
+                        yield chunk
                     continue
             elif match_data_started is True:
                 if MATCH_DATA_MARKER_END in chunk:
                     symptom_codes_str += chunk.partition(MATCH_DATA_MARKER_END)[0]
                     symptom_codes_str += chunk.partition(MATCH_DATA_MARKER_END)[1]
-                    yield f"data: {symptom_codes_str}\n\n"
+                    # yield f"data: {symptom_codes_str}\n\n"
+                    yield symptom_codes_str
                 else:
                     symptom_codes_str += chunk
                 continue
-            payload = json.dumps({"content": chunk})
-            yield f"data: {payload}\n\n"
+            # payload = json.dumps({"content": chunk})
+            # yield f"data: {payload}\n\n"
+            yield chunk
     except RuntimeError as e:
         print(e)
         error_payload = json.dumps({"error": str(e)})
-        yield f"data: {error_payload}\n\n"
+        # yield f"data: {error_payload}\n\n"
+        yield chunk
     await redis_storage.append_message(session_id=session_id, role="assistant", content=reply)
 
 
@@ -74,7 +82,7 @@ async def send_message(
         history = await redis_storage.get_history(session_id=request.session_id)
         history.append({"role": "user", "content": request.message})
         messages_for_api = [
-            {"role": "system", "content": SYSTEM_PROMPT},
+            {"role": "system", "content": SYSTEM_PROMPT.replace("{today}", str(await today_datetime()))},
         ] + history
         await redis_storage.append_message(session_id=request.session_id, role="user", content=request.message)
         return StreamingResponse(
