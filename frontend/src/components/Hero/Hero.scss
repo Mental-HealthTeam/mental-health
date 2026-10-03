@@ -4,192 +4,216 @@
 
 .hero {
     width: 100%;
-    padding: c.$hero-padding-inline;
+    overflow-x: clip;
 
     &__container {
-        display: flex;
+        @include flex-center;
         flex-direction: column;
-        justify-content: center;
-        align-items: center;
-
+        padding-inline: c.$hero-padding-inline;
         gap: c.$hero-container-gap;
-
-        height: c.$hero-container-height;
-
-        background-image:
-                linear-gradient(c.$hero-overlay-color),
-                url('../../assets/background-hero.jpg');
-        background-position: center;
-        background-repeat: no-repeat;
-        background-size: cover;
-
-        border-radius: a.$border-radius-hero;
-    }
-
-    &__region-title {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-
-        gap: c.$hero-region-title-gap;
-
-        max-width: c.$hero-region-title-max-width;
-    }
-
-    &__badge {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-
-        gap: c.$hero-badge-gap;
-
-        padding:
-                c.$hero-badge-padding-block
-                c.$hero-badge-padding-inline;
-
-        border: c.$hero-badge-border-width solid c.$hero-color-pill-border;
-        border-radius: a.$border-radius-pill;
-
-        color: c.$hero-color-text-light;
-        background-color: c.$hero-color-pill-bg;
-    }
-
-    &__badge-icon {
-        width: c.$hero-badge-icon-width;
-    }
-
-    &__badge-text {
-        color: c.$hero-color-text-light;
-
-        font-size: a.$font-size-caption-secondary;
-        font-weight: a.$font-weight-caption-secondary;
-        line-height: a.$line-height-caption-secondary;
-
-        text-transform: uppercase;
     }
 
     &__title {
-        padding-inline: c.$hero-title-padding-inline;
-
-        color: c.$hero-color-text-light;
-
-        font-size: a.$font-size-h2;
-        font-weight: a.$font-weight-h2;
-        line-height: a.$line-height-h2;
-        letter-spacing: a.$letter-spacing-h2;
-
+        font-size: a.$font-size-h3;
+        line-height: a.$line-height-h3;
+        letter-spacing: a.$letter-spacing-h3;
+        font-weight: a.$font-weight-h3;
+        color: a.$color-text;
         text-align: center;
     }
 
+    &__title-accent {
+        background: a.$color-secondary-gradient;
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+    }
+
     &__subtitle {
-        padding-inline: c.$hero-subtitle-padding-inline;
-
-        color: c.$hero-color-text-muted;
-
-        font-size: a.$font-size-main;
-        font-weight: a.$font-weight-main;
-        line-height: a.$line-height-main;
-        letter-spacing: a.$letter-spacing-main;
-
+        font-size: a.$font-size-body;
+        line-height: a.$line-height-body;
+        letter-spacing: a.$letter-spacing-body;
+        font-weight: a.$font-weight-body;
+        color: a.$color-gray-60;
         text-align: center;
     }
 
     &__search {
-        display: flex;
-        justify-content: center;
-
         width: 100%;
+        max-width: c.$hero-search-max-width;
     }
 
-    &__search-field {
+    &__media {
         position: relative;
-
-        display: flex;
-        align-items: center;
-
-        width: c.$hero-search-field-width;
+        width: 100%;
+        max-width: c.$hero-media-max-width;
     }
 
-    &__search-input {
+    &__image-wrap {
+        position: relative;
+        border-radius: a.$border-radius-hero;
+        overflow: hidden;
+    }
+
+    &__image {
+        display: block;
         width: 100%;
+        height: c.$hero-image-height;
+        object-fit: cover;
+        object-position: c.$hero-image-object-position;
 
-        padding:
-                c.$hero-search-input-padding-block
-                c.$hero-search-input-padding-right
-                c.$hero-search-input-padding-block
-                c.$hero-search-input-padding-left;
+        &--blur {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            filter: blur(c.$hero-image-blur);
+            transform: scale(c.$hero-image-blur-scale);
 
-        border-radius: a.$border-radius-pill;
-
-        color: a.$color-text;
-        background-color: c.$hero-color-text-light;
-
-        font-size: a.$font-size-body;
-        font-weight: a.$font-weight-body;
-        line-height: a.$line-height-body;
-
-        &:focus-visible {
-            outline: c.$hero-search-hover-outline-width solid a.$color-primary;
-            outline-offset: c.$hero-search-hover-outline-offset;
+            mask-image: linear-gradient(
+                to right,
+                #000,
+                transparent c.$hero-image-blur-mask-start,
+                transparent c.$hero-image-blur-mask-end,
+                #000
+            );
         }
     }
 
-    &__search-icon {
-        position: absolute;
-        z-index: 1;
-        top: 50%;
-        left: c.$hero-search-icon-offset-left;
-
-        transform: translateY(-50%);
-
-        pointer-events: none;
+    &__region-stat {
+        display: flex;
+        gap: c.$hero-stats-gap;
+        margin-top: c.$hero-stats-margin-block;
+        margin-bottom: c.$hero-stats-margin-block;
     }
 
-    &__search-button {
-        position: absolute;
-        z-index: 10;
-        right: c.$hero-search-button-offset-right;
+    &__stat {
+        --glow-x: #{c.$hero-stat-glow-x};
+        --glow-y: #{c.$hero-stat-glow-y};
 
-        height: calc(100% - #{c.$hero-search-button-inset-block});
-
-        font-size: a.$font-size-button-large;
-        font-weight: a.$font-weight-button-large;
-        line-height: a.$line-height-button-large;
-    }
-
-    &__region-tags {
+        position: relative;
         display: flex;
         flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        gap: c.$hero-stat-gap;
+        padding: c.$hero-stat-padding;
+        border-radius: c.$hero-stat-border-radius;
+        text-align: center;
+        min-width: 0;
+        flex: 1;
 
-        gap: c.$hero-tags-gap;
+        background-color: a.$color-background;
+        background-image: radial-gradient(
+            ellipse c.$hero-stat-glow-size at var(--glow-x) var(--glow-y),
+            rgba(a.$color-secondary-start, c.$hero-stat-glow-opacity-start) 0%,
+            rgba(a.$color-secondary-middle, c.$hero-stat-glow-opacity-middle) 50%,
+            rgba(a.$color-secondary-end, c.$hero-stat-glow-opacity-end) 100%
+        );
 
-        padding-inline: c.$hero-region-tags-padding-inline;
+        box-shadow: c.$hero-stat-inset-shadow
+            rgba(a.$color-secondary-start, c.$hero-stat-inset-shadow-opacity);
+
+        &::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            padding: c.$hero-stat-glass-padding-width;
+            border-radius: inherit;
+            background: linear-gradient(
+                c.$hero-stat-glass-angle,
+                rgba(a.$color-background, c.$hero-stat-glass-opacity-start) 0%,
+                rgba(a.$color-background, c.$hero-stat-glass-opacity-middle)
+                    c.$hero-stat-glass-middle-stop,
+                rgba(a.$color-background, c.$hero-stat-glass-opacity-end) 100%
+            );
+            mask:
+                linear-gradient(#000 0 0) content-box exclude,
+                linear-gradient(#000 0 0);
+            pointer-events: none;
+        }
     }
 
-    &__tags-title {
-        color: c.$hero-color-text-muted;
+    &__stat--users {
+        --glow-x: #{c.$hero-stat-glow-users-x};
+        --glow-y: #{c.$hero-stat-glow-users-y};
+    }
 
-        font-size: a.$font-size-caption-secondary;
-        font-weight: a.$font-weight-caption-secondary;
-        line-height: a.$line-height-caption-secondary;
+    &__stat--specialists {
+        --glow-x: #{c.$hero-stat-glow-specialists-x};
+        --glow-y: #{c.$hero-stat-glow-specialists-y};
+    }
 
+    &__stat-value {
+        font-size: a.$font-size-h3;
+        line-height: a.$line-height-h3;
+        letter-spacing: a.$letter-spacing-h3;
+        font-weight: a.$font-weight-h3;
+    }
+
+    &__stat-text {
+        display: flex;
+        align-items: end;
+        flex: 1;
+        color: a.$color-text-primary;
+        font-size: a.$font-size-caption-third;
+        line-height: a.$line-height-caption-third;
+        font-weight: a.$font-weight-caption-third;
         text-align: center;
     }
 
-    &__tags {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-
-        gap: c.$hero-tags-gap;
+    &__avatars {
+        @include flex-center;
     }
 
-    @include up(md) {
+    &__avatar {
+        width: c.$hero-avatar-size;
+        aspect-ratio: 1 / 1;
+
+        &:not(:first-child) {
+            margin-left: c.$hero-avatar-overlap;
+        }
+    }
+}
+
+@media (min-width: a.$breakpoint-hero-stats) {
+    .hero {
         &__title {
-            font-size: a.$font-size-h1;
-            font-weight: a.$font-weight-h1;
-            line-height: a.$line-height-h1;
-            letter-spacing: a.$letter-spacing-h1;
+            font-size: a.$font-size-h2;
+            line-height: a.$line-height-h2;
+            letter-spacing: a.$letter-spacing-h2;
+            font-weight: a.$font-weight-h2;
+        }
+        &__stat {
+            flex-direction: row;
+            position: absolute;
+            z-index: c.$hero-stat-z-index;
+            max-width: c.$hero-stat-max-width-desktop;
+            box-shadow:
+                0 0 0 c.$hero-stat-outline-width-desktop a.$color-background,
+                c.$hero-stat-inset-shadow rgba(a.$color-secondary-start, 0.1);
+        }
+        &__stat--users {
+            top: c.$hero-stat-users-top;
+            left: c.$hero-stat-users-left;
+        }
+
+        &__stat--specialists {
+            bottom: c.$hero-stat-specialists-bottom;
+            right: c.$hero-stat-specialists-right;
+        }
+
+        &__stat-text {
+            font-size: a.$font-size-caption-secondary;
+            line-height: a.$line-height-caption-secondary;
+            font-weight: a.$font-weight-caption-secondary;
+            text-align: left;
+        }
+
+        &__stat-value {
+            font-size: a.$font-size-h2;
+            line-height: a.$line-height-h2;
+            letter-spacing: a.$letter-spacing-h2;
+            font-weight: a.$font-weight-h2;
         }
     }
 }

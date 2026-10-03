@@ -1,76 +1,65 @@
+import { useTranslation } from 'react-i18next'
+import { formatCount } from '../../utils/formatCount'
+import heroImage from '../../assets/hero-image.png'
+import { avatars } from '../../constants/avatars'
+import { Search } from '../UI/Search'
 import './Hero.scss'
-import { Button } from '../UI/Button'
-import { ArrowRightIcon, SearchIcon, SparkIcon } from '../UI/Icons'
-import { useRef, useState } from 'react'
-import { tags } from '../../constants/tags'
+
+const USERS_COUNT = 1000
+const SPECIALISTS_COUNT = 50
 
 export const Hero = () => {
-    const [inputValue, setInputValue] = useState('')
-    const inputRef = useRef<HTMLInputElement>(null)
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault()
+    const { t } = useTranslation('home')
+
+    const handleSubmit = (value: string) => {
+        return value
     }
 
     return (
         <section className="hero">
-            <div className="hero__container">
-                <div className="hero__region-title">
-                    <div className="hero__badge">
-                        <SparkIcon />
-                        <p className="hero__badge-text">Розумний підбір за допомогою ШІ</p>
-                    </div>
+            <div className="container hero__container">
+                <h1 className="hero__title">
+                    {t('hero.title')}{' '}
+                    <span className="hero__title-accent">{t('hero.titleAccent')}</span>
+                </h1>
+                <p className="hero__subtitle">{t('hero.subtitle')}</p>
 
-                    <h1 className="hero__title">Знайди свого психолога</h1>
+                <Search
+                    className="hero__search"
+                    onSubmit={handleSubmit}
+                    placeholder={t('hero.search.placeholder')}
+                    buttonText={t('hero.search.button')}
+                />
 
-                    <p className="hero__subtitle">
-                        AI допоможе підібрати фахівця під твою потребу за кілька хвилин
-                    </p>
-                </div>
-                <form className="hero__search" onSubmit={handleSubmit}>
-                    <div className="hero__search-field">
-                        <input
-                            type="text"
-                            ref={inputRef}
-                            aria-label="Опишіть свій стан або запит"
-                            className="hero__search-input"
-                            placeholder="Опишіть свій стан або запит..."
-                            value={inputValue}
-                            onChange={(e) => setInputValue(e.target.value)}
+                <div className="hero__media">
+                    <div className="hero__image-wrap">
+                        <img src={heroImage} alt={t('hero.imageAlt')} className="hero__image" />
+                        <img
+                            src={heroImage}
+                            alt=""
+                            aria-hidden="true"
+                            className="hero__image hero__image--blur"
                         />
-                        <Button
-                            type="submit"
-                            className="hero__search-button"
-                            variant="primary"
-                            size="large"
-                            endIcon={<ArrowRightIcon />}
-                        >
-                            Підібрати
-                        </Button>
-                        <SearchIcon className="hero__search-icon" />
                     </div>
-                </form>
 
-                <div className="hero__region-tags">
-                    <h3 className="hero__tags-title">Популярні запити:</h3>
-                    <div className="hero__tags">
-                        {tags.map((item) => {
-                            const Icon = item.icon
+                    <div className="hero__region-stat">
+                        <div className="hero__stat hero__stat--users">
+                            <p className="hero__stat-value">{formatCount(USERS_COUNT)}</p>
+                            <p className="hero__stat-text">{t('hero.stats.users')}</p>
+                        </div>
 
-                            return (
-                                <Button
-                                    className="hero__tag"
-                                    type="button"
-                                    startIcon={<Icon />}
-                                    key={item.id}
-                                    onClick={() => {
-                                        setInputValue(item.description)
-                                        inputRef.current?.focus()
-                                    }}
-                                >
-                                    {item.text}
-                                </Button>
-                            )
-                        })}
+                        <div className="hero__stat hero__stat--specialists">
+                            <ul className="hero__avatars" aria-hidden="true">
+                                {avatars.map((avatar) => (
+                                    <li className="hero__avatar" key={avatar.id}>
+                                        <img src={avatar.src} alt="" />
+                                    </li>
+                                ))}
+                            </ul>
+                            <p className="hero__stat-text">
+                                {formatCount(SPECIALISTS_COUNT)} {t('hero.stats.specialists')}
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
