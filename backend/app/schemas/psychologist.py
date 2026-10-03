@@ -31,7 +31,7 @@ class PsychologistDetailResponse(BaseModel):
     psychologist_id: UUID
     full_name: str
     specialization: list[str]
-    experience: str
+    experience: int
     methods: list[str]
     bio: dict[str, str]
     certificates: list[Certificate]
