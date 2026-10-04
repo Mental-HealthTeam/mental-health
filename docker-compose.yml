@@ -76,17 +76,6 @@ services:
     depends_on:
       - backend
 
-  # Redis for AI_Service
-  redis:
-    image: redis:7-alpine
-    container_name: ${PROJECT_NAME}_redis
-    restart: always
-    env_file:
-      - .env
-    ports:
-      - "${REDIS_PORT}:6379"
-
-
 volumes:
   postgres_data:
   redis_data:
