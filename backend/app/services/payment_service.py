@@ -1,10 +1,11 @@
 import stripe
+
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from uuid import UUID
 
 from config.settings import Settings
-from database.models.models import Booking, Psychologist
+from database.models.models import Psychologist
 
 
 settings = Settings()
@@ -14,32 +15,28 @@ stripe.api_key = settings.STRIPE_SECRET_KEY
 
 async def create_checkout_session(
     db: AsyncSession,
-    booking_id: UUID,
+    psychologist_id: UUID,
+    selected_time: str,
 ) -> str:
     result = await db.execute(
-        select(Booking, Psychologist)
-        .join(
-            Psychologist,
-            Psychologist.psychologist_id == Booking.psychologist_id,
+        select(Psychologist).where(
+            Psychologist.psychologist_id == psychologist_id
         )
-        .where(Booking.id == booking_id)
     )
 
-    row = result.one_or_none()
+    psychologist = result.scalar_one_or_none()
 
-    if row is None:
-        raise ValueError("Booking not found")
+    if psychologist is None:
+        raise ValueError("Psychologist not found")
 
-    booking, psychologist = row
-
-    amount = int(booking.price * 100)
+    amount = int(psychologist.price_per_hour * 100)
 
     checkout_session = stripe.checkout.Session.create(
         mode="payment",
         line_items=[
             {
                 "price_data": {
-                    "currency": booking.currency.lower(),
+                    "currency": "uah",
                     "product_data": {
                         "name": (
                             f"Consultation with "
@@ -52,7 +49,10 @@ async def create_checkout_session(
             }
         ],
         metadata={
-            "booking_id": str(booking.id),
+            "psychologist_id": str(
+                psychologist.psychologist_id
+            ),
+            "selected_time": selected_time,
         },
         success_url=settings.STRIPE_SUCCESS_URL,
         cancel_url=settings.STRIPE_CANCEL_URL,

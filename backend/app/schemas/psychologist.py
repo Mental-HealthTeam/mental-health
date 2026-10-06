@@ -1,10 +1,12 @@
+from datetime import datetime
 from uuid import UUID
 
 from pydantic import BaseModel
 
 
 class MockSlot(BaseModel):
-    time: str
+    time_label: str
+    time: datetime
 
 
 class Review(BaseModel):
