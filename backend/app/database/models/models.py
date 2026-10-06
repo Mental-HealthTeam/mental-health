@@ -124,8 +124,8 @@ class Psychologist(Base):
     avatar_url: Mapped[str | None] = mapped_column(
         String(255),
     )
-    mock_slots: Mapped[list[str] | None] = mapped_column(
-        JSON,
+    mock_slots: Mapped[list[dict] | None] = mapped_column(
+        JSON
     )
     certificates: Mapped[list[str] | None] = mapped_column(
         JSON,

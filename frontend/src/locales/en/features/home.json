@@ -1,1 +1,16 @@
-{}
+{
+    "hero": {
+        "title": "Find",
+        "titleAccent": "your psychologist",
+        "subtitle": "AI will help match a specialist to your needs in a few minutes",
+        "search": {
+            "placeholder": "Describe your condition or request",
+            "button": "match"
+        },
+        "imageAlt": "Smiling woman in nature",
+        "stats": {
+            "users": "Users have already joined the platform",
+            "specialists": "specialists work on mental health"
+        }
+    }
+}
