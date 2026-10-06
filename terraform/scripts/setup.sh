@@ -23,4 +23,12 @@ mkdir -p /opt/mental-health
 
 chown ubuntu:ubuntu /opt/mental-health
 
+cd /opt/mental-health
+
+git clone https://github.com/Mental-HealthTeam/mental-health.git
+
+cd ./mental-health
+
+docker compose -f docker-compose.yml --build
+
 echo "Server setup completed."
