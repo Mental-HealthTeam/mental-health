@@ -116,7 +116,6 @@ class Psychologist(Base):
     )
     full_name: Mapped[str] = mapped_column(
         String(100),
-        nullable=False,
     )
     title: Mapped[str] = mapped_column(
         String(255)
@@ -132,7 +131,6 @@ class Psychologist(Base):
     )
     bio: Mapped[dict] = mapped_column(
         JSON,
-        nullable=False,
     )
     reviews: Mapped[list[dict] | None] = mapped_column(
         JSON
@@ -148,20 +146,16 @@ class Psychologist(Base):
     )
     price_per_hour: Mapped[Decimal] = mapped_column(
         Numeric(10, 2),
-        nullable=False,
     )
     profile_status: Mapped[PsychologistStatus] = mapped_column(
         SAEnum(PsychologistStatus, name="psychologist_status"),
-        nullable=False,
         default=PsychologistStatus.PENDING_MODERATION,
     )
     gender: Mapped[Gender] = mapped_column(
         SAEnum(Gender, name="gender"),
-        nullable=False,
     )
     languages: Mapped[list[str]] = mapped_column(
         JSON,
-        nullable=False,
     )
 
     user: Mapped["User"] = relationship(
@@ -207,43 +201,34 @@ class Booking(Base):
     )
     client_id: Mapped[uuid.UUID] = mapped_column(
         ForeignKey("users.id"),
-        nullable=False,
     )
     psychologist_id: Mapped[uuid.UUID] = mapped_column(
         ForeignKey("psychologists.psychologist_id"),
-        nullable=False,
     )
     selected_time: Mapped[str] = mapped_column(
         String(100),
-        nullable=False,
     )
     status: Mapped[BookingStatus] = mapped_column(
         SAEnum(BookingStatus, name="booking_status"),
-        nullable=False,
         default=BookingStatus.PENDING,
     )
     payment_status: Mapped[PaymentStatus] = mapped_column(
         SAEnum(PaymentStatus, name="payment_status"),
-        nullable=False,
         default=PaymentStatus.HELD,
     )
     price: Mapped[Decimal] = mapped_column(
         Numeric(10, 2),
-        nullable=False,
     )
     currency: Mapped[str] = mapped_column(
         String(100),
-        nullable=False,
         default="UAH",
     )
     selection_source: Mapped[SelectionSource] = mapped_column(
         SAEnum(SelectionSource, name="selection_source"),
-        nullable=False,
         default=SelectionSource.AI_RECOMMENDATION
     )
     ai_session_id: Mapped[str] = mapped_column(
         ForeignKey("ai_session_logs.ai_session_id"),
-        nullable=False,
         unique=True,
     )
 
@@ -272,22 +257,15 @@ class AI_Session(Base):  # noqa: N801
     )
     ai_session_id: Mapped[str] = mapped_column(
         String(50),
-        nullable=False,
         unique=True,
     )
     user_id: Mapped[uuid.UUID | None] = mapped_column(
         ForeignKey("users.id"),
         nullable=True,
     )
-    messages_count: Mapped[int] = mapped_column(
-        nullable=False,
-    )
-    duration_sec: Mapped[int] = mapped_column(
-        nullable=False,
-    )
-    recommendations_count: Mapped[int] = mapped_column(
-        nullable=False,
-    )
+    messages_count: Mapped[int]
+    duration_sec: Mapped[int]
+    recommendations_count: Mapped[int]
 
     booking: Mapped["Booking"] = relationship(
         "Booking",
