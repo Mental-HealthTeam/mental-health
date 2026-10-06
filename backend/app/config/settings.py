@@ -16,6 +16,12 @@ class BaseAppSettings(BaseSettings):
     DB_HOST: str = "db"
     REDIS_URL: str = "redis://redis:6379/0"
 
+    STRIPE_SECRET_KEY: str
+    STRIPE_WEBHOOK_SECRET: str
+
+    STRIPE_SUCCESS_URL: str = "http://localhost:3000/payment/success"
+    STRIPE_CANCEL_URL: str = "http://localhost:3000/payment/cancel"
+
 
 class Settings(BaseAppSettings):
     pass
@@ -29,4 +35,3 @@ class TestSettings(BaseAppSettings):
             "PATH_TO_JSON",
             Path(self.BASE_DIR / "database" / "seed_data" / "test_data.json")
         )
-

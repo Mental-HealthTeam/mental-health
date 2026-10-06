@@ -5,7 +5,8 @@ from sqlalchemy import pool
 
 from alembic import context
 
-from database.models.base import Base
+from database import Base
+from database.models import models # noqa: F401
 from database.session_postgresql import sync_database_engine
 
 # this is the Alembic Config object, which provides
