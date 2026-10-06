@@ -1,0 +1,96 @@
+@use '../../../styles/abstracts/' as a;
+@use '../../../styles/components/' as c;
+
+.search {
+    display: flex;
+    align-items: center;
+    gap: c.$search-gap;
+    padding: c.$search-padding;
+    border: c.$search-border-width solid a.$color-gray-20;
+    border-radius: c.$search-border-radius;
+    background: transparent;
+    transition: border-color a.$transition-default;
+
+    &--small {
+        padding: c.$search-padding-small;
+        gap: c.$search-gap-small;
+    }
+    &--medium {
+        padding: c.$search-padding-medium;
+        gap: c.$search-gap-medium;
+    }
+
+    &--full-width {
+        width: 100%;
+    }
+
+    &__field {
+        flex: 1;
+        min-width: 0;
+        display: flex;
+        align-items: center;
+        gap: c.$search-field-gap;
+        padding-left: c.$search-field-padding-left;
+        cursor: text;
+    }
+
+    &__icon {
+        color: a.$color-gray-60;
+        transition: color a.$transition-default;
+    }
+
+    &__input {
+        flex: 1;
+        min-width: 0;
+        border: 0;
+        outline: 0;
+        background: transparent;
+        font: inherit;
+        color: a.$color-text-primary;
+        text-overflow: ellipsis;
+
+        &::placeholder {
+            color: a.$color-gray-60;
+            opacity: 1;
+            transition: color a.$transition-default;
+        }
+
+        &::-webkit-search-cancel-button,
+        &::-webkit-search-decoration {
+            -webkit-appearance: none;
+            appearance: none;
+        }
+    }
+
+    &__button {
+      background: a.$color-secondary-gradient;
+      color: a.$color-text-primary;
+      text-transform: uppercase;
+    }
+
+    &:hover {
+        border-color: a.$color-gray-40;
+        .search__icon {
+            color: a.$color-gray-80;
+        }
+
+        .search__input::placeholder {
+            color: a.$color-gray-80;
+        }
+    }
+
+    &:focus-within {
+        border-color: a.$color-optional;
+        .search__icon {
+            color: a.$color-text-primary;
+        }
+    }
+
+    &--disabled {
+        opacity: c.$search-disabled-opacity;
+
+        .search__input {
+            cursor: none;
+        }
+    }
+}
