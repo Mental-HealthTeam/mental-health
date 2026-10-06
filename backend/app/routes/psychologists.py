@@ -4,6 +4,7 @@ from uuid import UUID
 from fastapi import APIRouter
 from fastapi import Depends
 
+from database import get_db
 from schemas.psychologist import (
     PsychologistDetailResponse,
     PsychologistListItem,
