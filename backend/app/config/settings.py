@@ -24,7 +24,14 @@ class BaseAppSettings(BaseSettings):
 
 
 class Settings(BaseAppSettings):
-    pass
+    GOOGLE_CLIENT_ID: str = "GOOGLE_CLIENT_ID"
+    SECRET_KEY_ACCESS: str = "SECRET_KEY_ACCESS"
+    SECRET_KEY_REFRESH: str = "SECRET_KEY_REFRESH"
+    JWT_SIGNING_ALGORITHM: str = "HS256"
+    COOKIE_SECURE: bool = False
+    ACCESS_TTL_MIN: int = 15
+    REFRESH_TTL_DAYS: int = 30
+    CORS_ORIGINS: str = "http://localhost"
 
 
 class TestSettings(BaseAppSettings):
