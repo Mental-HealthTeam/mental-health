@@ -11,7 +11,9 @@ from sqlalchemy import (
     ForeignKey,
     JSON,
     String,
-    func, Numeric,
+    func,
+    Numeric,
+    UniqueConstraint
 )
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -73,6 +75,11 @@ class SelectionSource(str, Enum):
     MANUAL_FILTER = "manual_filter"
 
 
+class AuthProvider(str, Enum):
+    GOOGLE = "google"
+    PASSWORD = "password"
+
+
 class User(Base):
     __tablename__ = "users"
 
@@ -80,19 +87,27 @@ class User(Base):
         primary_key=True,
         server_default=func.gen_random_uuid()
     )
+    name: Mapped[str | None] = mapped_column(
+        String(255),
+        nullable=True
+    )
+    avatar_url: Mapped[str | None] = mapped_column(
+        String(500)
+    )
+    last_login_at: Mapped[datetime.datetime | None] = mapped_column(
+        DateTime(timezone=True),
+        nullable=True
+    )
     email: Mapped[str] = mapped_column(
-        String(50),
+        String(255),
         unique=True,
-        nullable=False,
     )
     role: Mapped[UserRole] = mapped_column(
         SAEnum(UserRole, name="user_role"),
-        nullable=False,
         default=UserRole.CLIENT,
     )
     created_at: Mapped[datetime.datetime] = mapped_column(
         DateTime(timezone=True),
-        nullable=False,
         server_default=func.now(),
     )
 
@@ -104,6 +119,16 @@ class User(Base):
     bookings: Mapped[List["Booking"]] = relationship(
         "Booking",
         back_populates="client"
+    )
+
+    user_identities: Mapped[List["UserIdentity"]] = relationship(
+        "UserIdentity",
+        back_populates="user"
+    )
+
+    auth_sessions: Mapped[List["AuthSession"]] = relationship(
+        "AuthSession",
+        back_populates="user"
     )
 
 
@@ -293,4 +318,79 @@ class AISessionSymptomCode(Base):
     ai_session_log: Mapped["AI_Session"] = relationship(
         "AI_Session",
         back_populates="ai_session_symptom_codes"
+    )
+
+
+class UserIdentity(Base):
+    __tablename__ = "user_identities"
+    id: Mapped[uuid.UUID] = mapped_column(
+        primary_key=True,
+        server_default=func.gen_random_uuid()
+    )
+    user_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("users.id", ondelete="CASCADE"),
+        index=True
+    )
+    provider: Mapped["AuthProvider"] = mapped_column(
+        SAEnum(AuthProvider, name="auth_provider")
+    )
+    provider_subject: Mapped[str] = mapped_column(
+        String(255)
+    )
+    created_at: Mapped[datetime.datetime] = mapped_column(
+        DateTime(timezone=True),
+        server_default=func.now()
+    )
+
+    __table_args__ = (UniqueConstraint("provider", "provider_subject"),)
+
+    user: Mapped["User"] = relationship(
+        "User",
+        back_populates="user_identities"
+    )
+
+
+class AuthSession(Base):
+    __tablename__ = "auth_sessions"
+
+    id: Mapped[uuid.UUID] = mapped_column(
+        primary_key=True,
+        server_default=func.gen_random_uuid()
+    )
+    user_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("users.id", ondelete="CASCADE"),
+        index=True
+    )
+    family_id: Mapped[uuid.UUID] = mapped_column(
+        index=True
+    )
+    jti: Mapped[uuid.UUID] = mapped_column(
+        unique=True
+    )
+    expires_at: Mapped[datetime.datetime] = mapped_column(
+        DateTime(timezone=True)
+    )
+    revoked_at: Mapped[datetime.datetime | None] = mapped_column(
+        DateTime(timezone=True),
+        nullable=True
+    )
+    replaced_by: Mapped[uuid.UUID | None] = mapped_column(
+        nullable=True
+    )
+    user_agent: Mapped[str | None] = mapped_column(
+        String(255),
+        nullable=True
+    )
+    ip: Mapped[str | None] = mapped_column(
+        String(45),
+        nullable=True
+    )
+    created_at: Mapped[datetime.datetime] = mapped_column(
+        DateTime(timezone=True),
+        server_default=func.now()
+    )
+
+    user: Mapped["User"] = relationship(
+        "User",
+        back_populates="auth_sessions"
     )
