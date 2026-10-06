@@ -5,16 +5,10 @@ from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, Request
 from pydantic import BaseModel
-from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from config.settings import Settings
 from database import get_db
-from database.models.models import (
-    Booking,
-    BookingStatus,
-    PaymentStatus,
-)
 from services.payment_service import create_checkout_session
 
 
@@ -24,7 +18,8 @@ router = APIRouter()
 
 
 class CheckoutRequest(BaseModel):
-    booking_id: UUID
+    psychologist_id: UUID
+    selected_time: str
 
 
 class CheckoutResponse(BaseModel):
@@ -42,13 +37,14 @@ async def create_checkout(
     try:
         checkout_url = await create_checkout_session(
             db=db,
-            booking_id=body.booking_id,
+            psychologist_id=body.psychologist_id,
+            selected_time=body.selected_time,
         )
     except ValueError as error:
         raise HTTPException(
             status_code=404,
             detail=str(error),
-        )
+        ) from error
 
     return CheckoutResponse(
         checkout_url=checkout_url,
@@ -56,10 +52,7 @@ async def create_checkout(
 
 
 @router.post("/webhook")
-async def stripe_webhook(
-    request: Request,
-    db: Annotated[AsyncSession, Depends(get_db)],
-):
+async def stripe_webhook(request: Request):
     payload = await request.body()
     signature = request.headers.get("stripe-signature")
 
@@ -75,7 +68,10 @@ async def stripe_webhook(
             signature,
             settings.STRIPE_WEBHOOK_SECRET,
         )
-    except (ValueError, stripe.error.SignatureVerificationError) as error:
+    except (
+        ValueError,
+        stripe.error.SignatureVerificationError,
+    ) as error:
         raise HTTPException(
             status_code=400,
             detail="Invalid webhook",
@@ -84,31 +80,16 @@ async def stripe_webhook(
     if event["type"] == "checkout.session.completed":
         session = event["data"]["object"]
 
-        booking_id = session.get("metadata", {}).get("booking_id")
+        if session.get("payment_status") != "paid":
+            return {
+                "status": "payment_not_completed",
+            }
 
-        if not booking_id:
-            raise HTTPException(
-                status_code=400,
-                detail="booking_id is missing in Stripe metadata",
-            )
-
-        result = await db.execute(
-            select(Booking).where(
-                Booking.id == UUID(booking_id)
-            )
-        )
-
-        booking = result.scalar_one_or_none()
-
-        if booking is None:
-            raise HTTPException(
-                status_code=404,
-                detail="Booking not found",
-            )
-
-        booking.payment_status = PaymentStatus.PAID
-        booking.status = BookingStatus.CONFIRMED
-
-        await db.commit()
+        return {
+            "status": "payment_completed",
+            "selected_time": session.get("metadata", {}).get(
+                "selected_time"
+            ),
+        }
 
     return {"status": "success"}
