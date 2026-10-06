@@ -13,7 +13,7 @@ from sqlalchemy import (
     String,
     func,
     Numeric,
-    UniqueConstraint
+    UniqueConstraint, Index, text
 )
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -226,12 +226,17 @@ class Booking(Base):
     )
     client_id: Mapped[uuid.UUID] = mapped_column(
         ForeignKey("users.id"),
+        index=True
     )
     psychologist_id: Mapped[uuid.UUID] = mapped_column(
         ForeignKey("psychologists.psychologist_id"),
+        index=True
     )
-    selected_time: Mapped[str] = mapped_column(
+    selected_time_label: Mapped[str] = mapped_column(
         String(100),
+    )
+    selected_time: Mapped[datetime.datetime] = mapped_column(
+        DateTime(timezone=True)
     )
     status: Mapped[BookingStatus] = mapped_column(
         SAEnum(BookingStatus, name="booking_status"),
@@ -256,6 +261,13 @@ class Booking(Base):
         ForeignKey("ai_session_logs.ai_session_id"),
         unique=True,
     )
+
+    __table_args__ = (Index(
+        "uq_booking_confirmed_slot",
+        "psychologist_id", "selected_time",
+        unique=True,
+        postgresql_where=text("status = 'CONFIRMED'")
+    ),)
 
     client: Mapped[User] = relationship(
         "User",
