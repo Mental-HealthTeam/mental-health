@@ -23,6 +23,8 @@
     }
 
     &__title-accent {
+        display: block;
+        white-space: nowrap;
         background: a.$color-secondary-gradient;
         -webkit-background-clip: text;
         background-clip: text;
@@ -171,6 +173,14 @@
 
         &:not(:first-child) {
             margin-left: c.$hero-avatar-overlap;
+        }
+    }
+}
+
+@media (min-width: a.$breakpoint-mobile) {
+    .hero {
+        &__title-accent {
+            display: inline;
         }
     }
 }

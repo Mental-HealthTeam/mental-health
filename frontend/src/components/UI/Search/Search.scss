@@ -47,6 +47,7 @@
         background: transparent;
         font: inherit;
         color: a.$color-text-primary;
+        text-overflow: ellipsis;
 
         &::placeholder {
             color: a.$color-gray-60;

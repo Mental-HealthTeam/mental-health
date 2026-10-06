@@ -4,7 +4,7 @@
         "titleAccent": "your psychologist",
         "subtitle": "AI will help match a specialist to your needs in a few minutes",
         "search": {
-            "placeholder": "Describe your condition or request...",
+            "placeholder": "Describe your condition or request",
             "button": "match"
         },
         "imageAlt": "Smiling woman in nature",
