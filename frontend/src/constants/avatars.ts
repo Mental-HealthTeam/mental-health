@@ -1,23 +1,22 @@
-import avatar1 from '../assets/avatars/hero-avatar-1.png'
-import avatar2 from '../assets/avatars/hero-avatar-2.png'
-import avatar3 from '../assets/avatars/hero-avatar-3.png'
+import avatar1 from '../assets/avatars/avatar-1.png'
+import avatar2 from '../assets/avatars/avatar-2.png'
+import avatar3 from '../assets/avatars/avatar-3.png'
+import type { TypeAvatar } from '../components/UI/Avatar'
 
-type Avatar = {
-    id: string
-    src: string
-}
-
-export const avatars: Avatar[] = [
+export const avatars: TypeAvatar[] = [
     {
         id: 'avatar1',
         src: avatar1,
+        alt: '',
     },
     {
         id: 'avatar2',
         src: avatar2,
+        alt: '',
     },
     {
         id: 'avatar3',
         src: avatar3,
+        alt: '',
     },
 ]

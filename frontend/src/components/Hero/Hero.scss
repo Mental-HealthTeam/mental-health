@@ -23,8 +23,6 @@
     }
 
     &__title-accent {
-        display: block;
-        white-space: nowrap;
         background: a.$color-secondary-gradient;
         -webkit-background-clip: text;
         background-clip: text;
@@ -163,24 +161,15 @@
         text-align: center;
     }
 
-    &__avatars {
+    &__avatars-group {
         @include flex-center;
-    }
-
-    &__avatar {
-        width: c.$hero-avatar-size;
-        aspect-ratio: 1 / 1;
-
-        &:not(:first-child) {
-            margin-left: c.$hero-avatar-overlap;
-        }
     }
 }
 
 @media (min-width: a.$breakpoint-mobile) {
     .hero {
-        &__title-accent {
-            display: inline;
+        &__title-break {
+            display: none;
         }
     }
 }

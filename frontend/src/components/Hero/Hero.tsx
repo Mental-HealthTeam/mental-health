@@ -1,9 +1,10 @@
 import { useTranslation } from 'react-i18next'
 import { formatCount } from '../../utils/formatCount'
 import heroImage from '../../assets/hero-image.png'
-import { avatars } from '../../constants/avatars'
 import { Search } from '../UI/Search'
 import './Hero.scss'
+import { AvatarGroup } from '../UI/Avatar'
+import { avatars } from '../../constants/avatars'
 
 const USERS_COUNT = 1000
 const SPECIALISTS_COUNT = 50
@@ -19,7 +20,7 @@ export const Hero = () => {
         <section className="hero">
             <div className="container hero__container">
                 <h1 className="hero__title">
-                    {t('hero.title')}{' '}
+                    {t('hero.title')} <br className="hero__title-break" />
                     <span className="hero__title-accent">{t('hero.titleAccent')}</span>
                 </h1>
                 <p className="hero__subtitle">{t('hero.subtitle')}</p>
@@ -49,13 +50,11 @@ export const Hero = () => {
                         </div>
 
                         <div className="hero__stat hero__stat--specialists">
-                            <ul className="hero__avatars" aria-hidden="true">
-                                {avatars.map((avatar) => (
-                                    <li className="hero__avatar" key={avatar.id}>
-                                        <img src={avatar.src} alt="" />
-                                    </li>
-                                ))}
-                            </ul>
+                            <AvatarGroup
+                                avatars={avatars}
+                                size="medium"
+                                className="hero__avatars-group"
+                            />
                             <p className="hero__stat-text">
                                 {formatCount(SPECIALISTS_COUNT)} {t('hero.stats.specialists')}
                             </p>
