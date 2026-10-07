@@ -1,6 +1,7 @@
 import { Footer } from '../../components/Footer'
 import { Header } from '../../components/Header'
 import { Hero } from '../../components/Hero'
+import { WhyChooseUs } from '../../components/WhyChooseUs'
 import './Home.scss'
 
 export const Home = () => {
@@ -10,6 +11,7 @@ export const Home = () => {
 
             <main className="home__content">
                 <Hero />
+                <WhyChooseUs />
             </main>
 
             <Footer />

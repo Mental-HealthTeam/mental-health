@@ -1,0 +1,23 @@
+@use '../../../styles/abstracts' as a;
+@use '../../../styles/components' as c;
+
+.section-index {
+    display: flex;
+    gap: c.$section-index-gap;
+    align-items: center;
+
+    &__number {
+        font-size: a.$font-size-caption-secondary;
+        line-height: a.$line-height-caption-secondary;
+        font-weight: a.$font-weight-caption-secondary;
+        color: a.$color-optional;
+        text-align: center;
+    }
+
+    &__line {
+        height: c.$section-index-line-height;
+        width: c.$section-index-line-width;
+        background-color: a.$color-optional;
+        min-width: 0;
+    }
+}

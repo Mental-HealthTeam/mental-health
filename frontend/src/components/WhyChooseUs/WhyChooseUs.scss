@@ -1,0 +1,92 @@
+@use '../../styles/abstracts/mixins' as *;
+@use '../../styles/components' as c;
+@use '../../styles/abstracts' as a;
+
+.why-us {
+    &__container {
+        @include flex-center;
+        flex-direction: column;
+        padding-inline: c.$why-us-container-padding-inline;
+        gap: c.$why-us-container-gap;
+        margin-block: c.$why-us-container-margin-block;
+    }
+
+    &__intro {
+        display: flex;
+        flex-direction: column;
+        gap: c.$why-us-intro-gap;
+        background: a.$color-secondary-gradient;
+        border-radius: a.$border-radius-why-us;
+        padding: c.$why-us-intro-padding-block c.$why-us-intro-padding-inline;
+        max-width: c.$why-us-intro-max-width;
+        min-width: 0;
+    }
+
+    &__button {
+        background: a.$color-secondary-gradient;
+        color: a.$color-text-primary;
+        text-transform: uppercase;
+        max-width: c.$why-us-button-max-width;
+    }
+
+    &__title {
+        font-size: a.$font-size-h3;
+        line-height: a.$line-height-h3;
+        letter-spacing: a.$letter-spacing-h3;
+        font-weight: a.$font-weight-h3;
+        color: a.$color-optional;
+        text-align: left;
+    }
+
+    &__description {
+        font-size: a.$font-size-body;
+        line-height: a.$line-height-body;
+        letter-spacing: a.$letter-spacing-body;
+        font-weight: a.$font-weight-body;
+        color: a.$color-text-primary;
+        text-align: left;
+    }
+
+    &__list {
+        display: grid;
+        grid-template: 1fr 1fr 1fr / 1fr 1fr;
+        gap: c.$why-us-list-gap;
+        min-width: 0;
+    }
+
+    &__item {
+        display: flex;
+        flex-direction: column;
+        gap: c.$why-us-item-gap;
+        border: c.$why-us-item-border-width solid a.$color-optional;
+        border-radius: a.$border-radius-why-us-item;
+        padding: c.$why-us-item-padding-block c.$why-us-item-padding-inline;
+        min-width: 0;
+        max-width: c.$why-us-item-max-width;
+    }
+
+    &__item-title {
+        font-size: a.$font-size-h4;
+        line-height: a.$line-height-h4;
+        letter-spacing: a.$letter-spacing-h4;
+        font-weight: a.$font-weight-main;
+        color: a.$color-optional;
+        text-align: left;
+    }
+
+    &__item-text {
+        font-size: a.$font-size-caption-third;
+        line-height: a.$line-height-caption-third;
+        font-weight: a.$font-weight-caption-third;
+        color: a.$color-optional;
+        text-align: left;
+    }
+}
+
+@media (min-width: a.$breakpoint-mobile) {
+    .why-us {
+        &__list {
+            grid-template: 1fr 1fr / 1fr 1fr 1fr;
+        }
+    }
+}
