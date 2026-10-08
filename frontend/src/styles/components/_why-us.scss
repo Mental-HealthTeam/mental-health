@@ -6,6 +6,16 @@ $why-us-container-padding-inline: 20px;
 $why-us-container-gap: 24px;
 $why-us-container-margin-block: 32px;
 
+$why-us-container-gap-tablet: 57px;
+$why-us-container-max-width-tablet: 1129px;
+
+// ======================================================
+// Why us content
+// ======================================================
+
+$why-us-content-gap: 24px;
+$why-us-content-gap-tablet: 22px;
+
 // ======================================================
 // Why us intro
 // ======================================================
@@ -13,13 +23,23 @@ $why-us-container-margin-block: 32px;
 $why-us-intro-gap: 16px;
 $why-us-intro-padding-block: 32px;
 $why-us-intro-padding-inline: 16px;
-$why-us-intro-max-width: 1000px;
+$why-us-intro-max-width: 900px;
+
+$why-us-intro-width-tablet: 440px;
+$why-us-intro-padding-block-tablet: 36px;
+$why-us-intro-padding-inline-tablet: 32px;
 
 // ======================================================
 // Why us list
 // ======================================================
 
 $why-us-list-gap: 16px;
+$why-us-list-max-width: 900px;
+
+$why-us-list-row-gap-tablet: 17px;
+$why-us-list-column-gap-tablet: 22px;
+
+$why-us-list-gap-small: 10px;
 
 // ======================================================
 // Why us item
@@ -30,6 +50,19 @@ $why-us-item-gap: 16px;
 $why-us-item-padding-block: 24px;
 $why-us-item-padding-inline: 12px;
 $why-us-item-max-width: 300px;
+
+$why-us-item-gap-tablet: 8px;
+$why-us-item-padding-block-tablet: 16px;
+$why-us-item-padding-inline-tablet: 32px;
+
+$why-us-item-gap-small: 10px;
+
+// ======================================================
+// Why us item title
+// ======================================================
+
+$why-us-item-title-font-size-tablet: 30px;
+$why-us-item-title-line-height-tablet: 42px;
 
 // ======================================================
 // Why us button

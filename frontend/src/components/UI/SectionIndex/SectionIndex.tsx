@@ -3,15 +3,17 @@ import classNames from 'classnames'
 import './SectionIndex.scss'
 
 type Props = {
-    number: string
+    index: number
     className: string
 }
 
-export const SectionIndex = ({ number, className }: Props) => {
+export const SectionIndex = ({ index, className }: Props) => {
+    const readyIndex = String(index).padStart(2, '0')
+
     return (
         <div className={classNames('section-index', className)} aria-hidden="true">
-            <p className="section-index__number">{number}</p>
-            <div className="section-index__line" />
+            <span  className="section-index__number">{readyIndex}</span >
+            <span  className="section-index__line" />
         </div>
     )
 }

@@ -15,6 +15,7 @@
     }
 
     &__line {
+        display: block;
         height: c.$section-index-line-height;
         width: c.$section-index-line-width;
         background-color: a.$color-optional;
