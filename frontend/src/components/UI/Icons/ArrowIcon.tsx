@@ -1,8 +1,25 @@
 import type { SVGProps } from 'react'
 
-type Props = SVGProps<SVGSVGElement>
+export type ArrowDirection = 'left' | 'right' | 'up' | 'down'
 
-export const ArrowRightIcon = ({ width = 11, height = 11, ...props }: Props) => {
+type Props = SVGProps<SVGSVGElement> & {
+    direction?: ArrowDirection
+}
+
+const ROTATION: Record<ArrowDirection, number> = {
+    right: 0,
+    down: 90,
+    left: 180,
+    up: 270,
+}
+
+export const ArrowIcon = ({
+    direction = 'right',
+    width = 11,
+    height = 11,
+    style,
+    ...props
+}: Props) => {
     return (
         <svg
             width={width}
@@ -11,6 +28,10 @@ export const ArrowRightIcon = ({ width = 11, height = 11, ...props }: Props) => 
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
             aria-hidden="true"
+            style={{
+                transform: `rotate(${ROTATION[direction]}deg)`,
+                ...style,
+            }}
             {...props}
         >
             <path

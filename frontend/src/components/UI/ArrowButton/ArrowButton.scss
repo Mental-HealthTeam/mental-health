@@ -1,0 +1,59 @@
+@use '../../../styles/abstracts' as a;
+@use '../../../styles/components' as c;
+
+.arrow-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  width: c.$arrow-button-size;
+  height: c.$arrow-button-size;
+
+  padding: 0;
+
+  border: c.$arrow-button-border-width solid a.$color-primary;
+  border-radius: 50%;
+
+  color: a.$color-primary;
+  background-color: transparent;
+
+  cursor: pointer;
+
+  transition:
+          color a.$transition-default,
+          border-color a.$transition-default,
+          background-color a.$transition-default,
+          opacity a.$transition-default;
+
+  svg {
+    width: c.$arrow-button-icon-size;
+    height: c.$arrow-button-icon-size;
+  }
+
+  &:hover {
+    border-color: a.$color-gray-60;
+
+    color: a.$color-white;
+    background-color: a.$color-gray-60;
+  }
+
+  &:active {
+    border-color: a.$color-primary;
+
+    color: a.$color-white;
+    background-color: a.$color-primary;
+  }
+
+  &:focus-visible {
+    outline: 2px solid a.$color-process;
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+
+    cursor: not-allowed;
+  }
+}

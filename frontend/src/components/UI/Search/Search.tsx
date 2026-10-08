@@ -1,10 +1,9 @@
-// components/Search/Search.tsx
 import './Search.scss'
 import { useState } from 'react'
 import type { ChangeEvent, FormEvent } from 'react'
 import classNames from 'classnames'
 import { Button } from '../Button'
-import { ArrowRightIcon, SearchIcon } from '../Icons'
+import { ArrowIcon, SearchIcon } from '../Icons'
 
 type SearchSize = 'small' | 'medium' | 'large'
 
@@ -32,8 +31,8 @@ export const Search = ({
     fullWidth = false,
     disabled = false,
     name = 'q',
-    placeholder = 'Опишіть свій стан або запит',
-    buttonText = 'підібрати',
+    placeholder,
+    buttonText,
     ariaLabel = placeholder,
     initialValue = '',
     onChange,
@@ -90,7 +89,7 @@ export const Search = ({
                 variant="primary"
                 size={size}
                 disabled={disabled}
-                endIcon={<ArrowRightIcon />}
+                endIcon={<ArrowIcon />}
             >
                 {buttonText}
             </Button>

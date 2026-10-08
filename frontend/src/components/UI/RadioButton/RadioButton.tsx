@@ -30,7 +30,7 @@ export const RadioButton = ({
     }
 
     return (
-        <label
+        <span
             className={classNames(
                 'radio-button',
                 {
@@ -52,6 +52,6 @@ export const RadioButton = ({
             />
 
             <span className="radio-button__control" aria-hidden="true" />
-        </label>
+        </span>
     )
 }

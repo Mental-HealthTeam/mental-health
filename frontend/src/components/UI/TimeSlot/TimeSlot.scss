@@ -5,28 +5,30 @@
   display: inline-flex;
   align-items: center;
 
+  flex-shrink: 0;
+
   gap: c.$time-slot-gap;
 
   min-height: c.$time-slot-height;
 
-  padding-inline: c.$time-slot-padding-inline;
+  padding: c.$time-slot-padding-block c.$time-slot-padding-inline;
 
   border: c.$time-slot-border-width solid a.$color-primary;
   border-radius: c.$time-slot-border-radius;
 
   color: a.$color-primary;
-  background-color: a.$color-background;
+  background-color: transparent;
 
   cursor: pointer;
 
   transition:
           border-color a.$transition-default,
-          opacity a.$transition-default;
+          background-color a.$transition-default;
 
   &__label {
-    font-size: a.$font-size-body;
-    font-weight: a.$font-weight-body;
-    line-height: a.$line-height-body;
+    font-size: c.$time-slot-font-size;
+    font-weight: c.$time-slot-font-weight;
+    line-height: c.$time-slot-line-height;
 
     white-space: nowrap;
   }
@@ -36,13 +38,10 @@
   }
 
   &--disabled {
-    opacity: c.$time-slot-disabled-opacity;
+    border-color: a.$color-gray-40;
+
+    color: a.$color-gray-60;
 
     cursor: not-allowed;
-  }
-
-  &:focus-within {
-    outline: 2px solid a.$color-process;
-    outline-offset: 2px;
   }
 }
