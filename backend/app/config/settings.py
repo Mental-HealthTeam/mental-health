@@ -24,7 +24,26 @@ class BaseAppSettings(BaseSettings):
 
 
 class Settings(BaseAppSettings):
-    pass
+    GOOGLE_CLIENT_ID: str = "GOOGLE_CLIENT_ID"
+    SECRET_KEY_ACCESS: str = "SECRET_KEY_ACCESS"
+    SECRET_KEY_REFRESH: str = "SECRET_KEY_REFRESH"
+    JWT_SIGNING_ALGORITHM: str = "HS256"
+    COOKIE_SECURE: bool = False
+    ACCESS_TTL_MIN: int = 15
+    REFRESH_TTL_DAYS: int = 30
+    CORS_ORIGINS: str = "http://localhost"
+    ACCESS_COOKIE: str = "access"
+    REFRESH_COOKIE: str = "refresh"
+    ACCESS_PATH: str = "/"
+    REFRESH_PATH: str = "/api/auth"
+
+    @property
+    def refresh_ttl_min(self):
+        return self.REFRESH_TTL_DAYS * 24 * 60
+
+    @property
+    def cors_origins_list(self):
+        return [cor_origin.strip() for cor_origin in self.CORS_ORIGINS.strip().split(",")]
 
 
 class TestSettings(BaseAppSettings):
