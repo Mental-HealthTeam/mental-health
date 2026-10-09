@@ -5,7 +5,7 @@ import specialistImage from '../../assets/images/photo-card.png'
 import { Container } from '../Container'
 import { Button } from '../UI/Button'
 
-import './WhyChooseUs.scss'
+import './WhyUs.scss'
 
 const FEATURED_SPECIALIST = {
     image: specialistImage,
@@ -13,8 +13,8 @@ const FEATURED_SPECIALIST = {
     specialization: 'гештальт-терапевт',
 }
 
-export const WhyChooseUs = () => {
-    const { t } = useTranslation('whyChooseUs')
+export const WhyUs = () => {
+    const { t } = useTranslation('whyUs')
 
     return (
         <section className="why-us" id="about">

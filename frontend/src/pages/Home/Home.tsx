@@ -2,7 +2,7 @@ import { Footer } from '../../components/Footer'
 import { Header } from '../../components/Header'
 import { Hero } from '../../components/Hero'
 import './Home.scss'
-import { WhyChooseUs } from '../../components/WhyChooseUs/WhyChooseUs.tsx'
+import { WhyUs } from '../../components/WhyUs/WhyUs.tsx'
 
 export const Home = () => {
     return (
@@ -11,7 +11,7 @@ export const Home = () => {
 
             <main className="home__content">
                 <Hero />
-                <WhyChooseUs />
+                <WhyUs />
             </main>
 
             <Footer />

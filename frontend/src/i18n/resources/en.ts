@@ -7,7 +7,7 @@ import home from '../../locales/en/features/home.json'
 import psychologists from '../../locales/en/features/psychologists.json'
 import auth from '../../locales/en/features/auth.json'
 import footer from '../../locales/en/features/footer.json'
-import whyChooseUs from '../../locales/en/features/whyChooseUs.json'
+import whyUs from '../../locales/en/features/whyUs.json'
 
 export const enResources = {
     common,
@@ -18,5 +18,5 @@ export const enResources = {
     psychologists,
     auth,
     footer,
-    whyChooseUs,
+    whyUs,
 } as const
