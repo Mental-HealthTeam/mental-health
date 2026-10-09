@@ -14,3 +14,8 @@ flake8-bugbear==26.9.9
 flake8-variables-names==0.0.6
 tzdata==2026.4
 stripe==16.0.0
+google-auth==2.60.0
+requests==2.34.2
+pyjwt==2.15.1
+email-validator==2.3.0
+pyjwt==2.15.1
