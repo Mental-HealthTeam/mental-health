@@ -1,18 +1,18 @@
 from typing import Annotated
 from uuid import UUID
 
-from fastapi import APIRouter
-from fastapi import Depends
+from fastapi import APIRouter, Depends, Query
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from database import get_db
+from database.models.models import SymptomCode
 from schemas.psychologist import (
     PsychologistDetailResponse,
     PsychologistListItem,
 )
-from sqlalchemy.ext.asyncio import AsyncSession
-from services.psychologists import (
+from services.psychologist_service import (
     get_psychologists,
-    get_psychologist_by_id_service
+    get_psychologist_by_id as get_psychologist_by_id_service,
 )
 
 router = APIRouter()
@@ -22,20 +22,27 @@ router = APIRouter()
     "",
     response_model=list[PsychologistListItem],
     summary="Get all psychologists",
-    response_description="Catalog of psychologists with specializations and available slots",
+    response_description=(
+        "Catalog of psychologists with specializations and available slots"
+    ),
 )
 async def list_psychologists(
-        db: Annotated[AsyncSession, Depends(get_db)]
+    db: Annotated[AsyncSession, Depends(get_db)],
+    limit: int = Query(default=5, ge=1, le=100),
+    offset: int = Query(default=0, ge=0),
+    symptom_codes: list[SymptomCode] | None = Query(default=None),
 ):
     """
-    Returns the full psychologist catalog for the listing/catalog page.
+    Returns the psychologist catalog for the listing/catalog page.
 
-    Note: does not filter by `profile_status` — add that filter in
-    `services/psychologists.py` before exposing this publicly, so
-    `pending_moderation`/`frozen` profiles don't show up.
+    Only active psychologist profiles are returned.
+    Supports pagination and filtering by multiple symptom codes.
     """
     return await get_psychologists(
-        db=db
+        db=db,
+        limit=limit,
+        offset=offset,
+        symptom_codes=symptom_codes,
     )
 
 
@@ -43,7 +50,9 @@ async def list_psychologists(
     "/{psychologist_id}",
     response_model=PsychologistDetailResponse,
     summary="Get a single psychologist's full profile",
-    response_description="Full profile with bio, certificates, reviews and available slots",
+    response_description=(
+        "Full profile with bio, certificates, reviews and available slots"
+    ),
     responses={
         404: {
             "description": "Psychologist not found",
@@ -56,16 +65,13 @@ async def list_psychologists(
     },
 )
 async def get_psychologist_by_id(
-        psychologist_id: UUID,
-        db: Annotated[AsyncSession, Depends(get_db)],
+    psychologist_id: UUID,
+    db: Annotated[AsyncSession, Depends(get_db)],
 ):
     """
-    Returns the full profile for a single psychologist, used on the
-    psychologist detail page (bio, certificates, reviews, meet_link).
-
-    Raises 404 if no psychologist exists with the given id.
+    Returns the full profile for a single psychologist.
     """
     return await get_psychologist_by_id_service(
         psychologist_id=psychologist_id,
-        db=db
+        db=db,
     )
