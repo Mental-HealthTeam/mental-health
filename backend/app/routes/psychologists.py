@@ -10,7 +10,6 @@ from schemas.psychologist import (
     PsychologistListItem,
 )
 from sqlalchemy.ext.asyncio import AsyncSession
-from database import get_db
 from services.psychologists import (
     get_psychologists,
     get_psychologist_by_id_service
