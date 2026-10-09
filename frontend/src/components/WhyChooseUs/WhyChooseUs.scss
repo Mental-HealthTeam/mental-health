@@ -1,0 +1,168 @@
+@use '../../styles/abstracts/mixins' as *;
+@use '../../styles/components' as c;
+@use '../../styles/abstracts' as a;
+
+.why-us {
+    &__container {
+        @include flex-center;
+        flex-direction: column;
+        padding-inline: c.$why-us-container-padding-inline;
+        gap: c.$why-us-container-gap;
+        margin-block: c.$why-us-container-margin-block;
+    }
+
+    &__content {
+        @include flex-center;
+        flex-direction: column;
+        gap: c.$why-us-content-gap;
+    }
+
+    &__intro {
+        display: flex;
+        flex-direction: column;
+        gap: c.$why-us-intro-gap;
+        background: a.$color-secondary-gradient;
+        border-radius: a.$border-radius-why-us;
+        padding: c.$why-us-intro-padding-block c.$why-us-intro-padding-inline;
+        max-width: c.$why-us-intro-max-width;
+        min-width: 0;
+    }
+
+    &__button {
+        background: a.$color-secondary-gradient;
+        color: a.$color-text-primary;
+        text-transform: uppercase;
+        max-width: c.$why-us-button-max-width;
+    }
+
+    &__title {
+        font-size: a.$font-size-h3;
+        line-height: a.$line-height-h3;
+        letter-spacing: a.$letter-spacing-h3;
+        font-weight: a.$font-weight-h3;
+        color: a.$color-optional;
+        text-align: left;
+    }
+
+    &__description {
+        font-size: a.$font-size-body;
+        line-height: a.$line-height-body;
+        letter-spacing: a.$letter-spacing-body;
+        font-weight: a.$font-weight-body;
+        color: a.$color-text-primary;
+        text-align: left;
+    }
+
+    &__list {
+        display: grid;
+        grid-template: 1fr 1fr 1fr / 1fr 1fr;
+        gap: c.$why-us-list-gap;
+        min-width: 0;
+        max-width: c.$why-us-list-max-width;
+    }
+
+    &__item {
+        display: flex;
+        flex-direction: column;
+        gap: c.$why-us-item-gap;
+        border: c.$why-us-item-border-width solid a.$color-optional;
+        border-radius: a.$border-radius-why-us-item;
+        padding: c.$why-us-item-padding-block c.$why-us-item-padding-inline;
+        min-width: 0;
+        max-width: c.$why-us-item-max-width;
+    }
+
+    &__item-title {
+        font-size: a.$font-size-h4;
+        line-height: a.$line-height-h4;
+        letter-spacing: a.$letter-spacing-h4;
+        font-weight: a.$font-weight-main;
+        color: a.$color-optional;
+        text-align: left;
+    }
+
+    &__item-text {
+        font-size: a.$font-size-caption-third;
+        line-height: a.$line-height-caption-third;
+        font-weight: a.$font-weight-caption-third;
+        color: a.$color-optional;
+        text-align: left;
+    }
+}
+
+@media (min-width: a.$breakpoint-mobile) {
+    .why-us {
+        &__list {
+            grid-template: 1fr 1fr / 1fr 1fr 1fr;
+        }
+    }
+}
+
+@media (min-width: a.$breakpoint-tablet) {
+    .why-us {
+        &__container {
+            width: 100%;
+            max-width: c.$why-us-container-max-width-tablet;
+            margin-inline: auto;
+            padding-inline: 0;
+            gap: c.$why-us-container-gap-tablet;
+        }
+
+        &__content {
+            flex-direction: row;
+            align-items: stretch;
+            gap: c.$why-us-content-gap-tablet;
+            max-width: 100%;
+        }
+
+        &__intro {
+            flex: 0 0 c.$why-us-intro-width-tablet;
+            padding: c.$why-us-intro-padding-block-tablet c.$why-us-intro-padding-inline-tablet;
+        }
+
+        &__list {
+            flex: 1;
+            grid-template: 1fr 1fr 1fr / 1fr 1fr;
+            row-gap: c.$why-us-list-row-gap-tablet;
+            column-gap: c.$why-us-list-column-gap-tablet;
+        }
+
+        &__item {
+            max-width: none;
+            gap: c.$why-us-item-gap-tablet;
+            padding: c.$why-us-item-padding-block-tablet c.$why-us-item-padding-inline-tablet;
+        }
+
+        &__item-title {
+            font-size: c.$why-us-item-title-font-size-tablet;
+            line-height: c.$why-us-item-title-line-height-tablet;
+            text-align: left;
+            font-weight: a.$font-weight-semibold;
+        }
+
+        &__item-text {
+            font-size: a.$font-size-body;
+            line-height: a.$line-height-body;
+            letter-spacing: a.$letter-spacing-body;
+            font-weight: a.$font-weight-body;
+            color: a.$color-optional;
+            text-align: left;
+        }
+    }
+}
+
+@media (max-width: a.$breakpoint-small) {
+    .why-us {
+        &__list {
+            gap: c.$why-us-list-gap-small;
+        }
+
+        &__item {
+            gap: c.$why-us-item-gap-small;
+        }
+
+        &__item-title {
+            font-size: a.$font-size-body;
+        }
+    }
+}
