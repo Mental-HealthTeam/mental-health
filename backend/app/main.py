@@ -5,6 +5,8 @@ from fastapi import FastAPI
 from routes import psychologists_router
 from routes import matching_psychologists_router
 from routes import payments_router
+from routes import bookings_router
+
 
 app = FastAPI()
 
@@ -29,6 +31,11 @@ app.include_router(
     payments_router,
     prefix=f"{BASE_PREFIX}/payments",
     tags=["Payments"],
+)
+app.include_router(
+    bookings_router,
+    prefix=f"{BASE_PREFIX}/bookings",
+    tags=["Bookings"],
 )
 
 

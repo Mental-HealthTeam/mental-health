@@ -2,7 +2,7 @@ from datetime import datetime
 from decimal import Decimal
 from uuid import UUID
 
-from pydantic import BaseModel, ConfigDict, EmailStr
+from pydantic import BaseModel, ConfigDict, EmailStr, Field
 
 from database.models.models import (
     BookingStatus,
@@ -60,15 +60,15 @@ class PsychologistSpecializationResponse(BaseModel):
 class BookingResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
-    booking_id: UUID
+    booking_id: UUID = Field(validation_alias="id")
     client_id: UUID
     psychologist_id: UUID
     selected_time: str
     status: BookingStatus
-    payment_status: str
+    payment_status: PaymentStatus
     price: Decimal
     currency: str
-    selection_source: str
+    selection_source: SelectionSource
     ai_session_id: str
 
 
