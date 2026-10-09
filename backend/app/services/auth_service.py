@@ -61,6 +61,11 @@ async def get_or_create_user(
             )
             db.add(user_identity_record)
             _apply_profile(user=user, identity=identity)
+            await db.commit()
+            logger.info(
+                "Identity linked to existing user by email (user_id=%s, provider=%s)",
+                user.id, identity.provider.value
+            )
         else:
             user = User(
                 email=identity.email,
@@ -75,7 +80,11 @@ async def get_or_create_user(
                 provider_subject=identity.subject,
             )
             db.add(user_identity_record)
-        await db.commit()
+            await db.commit()
+            logger.info(
+                "User created (user_id=%s, provider=%s)",
+                user.id, identity.provider.value
+            )
     except IntegrityError as e:
         await db.rollback()
         existing_email = (await db.execute(select(User).where(
@@ -83,7 +92,8 @@ async def get_or_create_user(
         ))).scalars().first()
         if not existing_email:
             logger.exception(
-                "Failed to create user",
+                "Failed to create user (provider=%s)",
+                identity.provider.value,
             )
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -101,17 +111,17 @@ async def get_or_create_user(
             ) from e
         user = existing_identity.user
         logger.warning(
-            "Identity was created by a concurrent login (provider=%s, subject=%s)",
+            "Identity was created by a concurrent login (provider=%s, user_id=%s)",
             identity.provider.value,
-            identity.subject,
+            user.id
         )
 
     except SQLAlchemyError as e:
-        await db.rollback()
         logger.exception(
             "Database error during login (provider=%s)",
-            identity.provider.value,
+            identity.provider.value
         )
+        await db.rollback()
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Database error while signing in"
