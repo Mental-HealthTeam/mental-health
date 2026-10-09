@@ -33,8 +33,7 @@ class GoogleAuthProvider(AuthProviderInterface):
                 self.CLIENT_ID
             )
         except ValueError as e:
-            logger.warning("Google token verification failed")
-            raise InvalidCredentialsError("Invalid Google token") from e
+            raise InvalidCredentialsError("Invalid Google token (%s)" % type(e).__name__) from e
         try:
             if user_info.get("email_verified") is not True:
                 raise InvalidCredentialsError("Email is not verified")
