@@ -1,0 +1,35 @@
+{
+    "title": "Why",
+    "titleAccent": "Us?",
+    "ai": {
+        "label": "AI matching",
+        "caption": "Instead of tedious 20-question forms",
+        "text": "A live empathetic AI conversation in 1–2 minutes with a generated list of suitable specialists"
+    },
+    "specialists": {
+        "value": "500+",
+        "text": "Verified psychotherapists in our database"
+    },
+    "availability": {
+        "value": "24/7",
+        "text": "Book a session at any time"
+    },
+    "speed": {
+        "label": "Speed",
+        "caption": "Instead of waiting hours for a response",
+        "text": "Instantly book an available calendar slot in one click"
+    },
+    "matching": {
+        "value": "1–2 minutes",
+        "text": "An intelligent AI conversation for accurate psychologist matching"
+    },
+    "flexibility": {
+        "label": "Flexibility",
+        "caption": "Instead of mandatory monthly packages",
+        "text": "Book a specific session for your needs directly, without overpaying"
+    },
+    "specialist": {
+        "imageAlt": "Psychotherapist"
+    },
+    "cta": "Try now"
+}
