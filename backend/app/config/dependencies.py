@@ -5,6 +5,7 @@ from fastapi import Depends
 
 from redis_storage.redis_storage import RedisSessionStorage
 from config.settings import BaseAppSettings
+from auth.token_manager import JWTAuthManager
 
 
 def get_settings():
@@ -16,4 +17,16 @@ def get_redis_storage(
 ):
     return RedisSessionStorage(
         redis_url=settings.REDIS_URL
+    )
+
+
+def get_jwt_manager(
+    settings: Annotated[BaseAppSettings, Depends(get_settings)]
+):
+    return JWTAuthManager(
+        secret_key_access=settings.SECRET_KEY_ACCESS,
+        secret_key_refresh=settings.SECRET_KEY_REFRESH,
+        algorithm=settings.JWT_SIGNING_ALGORITHM,
+        access_key_timedelta_minutes=settings.ACCESS_TTL_MIN,
+        refresh_key_timedelta_minutes=settings.refresh_ttl_min
     )

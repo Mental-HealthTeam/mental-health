@@ -32,6 +32,14 @@ class Settings(BaseAppSettings):
     ACCESS_TTL_MIN: int = 15
     REFRESH_TTL_DAYS: int = 30
     CORS_ORIGINS: str = "http://localhost"
+    ACCESS_COOKIE: str = "access"
+    REFRESH_COOKIE: str = "refresh"
+    ACCESS_PATH: str = "/"
+    REFRESH_PATH: str = "/api/auth"
+
+    @property
+    def refresh_ttl_min(self):
+        return self.REFRESH_TTL_DAYS * 24 * 60
 
 
 class TestSettings(BaseAppSettings):
