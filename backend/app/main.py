@@ -2,9 +2,13 @@ import logging
 
 from fastapi import FastAPI
 
-from routes import psychologists_router
-from routes import matching_psychologists_router
-from routes import payments_router
+from routes import (
+    psychologists_router,
+    matching_psychologists_router,
+    payments_router,
+    auth_router
+)
+
 
 app = FastAPI()
 
@@ -29,6 +33,11 @@ app.include_router(
     payments_router,
     prefix=f"{BASE_PREFIX}/payments",
     tags=["Payments"],
+)
+app.include_router(
+    auth_router,
+    prefix=f"{BASE_PREFIX}/auth",
+    tags=["Authentication"],
 )
 
 
