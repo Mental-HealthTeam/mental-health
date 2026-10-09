@@ -41,6 +41,10 @@ class Settings(BaseAppSettings):
     def refresh_ttl_min(self):
         return self.REFRESH_TTL_DAYS * 24 * 60
 
+    @property
+    def cors_origins_list(self):
+        return [cor_origin.strip() for cor_origin in self.CORS_ORIGINS.strip().split(",")]
+
 
 class TestSettings(BaseAppSettings):
     def model_post_init(self, context: Any, /) -> None:
