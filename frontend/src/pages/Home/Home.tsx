@@ -1,6 +1,7 @@
 import { Footer } from '../../components/Footer'
 import { Header } from '../../components/Header'
 import { Hero } from '../../components/Hero'
+import { WhyChooseUs } from '../../components/WhyChooseUs'
 import './Home.scss'
 import { WhyUs } from '../../components/WhyUs/WhyUs.tsx'
 
@@ -12,6 +13,7 @@ export const Home = () => {
             <main className="home__content">
                 <Hero />
                 <WhyUs />
+                <WhyChooseUs />
             </main>
 
             <Footer />
