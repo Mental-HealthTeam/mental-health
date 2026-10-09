@@ -1,0 +1,104 @@
+@use '../../../styles/abstracts' as a;
+@use '../../../styles/components' as c;
+
+.radio-button {
+  position: relative;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  flex: 0 0 c.$radio-button-size;
+
+  width: c.$radio-button-size;
+  height: c.$radio-button-size;
+
+  cursor: pointer;
+
+  &__input {
+    position: absolute;
+
+    width: 1px;
+    height: 1px;
+
+    margin: -1px;
+    padding: 0;
+
+    overflow: hidden;
+
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+
+    border: 0;
+
+    white-space: nowrap;
+  }
+
+  &__control {
+    position: relative;
+
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    border: c.$radio-button-border-width solid a.$color-primary;
+    border-radius: 50%;
+
+    background-color: transparent;
+
+    transition:
+            border-color a.$transition-default,
+            background-color a.$transition-default;
+  }
+
+  &--checked {
+    .radio-button__control {
+      border-color: a.$color-secondary-start;
+      background-color: a.$color-secondary-start;
+
+      &::after {
+        content: '';
+
+        position: absolute;
+
+        top: c.$radio-button-check-top;
+        left: c.$radio-button-check-left;
+
+        width: c.$radio-button-check-width;
+        height: c.$radio-button-check-height;
+
+        border-right:
+                c.$radio-button-check-border-width
+                solid
+                a.$color-white;
+        border-bottom:
+                c.$radio-button-check-border-width
+                solid
+                a.$color-white;
+
+        transform: rotate(45deg);
+      }
+    }
+  }
+
+  &--disabled {
+    cursor: not-allowed;
+
+    .radio-button__control {
+      border-color: a.$color-gray-40;
+    }
+
+    &.radio-button--checked {
+      .radio-button__control {
+        border-color: a.$color-gray-60;
+        background-color: a.$color-gray-60;
+      }
+    }
+  }
+
+  &__input:focus-visible + &__control {
+    outline: 2px solid a.$color-process;
+    outline-offset: 2px;
+  }
+}

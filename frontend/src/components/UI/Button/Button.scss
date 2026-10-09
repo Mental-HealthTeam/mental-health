@@ -5,6 +5,7 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
+
     gap: c.$button-content-gap;
 
     border: c.$button-border-width solid transparent;
@@ -12,6 +13,7 @@
 
     font-family: a.$font-family-primary;
     text-decoration: none;
+
     white-space: nowrap;
 
     cursor: pointer;
@@ -31,10 +33,12 @@
         display: inline-flex;
         align-items: center;
         justify-content: center;
+
         flex: 0 0 auto;
 
         svg {
             display: block;
+
             width: 100%;
             height: 100%;
         }
@@ -56,34 +60,9 @@
 
     &--secondary {
         border-color: a.$color-primary;
-        color: a.$color-primary;
-        background-color: transparent;
-
-        &:hover {
-            background-color: a.$color-gray-0;
-        }
-
-        &:active {
-            color: a.$color-white;
-            background-color: a.$color-primary;
-        }
-    }
-
-    &--arrow {
-        width: c.$button-arrow-size;
-        height: c.$button-arrow-size;
-        padding: 0;
-
-        border-color: a.$color-primary;
-        border-radius: 50%;
 
         color: a.$color-primary;
         background-color: transparent;
-
-        .button__icon {
-            width: c.$button-arrow-icon-size;
-            height: c.$button-arrow-icon-size;
-        }
 
         &:hover {
             background-color: a.$color-gray-0;
@@ -97,6 +76,7 @@
 
     &--label {
         border-color: a.$color-primary;
+
         color: a.$color-primary;
         background-color: transparent;
 
@@ -112,6 +92,7 @@
 
     &--large {
         height: c.$button-large-height;
+
         padding-inline: c.$button-large-padding-inline;
 
         font-size: a.$font-size-button-large;
@@ -121,6 +102,7 @@
 
     &--medium {
         height: c.$button-medium-height;
+
         padding-inline: c.$button-medium-padding-inline;
 
         font-size: a.$font-size-button-medium;
@@ -130,6 +112,7 @@
 
     &--small {
         height: c.$button-small-height;
+
         padding-inline: c.$button-small-padding-inline;
 
         font-size: a.$font-size-button-small;
@@ -139,16 +122,19 @@
 
     &--label#{&}--large {
         height: c.$label-large-height;
+
         padding-inline: c.$label-large-padding-inline;
     }
 
     &--label#{&}--medium {
         height: c.$label-medium-height;
+
         padding-inline: c.$label-medium-padding-inline;
     }
 
     &--label#{&}--small {
         height: c.$label-small-height;
+
         padding-inline: c.$label-small-padding-inline;
     }
 
@@ -164,6 +150,7 @@
     &--disabled,
     &:disabled {
         opacity: 0.5;
+
         cursor: not-allowed;
         pointer-events: none;
     }

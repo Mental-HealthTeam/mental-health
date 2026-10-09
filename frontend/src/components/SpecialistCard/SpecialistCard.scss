@@ -1,0 +1,224 @@
+@use '../../styles/abstracts' as a;
+
+.specialist-card {
+  display: flex;
+  flex-direction: column;
+
+  width: 354px;
+
+  padding: 20px 8px 22px;
+
+  border-radius: 18px;
+
+  background-color: a.$color-background;
+
+  &__header {
+    display: flex;
+    align-items: flex-start;
+
+    gap: 16px;
+
+    min-height: 88px;
+
+    padding-inline: 8px;
+  }
+
+  &__avatar {
+    flex-shrink: 0;
+  }
+
+  &__identity {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    gap: 6px;
+
+    min-width: 0;
+
+    padding-top: 8px;
+  }
+
+  &__name {
+    margin: 0;
+
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.25;
+
+    color: a.$color-primary;
+
+    white-space: nowrap;
+  }
+
+  &__verified {
+    display: inline-flex;
+    align-items: center;
+
+    min-height: 20px;
+
+    padding: 2px 6px;
+
+    border-radius: 5px;
+
+    font-size: 10px;
+    font-weight: 700;
+    line-height: 1;
+
+    color: a.$color-background;
+    background-color: a.$color-optional;
+  }
+
+  &__meta {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    gap: 8px;
+
+    padding: 7px 8px 12px;
+  }
+
+  &__meta-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 8px;
+
+    font-size: 14px;
+    line-height: 1.3;
+
+    color: a.$color-primary;
+
+    strong {
+      font-weight: 700;
+
+      color: a.$color-optional;
+    }
+  }
+
+  &__dot {
+    font-weight: 700;
+
+    color: a.$color-optional;
+  }
+
+  &__section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    gap: 5px;
+
+    margin-inline: 8px;
+    padding: 11px 0;
+
+    border-top: 1px solid a.$color-gray-20;
+  }
+
+  &__section-title {
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.3;
+
+    color: a.$color-primary;
+  }
+
+  &__section-value {
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.3;
+
+    color: a.$color-primary;
+  }
+
+  &__topics {
+    padding-bottom: 13px;
+
+    border-bottom: 1px solid a.$color-gray-20;
+  }
+
+  &__topic-list {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+
+    gap: 5px;
+  }
+
+  &__topic {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 25px;
+
+    padding: 3px 10px;
+
+    border: 1px solid a.$color-primary;
+    border-radius: 6px;
+
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1;
+
+    color: a.$color-primary;
+  }
+
+  &__actions {
+    display: flex;
+    flex-direction: column;
+
+    gap: 9px;
+
+    padding-top: 16px;
+  }
+
+  &__booking-button,
+  &__profile-button {
+    border-radius: 11px;
+  }
+
+  &__booking-button {
+    color: a.$color-primary;
+    background: a.$color-secondary-gradient;
+
+    &:hover {
+      opacity: 1;
+    }
+
+    &:active {
+      color: a.$color-primary;
+      background: a.$color-secondary-gradient;
+    }
+  }
+
+  &__profile-button {
+    color: a.$color-white;
+    background-color: a.$color-primary;
+  }
+
+  &__availability {
+    display: flex;
+    flex-direction: column;
+
+    gap: 10px;
+  }
+
+  &__availability-title {
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.3;
+
+    color: a.$color-primary;
+  }
+
+  &__slots {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    gap: 8px;
+  }
+}
