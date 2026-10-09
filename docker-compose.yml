@@ -54,7 +54,7 @@ services:
     restart: always
     environment:
       DATABASE_URL: postgresql://${DB_USER}:${DB_PASSWORD}@db:5432/${DB_NAME}
-      REDIS_URL: redis://redis:6379/0
+      REDIS_URL: redis://${REDIS_HOST}:${REDIS_PORT}/0
     ports:
       - "${BACKEND_PORT}:8000"
     depends_on:

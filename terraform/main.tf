@@ -33,22 +33,6 @@ resource "aws_security_group" "server_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  # Backend (8000)
-  ingress {
-    from_port   = 8000
-    to_port     = 8000
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  # AI Service (8001)
-  ingress {
-    from_port   = 8001
-    to_port     = 8001
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
   egress {
     from_port   = 0
     to_port     = 0
@@ -90,5 +74,14 @@ resource "aws_instance" "app_server" {
   tags = {
     Name        = "${var.project_name}-${var.environment}"
     Environment = var.environment
+  }
+}
+
+resource "aws_eip" "app_server" {
+  domain   = "vpc"
+  instance = aws_instance.app_server.id
+
+  tags = {
+    Name = "${var.project_name}-${var.environment}-eip"
   }
 }

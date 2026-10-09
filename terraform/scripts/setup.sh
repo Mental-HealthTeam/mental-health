@@ -25,10 +25,12 @@ chown ubuntu:ubuntu /opt/mental-health
 
 cd /opt/mental-health
 
-git clone https://github.com/Mental-HealthTeam/mental-health.git
+git clone --branch develop --single-branch \
+  https://github.com/Mental-HealthTeam/mental-health.git
 
 cd ./mental-health
 
-docker compose -f docker-compose.yml --build
+docker compose -f docker-compose.yml pull
+docker compose -f docker-compose.yml up -d
 
 echo "Server setup completed."
