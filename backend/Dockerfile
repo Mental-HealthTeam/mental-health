@@ -25,6 +25,7 @@ WORKDIR /app
 RUN adduser --disabled-password --gecos "" appuser
 
 COPY --chown=appuser:appuser ./app .
+COPY --chown=appuser:appuser ./payment_provider ./payment_provider
 COPY --chown=appuser:appuser --chmod=755 ./entrypoint.sh .
 COPY  ./alembic.ini .
 
