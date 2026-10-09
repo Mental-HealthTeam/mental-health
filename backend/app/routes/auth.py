@@ -19,7 +19,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from auth.dependencies import (
     get_current_user,
     get_client_info,
-    get_refresh_token
+    get_refresh_token,
+    verify_origin
 )
 from auth.dependencies import get_google_provider
 from auth.provider_interface import AuthProviderInterface
@@ -53,7 +54,8 @@ logger = logging.getLogger(__name__)
 @router.post(
     "/google",
     status_code=status.HTTP_200_OK,
-    response_model=UserPublic
+    response_model=UserPublic,
+    dependencies=[Depends(verify_origin)]
 )
 async def google_login(
         response: Response,
@@ -110,7 +112,8 @@ async def get_me(
 
 @router.post(
     "/refresh",
-    status_code=status.HTTP_204_NO_CONTENT
+    status_code=status.HTTP_204_NO_CONTENT,
+    dependencies=[Depends(verify_origin)]
 )
 async def refresh(
         response: Response,
@@ -140,7 +143,8 @@ async def refresh(
 
 @router.post(
     "/logout",
-    status_code=status.HTTP_204_NO_CONTENT
+    status_code=status.HTTP_204_NO_CONTENT,
+    dependencies=[Depends(verify_origin)]
 )
 async def log_out_session(
         response: Response,
@@ -169,7 +173,8 @@ async def log_out_session(
 
 @router.post(
     "/logout-all",
-    status_code=status.HTTP_204_NO_CONTENT
+    status_code=status.HTTP_204_NO_CONTENT,
+    dependencies=[Depends(verify_origin)]
 )
 async def log_out_all_sessions(
         response: Response,

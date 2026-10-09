@@ -1,7 +1,12 @@
 import logging
 import uuid
 from typing import Annotated, Callable, Coroutine, Any
-from fastapi import Depends, HTTPException, status, Request
+from fastapi import (
+    Depends,
+    HTTPException,
+    status,
+    Request
+)
 
 from database import get_db
 from config.settings import BaseAppSettings
@@ -120,3 +125,21 @@ def require_roles(*allowed_roles: UserRole) -> Callable[..., Coroutine[Any, Any,
             )
         return current_user
     return role_checker
+
+
+def verify_origin(
+        request: Request,
+        settings: Annotated[BaseAppSettings, Depends(get_settings)]
+):
+    origin = request.headers.get("Origin")
+    if not origin:
+        logger.debug("Request without Origin header (path=%s)", request.url.path)
+        return
+    for allowed_origin in settings.cors_origins_list:
+        if origin == allowed_origin:
+            return
+    logger.warning("Origin rejected (origin=%s, path=%s)", origin, request.url.path)
+    raise HTTPException(
+        status_code=status.HTTP_403_FORBIDDEN,
+        detail="Origin not allowed"
+    )
