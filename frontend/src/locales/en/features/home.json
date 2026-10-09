@@ -1,1 +1,47 @@
-{}
+{
+    "hero": {
+        "title": "Find",
+        "titleAccent": "your psychologist",
+        "subtitle": "AI will help match a specialist to your needs in a few minutes",
+        "search": {
+            "placeholder": "Describe your condition or request",
+            "button": "match"
+        },
+        "imageAlt": "Smiling woman in nature",
+        "stats": {
+            "users": "Users have already joined the platform",
+            "specialists": "specialists work on mental health"
+        }
+    },
+    "whyChooseUs": {
+        "title": "Why choose Mental Health Platform?",
+        "description": "Our service was created to make quality, professional psychological consultation as accessible as possible for everyone. Interactive matching of a psychotherapist with the help of an AI assistant lets you quickly understand your condition and find a qualified specialist for any budget, without exhausting questionnaires.",
+        "items": {
+            "relationships": {
+                "title": "We help",
+                "text": "build healthy and harmonious relationships with loved ones"
+            },
+            "specialists": {
+                "title": "We match",
+                "text": "verified specialists for working with stress and anxiety"
+            },
+            "space": {
+                "title": "We create",
+                "text": "a safe space for self-discovery and growth"
+            },
+            "learning": {
+                "title": "We teach",
+                "text": "to care for yourself, understand and defend your boundaries"
+            },
+            "support": {
+                "title": "We support",
+                "text": "you through difficult periods of change and new beginnings"
+            },
+            "balance": {
+                "title": "We help",
+                "text": "find a balance between work and personal life"
+            }
+        },
+        "cta": "Find your psychologist"
+    }
+}

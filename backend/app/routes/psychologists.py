@@ -1,93 +1,77 @@
 from typing import Annotated
 from uuid import UUID
 
-from fastapi import APIRouter, HTTPException
-from fastapi import Depends
+from fastapi import APIRouter, Depends, Query
+from sqlalchemy.ext.asyncio import AsyncSession
 
+from database import get_db
+from database.models.models import SymptomCode
 from schemas.psychologist import (
-    Certificate,
-    MockSlot,
     PsychologistDetailResponse,
     PsychologistListItem,
-    Review,
 )
-from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import selectinload
-from database import get_db
-from database.models.models import Psychologist
+from services.psychologist_service import (
+    get_psychologists,
+    get_psychologist_by_id as get_psychologist_by_id_service,
+)
 
 router = APIRouter()
 
 
-@router.get("", response_model=list[PsychologistListItem])
-async def get_psychologists(
-        db: Annotated[AsyncSession, Depends(get_db)]
+@router.get(
+    "",
+    response_model=list[PsychologistListItem],
+    summary="Get all psychologists",
+    response_description=(
+        "Catalog of psychologists with specializations and available slots"
+    ),
+)
+async def list_psychologists(
+    db: Annotated[AsyncSession, Depends(get_db)],
+    limit: int = Query(default=5, ge=1, le=100),
+    offset: int = Query(default=0, ge=0),
+    symptom_codes: list[SymptomCode] | None = Query(default=None),
 ):
-    stmt = select(Psychologist).options(
-        selectinload(Psychologist.psychologist_specializations)
-    )
-    response = await db.execute(stmt)
-    psychologists = response.scalars().all()
+    """
+    Returns the psychologist catalog for the listing/catalog page.
 
-    return [
-        PsychologistListItem(
-            psychologist_id=psychologist.psychologist_id,
-            full_name=psychologist.full_name,
-            specialization=[
-                s.symptom_code.value for s in psychologist.psychologist_specializations
-            ],
-            mock_slots=[
-                MockSlot(time=slot) for slot in (psychologist.mock_slots or [])
-            ],
-        )
-        for psychologist in psychologists
-    ]
-
-
-@router.get("/{psychologist_id}", response_model=PsychologistDetailResponse)
-async def get_psychologist(
-        psychologist_id: UUID,
-        db: Annotated[AsyncSession, Depends(get_db)],
-):
-    stmt = (
-        select(Psychologist)
-        .options(
-            selectinload(Psychologist.psychologist_specializations)
-        )
-        .where(Psychologist.psychologist_id == psychologist_id)
+    Only active psychologist profiles are returned.
+    Supports pagination and filtering by multiple symptom codes.
+    """
+    return await get_psychologists(
+        db=db,
+        limit=limit,
+        offset=offset,
+        symptom_codes=symptom_codes,
     )
 
-    response = await db.execute(stmt)
-    psychologist = response.scalar_one_or_none()
 
-    if psychologist is None:
-        raise HTTPException(
-            status_code=404,
-            detail="Psychologist not found",
-        )
-
-    return PsychologistDetailResponse(
-        psychologist_id=psychologist.psychologist_id,
-        full_name=psychologist.full_name,
-        specialization=[
-            s.symptom_code.value
-            for s in psychologist.psychologist_specializations
-        ],
-        experience=str(psychologist.experience_years),
-        methods=psychologist.methods or [],
-        bio=psychologist.bio,
-        certificates=[
-            Certificate(title=certificate)
-            for certificate in (psychologist.certificates or [])
-        ],
-        reviews=[
-            Review(**review)
-            for review in (psychologist.reviews or [])
-        ],
-        meet_link=psychologist.meet_link or "",
-        mock_slots=[
-            MockSlot(time=slot)
-            for slot in (psychologist.mock_slots or [])
-        ],
+@router.get(
+    "/{psychologist_id}",
+    response_model=PsychologistDetailResponse,
+    summary="Get a single psychologist's full profile",
+    response_description=(
+        "Full profile with bio, certificates, reviews and available slots"
+    ),
+    responses={
+        404: {
+            "description": "Psychologist not found",
+            "content": {
+                "application/json": {
+                    "example": {"detail": "Psychologist not found"}
+                }
+            },
+        },
+    },
+)
+async def get_psychologist_by_id(
+    psychologist_id: UUID,
+    db: Annotated[AsyncSession, Depends(get_db)],
+):
+    """
+    Returns the full profile for a single psychologist.
+    """
+    return await get_psychologist_by_id_service(
+        psychologist_id=psychologist_id,
+        db=db,
     )

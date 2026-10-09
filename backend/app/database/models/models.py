@@ -11,7 +11,9 @@ from sqlalchemy import (
     ForeignKey,
     JSON,
     String,
-    func, Numeric,
+    func,
+    Numeric,
+    UniqueConstraint, Index, text
 )
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -73,6 +75,11 @@ class SelectionSource(str, Enum):
     MANUAL_FILTER = "manual_filter"
 
 
+class AuthProvider(str, Enum):
+    GOOGLE = "google"
+    PASSWORD = "password"
+
+
 class User(Base):
     __tablename__ = "users"
 
@@ -80,19 +87,27 @@ class User(Base):
         primary_key=True,
         server_default=func.gen_random_uuid()
     )
+    name: Mapped[str | None] = mapped_column(
+        String(255),
+        nullable=True
+    )
+    avatar_url: Mapped[str | None] = mapped_column(
+        String(500)
+    )
+    last_login_at: Mapped[datetime.datetime | None] = mapped_column(
+        DateTime(timezone=True),
+        nullable=True
+    )
     email: Mapped[str] = mapped_column(
-        String(50),
+        String(255),
         unique=True,
-        nullable=False,
     )
     role: Mapped[UserRole] = mapped_column(
         SAEnum(UserRole, name="user_role"),
-        nullable=False,
         default=UserRole.CLIENT,
     )
     created_at: Mapped[datetime.datetime] = mapped_column(
         DateTime(timezone=True),
-        nullable=False,
         server_default=func.now(),
     )
 
@@ -106,6 +121,16 @@ class User(Base):
         back_populates="client"
     )
 
+    user_identities: Mapped[List["UserIdentity"]] = relationship(
+        "UserIdentity",
+        back_populates="user"
+    )
+
+    auth_sessions: Mapped[List["AuthSession"]] = relationship(
+        "AuthSession",
+        back_populates="user"
+    )
+
 
 class Psychologist(Base):
     __tablename__ = "psychologists"
@@ -116,7 +141,6 @@ class Psychologist(Base):
     )
     full_name: Mapped[str] = mapped_column(
         String(100),
-        nullable=False,
     )
     title: Mapped[str] = mapped_column(
         String(255)
@@ -124,15 +148,14 @@ class Psychologist(Base):
     avatar_url: Mapped[str | None] = mapped_column(
         String(255),
     )
-    mock_slots: Mapped[list[str] | None] = mapped_column(
-        JSON,
+    mock_slots: Mapped[list[dict] | None] = mapped_column(
+        JSON
     )
     certificates: Mapped[list[str] | None] = mapped_column(
         JSON,
     )
     bio: Mapped[dict] = mapped_column(
         JSON,
-        nullable=False,
     )
     reviews: Mapped[list[dict] | None] = mapped_column(
         JSON
@@ -148,20 +171,16 @@ class Psychologist(Base):
     )
     price_per_hour: Mapped[Decimal] = mapped_column(
         Numeric(10, 2),
-        nullable=False,
     )
     profile_status: Mapped[PsychologistStatus] = mapped_column(
         SAEnum(PsychologistStatus, name="psychologist_status"),
-        nullable=False,
         default=PsychologistStatus.PENDING_MODERATION,
     )
     gender: Mapped[Gender] = mapped_column(
         SAEnum(Gender, name="gender"),
-        nullable=False,
     )
     languages: Mapped[list[str]] = mapped_column(
         JSON,
-        nullable=False,
     )
 
     user: Mapped["User"] = relationship(
@@ -207,45 +226,48 @@ class Booking(Base):
     )
     client_id: Mapped[uuid.UUID] = mapped_column(
         ForeignKey("users.id"),
-        nullable=False,
+        index=True
     )
     psychologist_id: Mapped[uuid.UUID] = mapped_column(
         ForeignKey("psychologists.psychologist_id"),
-        nullable=False,
+        index=True
     )
-    selected_time: Mapped[str] = mapped_column(
+    selected_time_label: Mapped[str] = mapped_column(
         String(100),
-        nullable=False,
+    )
+    selected_time: Mapped[datetime.datetime] = mapped_column(
+        DateTime(timezone=True)
     )
     status: Mapped[BookingStatus] = mapped_column(
         SAEnum(BookingStatus, name="booking_status"),
-        nullable=False,
         default=BookingStatus.PENDING,
     )
     payment_status: Mapped[PaymentStatus] = mapped_column(
         SAEnum(PaymentStatus, name="payment_status"),
-        nullable=False,
         default=PaymentStatus.HELD,
     )
     price: Mapped[Decimal] = mapped_column(
         Numeric(10, 2),
-        nullable=False,
     )
     currency: Mapped[str] = mapped_column(
         String(100),
-        nullable=False,
         default="UAH",
     )
     selection_source: Mapped[SelectionSource] = mapped_column(
         SAEnum(SelectionSource, name="selection_source"),
-        nullable=False,
         default=SelectionSource.AI_RECOMMENDATION
     )
     ai_session_id: Mapped[str] = mapped_column(
         ForeignKey("ai_session_logs.ai_session_id"),
-        nullable=False,
         unique=True,
     )
+
+    __table_args__ = (Index(
+        "uq_booking_confirmed_slot",
+        "psychologist_id", "selected_time",
+        unique=True,
+        postgresql_where=text("status = 'CONFIRMED'")
+    ),)
 
     client: Mapped[User] = relationship(
         "User",
@@ -272,22 +294,15 @@ class AI_Session(Base):  # noqa: N801
     )
     ai_session_id: Mapped[str] = mapped_column(
         String(50),
-        nullable=False,
         unique=True,
     )
     user_id: Mapped[uuid.UUID | None] = mapped_column(
         ForeignKey("users.id"),
         nullable=True,
     )
-    messages_count: Mapped[int] = mapped_column(
-        nullable=False,
-    )
-    duration_sec: Mapped[int] = mapped_column(
-        nullable=False,
-    )
-    recommendations_count: Mapped[int] = mapped_column(
-        nullable=False,
-    )
+    messages_count: Mapped[int]
+    duration_sec: Mapped[int]
+    recommendations_count: Mapped[int]
 
     booking: Mapped["Booking"] = relationship(
         "Booking",
@@ -315,4 +330,79 @@ class AISessionSymptomCode(Base):
     ai_session_log: Mapped["AI_Session"] = relationship(
         "AI_Session",
         back_populates="ai_session_symptom_codes"
+    )
+
+
+class UserIdentity(Base):
+    __tablename__ = "user_identities"
+    id: Mapped[uuid.UUID] = mapped_column(
+        primary_key=True,
+        server_default=func.gen_random_uuid()
+    )
+    user_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("users.id", ondelete="CASCADE"),
+        index=True
+    )
+    provider: Mapped["AuthProvider"] = mapped_column(
+        SAEnum(AuthProvider, name="auth_provider")
+    )
+    provider_subject: Mapped[str] = mapped_column(
+        String(255)
+    )
+    created_at: Mapped[datetime.datetime] = mapped_column(
+        DateTime(timezone=True),
+        server_default=func.now()
+    )
+
+    __table_args__ = (UniqueConstraint("provider", "provider_subject"),)
+
+    user: Mapped["User"] = relationship(
+        "User",
+        back_populates="user_identities"
+    )
+
+
+class AuthSession(Base):
+    __tablename__ = "auth_sessions"
+
+    id: Mapped[uuid.UUID] = mapped_column(
+        primary_key=True,
+        server_default=func.gen_random_uuid()
+    )
+    user_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("users.id", ondelete="CASCADE"),
+        index=True
+    )
+    family_id: Mapped[uuid.UUID] = mapped_column(
+        index=True
+    )
+    jti: Mapped[uuid.UUID] = mapped_column(
+        unique=True
+    )
+    expires_at: Mapped[datetime.datetime] = mapped_column(
+        DateTime(timezone=True)
+    )
+    revoked_at: Mapped[datetime.datetime | None] = mapped_column(
+        DateTime(timezone=True),
+        nullable=True
+    )
+    replaced_by: Mapped[uuid.UUID | None] = mapped_column(
+        nullable=True
+    )
+    user_agent: Mapped[str | None] = mapped_column(
+        String(255),
+        nullable=True
+    )
+    ip: Mapped[str | None] = mapped_column(
+        String(45),
+        nullable=True
+    )
+    created_at: Mapped[datetime.datetime] = mapped_column(
+        DateTime(timezone=True),
+        server_default=func.now()
+    )
+
+    user: Mapped["User"] = relationship(
+        "User",
+        back_populates="auth_sessions"
     )

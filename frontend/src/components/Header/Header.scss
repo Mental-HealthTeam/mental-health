@@ -4,10 +4,7 @@
 .header {
     width: 100%;
 
-    padding:
-            c.$header-padding-top
-            c.$header-padding-inline
-            c.$header-padding-bottom;
+    padding: c.$header-padding-top c.$header-padding-inline c.$header-padding-bottom;
 
     &__container {
         position: relative;
@@ -118,8 +115,8 @@
         cursor: pointer;
 
         transition:
-                border-color a.$transition-default,
-                color a.$transition-default;
+            border-color a.$transition-default,
+            color a.$transition-default;
 
         svg {
             display: block;
@@ -233,9 +230,9 @@
             transform: translateY(c.$mobile-menu-translate-y);
 
             transition:
-                    opacity a.$transition-default,
-                    transform a.$transition-default,
-                    visibility 0s a.$transition-duration;
+                opacity a.$transition-default,
+                transform a.$transition-default,
+                visibility 0s a.$transition-duration;
 
             &--open {
                 visibility: visible;
@@ -247,9 +244,9 @@
                 transform: translateY(0);
 
                 transition:
-                        opacity a.$transition-default,
-                        transform a.$transition-default,
-                        visibility 0s;
+                    opacity a.$transition-default,
+                    transform a.$transition-default,
+                    visibility 0s;
             }
         }
     }

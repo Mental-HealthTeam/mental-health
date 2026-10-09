@@ -1,0 +1,38 @@
+@use '../../../styles/abstracts' as a;
+@use '../../../styles/components' as c;
+
+.avatar {
+    flex-shrink: 0;
+    border-radius: c.$avatar-border-radius;
+    object-fit: cover;
+    object-position: center;
+    background-color: a.$color-background;
+
+    &--small {
+        width: c.$avatar-size-small;
+        height: c.$avatar-size-small;
+    }
+
+    &--medium {
+        width: c.$avatar-size-medium;
+        height: c.$avatar-size-medium;
+    }
+
+    &--large {
+        width: c.$avatar-size-large;
+        height: c.$avatar-size-large;
+    }
+}
+
+.avatar-group {
+    display: flex;
+    align-items: center;
+
+    &__item {
+        border: c.$avatar-group-border-width solid a.$color-background;
+
+        & + & {
+            margin-left: c.$avatar-group-overlap;
+        }
+    }
+}

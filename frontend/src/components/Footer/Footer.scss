@@ -4,26 +4,17 @@
 .footer {
     width: 100%;
 
-    padding:
-            c.$footer-padding-top
-            c.$footer-padding-inline
-            c.$footer-padding-bottom;
+    padding: c.$footer-padding-top c.$footer-padding-inline c.$footer-padding-bottom;
 
     &__container {
         position: relative;
 
         overflow: hidden;
 
-        padding:
-                c.$footer-container-padding-block-start
-                c.$footer-container-padding-inline
-                c.$footer-container-padding-block-end;
+        padding: c.$footer-container-padding-block-start c.$footer-container-padding-inline
+            c.$footer-container-padding-block-end;
 
-        border-radius:
-                a.$border-radius-footer
-                a.$border-radius-footer
-                0
-                0;
+        border-radius: a.$border-radius-footer a.$border-radius-footer 0 0;
 
         color: c.$color-footer-text;
         background-color: c.$color-footer-background;
@@ -111,7 +102,6 @@
         letter-spacing: 0;
     }
 
-
     &__title {
         width: fit-content;
 
@@ -148,8 +138,8 @@
             text-decoration: none;
 
             transition:
-                    color a.$transition-default,
-                    opacity a.$transition-default;
+                color a.$transition-default,
+                opacity a.$transition-default;
 
             &:hover {
                 color: a.$color-white;
@@ -171,23 +161,15 @@
         flex-wrap: wrap;
         align-items: center;
 
-        gap:
-                c.$footer-legal-row-gap
-                c.$footer-legal-column-gap;
+        gap: c.$footer-legal-row-gap c.$footer-legal-column-gap;
 
         margin-top: c.$footer-legal-margin-top;
 
         padding: c.$footer-legal-padding-block 0;
 
-        border-top:
-                c.$footer-border-width
-                solid
-                c.$color-footer-border;
+        border-top: c.$footer-border-width solid c.$color-footer-border;
 
-        border-bottom:
-                c.$footer-border-width
-                solid
-                c.$color-footer-border;
+        border-bottom: c.$footer-border-width solid c.$color-footer-border;
     }
 
     &__legal-item {
@@ -287,10 +269,8 @@
         padding: 0;
 
         &__container {
-            padding:
-                    c.$footer-container-padding-mobile-top
-                    c.$footer-container-padding-mobile-inline
-                    c.$footer-container-padding-mobile-bottom;
+            padding: c.$footer-container-padding-mobile-top
+                c.$footer-container-padding-mobile-inline c.$footer-container-padding-mobile-bottom;
 
             border-radius: 0;
         }
@@ -352,10 +332,7 @@
 
             padding-top: c.$footer-mobile-divider-padding-top;
 
-            border-top:
-                    c.$footer-border-width
-                    solid
-                    c.$color-footer-border;
+            border-top: c.$footer-border-width solid c.$color-footer-border;
         }
 
         &__warning {
