@@ -3,6 +3,8 @@ from typing import Any
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+from payment_provider.payment_types import PaymentProviderName
+
 
 class BaseAppSettings(BaseSettings):
     BASE_DIR: Path = Path(__file__).parent.parent
@@ -19,8 +21,9 @@ class BaseAppSettings(BaseSettings):
     STRIPE_SECRET_KEY: str
     STRIPE_WEBHOOK_SECRET: str
 
-    STRIPE_SUCCESS_URL: str = "http://localhost:3000/payment/success"
-    STRIPE_CANCEL_URL: str = "http://localhost:3000/payment/cancel"
+    SUCCESS_PAYMENTS_REDIRECT: str = "http://localhost:3000/payment/success"
+    CANCEL_PAYMENTS_REDIRECT: str = "http://localhost:3000/payment/cancel"
+    PAYMENT_PROVIDER: PaymentProviderName = PaymentProviderName.STRIPE
 
 
 class Settings(BaseAppSettings):
