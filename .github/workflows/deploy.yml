@@ -1,0 +1,20 @@
+name: Deploy
+
+on:
+  push:
+    branches: ['develop', 'main']
+
+jobs:
+  deploy-test:
+    if: github.ref_name == 'develop'
+    uses: ./.github/workflows/reusable-deploy.yml
+    with:
+      environment: test
+    secrets: inherit
+
+  deploy-prod:
+    if: github.ref_name == 'main'
+    uses: ./.github/workflows/reusable-deploy.yml
+    with:
+      environment: prod
+    secrets: inherit

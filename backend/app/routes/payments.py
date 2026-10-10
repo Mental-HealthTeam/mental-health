@@ -1,29 +1,16 @@
-import stripe
-
 from typing import Annotated
-from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, Request
-from pydantic import BaseModel
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from config.settings import Settings
+from config.dependencies import get_payment_provider
 from database import get_db
-from services.payment_service import create_checkout_session
+from payment_provider.payment_interface import PaymentProviderInterface
+from schemas.payment import CheckoutRequest, CheckoutResponse
+from services.payment_service import PaymentService
 
-
-settings = Settings()
 
 router = APIRouter()
-
-
-class CheckoutRequest(BaseModel):
-    psychologist_id: UUID
-    selected_time: str
-
-
-class CheckoutResponse(BaseModel):
-    checkout_url: str
 
 
 @router.post(
@@ -33,10 +20,18 @@ class CheckoutResponse(BaseModel):
 async def create_checkout(
     body: CheckoutRequest,
     db: Annotated[AsyncSession, Depends(get_db)],
+    payment_provider: Annotated[
+        PaymentProviderInterface,
+        Depends(get_payment_provider),
+    ],
 ):
+    service = PaymentService(
+        db=db,
+        payment_provider=payment_provider,
+    )
+
     try:
-        checkout_url = await create_checkout_session(
-            db=db,
+        checkout_url = await service.create_checkout(
             psychologist_id=body.psychologist_id,
             selected_time=body.selected_time,
         )
@@ -52,7 +47,14 @@ async def create_checkout(
 
 
 @router.post("/webhook")
-async def stripe_webhook(request: Request):
+async def stripe_webhook(
+    request: Request,
+    db: Annotated[AsyncSession, Depends(get_db)],
+    payment_provider: Annotated[
+        PaymentProviderInterface,
+        Depends(get_payment_provider),
+    ],
+):
     payload = await request.body()
     signature = request.headers.get("stripe-signature")
 
@@ -62,34 +64,18 @@ async def stripe_webhook(request: Request):
             detail="Missing Stripe signature",
         )
 
+    service = PaymentService(
+        db=db,
+        payment_provider=payment_provider,
+    )
+
     try:
-        event = stripe.Webhook.construct_event(
-            payload,
-            signature,
-            settings.STRIPE_WEBHOOK_SECRET,
+        return await service.handle_webhook(
+            payload=payload,
+            signature=signature,
         )
-    except (
-        ValueError,
-        stripe.error.SignatureVerificationError,
-    ) as error:
+    except ValueError as error:
         raise HTTPException(
             status_code=400,
-            detail="Invalid webhook",
+            detail=str(error),
         ) from error
-
-    if event["type"] == "checkout.session.completed":
-        session = event["data"]["object"]
-
-        if session.get("payment_status") != "paid":
-            return {
-                "status": "payment_not_completed",
-            }
-
-        return {
-            "status": "payment_completed",
-            "selected_time": session.get("metadata", {}).get(
-                "selected_time"
-            ),
-        }
-
-    return {"status": "success"}

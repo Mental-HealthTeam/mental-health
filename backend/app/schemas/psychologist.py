@@ -1,4 +1,5 @@
 from datetime import datetime
+from decimal import Decimal
 from uuid import UUID
 
 from pydantic import BaseModel
@@ -25,6 +26,10 @@ class Certificate(BaseModel):
 class PsychologistListItem(BaseModel):
     psychologist_id: UUID
     full_name: str
+    avatar_url: str | None
+    experience_years: int
+    price_per_hour: Decimal
+    methods: list[str]
     specialization: list[str]
     mock_slots: list[MockSlot]
 

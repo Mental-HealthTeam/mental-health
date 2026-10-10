@@ -5,10 +5,16 @@ from typing import Annotated
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
 from redis import RedisError
+from fastapi.middleware.cors import CORSMiddleware
 
 from ai_model.ai_interface import AIClientInterface
 from ai_model.system_prompt import SYSTEM_PROMPT
-from config.dependencies import get_groq_client, get_redis_storage
+from config.dependencies import (
+    get_groq_client,
+    get_redis_storage,
+    get_settings,
+    verify_origin
+)
 from fastapi import Depends, FastAPI, status, HTTPException
 from fastapi.responses import StreamingResponse
 from redis_storage.redis_interface import SessionStorageInterface
@@ -16,6 +22,15 @@ from schemas.schemas import ChatRequest
 
 
 app = FastAPI()
+
+settings = get_settings()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=settings.cors_origins_list,
+    allow_methods=["POST"],
+    allow_headers=["Content-Type"]
+)
 
 logging.basicConfig(
     level=logging.INFO,
@@ -111,6 +126,7 @@ async def event_generator(
     "/chat/message",
     response_model=None,
     status_code=status.HTTP_200_OK,
+    dependencies=[Depends(verify_origin)],
     summary="Send a chat message and stream the AI's reply",
     responses={
         200: {
