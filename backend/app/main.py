@@ -51,6 +51,11 @@ app.include_router(
     prefix=f"{BASE_PREFIX}/auth",
     tags=["Authentication"],
 )
+app.include_router(
+    bookings_router,
+    prefix=f"{BASE_PREFIX}/bookings",
+    tags=["Bookings"],
+)
 
 
 @app.get("/health")
