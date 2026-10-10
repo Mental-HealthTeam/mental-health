@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from config.dependencies import get_payment_provider
 from database import get_db
 from payment_provider.payment_interface import PaymentProviderInterface
-from schemas.payment import CheckoutRequest, CheckoutResponse
+from payment_provider.payment_types import CheckoutParams, CheckoutResponse
 from services.payment_service import PaymentService
 
 
@@ -18,7 +18,7 @@ router = APIRouter()
     response_model=CheckoutResponse,
 )
 async def create_checkout(
-    body: CheckoutRequest,
+    body: CheckoutParams,
     db: Annotated[AsyncSession, Depends(get_db)],
     payment_provider: Annotated[
         PaymentProviderInterface,
