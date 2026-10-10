@@ -1,0 +1,72 @@
+@use '../../../styles/abstracts' as a;
+
+.chat-header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+
+    &__close {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 36px;
+        height: 36px;
+        padding: 0;
+        border: none;
+        border-radius: 0;
+        overflow: visible;
+        color: #909988;
+
+        &:hover {
+          background: transparent;
+          color: a.$color-primary;
+        }
+    }
+
+    &__region-avatar-ai {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        width: 100%;
+        background-color: #fcfcfc;
+        border-radius: 20px;
+        padding: 16px 24px;
+    }
+
+    &__avatar-ai {
+        height: 100%;
+    }
+
+    &__info {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    &__name {
+        font-size: a.$font-size-h4;
+        line-height: a.$line-height-h4;
+        letter-spacing: a.$letter-spacing-h4;
+        font-weight: a.$font-weight-main;
+        color: a.$color-primary;
+        text-align: left;
+    }
+
+    &__role {
+        color: a.$color-gray-80;
+    }
+
+    &__status {
+        width: max-content;
+        font-size: a.$font-size-button-small;
+        line-height: a.$line-height-button-small;
+        font-weight: a.$font-weight-button-small;
+        text-transform: uppercase;
+        padding: 4.5px 8px;
+        background: a.$color-secondary-gradient;
+        color: a.$color-primary;
+        border-radius: 8px;
+    }
+}

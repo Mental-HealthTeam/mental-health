@@ -6,9 +6,16 @@ import { ArrowRightIcon } from '../UI/Icons'
 import './WhyChooseUs.scss'
 import { SectionIndex } from '../UI/SectionIndex'
 import { whyChooseUs } from '../../constants/whyChooseUs'
+import { useAppDispatch } from '../../app/hooks'
+import { openAiChat } from '../../app/store/slices/aiChatSlice'
 
 export const WhyChooseUs = () => {
     const { t } = useTranslation('home')
+    const dispatch = useAppDispatch()
+
+    const handleOpenChat = () => {
+        dispatch(openAiChat())
+    }
 
     return (
         <section className="why-us" id="about">
@@ -23,7 +30,7 @@ export const WhyChooseUs = () => {
 
                     <ul className="why-us__list">
                         {whyChooseUs.map((id) => (
-                            <li className="why-us__item">
+                            <li className="why-us__item" key={id}>
                                 <h3 className="why-us__item-title">
                                     {t(`whyChooseUs.items.${id}.title`)}
                                 </h3>
@@ -37,11 +44,11 @@ export const WhyChooseUs = () => {
 
                 <Button
                     className="why-us__button"
-                    href="#ai-search"
                     variant="primary"
                     size="large"
                     endIcon={<ArrowRightIcon />}
                     ariaLabel={t('whyChooseUs.cta')}
+                    onClick={handleOpenChat}
                 >
                     {t('whyChooseUs.cta')}
                 </Button>

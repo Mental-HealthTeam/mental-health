@@ -4,6 +4,7 @@ import { Hero } from '../../components/Hero'
 import { WhyChooseUs } from '../../components/WhyChooseUs'
 import './Home.scss'
 import { WhyUs } from '../../components/WhyUs/WhyUs.tsx'
+import { AiChat } from '../../components/AiChat/AiChat.tsx'
 
 export const Home = () => {
     return (
@@ -17,6 +18,8 @@ export const Home = () => {
             </main>
 
             <Footer />
+
+            <AiChat />
         </div>
     )
 }

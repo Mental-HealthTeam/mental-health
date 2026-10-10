@@ -1,0 +1,14 @@
+@use '../../styles/abstracts' as a;
+
+.ai-chat {
+    position: fixed;
+    right: 40px;
+    top: 108px;
+    width: 353px;
+    height: 80vh;
+    background-color: #f2f7ee;
+    padding: 8px 16px 16px 16px;
+    border-radius: a.$border-radius-ai-chat;
+    box-shadow: 9px 45px 32px #00000034;
+    z-index: 1000;
+}
