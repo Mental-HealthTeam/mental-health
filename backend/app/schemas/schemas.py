@@ -7,6 +7,8 @@ from pydantic import BaseModel, ConfigDict, EmailStr, Field
 from database.models.models import (
     BookingStatus,
     Gender,
+    PaymentStatus,
+    SelectionSource,
     SymptomCode,
     UserRole,
 )
