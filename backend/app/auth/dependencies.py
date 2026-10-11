@@ -72,7 +72,7 @@ async def get_current_user(
     db: Annotated[AsyncSession, Depends(get_db)],
     jwt_manager: Annotated[JWTAuthManagerInterface, Depends(get_jwt_manager)],
     access_token: Annotated[str, Depends(get_access_token)]
-):
+) -> User:
     try:
         payload = jwt_manager.decode_access_token(access_token)
     except BaseSecurityError as e:
@@ -109,6 +109,38 @@ async def get_current_user(
     return user
 
 
+async def get_current_user_optional(
+    request: Request,
+    db: Annotated[AsyncSession, Depends(get_db)],
+    jwt_manager: Annotated[JWTAuthManagerInterface, Depends(get_jwt_manager)],
+    settings: Annotated[BaseAppSettings, Depends(get_settings)]
+) -> User | None:
+    access_token = request.cookies.get(settings.ACCESS_COOKIE)
+    if not access_token:
+        return None
+    try:
+        payload = jwt_manager.decode_access_token(access_token)
+    except BaseSecurityError as e:
+        logger.debug("Access token rejected: %s", e)
+        return None
+
+    try:
+        user_id = uuid.UUID(payload["sub"])
+        token_type = payload["type"]
+    except (KeyError, ValueError):
+        logger.warning("Access token has malformed claims")
+        return None
+    if token_type != "access":
+        logger.warning("Access token has wrong type (type=%s)", token_type)
+        return None
+    user = await db.get(User, user_id)
+    if user is None:
+        logger.warning("Access token for unknown user (user_id=%s)", user_id)
+        return None
+
+    return user
+
+
 def require_roles(*allowed_roles: UserRole) -> Callable[..., Coroutine[Any, Any, User]]:
     async def role_checker(
             current_user: Annotated[User, Depends(get_current_user)]
@@ -130,7 +162,7 @@ def require_roles(*allowed_roles: UserRole) -> Callable[..., Coroutine[Any, Any,
 def verify_origin(
         request: Request,
         settings: Annotated[BaseAppSettings, Depends(get_settings)]
-):
+) -> None:
     origin = request.headers.get("Origin")
     if not origin:
         logger.debug("Request without Origin header (path=%s)", request.url.path)
