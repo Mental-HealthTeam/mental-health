@@ -1,6 +1,22 @@
+
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from uuid import UUID
+
+
+@dataclass(frozen=True)
+class CheckoutParams:
+    booking_id: str
+    amount: int
+    currency: str
+    psychologist_name: str
+    success_url: str
+    cancel_url: str
+
+
+@dataclass(frozen=True)
+class CheckoutResponse:
+    session_id: str
+    checkout_url: str
 
 
 @dataclass(frozen=True)
@@ -14,13 +30,10 @@ class PaymentWebhook:
 class PaymentProviderInterface(ABC):
 
     @abstractmethod
-    async def create_checkout(
+    async def create_checkout_session(
         self,
-        psychologist_id: UUID,
-        selected_time: str,
-        amount: int,
-        psychologist_name: str,
-    ) -> str:
+        params: CheckoutParams,
+    ) -> CheckoutResponse:
         pass
 
     @abstractmethod

@@ -1,9 +1,10 @@
-from uuid import UUID
 
 import stripe
 
 from config.settings import Settings
 from payment_provider.payment_interface import (
+    CheckoutParams,
+    CheckoutResponse,
     PaymentProviderInterface,
     PaymentWebhook,
 )
@@ -17,13 +18,10 @@ class StripePaymentProvider(PaymentProviderInterface):
             settings.STRIPE_SECRET_KEY,
         )
 
-    async def create_checkout(
+    async def create_checkout_session(
         self,
-        psychologist_id: UUID,
-        selected_time: str,
-        amount: int,
-        psychologist_name: str,
-    ) -> str:
+        params: CheckoutParams,
+    ) -> CheckoutResponse:
         checkout_session = await (
             self._client.v1.checkout.sessions.create_async(
                 params={
@@ -31,36 +29,39 @@ class StripePaymentProvider(PaymentProviderInterface):
                     "line_items": [
                         {
                             "price_data": {
-                                "currency": "uah",
+                                "currency": params.currency.lower(),
                                 "product_data": {
                                     "name": (
                                         "Consultation with "
-                                        f"{psychologist_name}"
+                                        f"{params.psychologist_name}"
                                     ),
                                 },
-                                "unit_amount": amount,
+                                "unit_amount": params.amount,
                             },
                             "quantity": 1,
                         }
                     ],
                     "metadata": {
-                        "psychologist_id": str(
-                            psychologist_id
-                        ),
-                        "selected_time": selected_time,
+                        "booking_id": params.booking_id,
                     },
                     "success_url": (
-                        f"{self._settings.STRIPE_SUCCESS_URL}"
+                        f"{params.success_url}"
                         "?session_id={CHECKOUT_SESSION_ID}"
                     ),
-                    "cancel_url": (
-                        self._settings.STRIPE_CANCEL_URL
-                    ),
+                    "cancel_url": params.cancel_url,
                 },
             )
         )
 
-        return checkout_session.url
+        if not checkout_session.url:
+            raise ValueError(
+                "Stripe did not return a checkout URL"
+            )
+
+        return CheckoutResponse(
+            session_id=checkout_session.id,
+            checkout_url=checkout_session.url,
+        )
 
     def parse_webhook(
         self,

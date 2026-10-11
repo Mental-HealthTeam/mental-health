@@ -1,10 +1,14 @@
+
 from uuid import UUID
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from database.models.models import Psychologist
-from payment_provider.payment_interface import PaymentProviderInterface
+from database.models.models import Booking, Psychologist
+from payment_provider.payment_interface import (
+    CheckoutParams,
+    PaymentProviderInterface,
+)
 
 
 class PaymentService:
@@ -19,29 +23,40 @@ class PaymentService:
 
     async def create_checkout(
         self,
-        psychologist_id: UUID,
-        selected_time: str,
-    ) -> str:
+        booking_id: UUID,
+    ):
         result = await self._db.execute(
+            select(Booking).where(Booking.id == booking_id)
+        )
+        booking = result.scalar_one_or_none()
+
+        if booking is None:
+            raise ValueError("Booking not found")
+
+        psychologist_result = await self._db.execute(
             select(Psychologist).where(
-                Psychologist.psychologist_id == psychologist_id
+                Psychologist.psychologist_id
+                == booking.psychologist_id
             )
         )
-
-        psychologist = result.scalar_one_or_none()
+        psychologist = psychologist_result.scalar_one_or_none()
 
         if psychologist is None:
             raise ValueError("Psychologist not found")
 
-        amount = int(
-            psychologist.price_per_hour * 100
+        amount = int(booking.price * 100)
+
+        params = CheckoutParams(
+            booking_id=str(booking.id),
+            amount=amount,
+            currency=booking.currency,
+            psychologist_name=psychologist.full_name,
+            success_url=self._payment_provider._settings.STRIPE_SUCCESS_URL,
+            cancel_url=self._payment_provider._settings.STRIPE_CANCEL_URL,
         )
 
-        return await self._payment_provider.create_checkout(
-            psychologist_id=psychologist.psychologist_id,
-            selected_time=selected_time,
-            amount=amount,
-            psychologist_name=psychologist.full_name,
+        return await self._payment_provider.create_checkout_session(
+            params=params,
         )
 
     async def handle_webhook(
@@ -58,13 +73,9 @@ class PaymentService:
             return {"status": "success"}
 
         if webhook.payment_status != "paid":
-            return {
-                "status": "payment_not_completed",
-            }
+            return {"status": "payment_not_completed"}
 
         return {
             "status": "payment_completed",
-            "selected_time": webhook.metadata.get(
-                "selected_time"
-            ),
+            "booking_id": webhook.metadata.get("booking_id"),
         }

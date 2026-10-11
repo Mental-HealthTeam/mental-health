@@ -22,13 +22,11 @@ def get_redis_storage(
     return RedisSessionStorage(redis_url=settings.REDIS_URL)
 
 
+
 def get_payment_provider(
     settings: Annotated[Settings, Depends(get_settings)]
 ) -> PaymentProviderInterface:
     return StripePaymentProvider(settings=settings)
-    return RedisSessionStorage(
-        redis_url=settings.REDIS_URL
-    )
 
 
 def get_jwt_manager(

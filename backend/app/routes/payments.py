@@ -1,3 +1,4 @@
+
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException, Request
@@ -31,9 +32,8 @@ async def create_checkout(
     )
 
     try:
-        checkout_url = await service.create_checkout(
-            psychologist_id=body.psychologist_id,
-            selected_time=body.selected_time,
+        checkout = await service.create_checkout(
+            booking_id=body.booking_id,
         )
     except ValueError as error:
         raise HTTPException(
@@ -42,7 +42,8 @@ async def create_checkout(
         ) from error
 
     return CheckoutResponse(
-        checkout_url=checkout_url,
+        session_id=checkout.session_id,
+        checkout_url=checkout.checkout_url,
     )
 
 

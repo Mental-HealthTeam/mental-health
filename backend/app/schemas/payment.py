@@ -4,9 +4,9 @@ from pydantic import BaseModel
 
 
 class CheckoutRequest(BaseModel):
-    psychologist_id: UUID
-    selected_time: str
+    booking_id: UUID
 
 
 class CheckoutResponse(BaseModel):
+    session_id: str
     checkout_url: str
