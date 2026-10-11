@@ -1,0 +1,47 @@
+@use '../../../styles/abstracts' as a;
+@use '../../../styles/components' as c;
+
+.time-slot {
+  display: inline-flex;
+  align-items: center;
+
+  flex-shrink: 0;
+
+  gap: c.$time-slot-gap;
+
+  min-height: c.$time-slot-height;
+
+  padding: c.$time-slot-padding-block c.$time-slot-padding-inline;
+
+  border: c.$time-slot-border-width solid a.$color-primary;
+  border-radius: c.$time-slot-border-radius;
+
+  color: a.$color-primary;
+  background-color: transparent;
+
+  cursor: pointer;
+
+  transition:
+          border-color a.$transition-default,
+          background-color a.$transition-default;
+
+  &__label {
+    font-size: c.$time-slot-font-size;
+    font-weight: c.$time-slot-font-weight;
+    line-height: c.$time-slot-line-height;
+
+    white-space: nowrap;
+  }
+
+  &--checked {
+    border-color: a.$color-secondary-start;
+  }
+
+  &--disabled {
+    border-color: a.$color-gray-40;
+
+    color: a.$color-gray-60;
+
+    cursor: not-allowed;
+  }
+}
