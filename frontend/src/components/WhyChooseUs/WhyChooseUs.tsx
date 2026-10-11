@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 
 import { Button } from '../UI/Button'
-import { ArrowRightIcon } from '../UI/Icons'
+import { ArrowIcon } from '../UI/Icons'
 
 import './WhyChooseUs.scss'
 import { SectionIndex } from '../UI/SectionIndex'
@@ -40,7 +40,7 @@ export const WhyChooseUs = () => {
                     href="#ai-search"
                     variant="primary"
                     size="large"
-                    endIcon={<ArrowRightIcon />}
+                    endIcon={<ArrowIcon />}
                     ariaLabel={t('whyChooseUs.cta')}
                 >
                     {t('whyChooseUs.cta')}
