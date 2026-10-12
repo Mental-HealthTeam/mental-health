@@ -2,13 +2,10 @@ from datetime import datetime
 from decimal import Decimal
 from uuid import UUID
 
-from pydantic import BaseModel, ConfigDict, EmailStr, Field
+from pydantic import BaseModel, ConfigDict, EmailStr
 
 from database.models.models import (
-    BookingStatus,
     Gender,
-    PaymentStatus,
-    SelectionSource,
     SymptomCode,
     UserRole,
 )
@@ -57,34 +54,6 @@ class PsychologistSpecializationResponse(BaseModel):
 
     psychologist_id: UUID
     symptom_code: SymptomCode
-
-
-class BookingResponse(BaseModel):
-    model_config = ConfigDict(from_attributes=True)
-
-    booking_id: UUID = Field(validation_alias="id")
-    client_id: UUID
-    psychologist_id: UUID
-    selected_time: str
-    status: BookingStatus
-    payment_status: PaymentStatus
-    price: Decimal
-    currency: str
-    selection_source: SelectionSource
-    ai_session_id: str
-
-
-class BookingCreate(BaseModel):
-    client_id: UUID
-    psychologist_id: UUID
-    selected_time: str
-    selection_source: str
-    ai_session_id: str
-
-
-class BookingUpdate(BaseModel):
-    status: BookingStatus | None = None
-    payment_status: str | None = None
 
 
 class AI_SessionResponse(BaseModel):  # noqa: N801
