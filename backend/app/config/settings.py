@@ -23,7 +23,7 @@ class BaseAppSettings(BaseSettings):
 
     SUCCESS_PAYMENTS_REDIRECT: str = "http://localhost:3000/payment/success"
     CANCEL_PAYMENTS_REDIRECT: str = "http://localhost:3000/payment/cancel"
-    PAYMENT_PROVIDER: PaymentProviderName = PaymentProviderName.STRIPE
+    PAYMENT_PROVIDER: PaymentProviderName = PaymentProviderName.WAYFORPAY
 
 
 class Settings(BaseAppSettings):
