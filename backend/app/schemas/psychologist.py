@@ -1,10 +1,12 @@
+from datetime import datetime
 from uuid import UUID
 
 from pydantic import BaseModel
 
 
 class MockSlot(BaseModel):
-    time: str
+    time_label: str
+    time: datetime
 
 
 class Review(BaseModel):
@@ -31,7 +33,7 @@ class PsychologistDetailResponse(BaseModel):
     psychologist_id: UUID
     full_name: str
     specialization: list[str]
-    experience: str
+    experience: int
     methods: list[str]
     bio: dict[str, str]
     certificates: list[Certificate]

@@ -2,78 +2,102 @@
 // Hero layout
 // ======================================================
 
-$hero-padding-inline: clamp(12px, 1.5vw, 30px);
-
-$hero-container-gap: 48px;
-$hero-container-height: 785px;
-
-$hero-overlay-color: rgb(29 30 29 / 64%);
-
-$hero-region-title-gap: 24px;
-$hero-region-title-max-width: 1000px;
-
-// ======================================================
-// Hero colors
-// ======================================================
-
-$hero-color-text-light: #ffffff;
-$hero-color-text-muted: #ecece3;
-
-$hero-color-pill-bg: rgb(250 248 238 / 15%);
-$hero-color-pill-border: rgb(250 248 238 / 25%);
-
-// ======================================================
-// Hero badge
-// ======================================================
-
-$hero-badge-gap: 8px;
-
-$hero-badge-border-width: 1px;
-
-$hero-badge-padding-block: 8px;
-$hero-badge-padding-inline: 16px;
-
-$hero-badge-icon-width: 14px;
-
-// ======================================================
-// Hero title
-// ======================================================
-
-$hero-title-padding-inline: 20px;
-
-// ======================================================
-// Hero subtitle
-// ======================================================
-
-$hero-subtitle-padding-inline: 20px;
+$hero-container-gap: 24px;
+$hero-padding-inline: 16px;
 
 // ======================================================
 // Hero search
 // ======================================================
 
-$hero-search-field-width: 80%;
-
-$hero-search-input-padding-block: 24px;
-$hero-search-input-padding-left: 65px;
-$hero-search-input-padding-right: 146px;
-
-$hero-search-hover-outline-width: 2px;
-$hero-search-hover-outline-offset: 2px;
-
-$hero-search-icon-offset-left: 25px;
-
-$hero-search-button-offset-right: 8px;
-$hero-search-button-inset-block: 16px;
+$hero-search-max-width: 670px;
 
 // ======================================================
-// Hero tags
+// Hero media
 // ======================================================
 
-$hero-tags-gap: 16px;
+$hero-media-max-width: 900px;
 
-$hero-region-tags-padding-inline: 20px;
+$hero-image-height: 341px;
+$hero-image-object-position: 56%;
 
-$hero-tag-padding-block: 8px;
-$hero-tag-padding-inline: 16px;
+// ======================================================
+// Hero image blur
+// ======================================================
 
-$hero-tag-hover-scale: 1.1;
+$hero-image-blur: 20px;
+$hero-image-blur-scale: 1.1;
+$hero-image-blur-mask-start: 25%;
+$hero-image-blur-mask-end: 75%;
+
+// ======================================================
+// Hero stats layout
+// ======================================================
+
+$hero-stats-columns: 1fr 1fr;
+$hero-stats-gap: 16px;
+$hero-stats-margin-block: 16px;
+
+// ======================================================
+// Hero stat card
+// ======================================================
+
+$hero-stat-gap: 12px;
+$hero-stat-padding: 16px 24px;
+$hero-stat-border-radius: 28px;
+$hero-stat-max-width-desktop: 350px;
+$hero-stat-outline-width-desktop: 8px;
+
+// ======================================================
+// Hero stat glow
+// ======================================================
+
+$hero-stat-glow-x: 60%;
+$hero-stat-glow-y: 30%;
+$hero-stat-glow-size: 90% 75%;
+
+$hero-stat-glow-users-x: 65%;
+$hero-stat-glow-users-y: 25%;
+
+$hero-stat-glow-specialists-x: 50%;
+$hero-stat-glow-specialists-y: 105%;
+
+$hero-stat-glow-opacity-start: 0.48;
+$hero-stat-glow-opacity-middle: 0.15;
+$hero-stat-glow-opacity-end: 0;
+
+// ======================================================
+// Hero stat glass border
+// ======================================================
+
+$hero-stat-glass-padding-width: 1px;
+$hero-stat-glass-angle: 135deg;
+$hero-stat-glass-opacity-start: 1;
+$hero-stat-glass-opacity-middle: 0.2;
+$hero-stat-glass-opacity-end: 0.7;
+$hero-stat-glass-middle-stop: 50%;
+
+// ======================================================
+// Hero stat shadow
+// ======================================================
+
+$hero-stat-inset-shadow: inset -1px -1px 10px;
+$hero-stat-inset-shadow-opacity: 0.1;
+
+// ======================================================
+// Hero stat desktop positions
+// ======================================================
+
+$hero-stat-users-top: 32px;
+$hero-stat-users-left: -113px;
+
+$hero-stat-specialists-bottom: 100px;
+$hero-stat-specialists-right: -113px;
+
+$hero-stat-z-index: 1;
+
+// ======================================================
+// Hero avatars
+// ======================================================
+
+$hero-avatar-size: 44px;
+$hero-avatar-overlap: -14px;
