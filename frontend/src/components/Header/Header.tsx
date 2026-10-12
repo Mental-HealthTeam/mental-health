@@ -6,11 +6,11 @@ import { Container } from '../Container'
 import { LanguageSwitcher } from '../LanguageSwitcher'
 import { Navigation } from '../Navigation'
 import { Button } from '../UI/Button'
-import { ArrowRightIcon, LogoIcon, MenuIcon, SparkIcon } from '../UI/Icons'
 
 import { headerNavigationItems } from '../../constants/navigation'
 
 import './Header.scss'
+import { ArrowIcon, LogoIcon, MenuIcon, SparkIcon } from '../UI/Icons'
 
 export const Header = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -62,7 +62,7 @@ export const Header = () => {
                             variant="primary"
                             size="large"
                             startIcon={<SparkIcon />}
-                            endIcon={<ArrowRightIcon />}
+                            endIcon={<ArrowIcon />}
                             ariaLabel={tActions('findPsychologist')}
                             onClick={closeMenu}
                         >

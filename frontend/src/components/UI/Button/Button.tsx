@@ -3,7 +3,7 @@ import classNames from 'classnames'
 
 import './Button.scss'
 
-type ButtonVariant = 'primary' | 'secondary' | 'arrow' | 'label'
+type ButtonVariant = 'primary' | 'secondary' | 'label'
 
 type ButtonSize = 'small' | 'medium' | 'large'
 

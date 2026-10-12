@@ -1,0 +1,608 @@
+@use '../../styles/abstracts' as a;
+
+.why-us {
+  width: 100%;
+
+  padding-block: 32px 28px;
+
+  &__container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    padding-inline: 24px;
+  }
+
+  &__number {
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+
+    margin-bottom: 14px;
+
+    font-size: 9px;
+    line-height: 1;
+
+    color: a.$color-optional;
+  }
+
+  &__number-line {
+    width: 42px;
+    height: 1px;
+
+    background-color: a.$color-optional;
+  }
+
+  &__title {
+    margin: 0 0 36px;
+
+    font-size: 44px;
+    font-weight: 600;
+    line-height: 1;
+
+    color: a.$color-primary;
+
+    text-align: center;
+  }
+
+  &__title-accent {
+    color: a.$color-optional;
+  }
+
+  &__grid {
+    display: grid;
+
+    grid-template-columns:
+      minmax(0, 2fr)
+      minmax(0, 1fr)
+      minmax(0, 1fr)
+      minmax(0, 2fr);
+
+    grid-template-rows: 158px 146px;
+
+    grid-template-areas:
+      'ai specialists availability speed'
+      'matching flexibility flexibility specialist';
+
+    gap: 12px;
+
+    width: 100%;
+    max-width: 1060px;
+  }
+
+  &__card,
+  &__specialist {
+    min-width: 0;
+
+    border-radius: 16px;
+  }
+
+  &__card {
+    display: flex;
+    flex-direction: column;
+
+    padding: 20px 24px;
+
+    border: 1px solid a.$color-optional;
+
+    color: a.$color-optional;
+    background-color: a.$color-background;
+
+    &--ai {
+      grid-area: ai;
+
+      color: a.$color-white;
+      background-color: a.$color-optional;
+    }
+
+    &--specialists {
+      grid-area: specialists;
+
+      justify-content: center;
+
+      padding-inline: 22px;
+    }
+
+    &--availability {
+      grid-area: availability;
+
+      justify-content: center;
+
+      padding-inline: 22px;
+    }
+
+    &--speed {
+      grid-area: speed;
+
+      color: a.$color-white;
+      background-color: a.$color-optional;
+    }
+
+    &--matching {
+      grid-area: matching;
+
+      justify-content: center;
+
+      border: 0;
+
+      background: a.$color-secondary-gradient;
+    }
+
+    &--flexibility {
+      grid-area: flexibility;
+
+      color: a.$color-white;
+      background-color: a.$color-optional;
+    }
+  }
+
+  &__label {
+    align-self: flex-start;
+
+    margin-bottom: 16px;
+    padding: 3px 8px;
+
+    border: 1px solid currentColor;
+    border-radius: 5px;
+
+    font-size: 9px;
+    font-weight: 500;
+    line-height: 1;
+
+    text-transform: uppercase;
+  }
+
+  &__caption {
+    margin: 0 0 12px;
+
+    font-size: 11px;
+    font-weight: 400;
+    line-height: 1.2;
+
+    opacity: 0.8;
+  }
+
+  &__text {
+    margin: 0;
+
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.15;
+  }
+
+  &__value {
+    display: block;
+
+    margin-bottom: 14px;
+
+    font-size: 38px;
+    font-weight: 500;
+    line-height: 1;
+
+    white-space: nowrap;
+  }
+
+  &__small-text {
+    margin: 0;
+
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.1;
+  }
+
+  &__matching-value {
+    display: block;
+
+    margin-bottom: 22px;
+
+    font-size: 42px;
+    font-weight: 500;
+    line-height: 1;
+
+    white-space: nowrap;
+  }
+
+  &__matching-text {
+    margin: 0;
+
+    max-width: 270px;
+
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.2;
+  }
+
+  &__specialist {
+    position: relative;
+
+    grid-area: specialist;
+
+    overflow: hidden;
+
+    border: 1px solid a.$color-optional;
+
+    background-color: a.$color-background;
+  }
+
+  &__specialist-image {
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+    object-position: center;
+  }
+
+  &__specialist-info {
+    position: absolute;
+
+    right: 18px;
+    bottom: 14px;
+    left: 18px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+
+    min-height: 34px;
+
+    padding: 7px 12px;
+
+    border-radius: 8px;
+
+    background-color: rgba(a.$color-white, 0.9);
+  }
+
+  &__specialist-dot {
+    flex-shrink: 0;
+
+    width: 6px;
+    height: 6px;
+
+    border-radius: 50%;
+
+    background-color: a.$color-success;
+  }
+
+  &__specialist-text {
+    overflow: hidden;
+
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1.2;
+
+    color: a.$color-primary;
+
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  &__button {
+    margin-top: 24px;
+
+    color: a.$color-white;
+    background-color: a.$color-primary;
+  }
+}
+
+@media (max-width: 1199px) and (min-width: 1024px) {
+  .why-us {
+    &__container {
+      padding-inline: 20px;
+    }
+
+    &__title {
+      margin-bottom: 30px;
+
+      font-size: 40px;
+    }
+
+    &__grid {
+      grid-template-columns:
+        minmax(0, 2fr)
+        minmax(0, 1fr)
+        minmax(0, 1fr)
+        minmax(0, 2fr);
+
+      grid-template-rows: 150px 138px;
+
+      grid-template-areas:
+        'ai specialists availability speed'
+        'matching flexibility flexibility specialist';
+
+      gap: 10px;
+
+      max-width: 940px;
+    }
+
+    &__card {
+      padding: 18px 20px;
+
+      &--specialists,
+      &--availability {
+        padding-inline: 18px;
+      }
+    }
+
+    &__label {
+      margin-bottom: 14px;
+    }
+
+    &__caption {
+      margin-bottom: 10px;
+    }
+
+    &__text {
+      font-size: 12px;
+    }
+
+    &__value {
+      font-size: 34px;
+    }
+
+    &__small-text {
+      font-size: 11px;
+    }
+
+    &__matching-value {
+      font-size: 38px;
+    }
+
+    &__matching-text {
+      font-size: 11px;
+    }
+
+    &__specialist-info {
+      right: 14px;
+      bottom: 12px;
+      left: 14px;
+
+      padding: 6px 10px;
+    }
+  }
+}
+
+@media (max-width: 1023px) and (min-width: 768px) {
+  .why-us {
+    &__container {
+      padding-inline: 18px;
+    }
+
+    &__number {
+      margin-bottom: 12px;
+    }
+
+    &__title {
+      margin-bottom: 26px;
+
+      font-size: 36px;
+    }
+
+    &__grid {
+      grid-template-columns:
+        minmax(0, 2fr)
+        minmax(0, 1fr)
+        minmax(0, 1fr)
+        minmax(0, 2fr);
+
+      grid-template-rows: 142px 132px;
+
+      grid-template-areas:
+        'ai specialists availability speed'
+        'matching flexibility flexibility specialist';
+
+      gap: 8px;
+
+      max-width: 760px;
+    }
+
+    &__card,
+    &__specialist {
+      border-radius: 14px;
+    }
+
+    &__card {
+      padding: 16px 18px;
+
+      &--specialists,
+      &--availability {
+        padding-inline: 16px;
+      }
+    }
+
+    &__label {
+      margin-bottom: 12px;
+
+      padding: 3px 7px;
+
+      font-size: 8px;
+    }
+
+    &__caption {
+      margin-bottom: 9px;
+
+      font-size: 10px;
+    }
+
+    &__text {
+      font-size: 11px;
+    }
+
+    &__value {
+      margin-bottom: 12px;
+
+      font-size: 30px;
+    }
+
+    &__small-text {
+      font-size: 10px;
+    }
+
+    &__matching-value {
+      margin-bottom: 14px;
+
+      font-size: 34px;
+    }
+
+    &__matching-text {
+      font-size: 10px;
+    }
+
+    &__specialist-info {
+      right: 10px;
+      bottom: 10px;
+      left: 10px;
+
+      min-height: 30px;
+
+      padding: 6px 8px;
+    }
+
+    &__specialist-text {
+      font-size: 10px;
+    }
+
+    &__button {
+      margin-top: 20px;
+    }
+  }
+}
+
+@media (max-width: 767px) {
+  .why-us {
+    padding-block: 28px;
+
+    &__container {
+      padding-inline: 16px;
+    }
+
+    &__number {
+      margin-bottom: 12px;
+
+      font-size: 8px;
+    }
+
+    &__number-line {
+      width: 38px;
+    }
+
+    &__title {
+      margin-bottom: 24px;
+
+      font-size: 32px;
+    }
+
+    &__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+
+      grid-template-areas:
+        'ai ai'
+        'specialists availability'
+        'speed speed'
+        'matching matching'
+        'flexibility flexibility'
+        'specialist specialist';
+
+      grid-template-rows: none;
+
+      gap: 12px;
+
+      width: 100%;
+      max-width: 100%;
+    }
+
+    &__card {
+      padding: 20px 16px;
+
+      &--ai {
+        min-height: 158px;
+      }
+
+      &--specialists,
+      &--availability {
+        min-height: 150px;
+
+        padding: 18px 14px;
+      }
+
+      &--speed {
+        min-height: 144px;
+      }
+
+      &--matching {
+        min-height: 140px;
+      }
+
+      &--flexibility {
+        min-height: 140px;
+      }
+    }
+
+    &__label {
+      margin-bottom: 18px;
+
+      font-size: 9px;
+    }
+
+    &__caption {
+      margin-bottom: 12px;
+
+      font-size: 11px;
+    }
+
+    &__text {
+      font-size: 13px;
+    }
+
+    &__value {
+      margin-bottom: 18px;
+
+      font-size: 36px;
+    }
+
+    &__small-text {
+      font-size: 12px;
+    }
+
+    &__matching-value {
+      margin-bottom: 16px;
+
+      font-size: 42px;
+    }
+
+    &__matching-text {
+      max-width: none;
+
+      font-size: 12px;
+    }
+
+    &__specialist {
+      min-height: 146px;
+    }
+
+    &__specialist-image {
+      object-position: center;
+    }
+
+    &__specialist-info {
+      right: 12px;
+      bottom: 12px;
+      left: 12px;
+
+      min-height: 34px;
+
+      padding: 7px 10px;
+    }
+
+    &__specialist-text {
+      font-size: 11px;
+    }
+
+    &__button {
+      margin-top: 20px;
+    }
+  }
+}

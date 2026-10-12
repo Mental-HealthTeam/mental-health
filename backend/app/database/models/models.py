@@ -17,6 +17,11 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
+from payment_provider.payment_types import (
+    PaymentProviderName,
+    PaymentEventType
+)
+
 
 class SymptomCode(str, Enum):
     ANXIETY = "anxiety"
@@ -55,6 +60,7 @@ class BookingStatus(str, Enum):
     DECLINED = "declined"
     CANCELLED = "cancelled"
     COMPLETED = "completed"
+    DISPUTED = "disputed"
 
 
 class PsychologistStatus(str, Enum):
@@ -182,6 +188,9 @@ class Psychologist(Base):
     languages: Mapped[list[str]] = mapped_column(
         JSON,
     )
+    payout_card_token: Mapped[str | None] = mapped_column(
+        String(255)
+    )
 
     user: Mapped["User"] = relationship(
         "User",
@@ -244,7 +253,48 @@ class Booking(Base):
     )
     payment_status: Mapped[PaymentStatus] = mapped_column(
         SAEnum(PaymentStatus, name="payment_status"),
-        default=PaymentStatus.HELD,
+        default=PaymentStatus.UNPAID,
+    )
+    payment_provider: Mapped[PaymentProviderName | None] = mapped_column(
+        SAEnum(PaymentProviderName, native_enum=False, length=50),
+        nullable=True
+    )
+    payment_reference: Mapped[str | None] = mapped_column(
+        String(255),
+        nullable=True
+    )
+    paid_at: Mapped[datetime.datetime | None] = mapped_column(
+        DateTime(timezone=True),
+        nullable=True
+    )
+    hold_expires_at: Mapped[datetime.datetime | None] = mapped_column(
+        DateTime(timezone=True),
+        nullable=True
+    )
+    completed_at: Mapped[datetime.datetime | None] = mapped_column(
+        DateTime(timezone=True),
+        nullable=True
+    )
+    payout_amount: Mapped[Decimal | None] = mapped_column(
+        Numeric(10, 2),
+        nullable=True
+    )
+    platform_fee: Mapped[Decimal | None] = mapped_column(
+        Numeric(10, 2),
+        nullable=True
+    )
+    payout_reference: Mapped[str | None] = mapped_column(
+        String(255),
+        nullable=True
+    )
+    released_at: Mapped[datetime.datetime | None] = mapped_column(
+        DateTime(timezone=True),
+        nullable=True
+    )
+    provider_session_id: Mapped[str | None] = mapped_column(
+        String(255),
+        unique=True,
+        nullable=True
     )
     price: Mapped[Decimal] = mapped_column(
         Numeric(10, 2),
@@ -257,17 +307,25 @@ class Booking(Base):
         SAEnum(SelectionSource, name="selection_source"),
         default=SelectionSource.AI_RECOMMENDATION
     )
-    ai_session_id: Mapped[str] = mapped_column(
+    ai_session_id: Mapped[str | None] = mapped_column(
         ForeignKey("ai_session_logs.ai_session_id"),
-        unique=True,
+        nullable=True
     )
 
-    __table_args__ = (Index(
-        "uq_booking_confirmed_slot",
-        "psychologist_id", "selected_time",
-        unique=True,
-        postgresql_where=text("status = 'CONFIRMED'")
-    ),)
+    __table_args__ = (
+        Index(
+            "uq_booking_active_slot",
+            "psychologist_id", "selected_time",
+            unique=True,
+            postgresql_where=text(
+                "status IN ('CONFIRMED', 'PENDING', 'DISPUTED', 'COMPLETED')"
+            )
+        ),
+        Index(
+            "ix_booking_status_payment_hold",
+            "status", "payment_status", "hold_expires_at"
+        ),
+    )
 
     client: Mapped[User] = relationship(
         "User",
@@ -281,6 +339,10 @@ class Booking(Base):
 
     ai_session: Mapped["AI_Session"] = relationship(
         "AI_Session",
+        back_populates="booking"
+    )
+    payment_events: Mapped[List["PaymentEvent"]] = relationship(
+        "PaymentEvent",
         back_populates="booking"
     )
 
@@ -405,4 +467,37 @@ class AuthSession(Base):
     user: Mapped["User"] = relationship(
         "User",
         back_populates="auth_sessions"
+    )
+
+
+class PaymentEvent(Base):
+    __tablename__ = "payment_events"
+
+    id: Mapped[uuid.UUID] = mapped_column(
+        primary_key=True,
+        server_default=func.gen_random_uuid()
+    )
+    provider: Mapped[PaymentProviderName] = mapped_column(
+        SAEnum(PaymentProviderName, native_enum=False, length=50),
+    )
+    event_id: Mapped[str] = mapped_column(
+        String(255)
+    )
+    booking_id: Mapped[uuid.UUID | None] = mapped_column(
+        ForeignKey("bookings.id", ondelete="RESTRICT"),
+        nullable=True
+    )
+    event_type: Mapped[PaymentEventType] = mapped_column(
+        SAEnum(PaymentEventType, native_enum=False, length=50)
+    )
+    received_at: Mapped[datetime.datetime] = mapped_column(
+        DateTime(timezone=True),
+        server_default=func.now()
+    )
+
+    __table_args__ = (UniqueConstraint("provider", "event_id"),)
+
+    booking: Mapped["Booking | None"] = relationship(
+        "Booking",
+        back_populates="payment_events"
     )

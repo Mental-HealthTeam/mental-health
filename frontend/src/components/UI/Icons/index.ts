@@ -1,5 +1,5 @@
 export { SparkIcon } from './SparkIcon'
-export { ArrowRightIcon } from './ArrowRightIcon'
+export { ArrowIcon } from './ArrowIcon.tsx'
 export { MenuIcon } from './MenuIcon'
 export { SearchIcon } from './SearchIcon'
 export { FireIcon } from './FireIcon'
