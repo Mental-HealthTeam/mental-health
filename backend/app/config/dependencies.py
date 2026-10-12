@@ -2,7 +2,6 @@ from typing import Annotated
 
 from config.settings import Settings
 from fastapi import Depends
-from pydantic_settings import BaseSettings
 
 from redis_storage.redis_storage import RedisSessionStorage
 from config.settings import BaseAppSettings
@@ -23,12 +22,15 @@ def get_redis_storage(
 
 
 def get_payment_provider(
-    settings: Annotated[Settings, Depends(get_settings)]
+    settings: Annotated[BaseAppSettings, Depends(get_settings)]
 ) -> PaymentProviderInterface:
-    return StripePaymentProvider(settings=settings)
-    return RedisSessionStorage(
-        redis_url=settings.REDIS_URL
-    )
+    if settings.PAYMENT_PROVIDER == "stripe":
+        return StripePaymentProvider(
+            api_key=settings.STRIPE_SECRET_KEY,
+            success_url=settings.SUCCESS_PAYMENTS_REDIRECT,
+            cancel_url=settings.CANCEL_PAYMENTS_REDIRECT,
+            webhook_secret=settings.STRIPE_WEBHOOK_SECRET
+        )
 
 
 def get_jwt_manager(
