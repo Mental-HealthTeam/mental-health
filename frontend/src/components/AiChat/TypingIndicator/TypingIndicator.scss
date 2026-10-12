@@ -1,0 +1,22 @@
+@use '../../../styles/abstracts' as a;
+
+.typing-indicator {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: max-content;
+    gap: 4px;
+    color: a.$color-gray-60;
+    animation: pulsation 0.8s infinite alternate;
+
+    @keyframes pulsation {
+        0% {
+            opacity: 0.7;
+            transform: scale(0.95);
+        }
+        100% {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+}

@@ -1,4 +1,3 @@
-// components/Search/Search.tsx
 import './Search.scss'
 import { useState } from 'react'
 import type { ChangeEvent, FormEvent } from 'react'

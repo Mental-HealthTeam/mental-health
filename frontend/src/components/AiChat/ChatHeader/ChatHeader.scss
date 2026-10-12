@@ -5,6 +5,7 @@
     flex-direction: column;
     align-items: flex-end;
     gap: 8px;
+    flex-shrink: 0;
 
     &__close {
         display: flex;
@@ -19,8 +20,8 @@
         color: #909988;
 
         &:hover {
-          background: transparent;
-          color: a.$color-primary;
+            background: transparent;
+            color: a.$color-primary;
         }
     }
 
@@ -32,10 +33,6 @@
         background-color: #fcfcfc;
         border-radius: 20px;
         padding: 16px 24px;
-    }
-
-    &__avatar-ai {
-        height: 100%;
     }
 
     &__info {

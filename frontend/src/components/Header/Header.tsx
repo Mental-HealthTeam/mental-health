@@ -11,8 +11,11 @@ import { ArrowRightIcon, LogoIcon, MenuIcon, SparkIcon } from '../UI/Icons'
 import { headerNavigationItems } from '../../constants/navigation'
 
 import './Header.scss'
+import { useAppDispatch } from '../../app/hooks'
+import { openAiChat } from '../../app/store/slices/aiChatSlice'
 
 export const Header = () => {
+    const dispatch = useAppDispatch()
     const [isMenuOpen, setIsMenuOpen] = useState(false)
 
     const { t: tActions } = useTranslation('actions')
@@ -24,6 +27,11 @@ export const Header = () => {
 
     const closeMenu = () => {
         setIsMenuOpen(false)
+    }
+
+    const handleOpenChat = () => {
+        closeMenu()
+        dispatch(openAiChat())
     }
 
     useEffect(() => {
@@ -58,13 +66,12 @@ export const Header = () => {
                     <div className="header__actions">
                         <Button
                             className="header__ai-button"
-                            href="#ai-search"
                             variant="primary"
                             size="large"
                             startIcon={<SparkIcon />}
                             endIcon={<ArrowRightIcon />}
                             ariaLabel={tActions('findPsychologist')}
-                            onClick={closeMenu}
+                            onClick={handleOpenChat}
                         >
                             {tActions('findPsychologist')}
                         </Button>

@@ -2,30 +2,38 @@ import { AnimatePresence, motion } from 'motion/react'
 import { createPortal } from 'react-dom'
 import { ChatHeader } from './ChatHeader/ChatHeader'
 import { useAppDispatch, useAppSelector } from '../../app/hooks'
-import { addMessage, closeAiChat } from '../../app/store/slices/aiChatSlice'
-
-import './AiChat.scss'
+import { closeAiChat, sendUserMessage } from '../../app/store/slices/aiChatSlice'
 import { useEffect } from 'react'
-import { createMessage } from '../../utils/createMessage'
+import { MessageList } from './MessageList/MessageList'
+import './AiChat.scss'
+import { ChatInput } from './ChatInput/ChatInput'
 
 export const AiChat = () => {
     const dispatch = useAppDispatch()
-    const { isOpen } = useAppSelector((state) => state.aiChat)
+    const { isOpen, status } = useAppSelector((state) => state.aiChat)
+
     const handleClose = () => {
         if (isOpen) {
             dispatch(closeAiChat())
         }
     }
 
+    const handleSend = (text: string) => {
+        dispatch(sendUserMessage({ text }))
+    }
+
     useEffect(() => {
-        dispatch(
-            addMessage(
-                createMessage(
-                    'Доброго дня! Мене звати Анна, я твій ШІ-помічник “Mental Health Platform”. Розкажи, будь ласка, що тебе турбує — це допоможе швидше підібрати психолога, який підійде саме тобі.',
-                    'bot',
-                ),
-            ),
-        )
+        const handleEscape = (event: KeyboardEvent) => {
+            if (event.key === 'Escape') {
+                handleClose()
+            }
+        }
+
+        window.addEventListener('keydown', handleEscape)
+
+        return () => {
+            window.removeEventListener('keydown', handleEscape)
+        }
     }, [])
 
     return createPortal(
@@ -41,9 +49,16 @@ export const AiChat = () => {
                     exit={{ opacity: 0, x: 90, scale: 0.86 }}
                     transition={{ duration: 0.2, ease: 'easeOut' }}
                 >
-                    <ChatHeader onClose={handleClose} />
-                    {/* <MessageList /> */}
-                    {/* <ChatInput onSend={sendUserMessage} disabled={isTyping} /> */}
+                    <div className="ai-chat__content">
+                        <ChatHeader onClose={handleClose} />
+                        <MessageList isTyping={status === 'waiting'} />
+
+                        <ChatInput
+                            onSend={handleSend}
+                            disabled={status === 'waiting'}
+                            initialValue=""
+                        />
+                    </div>
                 </motion.div>
             )}
         </AnimatePresence>,

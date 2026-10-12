@@ -1,0 +1,30 @@
+@use '../../../styles/abstracts' as a;
+
+.chat-input {
+    display: flex;
+    gap: 16px;
+    justify-content: space-between;
+    align-items: center;
+    background-color: a.$color-background;
+    border-radius: a.$border-radius-ai-chat-region-avatar;
+    border: 1px solid a.$color-gray-20;
+    min-height: 70px;
+    padding: 16px;
+
+    &__field {
+        height: 100%;
+        outline: none;
+        border: none;
+
+        resize: none;
+
+        scrollbar-width: none;
+    }
+
+    &__send {
+        width: 36px;
+        height: 36px;
+        background: a.$color-secondary-gradient;
+        border-radius: 50%;
+    }
+}

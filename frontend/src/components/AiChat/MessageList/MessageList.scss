@@ -1,0 +1,53 @@
+@use '../../../styles/abstracts' as a;
+
+.message-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding-inline: 16px;
+
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+
+    scrollbar-width: thin;
+    scrollbar-color: a.$color-optional transparent;
+
+    > :first-child {
+        margin-top: auto;
+    }
+
+    &::-webkit-scrollbar {
+        width: 2px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: transparent;
+        margin: 6px 0;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: a.$color-secondary-gradient;
+        border-radius: 999px;
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+        background: a.$color-optional;
+    }
+
+    &__messages {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    &__date {
+        width: 100%;
+        text-align: center;
+    }
+
+    &__button-search-psy {
+      padding: 12px;
+      background: a.$color-optional;
+    }
+}

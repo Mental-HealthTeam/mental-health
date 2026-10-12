@@ -5,15 +5,18 @@ import { Search } from '../UI/Search'
 import './Hero.scss'
 import { AvatarGroup } from '../UI/Avatar'
 import { avatars } from '../../constants/avatars'
+import { openAiChat } from '../../app/store/slices/aiChatSlice'
+import { useAppDispatch } from '../../app/hooks'
 
 const USERS_COUNT = 1000
 const SPECIALISTS_COUNT = 50
 
 export const Hero = () => {
     const { t } = useTranslation('home')
+    const dispatch = useAppDispatch()
 
-    const handleSubmit = (value: string) => {
-        return value
+    const handleOpenChat = () => {
+        dispatch(openAiChat())
     }
 
     return (
@@ -27,7 +30,7 @@ export const Hero = () => {
 
                 <Search
                     className="hero__search"
-                    onSubmit={handleSubmit}
+                    onSubmit={handleOpenChat}
                     placeholder={t('hero.search.placeholder')}
                     buttonText={t('hero.search.button')}
                 />

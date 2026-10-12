@@ -1,44 +1,83 @@
-// import classNames from 'classnames'
-// import { Button } from '../../UI/Button'
-// import { CloseAiChatIcon } from '../../UI/Icons/CloseAiChatIcon'
-// import AvatarAi from '../../../assets/avatars/avatar-ai.png'
-// import { Avatar } from '../../UI/Avatar'
+import { useEffect, useRef } from 'react'
+import { searchPsychologists, sendUserMessage } from '../../../app/store/slices/aiChatSlice'
+import classNames from 'classnames'
+import { ChatMessage } from '../ChatMessage/ChatMessage'
 
-// import './ChatHeader.scss'
-// import { useAppSelector } from '../../../app/hooks'
+import './MessageList.scss'
+import { formatChatDate } from '../../../utils/formatChatDate'
+import { TypingIndicator } from '../TypingIndicator/TypingIndicator'
+import { Button } from '../../UI/Button'
+import { useAppDispatch, useAppSelector } from '../../../app/hooks'
 
-// type Props = {
-//     className?: string
-// }
+type Props = {
+    isTyping: boolean
+    className?: string
+}
 
-// export const MessageList = ({ className }: Props) => {
-//     const { messages } = useAppSelector((state) => state.aiChat)
+export const MessageList = ({ isTyping, className }: Props) => {
+    const dispatch = useAppDispatch()
+    const { messages, error, lastUserText, matchData
+      
+     } = useAppSelector(
+        (state) => state.aiChat,
+    )
+    const endRef = useRef<HTMLDivElement>(null)
 
-//     return (
-//         <header className={classNames('chat-header', className)}>
-//             <Button
-//                 className="chat-header__close"
-//                 variant="secondary"
-//                 size="small"
-//                 ariaLabel="Закрити чат"
-//                 startIcon={<CloseAiChatIcon />}
-//                 onClick={onClose}
-//             />
+    const firstCreatedAt = messages[0].createdAt
 
-//             <div className="chat-header__region-avatar-ai">
-//                 <Avatar
-//                     src={AvatarAi}
-//                     alt="avatar-ai"
-//                     className="chat-header__avatar-ai"
-//                     size="large"
-//                 />
+    useEffect(() => {
+        endRef.current?.scrollIntoView({ behavior: 'smooth' })
+    }, [messages.length, isTyping])
 
-//                 <div className="chat-header__info">
-//                     <h2 className="chat-header__name">Анна</h2>
-//                     <p className="chat-header__role">Твій ШІ-консультант</p>
-//                     <span className="chat-header__status">ONLINE</span>
-//                 </div>
-//             </div>
-//         </header>
-//     )
-// }
+    return (
+        <div className={classNames('message-list', className)}>
+            <time className="message-list__date" dateTime={new Date(firstCreatedAt).toISOString()}>
+                {formatChatDate(firstCreatedAt)}
+            </time>
+            <div className="message-list__messages">
+                {messages.map((item) => (
+                    <ChatMessage
+                        key={item.id}
+                        message={item.message}
+                        fromWho={item.fromWho}
+                        className="message-list__message"
+                    />
+                ))}
+            </div>
+
+            {isTyping && <TypingIndicator />}
+
+            {error && lastUserText && (
+                <div className="message-list__error" role="alert">
+                    <p>{error}</p>
+                    <Button
+                        className="message-list__button-try-again"
+                        size="small"
+                        variant="secondary"
+                        ariaLabel="Повторити запит"
+                        onClick={() =>
+                            dispatch(sendUserMessage({ text: lastUserText, retry: true }))
+                        }
+                    >
+                        Спробувати ще раз
+                    </Button>
+                </div>
+            )}
+
+            {matchData?.ready_for_search && (
+                <Button
+                    className="message-list__button-search-psy"
+                    ariaLabel="Підібрати психолога"
+                    fullWidth
+                    onClick={() => dispatch(searchPsychologists())}
+                >
+                    Підібрати психолога
+                </Button>
+            )}
+
+            {/* {psychologists.length > 0 && <PsychologistList psychologists={psychologists} />} */}
+
+            <div ref={endRef} />
+        </div>
+    )
+}
