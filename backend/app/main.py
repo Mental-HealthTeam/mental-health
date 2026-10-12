@@ -8,7 +8,8 @@ from routes import (
     psychologists_router,
     matching_psychologists_router,
     payments_router,
-    auth_router
+    auth_router,
+    bookings_router,
 )
 
 
