@@ -22,7 +22,7 @@ resource "aws_security_group" "server_sg" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = ["46.205.206.167/32"]
   }
 
   # Frontend (3000)
