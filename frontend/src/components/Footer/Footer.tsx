@@ -46,11 +46,7 @@ export const Footer = () => {
                             href="#home"
                             aria-label={tAccessibility('homeLink')}
                         >
-                            <LogoIcon
-                                textColor="#FFFFFF"
-                                className="footer__logo-icon"
-                                aria-hidden="true"
-                            />
+                            <LogoIcon className="footer__logo-icon" aria-hidden="true" />
                         </a>
 
                         <p className="footer__description">{tFooter('description')}</p>

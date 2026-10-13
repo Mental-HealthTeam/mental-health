@@ -11,12 +11,17 @@ import {
 
 import type { IconProps } from '../components/UI/Icons/WhyChoosePlatform'
 
+type WhyChooseUsItemId =
+    'relationships' | 'specialists' | 'space' | 'learning' | 'support' | 'balance'
+
 type WhyChooseUsItem = {
-    id: 'relationships' | 'specialists' | 'space' | 'learning' | 'support' | 'balance'
-    labelKey: string
-    titleKey: string
-    Icon: ComponentType<IconProps>
-}
+    [Key in WhyChooseUsItemId]: {
+        id: Key
+        labelKey: `items.${Key}.label`
+        titleKey: `items.${Key}.title`
+        Icon: ComponentType<IconProps>
+    }
+}[WhyChooseUsItemId]
 
 export const whyChooseUs: WhyChooseUsItem[] = [
     {
