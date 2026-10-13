@@ -1,9 +1,9 @@
 import './Search.scss'
-import { useState } from 'react'
 import type { ChangeEvent, FormEvent } from 'react'
+import { useState } from 'react'
 import classNames from 'classnames'
-import { Button } from '../Button'
 import { ArrowIcon, SearchIcon } from '../Icons'
+import { PrimaryButton } from '../Buttons'
 
 type SearchSize = 'small' | 'medium' | 'large'
 
@@ -83,16 +83,13 @@ export const Search = ({
                 />
             </label>
 
-            <Button
-                className="search__button"
+            <PrimaryButton
                 type="submit"
-                variant="primary"
-                size={size}
                 disabled={disabled}
-                endIcon={<ArrowIcon />}
+                endIcon={<ArrowIcon height={14} width={14} />}
             >
                 {buttonText}
-            </Button>
+            </PrimaryButton>
         </form>
     )
 }

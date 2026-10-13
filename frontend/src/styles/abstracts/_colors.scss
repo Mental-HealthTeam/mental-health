@@ -4,40 +4,48 @@
 
 $color-background: #fcfcfc;
 
-$color-primary: #1b1c1c;
+$color-primary: #202120;
 
-$color-secondary-start: #25e956;
-$color-secondary-middle: #0cbb7f;
-$color-secondary-end: #0ec673;
+$color-secondary-start: #a9db87;
+$color-secondary-end: #47996d;
 
 $color-secondary-gradient: linear-gradient(
-    135deg,
-    $color-secondary-start,
-    $color-secondary-middle,
-    $color-secondary-end
+                135deg,
+                $color-secondary-start,
+                $color-secondary-end
 );
 
-$color-optional: #06583c;
+$color-tertiary-start: #91c178;
+$color-tertiary-end: #4e9265;
+
+$color-tertiary-gradient: linear-gradient(
+                135deg,
+                $color-tertiary-start,
+                $color-tertiary-end
+);
+
+$color-optional: #3a5b4a;
 
 // ======================================================
 // Gray scale
 // ======================================================
 
-$color-gray-100: #080808;
-$color-gray-80: #343536;
-$color-gray-60: #656768;
-$color-gray-40: #a7aaac;
-$color-gray-20: #ced0d1;
-$color-gray-0: #f9f9f9;
+$color-gray-100: #181e18;
+$color-gray-80: #3d483e;
+$color-gray-60: #686f61;
+$color-gray-40: #909988;
+$color-gray-20: #bbc4b3;
+$color-gray-10: #e3ecd8;
+$color-gray-0: #f2f7ee;
 
 // ======================================================
 // Status colors
 // ======================================================
 
-$color-error: #fa2424;
-$color-process: #306be1;
-$color-warning: #edcb22;
-$color-success: #29b647;
+$color-error: #f03434;
+$color-process: #2a6da7;
+$color-warning: #e9de39;
+$color-success: #2aa767;
 
 // ======================================================
 // Semantic colors

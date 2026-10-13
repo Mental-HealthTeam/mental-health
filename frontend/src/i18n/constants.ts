@@ -12,7 +12,7 @@ export const NAMESPACES = [
     'navigation',
     'actions',
     'accessibility',
-    'home',
+    'hero',
     'psychologists',
     'auth',
     'whyUs',
