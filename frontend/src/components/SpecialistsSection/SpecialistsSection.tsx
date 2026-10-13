@@ -5,8 +5,8 @@ import { useScreenLayout } from '../../hooks'
 import { Container } from '../Container'
 import { SpecialistCard } from '../SpecialistCard'
 import { ArrowButton } from '../UI/ArrowButton'
-import { Button } from '../UI/Button'
-import { ArrowIcon } from '../UI/Icons'
+import { OutlineButton } from '../UI/Buttons'
+import { SectionIndex } from '../UI/SectionIndex'
 
 import './SpecialistsSection.scss'
 
@@ -19,7 +19,7 @@ const FILTERS = [
     'САМООЦІНКА',
     'СТОСУНКИ',
     'ЕКСТРЕНИЙ ЗАПИС',
-]
+] as const
 
 const MOCK_SPECIALISTS = Array.from({ length: 5 }, (_, index) => ({
     id: index + 1,
@@ -32,7 +32,7 @@ export const SpecialistsSection = () => {
 
     const { visibleCards } = useScreenLayout()
 
-    const [activeFilter, setActiveFilter] = useState('ВСІ')
+    const [activeFilter, setActiveFilter] = useState<(typeof FILTERS)[number]>('ВСІ')
 
     const sliderStyle = {
         '--visible-cards': visibleCards,
@@ -67,11 +67,7 @@ export const SpecialistsSection = () => {
     return (
         <section className="specialists-section">
             <Container className="specialists-section__container">
-                <div className="specialists-section__number">
-                    <span>03</span>
-
-                    <span className="specialists-section__number-line" aria-hidden="true" />
-                </div>
+                <SectionIndex index={3} className="specialists-section__section-index" />
 
                 <h2 className="specialists-section__title">Наші фахівці</h2>
 
@@ -137,14 +133,9 @@ export const SpecialistsSection = () => {
                     />
                 </div>
 
-                <Button
-                    className="specialists-section__all-button"
-                    variant="primary"
-                    size="medium"
-                    endIcon={<ArrowIcon direction="right" />}
-                >
+                <OutlineButton className="specialists-section__all-button" variant="secondary">
                     ПЕРЕГЛЯНУТИ ВСІХ
-                </Button>
+                </OutlineButton>
             </Container>
         </section>
     )

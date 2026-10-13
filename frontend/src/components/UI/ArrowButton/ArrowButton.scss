@@ -5,7 +5,6 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-
   flex-shrink: 0;
 
   width: c.$arrow-button-size;
@@ -13,10 +12,10 @@
 
   padding: 0;
 
-  border: c.$arrow-button-border-width solid a.$color-primary;
+  border: c.$arrow-button-border-width solid a.$color-optional;
   border-radius: 50%;
 
-  color: a.$color-primary;
+  color: a.$color-optional;
   background-color: transparent;
 
   cursor: pointer;
@@ -32,27 +31,27 @@
     height: c.$arrow-button-icon-size;
   }
 
-  &:hover {
+  &:hover:not(:disabled) {
     border-color: a.$color-gray-60;
 
-    color: a.$color-white;
+    color: a.$color-gray-0;
     background-color: a.$color-gray-60;
   }
 
-  &:active {
+  &:active:not(:disabled) {
     border-color: a.$color-primary;
 
-    color: a.$color-white;
+    color: a.$color-gray-0;
     background-color: a.$color-primary;
   }
 
   &:focus-visible {
-    outline: 2px solid a.$color-process;
-    outline-offset: 2px;
+    outline: 2px solid a.$color-secondary-start;
+    outline-offset: 3px;
   }
 
   &:disabled {
-    opacity: 0.5;
+    opacity: 0.4;
 
     cursor: not-allowed;
   }

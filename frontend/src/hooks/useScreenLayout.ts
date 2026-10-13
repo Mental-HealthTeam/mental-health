@@ -39,13 +39,13 @@ const getLayout = (): ScreenLayout => {
     if (width < EXTRA_LARGE_DESKTOP_BREAKPOINT) {
         return {
             screenType: 'desktop',
-            visibleCards: 4,
+            visibleCards: 3,
         }
     }
 
     return {
         screenType: 'desktop',
-        visibleCards: 5,
+        visibleCards: 3,
     }
 }
 

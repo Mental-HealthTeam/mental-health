@@ -1,0 +1,33 @@
+{
+    "titleStart": "Why choose",
+    "titleBrand": "Mental",
+    "titleHealth": "Health",
+    "description": "Our service is designed to make high-quality professional psychological support as accessible as possible for everyone. AI-assisted therapist matching helps you quickly understand your needs and find a qualified specialist for any budget without exhausting questionnaires.",
+    "items": {
+        "relationships": {
+            "label": "We help",
+            "title": "Build healthy and harmonious relationships with loved ones"
+        },
+        "specialists": {
+            "label": "We match",
+            "title": "You with verified specialists for managing stress and anxiety"
+        },
+        "space": {
+            "label": "We create",
+            "title": "A safe space for comfortable therapy and personal growth"
+        },
+        "learning": {
+            "label": "We teach",
+            "title": "You to take care of yourself, understand and maintain your boundaries"
+        },
+        "support": {
+            "label": "We support",
+            "title": "You through difficult periods of change and new beginnings"
+        },
+        "balance": {
+            "label": "We guide",
+            "title": "You toward a healthy balance between work and personal life"
+        }
+    },
+    "cta": "Start a conversation"
+}

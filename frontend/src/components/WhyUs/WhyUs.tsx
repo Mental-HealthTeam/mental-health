@@ -2,8 +2,12 @@ import { useTranslation } from 'react-i18next'
 
 import specialistImage from '../../assets/images/photo-card.png'
 
+import { whyUsCards } from '../../constants/whyUs'
+
 import { Container } from '../Container'
-import { Button } from '../UI/Button'
+import { PrimaryButton } from '../UI/Buttons'
+import { ArrowIcon } from '../UI/Icons'
+import { SectionIndex } from '../UI/SectionIndex'
 
 import './WhyUs.scss'
 
@@ -19,57 +23,48 @@ export const WhyUs = () => {
     return (
         <section className="why-us" id="about">
             <Container className="why-us__container">
-                <div className="why-us__number">
-                    <span>04</span>
-                    <span className="why-us__number-line" aria-hidden="true" />
-                </div>
+                <SectionIndex index={4} className="why-us__section-index" />
 
                 <h2 className="why-us__title">
                     {t('title')} <span className="why-us__title-accent">{t('titleAccent')}</span>
                 </h2>
 
                 <div className="why-us__grid">
-                    <article className="why-us__card why-us__card--ai">
-                        <span className="why-us__label">{t('ai.label')}</span>
+                    {whyUsCards.map((card) => {
+                        const className = `why-us__card ${card.className}`
 
-                        <p className="why-us__caption">{t('ai.caption')}</p>
+                        if (card.type === 'value') {
+                            return (
+                                <article className={className} key={card.id}>
+                                    <strong className="why-us__value">{t(card.valueKey)}</strong>
 
-                        <p className="why-us__text">{t('ai.text')}</p>
-                    </article>
+                                    <p className="why-us__small-text">{t(card.textKey)}</p>
+                                </article>
+                            )
+                        }
 
-                    <article className="why-us__card why-us__card--specialists">
-                        <strong className="why-us__value">{t('specialists.value')}</strong>
+                        if (card.type === 'matching') {
+                            return (
+                                <article className={className} key={card.id}>
+                                    <strong className="why-us__matching-value">
+                                        {t(card.valueKey)}
+                                    </strong>
 
-                        <p className="why-us__small-text">{t('specialists.text')}</p>
-                    </article>
+                                    <p className="why-us__matching-text">{t(card.textKey)}</p>
+                                </article>
+                            )
+                        }
 
-                    <article className="why-us__card why-us__card--availability">
-                        <strong className="why-us__value">{t('availability.value')}</strong>
+                        return (
+                            <article className={className} key={card.id}>
+                                <span className="why-us__label">{t(card.labelKey)}</span>
 
-                        <p className="why-us__small-text">{t('availability.text')}</p>
-                    </article>
+                                <p className="why-us__caption">{t(card.captionKey)}</p>
 
-                    <article className="why-us__card why-us__card--speed">
-                        <span className="why-us__label">{t('speed.label')}</span>
-
-                        <p className="why-us__caption">{t('speed.caption')}</p>
-
-                        <p className="why-us__text">{t('speed.text')}</p>
-                    </article>
-
-                    <article className="why-us__card why-us__card--matching">
-                        <strong className="why-us__matching-value">{t('matching.value')}</strong>
-
-                        <p className="why-us__matching-text">{t('matching.text')}</p>
-                    </article>
-
-                    <article className="why-us__card why-us__card--flexibility">
-                        <span className="why-us__label">{t('flexibility.label')}</span>
-
-                        <p className="why-us__caption">{t('flexibility.caption')}</p>
-
-                        <p className="why-us__text">{t('flexibility.text')}</p>
-                    </article>
+                                <p className="why-us__text">{t(card.textKey)}</p>
+                            </article>
+                        )
+                    })}
 
                     <article className="why-us__specialist">
                         <img
@@ -88,15 +83,13 @@ export const WhyUs = () => {
                     </article>
                 </div>
 
-                <Button
+                <PrimaryButton
                     className="why-us__button"
-                    href="#ai-search"
-                    variant="primary"
-                    size="medium"
-                    ariaLabel={t('cta')}
+                    endIcon={<ArrowIcon />}
+                    aria-label={t('cta')}
                 >
                     {t('cta')}
-                </Button>
+                </PrimaryButton>
             </Container>
         </section>
     )

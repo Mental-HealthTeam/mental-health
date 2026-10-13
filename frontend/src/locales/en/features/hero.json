@@ -1,0 +1,15 @@
+{
+    "title": "Psychotherapy",
+    "titleAccent": "tailored to your needs",
+    "subtitle": "Our AI assistant will match you with a specialist based on your needs and schedule — no subscriptions or lengthy questionnaires",
+    "search": {
+        "placeholder": "Describe how you feel or what you need help with...",
+        "button": "Find a match"
+    },
+    "imageAlt": "Smiling woman outdoors",
+    "stats": {
+        "users": "Users have already joined the platform",
+        "specialistsMobile": "50+ specialists supporting mental health",
+        "specialistsDesktop": "More than 50 specialists supporting your mental health"
+    }
+}

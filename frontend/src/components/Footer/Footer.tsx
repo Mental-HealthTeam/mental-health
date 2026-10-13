@@ -1,12 +1,33 @@
 import { useTranslation } from 'react-i18next'
 
-import { Container } from '../Container'
-import { LogoIcon } from '../UI/Icons/LogoIcon'
-
 import { footerNavigationItems } from '../../constants/navigation'
 import { clientLinks, legalLinks, specialistLinks } from '../../constants/footerLinks'
 
+import { Container } from '../Container'
+import { LogoIcon } from '../UI/Icons/LogoIcon'
+
 import './Footer.scss'
+
+const FOOTER_CONTACTS = [
+    {
+        id: 'email',
+        label: 'support@platform.com',
+        href: 'mailto:support@platform.com',
+        icon: '✉',
+    },
+    {
+        id: 'telegram',
+        label: '@support_bot',
+        href: 'https://t.me/support_bot',
+        icon: '@',
+    },
+    {
+        id: 'phone',
+        label: '+380 (44) 123-45-67',
+        href: 'tel:+380441234567',
+        icon: '⌕',
+    },
+] as const
 
 export const Footer = () => {
     const currentYear = new Date().getFullYear()
@@ -33,9 +54,26 @@ export const Footer = () => {
                         </a>
 
                         <p className="footer__description">{tFooter('description')}</p>
+
+                        <ul className="footer__contacts">
+                            {FOOTER_CONTACTS.map(({ id, label, href, icon }) => (
+                                <li className="footer__contact-item" key={id}>
+                                    <a className="footer__contact-link" href={href}>
+                                        <span className="footer__contact-icon" aria-hidden="true">
+                                            {icon}
+                                        </span>
+
+                                        <span>{label}</span>
+                                    </a>
+                                </li>
+                            ))}
+                        </ul>
                     </div>
 
-                    <nav className="footer__column" aria-labelledby="footer-navigation-title">
+                    <nav
+                        className="footer__column footer__column--navigation"
+                        aria-labelledby="footer-navigation-title"
+                    >
                         <h2 className="footer__title" id="footer-navigation-title">
                             {tFooter('sections.navigation')}
                         </h2>
@@ -49,7 +87,10 @@ export const Footer = () => {
                         </ul>
                     </nav>
 
-                    <nav className="footer__column" aria-labelledby="footer-clients-title">
+                    <nav
+                        className="footer__column footer__column--clients"
+                        aria-labelledby="footer-clients-title"
+                    >
                         <h2 className="footer__title" id="footer-clients-title">
                             {tFooter('sections.clients')}
                         </h2>
@@ -63,7 +104,10 @@ export const Footer = () => {
                         </ul>
                     </nav>
 
-                    <nav className="footer__column" aria-labelledby="footer-specialists-title">
+                    <nav
+                        className="footer__column footer__column--specialists"
+                        aria-labelledby="footer-specialists-title"
+                    >
                         <h2 className="footer__title" id="footer-specialists-title">
                             {tFooter('sections.specialists')}
                         </h2>
@@ -115,8 +159,7 @@ export const Footer = () => {
                     </p>
 
                     <p className="footer__copyright">
-                        <span aria-hidden="true">© </span>
-                        {currentYear} {tFooter('copyright')}
+                        © {currentYear} {tFooter('copyright')}
                     </p>
                 </div>
             </Container>

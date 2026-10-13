@@ -2,28 +2,40 @@ import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import classNames from 'classnames'
 
-import { Container } from '../Container'
-import { LanguageSwitcher } from '../LanguageSwitcher'
-import { Navigation } from '../Navigation'
-import { Button } from '../UI/Button'
-
 import { headerNavigationItems } from '../../constants/navigation'
 
+import { Container } from '../Container'
+import { LanguageSwitcher } from '../LanguageSwitcher'
+import { OutlineButton, PrimaryButton } from '../UI/Buttons'
+import { ArrowIcon, CloseIcon, LogoIcon, MenuIcon, SparkIcon } from '../UI/Icons'
+
 import './Header.scss'
-import { ArrowIcon, LogoIcon, MenuIcon, SparkIcon } from '../UI/Icons'
 
 export const Header = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false)
+    const [activeHref, setActiveHref] = useState('#about')
+
+    const currentYear = new Date().getFullYear()
 
     const { t: tActions } = useTranslation('actions')
     const { t: tAccessibility } = useTranslation('accessibility')
+    const { t: tNavigation } = useTranslation('navigation')
+
+    const closeMenu = () => {
+        setIsMenuOpen(false)
+    }
 
     const toggleMenu = () => {
         setIsMenuOpen((currentValue) => !currentValue)
     }
 
-    const closeMenu = () => {
-        setIsMenuOpen(false)
+    const handleNavigation = (href: string) => {
+        setActiveHref(href)
+        closeMenu()
+
+        document.querySelector(href)?.scrollIntoView({
+            behavior: 'smooth',
+        })
     }
 
     useEffect(() => {
@@ -42,73 +54,118 @@ export const Header = () => {
 
     return (
         <header className="header">
-            <Container className="header__container">
-                <a
-                    className="header__logo"
-                    href="#home"
-                    aria-label={tAccessibility('homeLink')}
-                    onClick={closeMenu}
-                >
-                    <LogoIcon className="header__logo-icon" />
-                </a>
+            <Container
+                className={classNames('header__container', {
+                    'header__container--menu-open': isMenuOpen,
+                })}
+            >
+                <div className="header__top">
+                    <a
+                        className="header__logo"
+                        href="#home"
+                        aria-label={tAccessibility('homeLink')}
+                        onClick={closeMenu}
+                    >
+                        <LogoIcon className="header__logo-icon" />
+                    </a>
 
-                <div className="header__content">
-                    <Navigation items={headerNavigationItems} className="header__navigation" />
-
-                    <div className="header__actions">
-                        <Button
-                            className="header__ai-button"
-                            href="#ai-search"
-                            variant="primary"
-                            size="large"
-                            startIcon={<SparkIcon />}
-                            endIcon={<ArrowIcon />}
-                            ariaLabel={tActions('findPsychologist')}
-                            onClick={closeMenu}
+                    <div className="header__content">
+                        <nav
+                            className="header__navigation"
+                            aria-label={tAccessibility('mainNavigation')}
                         >
-                            {tActions('findPsychologist')}
-                        </Button>
+                            <ul className="header__navigation-list">
+                                {headerNavigationItems.map(({ href, key }) => {
+                                    const isActive = activeHref === href
 
-                        <span className="header__divider" aria-hidden="true" />
+                                    return (
+                                        <li key={href}>
+                                            <button
+                                                className={classNames('header__navigation-link', {
+                                                    'header__navigation-link--active': isActive,
+                                                })}
+                                                type="button"
+                                                aria-current={isActive ? 'page' : undefined}
+                                                onClick={() => handleNavigation(href)}
+                                            >
+                                                {tNavigation(key)}
+                                            </button>
+                                        </li>
+                                    )
+                                })}
+                            </ul>
+                        </nav>
 
-                        <div className="header__auth">
-                            <Button
-                                className="header__login-button"
-                                href="#login"
-                                variant="secondary"
-                                size="medium"
-                                onClick={closeMenu}
+                        <div className="header__actions">
+                            <PrimaryButton
+                                className="header__ai-button"
+                                startIcon={<SparkIcon />}
+                                endIcon={
+                                    <span className="header__ai-arrow">
+                                        <ArrowIcon />
+                                    </span>
+                                }
+                                aria-label={tActions('findPsychologist')}
+                                onClick={() => handleNavigation('#ai-search')}
                             >
-                                {tActions('login')}
-                            </Button>
+                                <span className="header__ai-label">
+                                    {tActions('findPsychologist')}
+                                </span>
+                            </PrimaryButton>
 
-                            <Button
-                                className="header__register-button"
-                                href="#register"
-                                variant="primary"
-                                size="medium"
-                                onClick={closeMenu}
+                            <span className="header__divider" aria-hidden="true" />
+
+                            <div className="header__auth">
+                                <OutlineButton
+                                    className="header__login-button"
+                                    variant="tertiary"
+                                    onClick={() => handleNavigation('#login')}
+                                >
+                                    {tActions('login')}
+                                </OutlineButton>
+
+                                <OutlineButton
+                                    className="header__register-button"
+                                    variant="secondary"
+                                    onClick={() => handleNavigation('#register')}
+                                >
+                                    {tActions('register')}
+                                </OutlineButton>
+                            </div>
+
+                            <button
+                                className={classNames('header__menu-button', {
+                                    'header__menu-button--open': isMenuOpen,
+                                })}
+                                type="button"
+                                aria-label={
+                                    isMenuOpen
+                                        ? tAccessibility('closeMenu')
+                                        : tAccessibility('openMenu')
+                                }
+                                aria-expanded={isMenuOpen}
+                                aria-controls="header-mobile-menu"
+                                onClick={toggleMenu}
                             >
-                                {tActions('register')}
-                            </Button>
+                                <span
+                                    className={classNames('header__menu-icon', {
+                                        'header__menu-icon--hidden': isMenuOpen,
+                                    })}
+                                    aria-hidden="true"
+                                >
+                                    <MenuIcon />
+                                </span>
+
+                                <span
+                                    className={classNames('header__close-icon', {
+                                        'header__close-icon--visible': isMenuOpen,
+                                    })}
+                                    aria-hidden="true"
+                                >
+                                    <CloseIcon />
+                                </span>
+                            </button>
                         </div>
-
-                        <button
-                            className={classNames('header__menu-button', {
-                                'header__menu-button--open': isMenuOpen,
-                            })}
-                            type="button"
-                            aria-label={
-                                isMenuOpen
-                                    ? tAccessibility('closeMenu')
-                                    : tAccessibility('openMenu')
-                            }
-                            aria-expanded={isMenuOpen}
-                            aria-controls="header-mobile-menu"
-                            onClick={toggleMenu}
-                        >
-                            <MenuIcon />
-                        </button>
                     </div>
                 </div>
 
@@ -118,17 +175,54 @@ export const Header = () => {
                     })}
                     id="header-mobile-menu"
                 >
-                    <Navigation items={headerNavigationItems} onNavigate={closeMenu} />
+                    <div className="header__mobile-menu-inner">
+                        <div className="header__mobile-divider" />
 
-                    <Button
-                        href="#register"
-                        variant="primary"
-                        size="medium"
-                        fullWidth
-                        onClick={closeMenu}
-                    >
-                        {tActions('register')}
-                    </Button>
+                        <div className="header__mobile-register">
+                            <OutlineButton
+                                variant="secondary"
+                                onClick={() => handleNavigation('#register')}
+                            >
+                                {tActions('register')}
+                            </OutlineButton>
+                        </div>
+
+                        <div className="header__mobile-divider" />
+
+                        <nav
+                            className="header__mobile-navigation"
+                            aria-label={tAccessibility('mainNavigation')}
+                        >
+                            <ul className="header__mobile-navigation-list">
+                                {headerNavigationItems.map(({ href, key }) => {
+                                    const isActive = activeHref === href
+
+                                    return (
+                                        <li key={href}>
+                                            <button
+                                                className={classNames(
+                                                    'header__mobile-navigation-link',
+                                                    {
+                                                        'header__mobile-navigation-link--active':
+                                                            isActive,
+                                                    },
+                                                )}
+                                                type="button"
+                                                aria-current={isActive ? 'page' : undefined}
+                                                onClick={() => handleNavigation(href)}
+                                            >
+                                                {tNavigation(key)}
+                                            </button>
+                                        </li>
+                                    )
+                                })}
+                            </ul>
+                        </nav>
+
+                        <p className="header__mobile-copyright">
+                            Mental Health Platform © {currentYear}
+                        </p>
+                    </div>
                 </div>
 
                 <LanguageSwitcher className="header__language-switcher" />

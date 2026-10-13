@@ -5,36 +5,40 @@
 .hero {
     width: 100%;
     overflow-x: clip;
+    background-color: a.$color-background;
 
     &__container {
         @include flex-center;
+
         flex-direction: column;
-        padding-inline: c.$hero-padding-inline;
         gap: c.$hero-container-gap;
+
+        margin-bottom: 64px;
+
+        padding-inline: c.$hero-padding-inline;
     }
 
     &__title {
+        color: a.$color-text-primary;
         font-size: a.$font-size-h3;
         line-height: a.$line-height-h3;
         letter-spacing: a.$letter-spacing-h3;
         font-weight: a.$font-weight-h3;
-        color: a.$color-text;
         text-align: center;
     }
 
     &__title-accent {
-        background: a.$color-secondary-gradient;
-        -webkit-background-clip: text;
-        background-clip: text;
-        color: transparent;
+        color: inherit;
     }
 
     &__subtitle {
+        max-width: 680px;
+
+        color: a.$color-gray-60;
         font-size: a.$font-size-body;
         line-height: a.$line-height-body;
         letter-spacing: a.$letter-spacing-body;
         font-weight: a.$font-weight-body;
-        color: a.$color-gray-60;
         text-align: center;
     }
 
@@ -45,36 +49,44 @@
 
     &__media {
         position: relative;
+
         width: 100%;
         max-width: c.$hero-media-max-width;
     }
 
     &__image-wrap {
         position: relative;
-        border-radius: a.$border-radius-hero;
+
         overflow: hidden;
+
+        border-radius: a.$border-radius-hero;
+        background-color: a.$color-gray-0;
     }
 
     &__image {
         display: block;
+
         width: 100%;
         height: c.$hero-image-height;
+
         object-fit: cover;
         object-position: c.$hero-image-object-position;
 
         &--blur {
             position: absolute;
             inset: 0;
+
             pointer-events: none;
+
             filter: blur(c.$hero-image-blur);
             transform: scale(c.$hero-image-blur-scale);
 
             mask-image: linear-gradient(
-                to right,
-                #000,
-                transparent c.$hero-image-blur-mask-start,
-                transparent c.$hero-image-blur-mask-end,
-                #000
+                            to right,
+                            #000,
+                            transparent c.$hero-image-blur-mask-start,
+                            transparent c.$hero-image-blur-mask-end,
+                            #000
             );
         }
     }
@@ -82,8 +94,20 @@
     &__region-stat {
         display: flex;
         gap: c.$hero-stats-gap;
-        margin-top: c.$hero-stats-margin-block;
-        margin-bottom: c.$hero-stats-margin-block;
+
+        margin-block: c.$hero-stats-margin-block;
+    }
+
+    &__stat-wrap {
+        flex: 1;
+        min-width: 0;
+
+        border-radius: calc(
+                #{c.$hero-stat-border-radius} +
+                #{c.$hero-stat-outline-width-desktop}
+        );
+
+        background-color: a.$color-background;
     }
 
     &__stat {
@@ -91,44 +115,85 @@
         --glow-y: #{c.$hero-stat-glow-y};
 
         position: relative;
+
         display: flex;
+        width: 100%;
+        height: 100%;
+        min-width: 0;
         flex-direction: column;
         align-items: center;
         justify-content: space-between;
         gap: c.$hero-stat-gap;
-        padding: c.$hero-stat-padding;
-        border-radius: c.$hero-stat-border-radius;
-        text-align: center;
-        min-width: 0;
-        flex: 1;
 
-        background-color: a.$color-background;
+        padding: c.$hero-stat-padding;
+
+        overflow: hidden;
+
+        border-radius: c.$hero-stat-border-radius;
+
+        background-color: a.$color-gray-0;
         background-image: radial-gradient(
-            ellipse c.$hero-stat-glow-size at var(--glow-x) var(--glow-y),
-            rgba(a.$color-secondary-start, c.$hero-stat-glow-opacity-start) 0%,
-            rgba(a.$color-secondary-middle, c.$hero-stat-glow-opacity-middle) 50%,
-            rgba(a.$color-secondary-end, c.$hero-stat-glow-opacity-end) 100%
+                        ellipse c.$hero-stat-glow-size at var(--glow-x) var(--glow-y),
+                        rgba(
+                                        a.$color-secondary-start,
+                                        c.$hero-stat-glow-opacity-start
+                        )
+                        0%,
+                        rgba(
+                                        a.$color-tertiary-start,
+                                        c.$hero-stat-glow-opacity-middle
+                        )
+                        50%,
+                        rgba(
+                                        a.$color-tertiary-end,
+                                        c.$hero-stat-glow-opacity-end
+                        )
+                        100%
         );
 
-        box-shadow: c.$hero-stat-inset-shadow
-            rgba(a.$color-secondary-start, c.$hero-stat-inset-shadow-opacity);
+        box-shadow:
+                c.$hero-stat-inset-shadow
+                rgba(
+                                a.$color-secondary-start,
+                                c.$hero-stat-inset-shadow-opacity
+                ),
+                0 8px 24px rgba(a.$color-primary, 0.04);
+
+        text-align: center;
 
         &::after {
             content: '';
+
             position: absolute;
             inset: 0;
+
             padding: c.$hero-stat-glass-padding-width;
+
             border-radius: inherit;
+
             background: linear-gradient(
-                c.$hero-stat-glass-angle,
-                rgba(a.$color-background, c.$hero-stat-glass-opacity-start) 0%,
-                rgba(a.$color-background, c.$hero-stat-glass-opacity-middle)
-                    c.$hero-stat-glass-middle-stop,
-                rgba(a.$color-background, c.$hero-stat-glass-opacity-end) 100%
+                            c.$hero-stat-glass-angle,
+                            rgba(
+                                            a.$color-gray-0,
+                                            c.$hero-stat-glass-opacity-start
+                            )
+                            0%,
+                            rgba(
+                                            a.$color-gray-0,
+                                            c.$hero-stat-glass-opacity-middle
+                            )
+                            c.$hero-stat-glass-middle-stop,
+                            rgba(
+                                            a.$color-gray-0,
+                                            c.$hero-stat-glass-opacity-end
+                            )
+                            100%
             );
+
             mask:
-                linear-gradient(#000 0 0) content-box exclude,
-                linear-gradient(#000 0 0);
+                    linear-gradient(#000 0 0) content-box exclude,
+                    linear-gradient(#000 0 0);
+
             pointer-events: none;
         }
     }
@@ -144,17 +209,35 @@
     }
 
     &__stat-value {
+        position: relative;
+        z-index: 1;
+
+        color: a.$color-primary;
         font-size: a.$font-size-h3;
         line-height: a.$line-height-h3;
         letter-spacing: a.$letter-spacing-h3;
         font-weight: a.$font-weight-h3;
     }
 
+    &__stat-value-mobile,
+    &__stat-specialists-mobile {
+        display: inline;
+    }
+
+    &__stat-value-desktop,
+    &__stat-specialists-desktop {
+        display: none;
+    }
+
     &__stat-text {
+        position: relative;
+        z-index: 1;
+
         display: flex;
-        align-items: end;
         flex: 1;
-        color: a.$color-text-primary;
+        align-items: center;
+
+        color: a.$color-gray-80;
         font-size: a.$font-size-caption-third;
         line-height: a.$line-height-caption-third;
         font-weight: a.$font-weight-caption-third;
@@ -162,6 +245,9 @@
     }
 
     &__avatars-group {
+        position: relative;
+        z-index: 1;
+
         @include flex-center;
     }
 }
@@ -174,6 +260,14 @@
     }
 }
 
+@media (min-width: 768px) {
+    .hero {
+        &__container {
+            margin-bottom: 88px;
+        }
+    }
+}
+
 @media (min-width: a.$breakpoint-hero-stats) {
     .hero {
         &__title {
@@ -182,23 +276,42 @@
             letter-spacing: a.$letter-spacing-h2;
             font-weight: a.$font-weight-h2;
         }
-        &__stat {
-            flex-direction: row;
+
+        &__stat-wrap {
             position: absolute;
             z-index: c.$hero-stat-z-index;
+
             max-width: c.$hero-stat-max-width-desktop;
-            box-shadow:
-                0 0 0 c.$hero-stat-outline-width-desktop a.$color-background,
-                c.$hero-stat-inset-shadow rgba(a.$color-secondary-start, 0.1);
+            padding: c.$hero-stat-outline-width-desktop;
         }
-        &__stat--users {
+
+        &__stat-wrap--users {
             top: c.$hero-stat-users-top;
             left: c.$hero-stat-users-left;
         }
 
-        &__stat--specialists {
-            bottom: c.$hero-stat-specialists-bottom;
+        &__stat-wrap--specialists {
             right: c.$hero-stat-specialists-right;
+            bottom: c.$hero-stat-specialists-bottom;
+        }
+
+        &__stat {
+            flex-direction: row;
+
+            box-shadow:
+                    c.$hero-stat-inset-shadow
+                    rgba(a.$color-secondary-start, 0.14),
+                    0 8px 28px rgba(a.$color-primary, 0.06);
+        }
+
+        &__stat-value-mobile,
+        &__stat-specialists-mobile {
+            display: none;
+        }
+
+        &__stat-value-desktop,
+        &__stat-specialists-desktop {
+            display: inline;
         }
 
         &__stat-text {
@@ -213,6 +326,14 @@
             line-height: a.$line-height-h2;
             letter-spacing: a.$letter-spacing-h2;
             font-weight: a.$font-weight-h2;
+        }
+    }
+}
+
+@media (min-width: 1200px) {
+    .hero {
+        &__container {
+            margin-bottom: 114px;
         }
     }
 }
