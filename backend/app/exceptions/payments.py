@@ -11,3 +11,8 @@ class WebhookVerificationError(PaymentProviderError):
 class RefundNotSupportedError(PaymentProviderError):
     def __init__(self, message: str = "Refund is not supported by this payment provider."):
         super().__init__(message)
+
+
+class PayoutNotSupportedError(PaymentProviderError):
+    def __init__(self, message: str = "Payout is not supported by this payment provider."):
+        super().__init__(message)
