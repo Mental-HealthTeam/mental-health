@@ -50,7 +50,9 @@ found (also used for foreign bookings), 409 wrong state, 422 invalid data,
 503 the time slot is already taken.
 
 The cancel endpoint is completed by the payments module: a paid booking is
-refunded before `mark_cancelled` is called.
+refunded before `mark_cancelled` is called, unless the session starts in less
+than `BOOKING_FREE_CANCEL_HOURS` (planned setting, 24): then there is no refund,
+`mark_cancelled` is not used and the booking is paid out as a completed session.
 
 ## Service functions and who calls them
 
@@ -70,8 +72,25 @@ refunded before `mark_cancelled` is called.
 changes nothing and returns the booking. Payment providers repeat webhooks,
 so this is required.
 
+## Payouts
+
+- Psychologists work as sole proprietors (FOP). The payout goes to the FOP
+  settlement account (IBAN, tax number and account name). The provider gets
+  them as `PayoutRequest.recipient`.
+- The payout is made once a month for all completed bookings of one psychologist
+  (a batch). `PayoutRequest.reference` is the idempotency key of the batch, for
+  example `payout_<psychologist_id>_<YYYY-MM>`; the provider rejects a second
+  payout with the same reference. After a successful payout `mark_paid_out` is
+  called for every booking of the batch with the same `payout_reference`.
+- The platform fee is a percentage setting (`PLATFORM_FEE_PERCENT`, planned) and
+  is stored per booking in `platform_fee`.
+- Payout details are stored in `psychologists` (`iban`, `tax_id`,
+  `account_name`, all required) and are never returned by public endpoints or
+  written to logs.
+
 ## Open points
 
 - There are no columns for the dispute note and the admin who set it: both are
   written to the log for now.
-- Where the psychologist's payout card token is entered is not decided.
+- The form where a psychologist enters the payout details (in the
+  psychologist's cabinet) is not built yet.

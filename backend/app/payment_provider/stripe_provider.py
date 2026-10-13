@@ -18,12 +18,12 @@ from payment_provider.payment_types import (
     PayoutRequest,
     PayoutResult,
     WebhookAcknowledgement,
-    PaymentProviderName,
-    PayoutStatus
+    PaymentProviderName
 )
 from exceptions.payments import (
     WebhookVerificationError,
-    PaymentProviderError
+    PaymentProviderError,
+    PayoutNotSupportedError
 )
 
 
@@ -171,20 +171,4 @@ class StripePaymentProvider(PaymentProviderInterface):
             self,
             request: PayoutRequest
     ) -> PayoutResult:
-        if request.connected_account_id is None:
-            raise PaymentProviderError("connected_account_id is required")
-        try:
-            transfer = await asyncio.to_thread(
-                stripe.Transfer.create,
-                amount=int(request.amount * 100),
-                currency=request.currency,
-                destination=request.connected_account_id,
-                transfer_group=str(request.booking_id),
-                metadata={"booking_id": str(request.booking_id)}
-            )
-            return PayoutResult(
-                payout_reference=transfer.id,
-                status=PayoutStatus.PAID
-            )
-        except StripeError as e:
-            raise PaymentProviderError() from e
+        raise PayoutNotSupportedError()
