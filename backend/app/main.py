@@ -8,7 +8,8 @@ from routes import (
     psychologists_router,
     matching_psychologists_router,
     payments_router,
-    auth_router
+    auth_router,
+    bookings_router,
 )
 
 
@@ -20,7 +21,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.cors_origins_list,
     allow_credentials=True,
-    allow_methods=["GET", "POST"],
+    allow_methods=["GET", "POST", "DELETE", "PATCH"],
     allow_headers=["Content-Type"]
 )
 
@@ -50,6 +51,11 @@ app.include_router(
     auth_router,
     prefix=f"{BASE_PREFIX}/auth",
     tags=["Authentication"],
+)
+app.include_router(
+    bookings_router,
+    prefix=f"{BASE_PREFIX}/bookings",
+    tags=["Bookings"],
 )
 
 

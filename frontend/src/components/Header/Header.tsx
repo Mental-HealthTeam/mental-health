@@ -6,13 +6,13 @@ import { Container } from '../Container'
 import { LanguageSwitcher } from '../LanguageSwitcher'
 import { Navigation } from '../Navigation'
 import { Button } from '../UI/Button'
-import { ArrowRightIcon, LogoIcon, MenuIcon, SparkIcon } from '../UI/Icons'
 
 import { headerNavigationItems } from '../../constants/navigation'
 
 import './Header.scss'
 import { useAppDispatch } from '../../app/hooks'
 import { openAiChat } from '../../app/store/slices/aiChatSlice'
+import { ArrowIcon, LogoIcon, MenuIcon, SparkIcon } from '../UI/Icons'
 
 export const Header = () => {
     const dispatch = useAppDispatch()
@@ -69,7 +69,7 @@ export const Header = () => {
                             variant="primary"
                             size="large"
                             startIcon={<SparkIcon />}
-                            endIcon={<ArrowRightIcon />}
+                            endIcon={<ArrowIcon />}
                             ariaLabel={tActions('findPsychologist')}
                             onClick={handleOpenChat}
                         >
