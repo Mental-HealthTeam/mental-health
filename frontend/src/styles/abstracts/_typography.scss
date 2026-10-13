@@ -11,59 +11,63 @@ $font-family-primary: 'Manrope', Arial, sans-serif;
 $font-weight-medium: 500;
 $font-weight-semibold: 600;
 $font-weight-bold: 700;
+$font-weight-extrabold: 800;
 
 // ======================================================
 // Headings
 // ======================================================
 
 $font-size-h1: 75px;
-$line-height-h1: 110px;
+$line-height-h1: 1.4;
 $letter-spacing-h1: -0.04em;
 $font-weight-h1: $font-weight-semibold;
 
 $font-size-h2: 55px;
-$line-height-h2: 68px;
+$line-height-h2: 1.05;
 $letter-spacing-h2: -0.04em;
 $font-weight-h2: $font-weight-semibold;
 
 $font-size-h3: 46px;
-$line-height-h3: 52px;
+$line-height-h3: 1.05;
 $letter-spacing-h3: -0.04em;
 $font-weight-h3: $font-weight-semibold;
 
 $font-size-h4: 20px;
-$line-height-h4: 24px;
+$line-height-h4: 1.2;
 $letter-spacing-h4: -0.02em;
-$font-weight-h4: $font-weight-semibold;
+$font-weight-h4: $font-weight-extrabold;
 
 // ======================================================
-// Main / Body
+// Body
 // ======================================================
-
-$font-size-main: 18px;
-$line-height-main: 20px;
-$letter-spacing-main: -0.02em;
-$font-weight-main: $font-weight-bold;
 
 $font-size-body: 16px;
-$line-height-body: 22px;
-$letter-spacing-body: 0;
-$font-weight-body: $font-weight-medium;
+$line-height-body: 1.35;
+$letter-spacing-body: -0.02em;
+
+$font-weight-body-semibold: $font-weight-semibold;
+$font-weight-body-extrabold: $font-weight-extrabold;
+
+// Backward-compatible body default
+$font-weight-body: $font-weight-semibold;
 
 // ======================================================
 // Captions
 // ======================================================
 
 $font-size-caption-primary: 14px;
-$line-height-caption-primary: 16px;
+$line-height-caption-primary: 1.2;
+$letter-spacing-caption-primary: 0;
 $font-weight-caption-primary: $font-weight-bold;
 
 $font-size-caption-secondary: 14px;
-$line-height-caption-secondary: 16px;
+$line-height-caption-secondary: 1.2;
+$letter-spacing-caption-secondary: 0;
 $font-weight-caption-secondary: $font-weight-medium;
 
 $font-size-caption-third: 12px;
-$line-height-caption-third: 14px;
+$line-height-caption-third: 1.15;
+$letter-spacing-caption-third: 0;
 $font-weight-caption-third: $font-weight-medium;
 
 // ======================================================
@@ -71,13 +75,16 @@ $font-weight-caption-third: $font-weight-medium;
 // ======================================================
 
 $font-size-button-large: 16px;
-$line-height-button-large: 22px;
+$line-height-button-large: 1.4;
+$letter-spacing-button-large: 0;
 $font-weight-button-large: $font-weight-bold;
 
 $font-size-button-medium: 14px;
-$line-height-button-medium: 19px;
-$font-weight-button-medium: $font-weight-semibold;
+$line-height-button-medium: 1.35;
+$letter-spacing-button-medium: 0;
+$font-weight-button-medium: $font-weight-bold;
 
-$font-size-button-small: 11px;
-$line-height-button-small: 15px;
+$font-size-button-small: 13px;
+$line-height-button-small: 1.15;
+$letter-spacing-button-small: 0;
 $font-weight-button-small: $font-weight-bold;

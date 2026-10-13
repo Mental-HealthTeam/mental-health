@@ -27,8 +27,6 @@ def get_payment_provider(
     if settings.PAYMENT_PROVIDER == "stripe":
         return StripePaymentProvider(
             api_key=settings.STRIPE_SECRET_KEY,
-            success_url=settings.SUCCESS_PAYMENTS_REDIRECT,
-            cancel_url=settings.CANCEL_PAYMENTS_REDIRECT,
             webhook_secret=settings.STRIPE_WEBHOOK_SECRET
         )
 

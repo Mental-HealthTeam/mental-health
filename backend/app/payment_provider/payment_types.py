@@ -13,7 +13,7 @@ class PaymentEventType(str, Enum):
 
 class PaymentProviderName(str, Enum):
     STRIPE = "stripe"
-    MONOBANK = "monobank"
+    WAYFORPAY = "way_for_pay"
 
 
 class PaymentKind(str, Enum):

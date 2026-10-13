@@ -3,8 +3,7 @@ import { useState } from 'react'
 import avatarImage from '../../assets/avatars/avatar-1.png'
 
 import { Avatar } from '../UI/Avatar'
-import { Button } from '../UI/Button'
-import { ArrowIcon } from '../UI/Icons'
+import { OutlineButton, PrimaryButton } from '../UI/Buttons'
 import { TimeSlot } from '../UI/TimeSlot'
 
 import './SpecialistCard.scss'
@@ -85,15 +84,13 @@ export const SpecialistCard = () => {
 
             <div className="specialist-card__actions">
                 {!isBooking && (
-                    <Button
+                    <PrimaryButton
                         className="specialist-card__booking-button"
-                        variant="primary"
-                        size="medium"
                         fullWidth
                         onClick={() => setIsBooking(true)}
                     >
                         ЗАБРОНЮВАТИ СЕСІЮ
-                    </Button>
+                    </PrimaryButton>
                 )}
 
                 {isBooking && (
@@ -115,15 +112,13 @@ export const SpecialistCard = () => {
                     </div>
                 )}
 
-                <Button
+                <OutlineButton
                     className="specialist-card__profile-button"
-                    variant="primary"
-                    size="medium"
+                    variant="secondary"
                     fullWidth
-                    endIcon={<ArrowIcon />}
                 >
                     ПЕРЕЙТИ ДО ПРОФІЛЮ
-                </Button>
+                </OutlineButton>
             </div>
         </article>
     )

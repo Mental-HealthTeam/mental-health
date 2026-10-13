@@ -4,55 +4,38 @@
 .specialists-section {
   width: 100%;
 
-  padding-block:
-          c.$specialists-section-padding-top
-          c.$specialists-section-padding-bottom;
-
   overflow: hidden;
+
+  background-color: a.$color-gray-0;
 
   &__container {
     display: flex;
     flex-direction: column;
     align-items: center;
 
-    padding-inline: c.$specialists-section-container-padding;
-  }
-
-  &__number {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    gap: c.$specialists-section-number-gap;
-
     width: 100%;
 
-    margin-bottom: c.$specialists-section-number-margin-bottom;
+    margin-inline: auto;
+    margin-bottom: 64px;
 
-    font-size: c.$specialists-section-number-font-size;
-    font-weight: c.$specialists-section-number-font-weight;
-    line-height: 1;
-
-    color: a.$color-optional;
+    padding: 32px 16px 0;
   }
 
-  &__number-line {
-    width: c.$specialists-section-number-line-width;
-    height: c.$specialists-section-number-line-height;
-
-    background-color: a.$color-optional;
+  &__section-index {
+    margin-bottom: 16px;
   }
 
   &__title {
     width: 100%;
 
-    margin: 0 0 c.$specialists-section-title-margin-bottom;
-
-    font-size: c.$specialists-section-title-font-size;
-    font-weight: c.$specialists-section-title-font-weight;
-    line-height: c.$specialists-section-title-line-height;
+    margin: 0 0 20px;
 
     color: a.$color-primary;
+
+    font-size: 36px;
+    line-height: 1.05;
+    letter-spacing: a.$letter-spacing-h3;
+    font-weight: a.$font-weight-h3;
 
     text-align: center;
   }
@@ -62,11 +45,12 @@
     flex-wrap: wrap;
     justify-content: center;
 
-    gap: c.$specialists-section-filters-gap;
+    gap: 8px;
 
     width: 100%;
+    max-width: 520px;
 
-    margin-bottom: c.$specialists-section-filters-margin-bottom;
+    margin-bottom: 28px;
   }
 
   &__filter {
@@ -74,25 +58,20 @@
     align-items: center;
     justify-content: center;
 
-    min-height: c.$specialists-section-filter-height;
+    min-height: 28px;
 
-    padding:
-            c.$specialists-section-filter-padding-block
-            c.$specialists-section-filter-padding-inline;
+    padding: 5px 10px;
 
-    border:
-            c.$specialists-section-filter-border-width
-            solid
-            a.$color-primary;
-    border-radius: c.$specialists-section-filter-border-radius;
-
-    font-family: inherit;
-    font-size: c.$specialists-section-filter-font-size;
-    font-weight: c.$specialists-section-filter-font-weight;
-    line-height: 1;
+    border: 1px solid a.$color-optional;
+    border-radius: 7px;
 
     color: a.$color-primary;
     background-color: transparent;
+
+    font-family: inherit;
+    font-size: a.$font-size-caption-third;
+    line-height: a.$line-height-caption-third;
+    font-weight: a.$font-weight-caption-third;
 
     cursor: pointer;
 
@@ -101,24 +80,26 @@
             border-color a.$transition-default,
             background-color a.$transition-default;
 
+    &:hover {
+      border-color: a.$color-primary;
+    }
+
     &--active {
-      color: a.$color-white;
+      border-color: a.$color-primary;
+
+      color: a.$color-gray-0;
       background-color: a.$color-primary;
     }
   }
 
   &__carousel {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    gap: c.$specialists-section-navigation-gap;
+    display: block;
 
     width: 100%;
   }
 
   &__side-navigation {
-    display: flex;
+    display: none;
     align-items: center;
     justify-content: center;
 
@@ -137,11 +118,9 @@
     );
 
     width: 100%;
+    max-width: c.$specialists-section-card-width;
 
-    max-width: calc(
-            var(--card-width) * var(--visible-cards) +
-            var(--slider-gap) * (var(--visible-cards) - 1)
-    );
+    margin-inline: auto;
 
     overflow: hidden;
   }
@@ -182,76 +161,133 @@
   }
 
   &__mobile-navigation {
-    display: none;
+    display: flex;
     align-items: center;
     justify-content: center;
 
-    gap: c.$specialists-section-navigation-gap;
+    gap: 16px;
 
     width: 100%;
 
-    margin-top: c.$specialists-section-navigation-margin-top;
+    margin-top: 20px;
   }
 
   &__all-button {
-    align-self: center;
-
-    margin-top: c.$specialists-section-all-button-margin-top;
-
-    color: a.$color-primary;
-    background: a.$color-secondary-gradient;
-
-    &:hover {
-      opacity: 1;
-    }
-
-    &:active {
-      color: a.$color-primary;
-      background: a.$color-secondary-gradient;
-    }
+    margin-top: 24px;
   }
 }
 
-@media (max-width: 1199px) {
+@media (min-width: 768px) {
   .specialists-section {
     &__container {
-      padding-inline: c.$specialists-section-tablet-container-padding;
+      margin-bottom: 88px;
+
+      padding-inline: 24px;
     }
-  }
-}
 
-@media (max-width: 767px) {
-  .specialists-section {
-    padding-block:
-            c.$specialists-section-mobile-padding-top
-            c.$specialists-section-mobile-padding-bottom;
+    &__section-index {
+      margin-bottom: 18px;
+    }
 
-    &__container {
-      padding-inline: c.$specialists-section-mobile-container-padding;
+    &__title {
+      margin-bottom: 22px;
+
+      font-size: a.$font-size-h3;
+      line-height: a.$line-height-h3;
+      letter-spacing: a.$letter-spacing-h3;
+      font-weight: a.$font-weight-h3;
     }
 
     &__filters {
-      gap: c.$specialists-section-mobile-filters-gap;
+      max-width: 720px;
 
-      margin-bottom:
-              c.$specialists-section-mobile-filters-margin-bottom;
-    }
+      gap: 8px;
 
-    &__carousel {
-      display: block;
-    }
-
-    &__side-navigation {
-      display: none;
+      margin-bottom: 32px;
     }
 
     &__slider-wrapper {
-      max-width: c.$specialists-section-card-width;
-      margin-inline: auto;
+      max-width: calc(
+              var(--card-width) * var(--visible-cards) +
+              var(--slider-gap) * (var(--visible-cards) - 1)
+      );
+    }
+  }
+}
+
+@media (min-width: 1024px) {
+  .specialists-section {
+    &__container {
+      padding: 40px 32px 0;
+    }
+
+    &__title {
+      margin-bottom: 22px;
+    }
+
+    &__filters {
+      max-width: 760px;
+
+      margin-bottom: 34px;
+    }
+
+    &__carousel {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      gap: 24px;
+
+      width: 100%;
+    }
+
+    &__side-navigation {
+      display: flex;
     }
 
     &__mobile-navigation {
-      display: flex;
+      display: none;
+    }
+
+    &__all-button {
+      margin-top: 24px;
+    }
+  }
+}
+
+@media (min-width: 1200px) {
+  .specialists-section {
+    &__container {
+      margin-bottom: 114px;
+    }
+  }
+}
+
+@media (min-width: 1440px) {
+  .specialists-section {
+    &__container {
+      padding-top: 48px;
+    }
+
+    &__title {
+      margin-bottom: 24px;
+
+      font-size: a.$font-size-h2;
+      line-height: a.$line-height-h2;
+      letter-spacing: a.$letter-spacing-h2;
+      font-weight: a.$font-weight-h2;
+    }
+
+    &__filters {
+      margin-bottom: 36px;
+    }
+
+    &__carousel {
+      gap: 32px;
+    }
+
+    &__all-button {
+      margin-top: 28px;
     }
   }
 }

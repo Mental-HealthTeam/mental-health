@@ -23,7 +23,10 @@ class BaseAppSettings(BaseSettings):
 
     SUCCESS_PAYMENTS_REDIRECT: str = "http://localhost:3000/payment/success"
     CANCEL_PAYMENTS_REDIRECT: str = "http://localhost:3000/payment/cancel"
-    PAYMENT_PROVIDER: PaymentProviderName = PaymentProviderName.STRIPE
+    PAYMENT_PROVIDER: PaymentProviderName = PaymentProviderName.WAYFORPAY
+    BOOKING_HOLD_MINUTES: int = 20
+    BOOKING_HORIZON_DAYS: int = 30
+    SESSION_DURATION_MIN: int = 60
 
 
 class Settings(BaseAppSettings):

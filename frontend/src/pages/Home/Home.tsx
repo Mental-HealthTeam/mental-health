@@ -14,9 +14,9 @@ export const Home = () => {
 
             <main className="home__content">
                 <Hero />
+                <WhyChooseUs />
                 <SpecialistsSection />
                 <WhyUs />
-                <WhyChooseUs />
             </main>
 
             <Footer />
