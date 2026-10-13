@@ -7,6 +7,8 @@ from database import get_db
 from schemas.matching import MatchingSearchResponse, MatchingSearchRequest
 from redis_storage.redis_interface import SessionStorageInterface
 from config.dependencies import get_redis_storage
+from auth.dependencies import get_current_user_optional
+from database.models.models import User
 
 router = APIRouter()
 
@@ -58,6 +60,7 @@ router = APIRouter()
 async def search_psychologists(
     db: Annotated[AsyncSession, Depends(get_db)],
     redis_storage: Annotated[SessionStorageInterface, Depends(get_redis_storage)],
+    current_user: Annotated[User | None, Depends(get_current_user_optional)],
     request: MatchingSearchRequest
 ):
     """
@@ -78,5 +81,6 @@ async def search_psychologists(
     return await find_matching_psychologists(
         db=db,
         redis_storage=redis_storage,
-        request=request
+        request=request,
+        current_user=current_user
     )

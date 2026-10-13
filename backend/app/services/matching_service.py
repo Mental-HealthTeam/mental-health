@@ -19,12 +19,14 @@ from database.models.models import (
     Psychologist,
     PsychologistStatus,
     AI_Session,
-    AISessionSymptomCode
+    AISessionSymptomCode,
+    User
 )
 from sqlalchemy.orm import selectinload
 from redis_storage.redis_interface import SessionStorageInterface
 from config.dependencies import get_redis_storage
 from schemas.psychologist import MockSlot
+from auth.dependencies import get_current_user_optional
 
 logger = logging.getLogger(__name__)
 
@@ -104,7 +106,7 @@ def _filter_by_time(rows, min_time, max_time):
     return rows
 
 
-async def _log_ai_session(db, redis_storage, info, rows):
+async def _log_ai_session(db, redis_storage, info, rows, current_user):
     try:
         ai_chat_info = await redis_storage.get_recording_info(info.session_id)
     except HTTPException:
@@ -116,6 +118,7 @@ async def _log_ai_session(db, redis_storage, info, rows):
         )
         ai_chat_info = None
     if ai_chat_info is not None:
+        user_id = current_user.id if current_user is not None else None
         try:
             stmt = select(AI_Session).options(
                 selectinload(AI_Session.ai_session_symptom_codes)
@@ -127,7 +130,7 @@ async def _log_ai_session(db, redis_storage, info, rows):
             if not ai_session_record:
                 ai_session_record = AI_Session(
                     ai_session_id=info.session_id,
-                    user_id=None,  # TODO: Fix it, when Google auth will be implemented
+                    user_id=user_id,
                     messages_count=int(ai_chat_info["message_count"]),
                     duration_sec=int(datetime.now(timezone.utc).timestamp()) - int(ai_chat_info["created_at"]),
                     recommendations_count=len(rows)
@@ -141,6 +144,8 @@ async def _log_ai_session(db, redis_storage, info, rows):
                     )
                     db.add(ai_session_symptom_code)
             else:
+                if ai_session_record.user_id is None and user_id is not None:
+                    ai_session_record.user_id = user_id
                 existing_symptom_codes = {s.symptom_code for s in ai_session_record.ai_session_symptom_codes}
                 ai_session_record.messages_count = int(ai_chat_info["message_count"])
                 ai_session_record.duration_sec = (
@@ -199,7 +204,8 @@ def _to_match_result(rows, symptom_codes):
 async def find_matching_psychologists(
     db: Annotated[AsyncSession, Depends(get_db)],
     redis_storage: Annotated[SessionStorageInterface, Depends(get_redis_storage)],
-    request: MatchingSearchRequest
+    request: MatchingSearchRequest,
+    current_user: Annotated[User | None, Depends(get_current_user_optional)]
 ):
     if request.matching_info is None:
         raise HTTPException(
@@ -222,6 +228,11 @@ async def find_matching_psychologists(
     rows = rows[:3]
 
     result = _to_match_result(rows=rows, symptom_codes=info.symptom_codes)
-    await _log_ai_session(db=db, redis_storage=redis_storage, info=info, rows=rows)
+    await _log_ai_session(
+        db=db,
+        redis_storage=redis_storage,
+        info=info, rows=rows,
+        current_user=current_user
+    )
 
     return MatchingSearchResponse(result=result)
