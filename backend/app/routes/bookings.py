@@ -9,6 +9,14 @@ from config.dependencies import get_settings
 from config.settings import Settings
 from database import get_db
 from database.models.models import BookingStatus, User, UserRole
+from services.booking_service import (
+    create_booking,
+    get_booking_for_user,
+    list_bookings_for_user,
+    mark_cancelled,
+    mark_disputed,
+    resolve_dispute,
+)
 from schemas.booking import (
     BookingCreateRequest,
     BookingListResponse,
@@ -16,6 +24,7 @@ from schemas.booking import (
     DisputeRequest,
     ResolveDisputeRequest,
 )
+
 
 router = APIRouter()
 
@@ -49,7 +58,12 @@ async def create_booking_endpoint(
         current_user: Annotated[User, Depends(get_current_user)],
         data: BookingCreateRequest,
 ):
-    raise not_implemented()
+    return await create_booking(
+        db=db,
+        settings=settings,
+        client=current_user,
+        data=data,
+    )
 
 
 @router.get(
@@ -60,13 +74,26 @@ async def create_booking_endpoint(
     responses={401: NOT_AUTHENTICATED},
 )
 async def list_my_bookings(
-        db: Annotated[AsyncSession, Depends(get_db)],
-        current_user: Annotated[User, Depends(get_current_user)],
-        booking_status: Annotated[BookingStatus | None, Query(alias="status")] = None,
-        limit: Annotated[int, Query(ge=1, le=100)] = 20,
-        offset: Annotated[int, Query(ge=0)] = 0,
+    db: Annotated[AsyncSession, Depends(get_db)],
+    current_user: Annotated[User, Depends(get_current_user)],
+    booking_status: Annotated[BookingStatus | None, Query(alias="status")] = None,
+    limit: Annotated[int, Query(ge=1, le=100)] = 20,
+    offset: Annotated[int, Query(ge=0)] = 0,
 ):
-    raise not_implemented()
+    bookings, total = await list_bookings_for_user(
+        db=db,
+        user=current_user,
+        booking_status=booking_status,
+        limit=limit,
+        offset=offset,
+    )
+
+    return {
+        "items": bookings,
+        "total": total,
+        "limit": limit,
+        "offset": offset,
+    }
 
 
 @router.get(
@@ -77,11 +104,15 @@ async def list_my_bookings(
     responses={401: NOT_AUTHENTICATED, 404: NOT_FOUND},
 )
 async def get_booking_endpoint(
-        db: Annotated[AsyncSession, Depends(get_db)],
-        current_user: Annotated[User, Depends(get_current_user)],
-        booking_id: UUID,
+    db: Annotated[AsyncSession, Depends(get_db)],
+    current_user: Annotated[User, Depends(get_current_user)],
+    booking_id: UUID,
 ):
-    raise not_implemented()
+    return await get_booking_for_user(
+        db=db,
+        booking_id=booking_id,
+        user=current_user,
+    )
 
 
 @router.post(
@@ -101,7 +132,18 @@ async def cancel_booking_endpoint(
         current_user: Annotated[User, Depends(get_current_user)],
         booking_id: UUID,
 ):
-    raise not_implemented()
+
+    booking = await get_booking_for_user(
+        db=db,
+        booking_id=booking_id,
+        user=current_user,
+    )
+
+    return await mark_cancelled(
+        db=db,
+        booking_id=booking.id,
+        refunded=False,
+    )
 
 
 @router.post(
@@ -122,7 +164,12 @@ async def dispute_booking_endpoint(
         booking_id: UUID,
         data: DisputeRequest,
 ):
-    raise not_implemented()
+    return await mark_disputed(
+        db=db,
+        booking_id=booking_id,
+        admin=admin,
+        note=data.note,
+    )
 
 
 @router.post(
@@ -143,4 +190,9 @@ async def resolve_dispute_endpoint(
         booking_id: UUID,
         data: ResolveDisputeRequest,
 ):
-    raise not_implemented()
+    return await resolve_dispute(
+        db=db,
+        booking_id=booking_id,
+        new_status=data.new_status,
+        admin=admin,
+    )
