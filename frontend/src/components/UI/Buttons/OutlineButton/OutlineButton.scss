@@ -1,0 +1,84 @@
+@use '../../../../styles/abstracts' as a;
+
+.outline-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 44px;
+
+  padding: 10px 18px;
+
+  border: 1px solid;
+  border-radius: 10px;
+
+  font-family: inherit;
+  font-size: a.$font-size-button-medium;
+  line-height: a.$line-height-button-medium;
+  font-weight: a.$font-weight-button-medium;
+
+  cursor: pointer;
+
+  transition:
+          color a.$transition-default,
+          border-color a.$transition-default,
+          background-color a.$transition-default,
+          opacity a.$transition-default;
+
+  &--secondary {
+    border-color: a.$color-optional;
+
+    color: a.$color-optional;
+    background-color: transparent;
+
+    &:hover:not(:disabled) {
+      border-color: a.$color-gray-60;
+
+      color: a.$color-gray-0;
+      background-color: a.$color-gray-60;
+    }
+
+    &:active:not(:disabled) {
+      border-color: a.$color-primary;
+
+      color: a.$color-gray-0;
+      background-color: a.$color-primary;
+    }
+  }
+
+  &--tertiary {
+    border-color: a.$color-gray-40;
+
+    color: a.$color-gray-80;
+    background-color: transparent;
+
+    &:hover:not(:disabled) {
+      border-color: a.$color-optional;
+
+      color: a.$color-optional;
+      background-color: transparent;
+    }
+
+    &:active:not(:disabled) {
+      border-color: a.$color-optional;
+
+      color: a.$color-gray-0;
+      background-color: a.$color-optional;
+    }
+  }
+
+  &--full-width {
+    width: 100%;
+  }
+
+  &:focus-visible {
+    outline: 2px solid a.$color-secondary-start;
+    outline-offset: 3px;
+  }
+
+  &:disabled {
+    opacity: 0.4;
+
+    cursor: not-allowed;
+  }
+}

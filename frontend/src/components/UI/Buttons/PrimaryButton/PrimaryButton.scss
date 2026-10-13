@@ -1,0 +1,67 @@
+@use '../../../../styles/abstracts' as a;
+
+.primary-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  min-height: 40px;
+  padding: 10px 16px;
+
+  border: none;
+  border-radius: 10px;
+
+  background: a.$color-secondary-gradient;
+  color: a.$color-text-primary;
+
+  font: inherit;
+  font-weight: 600;
+  text-transform: uppercase;
+
+  cursor: pointer;
+
+  transition:
+          filter a.$transition-default,
+          opacity a.$transition-default,
+          transform a.$transition-default;
+
+  &:hover:not(:disabled) {
+    filter: brightness(0.94);
+  }
+
+  &:active:not(:disabled) {
+    filter: brightness(0.88);
+    transform: translateY(1px);
+  }
+
+  &:disabled {
+    background: a.$color-gray-10;
+    color: a.$color-gray-60;
+    cursor: not-allowed;
+    filter: none;
+  }
+
+  &--full-width {
+    width: 100%;
+  }
+
+  &__text {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__icon {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    color: currentColor;
+
+    svg {
+      width: 100%;
+      height: 100%;
+    }
+  }
+}

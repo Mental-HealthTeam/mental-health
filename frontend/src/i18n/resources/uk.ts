@@ -3,7 +3,8 @@ import navigation from '../../locales/uk/shared/navigation.json'
 import actions from '../../locales/uk/shared/actions.json'
 import accessibility from '../../locales/uk/shared/accessibility.json'
 
-import home from '../../locales/uk/features/home.json'
+import hero from '../../locales/uk/features/hero.json'
+import whyChooseUs from '../../locales/uk/features/whyChooseUs.json'
 import psychologists from '../../locales/uk/features/psychologists.json'
 import auth from '../../locales/uk/features/auth.json'
 import footer from '../../locales/uk/features/footer.json'
@@ -14,9 +15,10 @@ export const ukResources = {
     navigation,
     actions,
     accessibility,
-    home,
+    hero,
     psychologists,
     auth,
     footer,
+    whyChooseUs,
     whyUs,
 } as const
