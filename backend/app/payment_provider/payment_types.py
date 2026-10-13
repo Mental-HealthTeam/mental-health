@@ -72,13 +72,52 @@ class WebhookAcknowledgement(BaseModel):
     body: dict[str , str | int] | None = None
 
 
+class Recipient(BaseModel):
+    iban: str
+    tax_id: str
+    account_name: str
+
+    @field_validator("iban")
+    @classmethod
+    def validate_iban(cls, value: str):
+        iban = value.replace(" ", "").upper()
+
+        if len(iban) != 29:
+            raise ValueError("IBAN must be 29 characters long")
+        if not iban[:2] == "UA":
+            raise ValueError("IBAN must start with UA")
+        if not (iban[2:].isdigit() and iban[2:].isascii()):
+            raise ValueError("IBAN must contain only digits after UA")
+        if int("".join(str(int(c, 36)) for c in iban[4:] + iban[:4])) % 97 != 1:
+            raise ValueError("IBAN checksum is invalid")
+        return iban
+
+    @field_validator("tax_id")
+    @classmethod
+    def validate_tax_id(cls, value: str):
+        if len(value) not in (8, 10):
+            raise ValueError("Tax ID must be 8 or 10 digits long")
+        if not (value.isascii() and value.isdigit()):
+            raise ValueError("Tax ID must contain only digits 0-9")
+        return value
+
+    @field_validator("account_name")
+    @classmethod
+    def validate_account_name(cls, value: str):
+        account_name = value.strip()
+        if account_name == "":
+            raise ValueError("Account name must not be empty")
+        if len(account_name) > 255:
+            raise ValueError("Account name is too long")
+        return account_name
+
+
 class PayoutRequest(BaseModel):
-    booking_id: UUID
-    amount: Decimal
+    reference: str
+    amount: Decimal = Field(gt=0)
     currency: str = Field(max_length=3)
-    recipient_token: str | None = None
-    # TODO: stripe_account_id should be added
-    connected_account_id: str | None = None
+    recipient: Recipient
+    description: str
 
 
 class PayoutResult(BaseModel):
