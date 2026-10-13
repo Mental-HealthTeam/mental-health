@@ -1,30 +1,57 @@
-from typing import Any
 from abc import ABC, abstractmethod
+from collections.abc import Mapping
 
 from payment_provider.payment_types import (
     CheckoutParams,
-    CheckoutResponse,
-    PaymentWebhook
+    CheckoutResult,
+    PaymentWebhook,
+    WebhookAcknowledgement,
+    RefundRequest,
+    RefundResult,
+    PayoutRequest,
+    PayoutResult
 )
 
 
 class PaymentProviderInterface(ABC):
 
+    @property
+    @abstractmethod
+    def name(self):
+        pass
+
     @abstractmethod
     async def create_checkout_session(
         self,
         params: CheckoutParams,
-    ) -> CheckoutResponse:
+    ) -> CheckoutResult:
         pass
 
     @abstractmethod
-    async def verify_webhook_event(
+    def verify_webhook_event(
         self,
         payload: bytes,
-        signature: str,
+        headers: Mapping[str, str]
     ) -> PaymentWebhook:
         pass
 
     @abstractmethod
-    async def refund(self, payload: dict) -> Any:
+    def build_webhook_response(
+            self,
+            event: PaymentWebhook
+    ) -> WebhookAcknowledgement:
+        pass
+
+    @abstractmethod
+    async def refund(
+            self,
+            request: RefundRequest
+    ) -> RefundResult:
+        pass
+
+    @abstractmethod
+    async def payout(
+            self,
+            request: PayoutRequest
+    ) -> PayoutResult:
         pass

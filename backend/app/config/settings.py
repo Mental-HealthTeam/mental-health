@@ -18,8 +18,8 @@ class BaseAppSettings(BaseSettings):
     DB_HOST: str = "db"
     REDIS_URL: str = "redis://redis:6379/0"
 
-    STRIPE_SECRET_KEY: str
-    STRIPE_WEBHOOK_SECRET: str
+    STRIPE_SECRET_KEY: str = ""
+    STRIPE_WEBHOOK_SECRET: str = ""
 
     SUCCESS_PAYMENTS_REDIRECT: str = "http://localhost:3000/payment/success"
     CANCEL_PAYMENTS_REDIRECT: str = "http://localhost:3000/payment/cancel"

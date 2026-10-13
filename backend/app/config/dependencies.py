@@ -1,14 +1,14 @@
 from typing import Annotated
 
 from config.settings import Settings
-from fastapi import Depends
+from fastapi import Depends, HTTPException, status
 
 from redis_storage.redis_storage import RedisSessionStorage
 from config.settings import BaseAppSettings
 from auth.token_manager import JWTAuthManager
-
 from payment_provider.payment_interface import PaymentProviderInterface
-from payment_provider.stripe_provider import StripePaymentProvider
+from payment_provider.factory import build_payment_provider
+from exceptions.payments import PaymentProviderError
 
 
 def get_settings():
@@ -24,11 +24,16 @@ def get_redis_storage(
 def get_payment_provider(
     settings: Annotated[BaseAppSettings, Depends(get_settings)]
 ) -> PaymentProviderInterface:
-    if settings.PAYMENT_PROVIDER == "stripe":
-        return StripePaymentProvider(
-            api_key=settings.STRIPE_SECRET_KEY,
-            webhook_secret=settings.STRIPE_WEBHOOK_SECRET
+    try:
+        return build_payment_provider(
+            name=settings.PAYMENT_PROVIDER,
+            settings=settings
         )
+    except PaymentProviderError as error:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Payment provider is not available"
+        ) from error
 
 
 def get_jwt_manager(
