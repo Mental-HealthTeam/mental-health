@@ -2,7 +2,7 @@ import type { MatchData, TypeData } from '../types/aiChat'
 
 export class ChatApiError extends Error {}
 
-const AI_URL = import.meta.env.VITE_AI_SERVICE_URL;
+const AI_URL = import.meta.env.VITE_AI_SERVICE_URL
 
 type Handlers = {
     onContent: (text: string) => void

@@ -1,9 +1,11 @@
 @use '../../../styles/abstracts' as a;
+@use '../../../styles/components' as c;
 
 .chat-message {
-    max-width: 242px;
+    min-width: 0;
+    max-width: c.$chat-message-max-width;
     border-radius: a.$border-radius-ai-chat-region-avatar;
-    padding: 12px 16px;
+    padding: c.$chat-message-padding;
 
     &__text {
         color: a.$color-primary;

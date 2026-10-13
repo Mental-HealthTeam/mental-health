@@ -1,17 +1,16 @@
-const dateFormatter = new Intl.DateTimeFormat('uk-UA', {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-})
+export const formatChatDate = (timestamp: number, locale: string): string => {
+    const date = new Date(timestamp)
 
-const timeFormatter = new Intl.DateTimeFormat('uk-UA', {
-    hour: '2-digit',
-    minute: '2-digit',
-})
+    const day = date.toLocaleDateString(locale, {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+    })
 
-export const formatChatDate = (timestamp: number): string => {
-    const date = dateFormatter.format(timestamp).replace(' р.', '')
-    const time = timeFormatter.format(timestamp)
+    const time = date.toLocaleTimeString(locale, {
+        hour: '2-digit',
+        minute: '2-digit',
+    })
 
-    return `${date}, ${time}`
+    return `${day}, ${time}`
 }

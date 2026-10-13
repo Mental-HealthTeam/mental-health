@@ -3,20 +3,20 @@ import { createPortal } from 'react-dom'
 import { ChatHeader } from './ChatHeader/ChatHeader'
 import { useAppDispatch, useAppSelector } from '../../app/hooks'
 import { closeAiChat, sendUserMessage } from '../../app/store/slices/aiChatSlice'
-import { useEffect } from 'react'
+import { useCallback, useEffect } from 'react'
 import { MessageList } from './MessageList/MessageList'
 import './AiChat.scss'
 import { ChatInput } from './ChatInput/ChatInput'
+import { useTranslation } from 'react-i18next'
 
 export const AiChat = () => {
+    const { t } = useTranslation('aiChat')
     const dispatch = useAppDispatch()
-    const { isOpen, status } = useAppSelector((state) => state.aiChat)
+    const { isOpen, status, initialText } = useAppSelector((state) => state.aiChat)
 
-    const handleClose = () => {
-        if (isOpen) {
-            dispatch(closeAiChat())
-        }
-    }
+    const handleClose = useCallback(() => {
+        dispatch(closeAiChat())
+    }, [dispatch])
 
     const handleSend = (text: string) => {
         dispatch(sendUserMessage({ text }))
@@ -34,7 +34,7 @@ export const AiChat = () => {
         return () => {
             window.removeEventListener('keydown', handleEscape)
         }
-    }, [])
+    }, [handleClose])
 
     return createPortal(
         <AnimatePresence>
@@ -42,7 +42,7 @@ export const AiChat = () => {
                 <motion.div
                     className="ai-chat"
                     role="dialog"
-                    aria-label="Чат з ШІ-консультантом"
+                    aria-label={t('window.ariaLabel')}
                     tabIndex={-1}
                     initial={{ opacity: 0, x: 90, scale: 0.86 }}
                     animate={{ opacity: 1, x: 0, scale: 1 }}
@@ -51,12 +51,12 @@ export const AiChat = () => {
                 >
                     <div className="ai-chat__content">
                         <ChatHeader onClose={handleClose} />
-                        <MessageList isTyping={status === 'waiting'} />
+                        <MessageList isTyping={status === 'streaming'} />
 
                         <ChatInput
                             onSend={handleSend}
-                            disabled={status === 'waiting'}
-                            initialValue=""
+                            disabled={status === 'streaming'}
+                            initialValue={initialText}
                         />
                     </div>
                 </motion.div>

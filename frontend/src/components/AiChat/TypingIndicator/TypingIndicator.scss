@@ -1,18 +1,19 @@
 @use '../../../styles/abstracts' as a;
+@use '../../../styles/components' as c;
 
 .typing-indicator {
     display: flex;
     justify-content: space-between;
     align-items: center;
     width: max-content;
-    gap: 4px;
+    gap: c.$typing-indicator-gap;
     color: a.$color-gray-60;
-    animation: pulsation 0.8s infinite alternate;
+    animation: pulsation c.$typing-indicator-duration infinite alternate;
 
     @keyframes pulsation {
         0% {
-            opacity: 0.7;
-            transform: scale(0.95);
+            opacity: c.$typing-indicator-opacity-from;
+            transform: scale(c.$typing-indicator-scale-from);
         }
         100% {
             opacity: 1;

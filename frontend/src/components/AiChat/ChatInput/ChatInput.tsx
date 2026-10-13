@@ -3,6 +3,7 @@ import './ChatInput.scss'
 import { Button } from '../../UI/Button'
 import { useEffect, useRef, useState, type SubmitEvent } from 'react'
 import { ArrowTopIcon } from '../../UI/Icons/ArrowTopIcon'
+import { useTranslation } from 'react-i18next'
 
 type Props = {
     className?: string
@@ -12,6 +13,8 @@ type Props = {
 }
 
 export const ChatInput = ({ className, onSend, disabled, initialValue = '' }: Props) => {
+    const { t } = useTranslation('aiChat')
+
     const [value, setValue] = useState(initialValue)
     const inputRef = useRef<HTMLTextAreaElement>(null)
 
@@ -33,14 +36,14 @@ export const ChatInput = ({ className, onSend, disabled, initialValue = '' }: Pr
     return (
         <form className={classNames('chat-input', className)} onSubmit={handleSubmit}>
             <textarea
-                name="Повідомлення"
+                name={t('input.label')}
                 id="chat-input__field"
                 rows={2}
                 className="chat-input__field"
                 maxLength={500}
                 value={value}
                 onChange={(event) => setValue(event.target.value)}
-                placeholder="Опишіть свій стан"
+                placeholder={t('input.placeholder')}
                 ref={inputRef}
             ></textarea>
 
@@ -49,7 +52,7 @@ export const ChatInput = ({ className, onSend, disabled, initialValue = '' }: Pr
                 type="submit"
                 variant="primary"
                 size="small"
-                ariaLabel="Надіслати повідомлення"
+                ariaLabel={t('input.sendAriaLabel')}
                 disabled={disabled}
                 endIcon={<ArrowTopIcon />}
             />

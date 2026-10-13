@@ -1,10 +1,11 @@
 @use '../../../styles/abstracts' as a;
+@use '../../../styles/components' as c;
 
 .message-list {
     display: flex;
     flex-direction: column;
-    gap: 16px;
-    padding-inline: 16px;
+    gap: c.$message-list-gap;
+    padding-inline: c.$message-list-padding-inline;
 
     flex: 1;
     min-height: 0;
@@ -18,17 +19,17 @@
     }
 
     &::-webkit-scrollbar {
-        width: 2px;
+        width:c.$message-list-scrollbar-width;
     }
 
     &::-webkit-scrollbar-track {
         background: transparent;
-        margin: 6px 0;
+        margin: c.$message-list-scrollbar-track-margin 0;
     }
 
     &::-webkit-scrollbar-thumb {
         background: a.$color-secondary-gradient;
-        border-radius: 999px;
+        border-radius: c.$message-list-scrollbar-radius;
     }
 
     &::-webkit-scrollbar-thumb:hover {
@@ -38,7 +39,7 @@
     &__messages {
         display: flex;
         flex-direction: column;
-        gap: 8px;
+        gap: c.$message-list-messages-gap;
     }
 
     &__date {
@@ -47,7 +48,7 @@
     }
 
     &__button-search-psy {
-      padding: 12px;
+      padding:c.$message-list-search-button-padding;
       background: a.$color-optional;
     }
 }

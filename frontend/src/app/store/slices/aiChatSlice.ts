@@ -27,22 +27,29 @@ type InitialState = {
     psychologists: Psychologist[]
     error: string | null
     lastUserText: string | null
+    initialText: string
 }
 
-const FIRST_MESSAGE =
-    'Доброго дня! Мене звати Анна, я твій ШІ-помічник “Mental Health Platform”. ' +
-    'Розкажи, будь ласка, що тебе турбує — це допоможе швидше підібрати психолога, який підійде саме тобі.'
+export const GREETING_ID = 'greeting'
+
+const createGreeting = (): Message => ({
+    id: GREETING_ID,
+    message: '',
+    fromWho: 'bot',
+    createdAt: Date.now(),
+})
 
 const initialState: InitialState = {
     isOpen: false,
     status: 'idle',
-    messages: [createMessage(FIRST_MESSAGE, 'bot')],
+    messages: [createGreeting()],
     sessionId: crypto.randomUUID(),
     lastActivity: Date.now(),
     matchData: null,
     psychologists: [],
     error: null,
     lastUserText: null,
+    initialText: '',
 }
 
 export const aiChatSlice = createSlice({
@@ -92,8 +99,11 @@ export const aiChatSlice = createSlice({
         setPsychologists: (state, action: PayloadAction<Psychologist[]>) => {
             state.psychologists = action.payload
         },
+        addInitialText: (state, action: PayloadAction<string>) => {
+            state.initialText = action.payload
+        },
         resetAiChat: (state) => {
-            state.messages = [createMessage(FIRST_MESSAGE, 'bot')]
+            state.messages = [createGreeting()]
             state.sessionId = crypto.randomUUID()
             state.matchData = null
             state.psychologists = []
@@ -117,6 +127,7 @@ export const {
     resetAiChat,
     setMatchData,
     setPsychologists,
+    addInitialText,
 } = aiChatSlice.actions
 
 export default aiChatSlice.reducer
