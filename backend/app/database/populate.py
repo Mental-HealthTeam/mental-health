@@ -130,6 +130,13 @@ def populate_psychologists() -> None:
                 existing = session.get(Psychologist, user.id)
                 if existing is not None:
                     existing.mock_slots = mock_slots
+                    existing.full_name_eng = entry["name_eng"]
+                    existing.title_eng = entry["title_eng"]
+                    existing.bio_eng = entry["bio_eng"]
+                    existing.methods_eng = entry["methods_eng"]
+                    existing.iban = entry["iban"]
+                    existing.tax_id = entry["tax_id"]
+                    existing.account_name = entry["account_name"]
                     refreshed += 1
                     continue
                 new_id = user.id
@@ -147,19 +154,26 @@ def populate_psychologists() -> None:
                 Psychologist(
                     psychologist_id=new_id,
                     full_name=entry["name"],
+                    full_name_eng=entry["name_eng"],
                     title=entry["title"],
+                    title_eng=entry["title_eng"],
                     avatar_url=entry["avatar_url"],
                     mock_slots=mock_slots,
                     certificates=entry["certificates"],
                     bio=entry["bio"],
+                    bio_eng=entry["bio_eng"],
                     reviews=entry["reviews"],
                     methods=entry["methods"],
+                    methods_eng=entry["methods_eng"],
                     experience_years=entry["experience_years"],
                     meet_link=entry["meet_link"],
                     price_per_hour=entry["price_uah"],
                     profile_status=PsychologistStatus.ACTIVE,
                     gender=resolve_gender(entry["name"]),
                     languages=entry["languages"],
+                    iban=entry["iban"],
+                    tax_id=entry["tax_id"],
+                    account_name=entry["account_name"],
                 )
             )
             for tag in entry["tags_symptoms"]:

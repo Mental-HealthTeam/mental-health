@@ -148,7 +148,13 @@ class Psychologist(Base):
     full_name: Mapped[str] = mapped_column(
         String(100),
     )
+    full_name_eng: Mapped[str] = mapped_column(
+        String(100)
+    )
     title: Mapped[str] = mapped_column(
+        String(255)
+    )
+    title_eng: Mapped[str] = mapped_column(
         String(255)
     )
     avatar_url: Mapped[str | None] = mapped_column(
@@ -163,10 +169,16 @@ class Psychologist(Base):
     bio: Mapped[dict] = mapped_column(
         JSON,
     )
+    bio_eng: Mapped[dict] = mapped_column(
+        JSON
+    )
     reviews: Mapped[list[dict] | None] = mapped_column(
         JSON
     )
     methods: Mapped[list[str] | None] = mapped_column(
+        JSON
+    )
+    methods_eng: Mapped[list[str] | None] = mapped_column(
         JSON
     )
     experience_years: Mapped[int] = mapped_column(
@@ -188,7 +200,15 @@ class Psychologist(Base):
     languages: Mapped[list[str]] = mapped_column(
         JSON,
     )
-    payout_card_token: Mapped[str | None] = mapped_column(
+    iban: Mapped[str] = mapped_column(
+        String(29),
+        unique=True
+    )
+    tax_id: Mapped[str] = mapped_column(
+        String(10),
+        unique=True
+    )
+    account_name: Mapped[str] = mapped_column(
         String(255)
     )
 
