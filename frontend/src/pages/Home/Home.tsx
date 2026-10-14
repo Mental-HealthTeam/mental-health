@@ -4,7 +4,7 @@ import { Hero } from '../../components/Hero'
 import { WhyChooseUs } from '../../components/WhyChooseUs'
 import './Home.scss'
 import { SpecialistsSection } from '../../components/SpecialistsSection'
-import { WhyUs } from '../../components/WhyUs/WhyUs.tsx'
+import { WhyUs } from '../../components/WhyUs'
 
 export const Home = () => {
     return (
@@ -13,9 +13,9 @@ export const Home = () => {
 
             <main className="home__content">
                 <Hero />
+                <WhyChooseUs />
                 <SpecialistsSection />
                 <WhyUs />
-                <WhyChooseUs />
             </main>
 
             <Footer />
