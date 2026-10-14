@@ -63,6 +63,7 @@ class PaymentWebhook(BaseModel):
 class RefundRequest(BaseModel):
     payment_reference: str
     amount: Decimal | None = None
+    reason: str | None = None
 
 
 class RefundResult(BaseModel):
@@ -83,7 +84,7 @@ class PayoutRequest(BaseModel):
     amount: Decimal = Field(gt=0)
     currency: str = Field(max_length=3)
     recipient: Recipient
-    description: str
+    description: str | None = None
 
 
 class PayoutResult(BaseModel):
