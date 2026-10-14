@@ -28,6 +28,22 @@ class BaseAppSettings(BaseSettings):
     BOOKING_HORIZON_DAYS: int = 30
     SESSION_DURATION_MIN: int = 60
 
+    WAYFORPAY_MERCHANT_ACCOUNT: str = ""
+    WAYFORPAY_SECRET_KEY: str = ""
+    WAYFORPAY_MERCHANT_DOMAIN: str = ""
+    WAYFORPAY_API_ADDRESS: str = "https://api.wayforpay.com/api"
+    WAYFORPAY_VERSION: int = 1
+    WAYFORPAY_CURRENCY: str = "UAH"
+    WAYFORPAY_SIMULATE_PAYOUTS: bool = True
+    WAYFORPAY_LANGUAGE: str = "UA"
+    WAYFORPAY_SERVICE_URL_PART: str = "/api/payments/webhook/wayforpay"
+
+    PUBLIC_BASE_URL: str = "http://localhost:8000"
+
+    @property
+    def order_timeout_sec(self):
+        return self.BOOKING_HOLD_MINUTES * 60
+
 
 class Settings(BaseAppSettings):
     GOOGLE_CLIENT_ID: str = "GOOGLE_CLIENT_ID"
