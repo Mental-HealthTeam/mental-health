@@ -3,10 +3,12 @@ import { useState } from 'react'
 import avatarImage from '../../assets/avatars/avatar-1.png'
 
 import { Avatar } from '../UI/Avatar'
-import { OutlineButton, PrimaryButton } from '../UI/Buttons'
+import { Button } from '../UI/Button'
 import { TimeSlot } from '../UI/TimeSlot'
 
 import './SpecialistCard.scss'
+import { OutlineButton } from '../UI/Buttons'
+import { useNavigate } from 'react-router-dom'
 
 const TIME_SLOTS = [
     {
@@ -22,6 +24,7 @@ const TIME_SLOTS = [
 const TOPICS = ['СТРЕС', 'СДВГ', 'СТОСУНКИ', 'ПТСР']
 
 export const SpecialistCard = () => {
+    const navigate = useNavigate()
     const [isBooking, setIsBooking] = useState(false)
     const [selectedSlot, setSelectedSlot] = useState('')
 
@@ -84,13 +87,15 @@ export const SpecialistCard = () => {
 
             <div className="specialist-card__actions">
                 {!isBooking && (
-                    <PrimaryButton
+                    <Button
                         className="specialist-card__booking-button"
+                        variant="primary"
+                        size="medium"
                         fullWidth
                         onClick={() => setIsBooking(true)}
                     >
                         ЗАБРОНЮВАТИ СЕСІЮ
-                    </PrimaryButton>
+                    </Button>
                 )}
 
                 {isBooking && (
@@ -116,6 +121,7 @@ export const SpecialistCard = () => {
                     className="specialist-card__profile-button"
                     variant="secondary"
                     fullWidth
+                    onClick={() => navigate('/psychologist-profile')}
                 >
                     ПЕРЕЙТИ ДО ПРОФІЛЮ
                 </OutlineButton>

@@ -9,20 +9,12 @@ $color-primary: #202120;
 $color-secondary-start: #a9db87;
 $color-secondary-end: #47996d;
 
-$color-secondary-gradient: linear-gradient(
-                135deg,
-                $color-secondary-start,
-                $color-secondary-end
-);
+$color-secondary-gradient: linear-gradient(135deg, $color-secondary-start, $color-secondary-end);
 
 $color-tertiary-start: #91c178;
 $color-tertiary-end: #4e9265;
 
-$color-tertiary-gradient: linear-gradient(
-                135deg,
-                $color-tertiary-start,
-                $color-tertiary-end
-);
+$color-tertiary-gradient: linear-gradient(135deg, $color-tertiary-start, $color-tertiary-end);
 
 $color-optional: #3a5b4a;
 

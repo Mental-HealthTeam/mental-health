@@ -1,0 +1,34 @@
+@use '../../styles/abstracts' as a;
+
+.psychologist-profile {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    min-height: 100vh;
+    background-color: a.$color-gray-0;
+
+    &__content {
+        flex: 1;
+    }
+
+    &__container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        width: 100%;
+
+        margin-inline: auto;
+        margin-bottom: 64px;
+
+        padding-inline: 20px;
+    }
+
+    &__title {
+        color: a.$color-primary;
+        font-size: a.$font-size-h4;
+        line-height: a.$line-height-h4;
+        letter-spacing: a.$letter-spacing-h4;
+        font-weight: a.$font-weight-h4;
+    }
+}
