@@ -351,6 +351,3 @@ def test_webhook_does_not_confirm_unpaid_session(monkeypatch):
     assert result == {
         "status": "payment_not_completed",
     }
-
-def test_nothing():
-    pass
