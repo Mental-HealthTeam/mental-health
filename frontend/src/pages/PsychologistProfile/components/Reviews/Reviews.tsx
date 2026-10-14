@@ -1,17 +1,13 @@
+import { CreateIcon } from '../../../../components/UI/Icons/WhyChoosePlatform'
+import { SectionLabel } from '../../../../components/UI/SectionLabel'
 import './Reviews.scss'
 
 export const Reviews = () => {
     return (
         <section className="reviews" aria-labelledby="reviews-title">
-            <h2 className="reviews__title section-label" id="reviews-title">
-                <svg
-                    className="section-label__icon"
-                    aria-hidden="true"
-                    width="16"
-                    height="16"
-                ></svg>
+            <SectionLabel className="reviews__section-label" startIcon={<CreateIcon />}>
                 Відгуки
-            </h2>
+            </SectionLabel>
 
             <div className="reviews__tabs" role="tablist" aria-label="Категорії відгуків">
                 <button className="tab tab--active" role="tab" aria-selected="true" type="button">

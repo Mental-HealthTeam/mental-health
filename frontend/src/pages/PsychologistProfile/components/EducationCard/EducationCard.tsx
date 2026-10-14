@@ -1,20 +1,13 @@
+import { LearnIcon } from '../../../../components/UI/Icons/WhyChoosePlatform'
+import { SectionLabel } from '../../../../components/UI/SectionLabel'
 import './EducationCard.scss'
 
 export const EducationCard = () => {
     return (
         <section className="education-card" aria-labelledby="education-title">
-            <h2
-                className="education-card__title section-label section-label--light"
-                id="education-title"
-            >
-                <svg
-                    className="section-label__icon"
-                    aria-hidden="true"
-                    width="16"
-                    height="16"
-                ></svg>
+            <SectionLabel className="education-card__section-label" startIcon={<LearnIcon />}>
                 Освіта
-            </h2>
+            </SectionLabel>
             <ul className="education-card__list">
                 <li className="education-card__item">
                     Диплом магістра психології (КНУ ім. Т. Шевченка, 2018)

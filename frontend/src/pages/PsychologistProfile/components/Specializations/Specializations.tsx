@@ -1,17 +1,13 @@
+import { BalanceIcon } from '../../../../components/UI/Icons/WhyChoosePlatform'
+import { SectionLabel } from '../../../../components/UI/SectionLabel'
 import './Specializations.scss'
 
 export const Specializations = () => {
     return (
         <section className="specializations" aria-labelledby="specializations-title">
-            <h2 className="specializations__title section-label" id="specializations-title">
-                <svg
-                    className="section-label__icon"
-                    aria-hidden="true"
-                    width="16"
-                    height="16"
-                ></svg>
+            <SectionLabel className="specializations__section-label" startIcon={<BalanceIcon />}>
                 Напрямки роботи
-            </h2>
+            </SectionLabel>
 
             <ul className="specializations__tags">
                 <li className="tag">Тривожність</li>
