@@ -3,3 +3,4 @@ from routes.matching import router as matching_psychologists_router  # noqa: F40
 from routes.payments import router as payments_router  # noqa: F401
 from routes.bookings import router as bookings_router  # noqa: F401
 from routes.auth import router as auth_router  # noqa: F401
+from routes.symptom_codes import router as symptom_codes_router  # noqa: F401
