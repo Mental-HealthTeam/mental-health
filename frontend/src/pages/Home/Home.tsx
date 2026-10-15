@@ -5,6 +5,7 @@ import { WhyChooseUs } from '../../components/WhyChooseUs'
 import './Home.scss'
 import { SpecialistsSection } from '../../components/SpecialistsSection'
 import { WhyUs } from '../../components/WhyUs'
+import { ReviewsSection } from '../../components/ReviewsSection'
 
 export const Home = () => {
     return (
@@ -16,6 +17,7 @@ export const Home = () => {
                 <WhyChooseUs />
                 <SpecialistsSection />
                 <WhyUs />
+                <ReviewsSection />
             </main>
 
             <Footer />
