@@ -1,27 +1,37 @@
 import { useState } from 'react'
 
-import avatarImage from '../../assets/avatars/avatar-1.png'
-
 import { Avatar } from '../UI/Avatar'
 import { OutlineButton, PrimaryButton } from '../UI/Buttons'
 import { TimeSlot } from '../UI/TimeSlot'
 
 import './SpecialistCard.scss'
 
-const TIME_SLOTS = [
-    {
-        value: 'today-12',
-        label: 'СЬОГОДНІ 12:00',
-    },
-    {
-        value: 'tomorrow-19',
-        label: 'ЗАВТРА 19:00',
-    },
-]
+type TimeSlotItem = {
+    time_label: string
+    time: string
+}
 
-const TOPICS = ['СТРЕС', 'СДВГ', 'СТОСУНКИ', 'ПТСР']
+type Props = {
+    id: string
+    name: string
+    avatar: string | null
+    experience: number
+    price: string
+    methods: string[]
+    topics: string[]
+    timeSlots: TimeSlotItem[]
+}
 
-export const SpecialistCard = () => {
+export const SpecialistCard = ({
+    id,
+    name,
+    avatar,
+    experience,
+    price,
+    methods,
+    topics,
+    timeSlots,
+}: Props) => {
     const [isBooking, setIsBooking] = useState(false)
     const [selectedSlot, setSelectedSlot] = useState('')
 
@@ -29,14 +39,14 @@ export const SpecialistCard = () => {
         <article className="specialist-card">
             <header className="specialist-card__header">
                 <Avatar
-                    src={avatarImage}
-                    alt="Катерина Ковальська"
+                    src={avatar ?? undefined}
+                    alt={name}
                     size="large"
                     className="specialist-card__avatar"
                 />
 
                 <div className="specialist-card__identity">
-                    <h3 className="specialist-card__name">Катерина Ковальська</h3>
+                    <h3 className="specialist-card__name">{name}</h3>
 
                     <span className="specialist-card__verified">ПЕРЕВІРЕНО</span>
                 </div>
@@ -50,7 +60,7 @@ export const SpecialistCard = () => {
                         ·
                     </span>
 
-                    <strong>8 років</strong>
+                    <strong>{experience} років</strong>
                 </div>
 
                 <div className="specialist-card__meta-row">
@@ -60,21 +70,21 @@ export const SpecialistCard = () => {
                         ·
                     </span>
 
-                    <strong>2 500 ₴</strong>
+                    <strong>{price} ₴</strong>
                 </div>
             </div>
 
             <section className="specialist-card__section">
                 <span className="specialist-card__section-title">Терапевтичний підхід</span>
 
-                <strong className="specialist-card__section-value">Гештальт-терапія, КПТ</strong>
+                <strong className="specialist-card__section-value">{methods.join(', ')}</strong>
             </section>
 
             <section className="specialist-card__section specialist-card__topics">
                 <span className="specialist-card__section-title">Працює з темами:</span>
 
                 <div className="specialist-card__topic-list">
-                    {TOPICS.map((topic) => (
+                    {topics.map((topic) => (
                         <span className="specialist-card__topic" key={topic}>
                             {topic}
                         </span>
@@ -98,13 +108,13 @@ export const SpecialistCard = () => {
                         <span className="specialist-card__availability-title">Вільний час</span>
 
                         <div className="specialist-card__slots">
-                            {TIME_SLOTS.map((slot) => (
+                            {timeSlots.map((slot) => (
                                 <TimeSlot
-                                    key={slot.value}
-                                    label={slot.label}
-                                    value={slot.value}
-                                    name="specialist-time"
-                                    checked={selectedSlot === slot.value}
+                                    key={slot.time}
+                                    label={slot.time_label}
+                                    value={slot.time}
+                                    name={`specialist-time-${id}`}
+                                    checked={selectedSlot === slot.time}
                                     onChange={setSelectedSlot}
                                 />
                             ))}

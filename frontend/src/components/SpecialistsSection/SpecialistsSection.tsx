@@ -1,6 +1,7 @@
 import { type CSSProperties, useRef, useState } from 'react'
 
 import { useScreenLayout } from '../../hooks'
+import { useGetPsychologistsQuery } from '../../services/psychologistsApi'
 
 import { Container } from '../Container'
 import { SpecialistCard } from '../SpecialistCard'
@@ -21,10 +22,6 @@ const FILTERS = [
     'ЕКСТРЕНИЙ ЗАПИС',
 ] as const
 
-const MOCK_SPECIALISTS = Array.from({ length: 5 }, (_, index) => ({
-    id: index + 1,
-}))
-
 const SLIDER_GAP = 16
 
 export const SpecialistsSection = () => {
@@ -33,6 +30,15 @@ export const SpecialistsSection = () => {
     const { visibleCards } = useScreenLayout()
 
     const [activeFilter, setActiveFilter] = useState<(typeof FILTERS)[number]>('ВСІ')
+
+    const {
+        data: specialists = [],
+        isLoading,
+        isError,
+    } = useGetPsychologistsQuery({
+        limit: 5,
+        offset: 0,
+    })
 
     const sliderStyle = {
         '--visible-cards': visibleCards,
@@ -91,47 +97,72 @@ export const SpecialistsSection = () => {
                     })}
                 </div>
 
-                <div className="specialists-section__carousel">
-                    <div className="specialists-section__side-navigation">
-                        <ArrowButton
-                            direction="left"
-                            ariaLabel="Попередній фахівець"
-                            onClick={handlePrevious}
-                        />
-                    </div>
+                {isLoading && <p className="specialists-section__status">Завантаження...</p>}
 
-                    <div className="specialists-section__slider-wrapper" style={sliderStyle}>
-                        <div className="specialists-section__slider" ref={sliderRef}>
-                            {MOCK_SPECIALISTS.map((specialist) => (
-                                <div className="specialists-section__slide" key={specialist.id}>
-                                    <SpecialistCard />
+                {isError && (
+                    <p className="specialists-section__status">Не вдалося завантажити фахівців</p>
+                )}
+
+                {!isLoading && !isError && (
+                    <>
+                        <div className="specialists-section__carousel">
+                            <div className="specialists-section__side-navigation">
+                                <ArrowButton
+                                    direction="left"
+                                    ariaLabel="Попередній фахівець"
+                                    onClick={handlePrevious}
+                                />
+                            </div>
+
+                            <div
+                                className="specialists-section__slider-wrapper"
+                                style={sliderStyle}
+                            >
+                                <div className="specialists-section__slider" ref={sliderRef}>
+                                    {specialists.map((specialist) => (
+                                        <div
+                                            className="specialists-section__slide"
+                                            key={specialist.psychologist_id}
+                                        >
+                                            <SpecialistCard
+                                                id={specialist.psychologist_id}
+                                                name={specialist.full_name}
+                                                avatar={specialist.avatar_url}
+                                                experience={specialist.experience_years}
+                                                price={specialist.price_per_hour}
+                                                methods={specialist.methods}
+                                                topics={specialist.specialization}
+                                                timeSlots={specialist.mock_slots}
+                                            />
+                                        </div>
+                                    ))}
                                 </div>
-                            ))}
+                            </div>
+
+                            <div className="specialists-section__side-navigation">
+                                <ArrowButton
+                                    direction="right"
+                                    ariaLabel="Наступний фахівець"
+                                    onClick={handleNext}
+                                />
+                            </div>
                         </div>
-                    </div>
 
-                    <div className="specialists-section__side-navigation">
-                        <ArrowButton
-                            direction="right"
-                            ariaLabel="Наступний фахівець"
-                            onClick={handleNext}
-                        />
-                    </div>
-                </div>
+                        <div className="specialists-section__mobile-navigation">
+                            <ArrowButton
+                                direction="left"
+                                ariaLabel="Попередній фахівець"
+                                onClick={handlePrevious}
+                            />
 
-                <div className="specialists-section__mobile-navigation">
-                    <ArrowButton
-                        direction="left"
-                        ariaLabel="Попередній фахівець"
-                        onClick={handlePrevious}
-                    />
-
-                    <ArrowButton
-                        direction="right"
-                        ariaLabel="Наступний фахівець"
-                        onClick={handleNext}
-                    />
-                </div>
+                            <ArrowButton
+                                direction="right"
+                                ariaLabel="Наступний фахівець"
+                                onClick={handleNext}
+                            />
+                        </div>
+                    </>
+                )}
 
                 <OutlineButton className="specialists-section__all-button" variant="secondary">
                     ПЕРЕГЛЯНУТИ ВСІХ
