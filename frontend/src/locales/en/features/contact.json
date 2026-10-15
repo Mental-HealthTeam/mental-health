@@ -1,0 +1,56 @@
+{
+    "title": "We are always in touch",
+    "direct": {
+        "title": "Direct contact",
+        "telegram": {
+            "label": "Telegram Support",
+            "value": "@support_bot"
+        },
+        "email": {
+            "label": "Email",
+            "value": "support@platform.com"
+        }
+    },
+    "work": {
+        "title": "Working hours",
+        "hours": {
+            "label": "Consultation hours",
+            "value": "Daily from 09:00 to 21:00"
+        },
+        "response": {
+            "label": "Response time",
+            "value": "Response within 15 minutes"
+        }
+    },
+    "specialist": {
+        "title": "Do you work in mental health?",
+        "text": "We are looking for qualified and caring specialists to join our team.",
+        "button": "JOIN AS A SPECIALIST"
+    },
+    "form": {
+        "title": "Quick contact",
+        "description": "Tell us what is bothering you or what you would like to ask. We will get back to you as soon as possible.",
+        "name": {
+            "label": "Your name",
+            "placeholder": "Alexander"
+        },
+        "contact": {
+            "label": "Telegram / Email",
+            "placeholder": "Enter Telegram or Email"
+        },
+        "message": {
+            "label": "Your question",
+            "placeholder": "Describe the situation.."
+        },
+        "submit": "SEND QUESTION",
+        "privacy": "By submitting the form, you agree to the processing of personal data.",
+        "errors": {
+            "nameRequired": "Enter your name",
+            "nameInvalid": "Name must be at least 2 characters long",
+            "contactRequired": "Enter your Telegram or Email",
+            "contactInvalid": "Enter a valid Telegram username or Email",
+            "messageRequired": "Enter your question",
+            "messageInvalid": "Question must be at least 10 characters long"
+        }
+    }
+}
