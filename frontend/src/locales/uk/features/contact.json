@@ -1,0 +1,56 @@
+{
+    "title": "Ми завжди на зв’язку",
+    "direct": {
+        "title": "Прямий зв’язок",
+        "telegram": {
+            "label": "Telegram Support",
+            "value": "@support_bot"
+        },
+        "email": {
+            "label": "Електронна пошта",
+            "value": "support@platform.com"
+        }
+    },
+    "work": {
+        "title": "Час роботи",
+        "hours": {
+            "label": "Години консультацій",
+            "value": "Щодня з 09:00 до 21:00"
+        },
+        "response": {
+            "label": "Швидкість реакції",
+            "value": "Відповідь за 15 хвилин"
+        }
+    },
+    "specialist": {
+        "title": "Працюєш у сфері ментального здоров’я?",
+        "text": "Шукаємо кваліфікованих та турботливих спеціалістів у команду.",
+        "button": "ПРИЄДНАТИСЯ ЯК ФАХІВЕЦЬ"
+    },
+    "form": {
+        "title": "Швидкий зв’язок",
+        "description": "Напиши, що тебе турбує або про що хочеш запитати. Ми на зв’язку й відповімо найближчим часом.",
+        "name": {
+            "label": "Твоє ім’я",
+            "placeholder": "Олександр"
+        },
+        "contact": {
+            "label": "Telegram / Email",
+            "placeholder": "Введи Telegram або Email"
+        },
+        "message": {
+            "label": "Твоє запитання",
+            "placeholder": "Опиши ситуацію.."
+        },
+        "submit": "НАДІСЛАТИ ЗАПИТАННЯ",
+        "privacy": "Надсилаючи форму, ти погоджуєшся на обробку персональних даних.",
+        "errors": {
+            "nameRequired": "Вкажи своє ім’я",
+            "nameInvalid": "Ім’я має містити щонайменше 2 символи",
+            "contactRequired": "Вкажи Telegram або Email",
+            "contactInvalid": "Вкажи коректний Telegram або Email",
+            "messageRequired": "Напиши своє запитання",
+            "messageInvalid": "Запитання має містити щонайменше 10 символів"
+        }
+    }
+}
