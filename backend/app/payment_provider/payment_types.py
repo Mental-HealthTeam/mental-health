@@ -1,6 +1,14 @@
 from enum import Enum
 from decimal import Decimal
-from pydantic import BaseModel, ConfigDict
+from uuid import UUID
+from pydantic import (
+    BaseModel,
+    ConfigDict,
+    Field,
+    field_validator
+)
+
+from schemas.payout import PayoutDetailsFields
 
 
 class PaymentEventType(str, Enum):
@@ -13,24 +21,30 @@ class PaymentEventType(str, Enum):
 
 class PaymentProviderName(str, Enum):
     STRIPE = "stripe"
-    WAYFORPAY = "way_for_pay"
+    WAYFORPAY = "wayforpay"
 
 
-class PaymentKind(str, Enum):
-    ONE_TIME = "one_time"
-    SUBSCRIPTION = "subscription"
+class PayoutStatus(str, Enum):
+    SIMULATED = "simulated"
+    PENDING = "pending"
+    PAID = "paid"
 
 
 class CheckoutParams(BaseModel):
-    line_items: list[dict]
-    metadata: dict[str, str]
-    payment_kind: PaymentKind
-    client_reference_id: str
-    success_url: str
-    cancel_url: str
+    booking_id: UUID
+    amount: Decimal
+    currency: str = Field(max_length=3)
+    description: str
+
+    @field_validator("amount")
+    @classmethod
+    def validate_amount(cls, value: Decimal):
+        if value <= Decimal(0):
+            raise ValueError("Amount can not be less than 0")
+        return value
 
 
-class CheckoutResponse(BaseModel):
+class CheckoutResult(BaseModel):
     session_id: str
     checkout_url: str
 
@@ -38,12 +52,41 @@ class CheckoutResponse(BaseModel):
 class PaymentWebhook(BaseModel):
     model_config = ConfigDict(frozen=True)
 
-    event_type: str
-    payment_status: str | None
-    provider_session_id: str
+    event_id: str
+    event_type: PaymentEventType
+    payment_reference: str | None = None
+    provider_session_id: str | None = None
     metadata: dict[str, str]
+    booking_id: UUID | None = None
 
 
-class Refund(BaseModel):
-    payment_intent_id: str
+class RefundRequest(BaseModel):
+    payment_reference: str
     amount: Decimal | None = None
+    reason: str | None = None
+
+
+class RefundResult(BaseModel):
+    refund_id: str
+
+
+class WebhookAcknowledgement(BaseModel):
+    status_code: int = 200
+    body: dict[str , str | int] | None = None
+
+
+class Recipient(PayoutDetailsFields):
+    pass
+
+
+class PayoutRequest(BaseModel):
+    reference: str
+    amount: Decimal = Field(gt=0)
+    currency: str = Field(max_length=3)
+    recipient: Recipient
+    description: str | None = None
+
+
+class PayoutResult(BaseModel):
+    payout_reference: str
+    status: PayoutStatus

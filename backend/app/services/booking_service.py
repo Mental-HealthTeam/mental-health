@@ -134,7 +134,6 @@ async def create_booking(
     return result.scalar_one()
 
 
-
 async def get_booking_for_user(
     db: AsyncSession,
     booking_id: UUID,
@@ -514,7 +513,6 @@ async def resolve_dispute(
     Route: POST /api/bookings/{booking_id}/resolve-dispute
     """
 
-
     result = await db.execute(
         select(Booking)
         .where(Booking.id == booking_id)
@@ -627,6 +625,8 @@ async def mark_paid_out(
         .where(Booking.id == booking_id)
     )
     return result.scalar_one()
+
+
 # Called by Celery tasks (no HTTP context)
 
 async def expire_pending_bookings(

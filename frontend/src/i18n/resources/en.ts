@@ -10,6 +10,7 @@ import auth from '../../locales/en/features/auth.json'
 import footer from '../../locales/en/features/footer.json'
 import whyUs from '../../locales/en/features/whyUs.json'
 import aiChat from '../../locales/en/features/aiChat.json'
+import contact from '../../locales/en/features/contact.json'
 
 export const enResources = {
     common,
@@ -23,4 +24,5 @@ export const enResources = {
     whyChooseUs,
     whyUs,
     aiChat,
+    contact,
 } as const

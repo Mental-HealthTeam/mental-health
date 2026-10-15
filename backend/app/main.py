@@ -10,6 +10,7 @@ from routes import (
     payments_router,
     auth_router,
     bookings_router,
+    symptom_codes_router,
 )
 
 
@@ -21,7 +22,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.cors_origins_list,
     allow_credentials=True,
-    allow_methods=["GET", "POST", "DELETE", "PATCH"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "PATCH"],
     allow_headers=["Content-Type"]
 )
 
@@ -56,6 +57,11 @@ app.include_router(
     bookings_router,
     prefix=f"{BASE_PREFIX}/bookings",
     tags=["Bookings"],
+)
+app.include_router(
+    symptom_codes_router,
+    prefix=BASE_PREFIX,
+    tags=["Symptom Codes"],
 )
 
 

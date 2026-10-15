@@ -47,6 +47,7 @@ services:
       redis:
         condition: service_started
 
+  #Change for testing Jira
   # Backend
   backend:
     image: vanyas627/mental-health-backend:${IMAGE_TAG}
