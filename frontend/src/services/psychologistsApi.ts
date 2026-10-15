@@ -1,24 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-
-type Psychologist = {
-    psychologist_id: string
-    full_name: string
-    avatar_url: string | null
-    experience_years: number
-    price_per_hour: string
-    methods: string[]
-    specialization: string[]
-    mock_slots: {
-        time_label: string
-        time: string
-    }[]
-}
-
-type GetPsychologistsParams = {
-    limit?: number
-    offset?: number
-    symptomCodes?: string[]
-}
+import type { GetPsychologistsParams, Psychologist, SymptomCode } from '../types/psychologist.ts'
 
 export const psychologistsApi = createApi({
     reducerPath: 'psychologistsApi',
@@ -28,27 +9,32 @@ export const psychologistsApi = createApi({
     }),
 
     endpoints: (builder) => ({
-        getPsychologists: builder.query<Psychologist[], GetPsychologistsParams>({
-            query: ({ limit = 5, offset = 0, symptomCodes = [] }) => {
-                const params = new URLSearchParams()
+        getPsychologists: builder.query<Psychologist[], GetPsychologistsParams | void>({
+            query: (params) => {
+                const searchParams = new URLSearchParams()
 
-                params.set('limit', String(limit))
-                params.set('offset', String(offset))
+                searchParams.set('limit', String(params?.limit ?? 5))
 
-                symptomCodes.forEach((code) => {
-                    params.append('symptom_codes', code)
+                searchParams.set('offset', String(params?.offset ?? 0))
+
+                params?.symptomCodes?.forEach((code) => {
+                    searchParams.append('symptom_codes', code)
                 })
 
                 return {
-                    url: `/psychologists?${params.toString()}`,
+                    url: `/psychologists?${searchParams.toString()}`,
+                    method: 'GET',
                 }
             },
         }),
 
-        getPsychologistById: builder.query<Psychologist, string>({
-            query: (psychologistId) => `/psychologists/${psychologistId}`,
+        getSymptomCodes: builder.query<SymptomCode[], void>({
+            query: () => ({
+                url: '/symptom-codes',
+                method: 'GET',
+            }),
         }),
     }),
 })
 
-export const { useGetPsychologistsQuery, useGetPsychologistByIdQuery } = psychologistsApi
+export const { useGetPsychologistsQuery, useGetSymptomCodesQuery } = psychologistsApi
