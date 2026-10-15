@@ -10,6 +10,7 @@
     flex: 1;
     min-height: 0;
     overflow-y: auto;
+    overscroll-behavior: contain;
 
     scrollbar-width: thin;
     scrollbar-color: a.$color-optional transparent;
@@ -19,7 +20,7 @@
     }
 
     &::-webkit-scrollbar {
-        width:c.$message-list-scrollbar-width;
+        width: c.$message-list-scrollbar-width;
     }
 
     &::-webkit-scrollbar-track {
@@ -48,7 +49,7 @@
     }
 
     &__button-search-psy {
-      padding:c.$message-list-search-button-padding;
-      background: a.$color-optional;
+        padding: c.$message-list-search-button-padding;
+        background: a.$color-optional;
     }
 }

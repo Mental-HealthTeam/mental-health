@@ -9,6 +9,7 @@
 
     &__text {
         color: a.$color-primary;
+        overflow-wrap: anywhere;
     }
 
     &--bot {
