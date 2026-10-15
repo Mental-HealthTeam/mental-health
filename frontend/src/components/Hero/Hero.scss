@@ -82,11 +82,11 @@
             transform: scale(c.$hero-image-blur-scale);
 
             mask-image: linear-gradient(
-                            to right,
-                            #000,
-                            transparent c.$hero-image-blur-mask-start,
-                            transparent c.$hero-image-blur-mask-end,
-                            #000
+                to right,
+                #000,
+                transparent c.$hero-image-blur-mask-start,
+                transparent c.$hero-image-blur-mask-end,
+                #000
             );
         }
     }
@@ -102,10 +102,7 @@
         flex: 1;
         min-width: 0;
 
-        border-radius: calc(
-                #{c.$hero-stat-border-radius} +
-                #{c.$hero-stat-outline-width-desktop}
-        );
+        border-radius: calc(#{c.$hero-stat-border-radius} + #{c.$hero-stat-outline-width-desktop});
 
         background-color: a.$color-background;
     }
@@ -133,31 +130,16 @@
 
         background-color: a.$color-gray-0;
         background-image: radial-gradient(
-                        ellipse c.$hero-stat-glow-size at var(--glow-x) var(--glow-y),
-                        rgba(
-                                        a.$color-secondary-start,
-                                        c.$hero-stat-glow-opacity-start
-                        )
-                        0%,
-                        rgba(
-                                        a.$color-tertiary-start,
-                                        c.$hero-stat-glow-opacity-middle
-                        )
-                        50%,
-                        rgba(
-                                        a.$color-tertiary-end,
-                                        c.$hero-stat-glow-opacity-end
-                        )
-                        100%
+            ellipse c.$hero-stat-glow-size at var(--glow-x) var(--glow-y),
+            rgba(a.$color-secondary-start, c.$hero-stat-glow-opacity-start) 0%,
+            rgba(a.$color-tertiary-start, c.$hero-stat-glow-opacity-middle) 50%,
+            rgba(a.$color-tertiary-end, c.$hero-stat-glow-opacity-end) 100%
         );
 
         box-shadow:
-                c.$hero-stat-inset-shadow
-                rgba(
-                                a.$color-secondary-start,
-                                c.$hero-stat-inset-shadow-opacity
-                ),
-                0 8px 24px rgba(a.$color-primary, 0.04);
+            c.$hero-stat-inset-shadow
+                rgba(a.$color-secondary-start, c.$hero-stat-inset-shadow-opacity),
+            0 8px 24px rgba(a.$color-primary, 0.04);
 
         text-align: center;
 
@@ -172,27 +154,16 @@
             border-radius: inherit;
 
             background: linear-gradient(
-                            c.$hero-stat-glass-angle,
-                            rgba(
-                                            a.$color-gray-0,
-                                            c.$hero-stat-glass-opacity-start
-                            )
-                            0%,
-                            rgba(
-                                            a.$color-gray-0,
-                                            c.$hero-stat-glass-opacity-middle
-                            )
-                            c.$hero-stat-glass-middle-stop,
-                            rgba(
-                                            a.$color-gray-0,
-                                            c.$hero-stat-glass-opacity-end
-                            )
-                            100%
+                c.$hero-stat-glass-angle,
+                rgba(a.$color-gray-0, c.$hero-stat-glass-opacity-start) 0%,
+                rgba(a.$color-gray-0, c.$hero-stat-glass-opacity-middle)
+                    c.$hero-stat-glass-middle-stop,
+                rgba(a.$color-gray-0, c.$hero-stat-glass-opacity-end) 100%
             );
 
             mask:
-                    linear-gradient(#000 0 0) content-box exclude,
-                    linear-gradient(#000 0 0);
+                linear-gradient(#000 0 0) content-box exclude,
+                linear-gradient(#000 0 0);
 
             pointer-events: none;
         }
@@ -299,9 +270,8 @@
             flex-direction: row;
 
             box-shadow:
-                    c.$hero-stat-inset-shadow
-                    rgba(a.$color-secondary-start, 0.14),
-                    0 8px 28px rgba(a.$color-primary, 0.06);
+                c.$hero-stat-inset-shadow rgba(a.$color-secondary-start, 0.14),
+                0 8px 28px rgba(a.$color-primary, 0.06);
         }
 
         &__stat-value-mobile,

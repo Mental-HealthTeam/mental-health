@@ -4,7 +4,9 @@ import { Hero } from '../../components/Hero'
 import { WhyChooseUs } from '../../components/WhyChooseUs'
 import './Home.scss'
 import { SpecialistsSection } from '../../components/SpecialistsSection'
+import { AiChat } from '../../components/AiChat/AiChat.tsx'
 import { WhyUs } from '../../components/WhyUs'
+import { ContactSection } from '../../components/ContactSection'
 
 export const Home = () => {
     return (
@@ -16,9 +18,12 @@ export const Home = () => {
                 <WhyChooseUs />
                 <SpecialistsSection />
                 <WhyUs />
+                <ContactSection />
             </main>
 
             <Footer />
+
+            <AiChat />
         </div>
     )
 }
