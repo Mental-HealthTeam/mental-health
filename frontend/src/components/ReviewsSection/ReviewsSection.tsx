@@ -8,6 +8,7 @@ import { Container } from '../Container'
 import avatar1 from '../../assets/avatars/avatar-1.png'
 
 import './ReviewsSection.scss'
+import { useTranslation } from 'react-i18next'
 
 export type Review = {
     id: string
@@ -38,6 +39,7 @@ const SLIDER_GAP = 16
 
 export const ReviewsSection = () => {
     const sliderRef = useRef<HTMLDivElement>(null)
+    const { t } = useTranslation('reviews')
 
     const { visibleCards } = useScreenLayout()
 
@@ -78,19 +80,16 @@ export const ReviewsSection = () => {
                     <SectionIndex index={5} className="reviews-section__section-index" />
 
                     <h2 className="reviews-section__title" id="reviews-section-title">
-                        Що про нас кажуть
+                        {t('title')}
                     </h2>
-                    <p className="reviews-section__subtitle">
-                        Історії людей, які зробили крок назустріч своєму ментальному здоров'ю та
-                        змінили життя.
-                    </p>
+                    <p className="reviews-section__subtitle">{t('subtitle')}</p>
                 </div>
 
                 <div
                     className="reviews-section__content"
                     role="region"
                     aria-roledescription="carousel"
-                    aria-label="Відгуки клієнтів"
+                    aria-label={t('contentLabel')}
                 >
                     <div className="reviews-section__media">
                         <img
@@ -126,13 +125,13 @@ export const ReviewsSection = () => {
                         <div className="reviews-section__controls">
                             <ArrowButton
                                 direction="left"
-                                ariaLabel="Попередній відгук"
+                                ariaLabel={t('previousReview')}
                                 onClick={handlePrevious}
                             />
 
                             <ArrowButton
                                 direction="right"
-                                ariaLabel="Наступний відгук"
+                                ariaLabel={t('nextReview')}
                                 onClick={handleNext}
                             />
                         </div>
