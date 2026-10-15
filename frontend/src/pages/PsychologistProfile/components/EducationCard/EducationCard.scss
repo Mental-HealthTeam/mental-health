@@ -1,0 +1,26 @@
+@use '../../../../styles/abstracts' as a;
+
+.education-card {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    background-color: a.$color-optional;
+    padding: 30px 16px;
+    border-radius: 10px;
+
+    &__list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        padding-left: 18px;
+        list-style: disc;
+    }
+
+    &__item {
+        color: a.$color-gray-0;
+        font-size: a.$font-size-body;
+        line-height: a.$line-height-body;
+        letter-spacing: a.$letter-spacing-body;
+        font-weight: a.$font-weight-body-extrabold;
+    }
+}

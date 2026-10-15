@@ -1,21 +1,34 @@
+import classNames from 'classnames'
 import { BalanceIcon } from '../../../../components/UI/Icons/WhyChoosePlatform'
 import { SectionLabel } from '../../../../components/UI/SectionLabel'
 import './Specializations.scss'
+import { Tag } from '../../../../components/UI/Tag'
 
-export const Specializations = () => {
+type Props = {
+    className?: string
+}
+
+const TAGS = ['Тривожність', 'Вигорання', 'Депресія', 'Самооцінка', 'Стосунки'] as const
+
+export const Specializations = ({ className }: Props) => {
     return (
-        <section className="specializations" aria-labelledby="specializations-title">
+        <section
+            className={classNames('specializations', className)}
+            aria-labelledby="specializations-title"
+        >
             <SectionLabel className="specializations__section-label" startIcon={<BalanceIcon />}>
                 Напрямки роботи
             </SectionLabel>
 
-            <ul className="specializations__tags">
-                <li className="tag">Тривожність</li>
-                <li className="tag">Вигорання</li>
-                <li className="tag">Депресія</li>
-                <li className="tag">Самооцінка</li>
-                <li className="tag">Стосунки</li>
-            </ul>
+            <div className="specializations__tags">
+                {TAGS.map((item, i) => {
+                    return (
+                        <Tag className="specializations__tag" key={i}>
+                            {item}
+                        </Tag>
+                    )
+                })}
+            </div>
 
             <hr className="specializations__divider" />
 

@@ -3,12 +3,15 @@
 .psychologist-profile {
     display: flex;
     flex-direction: column;
-    gap: 24px;
     min-height: 100vh;
     background-color: a.$color-gray-0;
 
     &__content {
         flex: 1;
+    }
+
+    &__title {
+        margin-bottom: 24px;
     }
 
     &__container {
@@ -30,5 +33,25 @@
         line-height: a.$line-height-h4;
         letter-spacing: a.$letter-spacing-h4;
         font-weight: a.$font-weight-h4;
+    }
+
+    &__region-about {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    &__top {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    &__specializations {
+        margin-top: 8px;
+    }
+
+    &__reviews {
+        margin-top: 8px;
     }
 }

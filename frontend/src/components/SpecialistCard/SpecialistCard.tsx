@@ -9,6 +9,12 @@ import { TimeSlot } from '../UI/TimeSlot'
 import './SpecialistCard.scss'
 import { OutlineButton } from '../UI/Buttons'
 import { useNavigate } from 'react-router-dom'
+import classNames from 'classnames'
+
+type Props = {
+    className?: string
+    variant?: 'preview' | 'full'
+}
 
 const TIME_SLOTS = [
     {
@@ -23,13 +29,16 @@ const TIME_SLOTS = [
 
 const TOPICS = ['СТРЕС', 'СДВГ', 'СТОСУНКИ', 'ПТСР']
 
-export const SpecialistCard = () => {
+export const SpecialistCard = ({ className, variant = 'full' }: Props) => {
     const navigate = useNavigate()
     const [isBooking, setIsBooking] = useState(false)
     const [selectedSlot, setSelectedSlot] = useState('')
+    const isPreview = variant === 'full'
 
     return (
-        <article className="specialist-card">
+        <article
+            className={classNames('specialist-card', `specialist-card--${variant}`, className)}
+        >
             <header className="specialist-card__header">
                 <Avatar
                     src={avatarImage}
@@ -73,17 +82,19 @@ export const SpecialistCard = () => {
                 <strong className="specialist-card__section-value">Гештальт-терапія, КПТ</strong>
             </section>
 
-            <section className="specialist-card__section specialist-card__topics">
-                <span className="specialist-card__section-title">Працює з темами:</span>
+            {isPreview && (
+                <section className="specialist-card__section specialist-card__topics">
+                    <span className="specialist-card__section-title">Працює з темами:</span>
 
-                <div className="specialist-card__topic-list">
-                    {TOPICS.map((topic) => (
-                        <span className="specialist-card__topic" key={topic}>
-                            {topic}
-                        </span>
-                    ))}
-                </div>
-            </section>
+                    <div className="specialist-card__topic-list">
+                        {TOPICS.map((topic) => (
+                            <span className="specialist-card__topic" key={topic}>
+                                {topic}
+                            </span>
+                        ))}
+                    </div>
+                </section>
+            )}
 
             <div className="specialist-card__actions">
                 {!isBooking && (
@@ -117,14 +128,16 @@ export const SpecialistCard = () => {
                     </div>
                 )}
 
-                <OutlineButton
-                    className="specialist-card__profile-button"
-                    variant="secondary"
-                    fullWidth
-                    onClick={() => navigate('/psychologist-profile')}
-                >
-                    ПЕРЕЙТИ ДО ПРОФІЛЮ
-                </OutlineButton>
+                {isPreview && (
+                    <OutlineButton
+                        className="specialist-card__profile-button"
+                        variant="secondary"
+                        fullWidth
+                        onClick={() => navigate('/psychologist-profile')}
+                    >
+                        ПЕРЕЙТИ ДО ПРОФІЛЮ
+                    </OutlineButton>
+                )}
             </div>
         </article>
     )

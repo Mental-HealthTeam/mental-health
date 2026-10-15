@@ -24,18 +24,21 @@ export const PsychologistProfile = () => {
                     <div className="psychologist-profile">
                         <h1 className="psychologist-profile__title">Профіль психолога</h1>
                         <div className="psychologist-profile__top">
-                            <SpecialistCard />
+                            <SpecialistCard
+                                className="psychologist-profile__specialist-card"
+                                variant="preview"
+                            />
 
                             <div className="psychologist-profile__region-about">
-                                <AboutCard />
+                                <AboutCard className="psychologist-profile__about-card" />
 
-                                <EducationCard />
+                                <EducationCard className="psychologist-profile__education-card" />
                             </div>
                         </div>
 
-                        <Specializations />
+                        <Specializations className="psychologist-profile__specializations" />
 
-                        <Reviews />
+                        <Reviews className="psychologist-profile__reviews" />
                     </div>
                 </Container>
             </main>

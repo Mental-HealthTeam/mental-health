@@ -1,0 +1,36 @@
+@use '../../../../styles/abstracts' as a;
+
+.reviews {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    background-color: a.$color-background;
+    padding: 30px 16px;
+    border: 1px solid a.$color-gray-20;
+    border-radius: 10px;
+
+    &__tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+
+    &__divider {
+        height: 1px;
+        margin: 0;
+        border: none;
+        background-color: a.$color-gray-20;
+    }
+
+    &__list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        padding-left: 18px;
+        list-style: disc;
+    }
+
+    &__item {
+        color: a.$color-gray-60;
+    }
+}

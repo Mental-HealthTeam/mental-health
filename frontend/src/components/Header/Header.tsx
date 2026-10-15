@@ -62,7 +62,7 @@ export const Header = () => {
                 <div className="header__top">
                     <a
                         className="header__logo"
-                        href="#home"
+                        href="/"
                         aria-label={tAccessibility('homeLink')}
                         onClick={closeMenu}
                     >

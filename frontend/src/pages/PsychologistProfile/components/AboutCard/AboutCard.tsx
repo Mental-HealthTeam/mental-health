@@ -1,10 +1,15 @@
+import classNames from 'classnames'
 import { HelpIcon } from '../../../../components/UI/Icons/WhyChoosePlatform'
 import { SectionLabel } from '../../../../components/UI/SectionLabel'
 import './AboutCard.scss'
 
-export const AboutCard = () => {
+type Props = {
+    className?: string
+}
+
+export const AboutCard = ({ className }: Props) => {
     return (
-        <section className="about-card" aria-labelledby="about-title">
+        <section className={classNames('about-card', className)} aria-labelledby="about-title">
             <SectionLabel className="about-card__section-label" startIcon={<HelpIcon />}>
                 Про спеціаліста
             </SectionLabel>
