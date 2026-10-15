@@ -10,6 +10,8 @@ import { ArrowIcon } from '../UI/Icons'
 import { SectionIndex } from '../UI/SectionIndex'
 
 import './WhyUs.scss'
+import { useAppDispatch } from '../../app/hooks'
+import { openAiChat } from '../../app/store/slices/aiChatSlice'
 
 const FEATURED_SPECIALIST = {
     image: specialistImage,
@@ -18,7 +20,12 @@ const FEATURED_SPECIALIST = {
 }
 
 export const WhyUs = () => {
+    const dispatch = useAppDispatch()
     const { t } = useTranslation('whyUs')
+
+    const handleOpenChat = () => {
+        dispatch(openAiChat())
+    }
 
     return (
         <section className="why-us" id="about">
@@ -87,6 +94,7 @@ export const WhyUs = () => {
                     className="why-us__button"
                     endIcon={<ArrowIcon />}
                     aria-label={t('cta')}
+                    onClick={handleOpenChat}
                 >
                     {t('cta')}
                 </PrimaryButton>

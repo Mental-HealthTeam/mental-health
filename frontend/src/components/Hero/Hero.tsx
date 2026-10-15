@@ -4,6 +4,8 @@ import heroDesktopImage from '../../assets/images/hero/hero-desktop.png'
 import heroMobileImage from '../../assets/images/hero/hero-mobile.png'
 
 import { avatars } from '../../constants/avatars'
+import { openAiChat } from '../../app/store/slices/aiChatSlice'
+import { useAppDispatch } from '../../app/hooks'
 
 import { AvatarGroup } from '../UI/Avatar'
 import { Search } from '../UI/Search'
@@ -12,9 +14,10 @@ import './Hero.scss'
 
 export const Hero = () => {
     const { t } = useTranslation('hero')
+    const dispatch = useAppDispatch()
 
-    const handleSubmit = (value: string) => {
-        return value
+    const handleOpenChat = () => {
+        dispatch(openAiChat())
     }
 
     return (
@@ -29,7 +32,7 @@ export const Hero = () => {
 
                 <Search
                     className="hero__search"
-                    onSubmit={handleSubmit}
+                    onSubmit={handleOpenChat}
                     placeholder={t('search.placeholder')}
                     buttonText={t('search.button')}
                 />

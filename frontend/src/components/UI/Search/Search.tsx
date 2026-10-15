@@ -4,6 +4,8 @@ import { useState } from 'react'
 import classNames from 'classnames'
 import { ArrowIcon, SearchIcon } from '../Icons'
 import { PrimaryButton } from '../Buttons'
+import { useAppDispatch } from '../../../app/hooks'
+import { addInitialText } from '../../../app/store/slices/aiChatSlice'
 
 type SearchSize = 'small' | 'medium' | 'large'
 
@@ -38,6 +40,7 @@ export const Search = ({
     onChange,
     onSubmit,
 }: Props) => {
+    const dispatch = useAppDispatch()
     const [value, setValue] = useState(initialValue)
 
     const searchClassName = classNames(
@@ -62,7 +65,9 @@ export const Search = ({
             return
         }
 
-        onSubmit(value.trim())
+        const trimmedValue = value.trim()
+        dispatch(addInitialText(trimmedValue))
+        onSubmit(trimmedValue)
     }
 
     return (

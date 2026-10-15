@@ -1,0 +1,55 @@
+@use '../../../styles/abstracts' as a;
+@use '../../../styles/components' as c;
+
+.message-list {
+    display: flex;
+    flex-direction: column;
+    gap: c.$message-list-gap;
+    padding-inline: c.$message-list-padding-inline;
+
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+
+    scrollbar-width: thin;
+    scrollbar-color: a.$color-optional transparent;
+
+    > :first-child {
+        margin-top: auto;
+    }
+
+    &::-webkit-scrollbar {
+        width: c.$message-list-scrollbar-width;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: transparent;
+        margin: c.$message-list-scrollbar-track-margin 0;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: a.$color-secondary-gradient;
+        border-radius: c.$message-list-scrollbar-radius;
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+        background: a.$color-optional;
+    }
+
+    &__messages {
+        display: flex;
+        flex-direction: column;
+        gap: c.$message-list-messages-gap;
+    }
+
+    &__date {
+        width: 100%;
+        text-align: center;
+    }
+
+    &__button-search-psy {
+        padding: c.$message-list-search-button-padding;
+        background: a.$color-optional;
+    }
+}
