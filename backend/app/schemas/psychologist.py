@@ -6,7 +6,6 @@ from pydantic import BaseModel
 
 
 class MockSlot(BaseModel):
-    time_label: str
     time: datetime
 
 
