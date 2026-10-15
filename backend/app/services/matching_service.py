@@ -188,7 +188,7 @@ def _to_match_result(rows, symptom_codes):
             price_per_hour=psychologist.price_per_hour,
             languages=psychologist.languages,
             mock_slots=[
-                MockSlot(time_label=slot["label"], time=slot["datetime"]) for slot in (psychologist.mock_slots or [])
+                MockSlot(time=slot["datetime"]) for slot in (psychologist.mock_slots or [])
             ],
             matched_symptom_codes=list(
                 set(symptom_codes) & {
