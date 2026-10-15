@@ -6,6 +6,7 @@ import './Home.scss'
 import { SpecialistsSection } from '../../components/SpecialistsSection'
 import { WhyUs } from '../../components/WhyUs'
 import { ReviewsSection } from '../../components/ReviewsSection'
+import { ContactSection } from '../../components/ContactSection'
 
 export const Home = () => {
     return (
@@ -18,6 +19,7 @@ export const Home = () => {
                 <SpecialistsSection />
                 <WhyUs />
                 <ReviewsSection />
+                <ContactSection />
             </main>
 
             <Footer />
