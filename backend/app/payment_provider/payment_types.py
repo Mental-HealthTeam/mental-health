@@ -8,6 +8,8 @@ from pydantic import (
     field_validator
 )
 
+from schemas.payout import PayoutDetailsFields
+
 
 class PaymentEventType(str, Enum):
     PAID = "paid"
@@ -61,6 +63,7 @@ class PaymentWebhook(BaseModel):
 class RefundRequest(BaseModel):
     payment_reference: str
     amount: Decimal | None = None
+    reason: str | None = None
 
 
 class RefundResult(BaseModel):
@@ -72,13 +75,16 @@ class WebhookAcknowledgement(BaseModel):
     body: dict[str , str | int] | None = None
 
 
+class Recipient(PayoutDetailsFields):
+    pass
+
+
 class PayoutRequest(BaseModel):
-    booking_id: UUID
-    amount: Decimal
+    reference: str
+    amount: Decimal = Field(gt=0)
     currency: str = Field(max_length=3)
-    recipient_token: str | None = None
-    # TODO: stripe_account_id should be added
-    connected_account_id: str | None = None
+    recipient: Recipient
+    description: str | None = None
 
 
 class PayoutResult(BaseModel):
