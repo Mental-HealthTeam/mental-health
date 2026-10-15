@@ -153,6 +153,8 @@
     font-size: a.$font-size-caption-primary;
     line-height: a.$line-height-caption-primary;
     font-weight: a.$font-weight-caption-primary;
+
+    overflow-wrap: anywhere;
   }
 
   &__specialist-cta {
@@ -399,18 +401,61 @@
 
 @media (max-width: 1199px) {
   .contact-section {
-    padding-inline: 20px;
+    padding-inline: 16px;
 
     &__container {
-      grid-template-columns: minmax(0, 1fr) minmax(320px, 400px);
+      grid-template-columns: minmax(0, 1fr) minmax(300px, 360px);
 
-      gap: 40px;
+      gap: 28px;
 
-      padding-inline: 48px;
+      padding: 40px 28px 64px;
     }
 
     &__contacts {
-      padding-block: 12px 52px;
+      gap: 22px;
+
+      padding-block: 12px 48px;
+    }
+
+    &__contact-grid {
+      gap: 12px;
+
+      padding: 16px;
+    }
+
+    &__contact-item {
+      gap: 10px;
+
+      padding: 10px 12px;
+    }
+
+    &__contact-icon {
+      width: 34px;
+      height: 34px;
+    }
+
+    &__label {
+      font-size: 13px;
+      line-height: 1.2;
+    }
+
+    &__value {
+      font-size: 15px;
+      line-height: 1.25;
+    }
+
+    &__specialist-cta {
+      gap: 16px;
+
+      padding: 18px 20px;
+    }
+
+    &__specialist-button {
+      padding: 12px 18px;
+    }
+
+    &__form-wrapper {
+      padding: 28px 22px;
     }
   }
 }
@@ -492,6 +537,21 @@
           background: transparent;
         }
       }
+    }
+
+    &__contact-icon {
+      width: 36px;
+      height: 36px;
+    }
+
+    &__label {
+      font-size: a.$font-size-caption-third;
+      line-height: a.$line-height-caption-third;
+    }
+
+    &__value {
+      font-size: a.$font-size-caption-primary;
+      line-height: a.$line-height-caption-primary;
     }
 
     &__specialist-cta {
