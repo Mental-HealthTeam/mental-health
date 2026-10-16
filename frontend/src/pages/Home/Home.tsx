@@ -7,6 +7,7 @@ import { SpecialistsSection } from '../../components/SpecialistsSection'
 import { AiChat } from '../../components/AiChat/AiChat.tsx'
 import { WhyUs } from '../../components/WhyUs'
 import { ContactSection } from '../../components/ContactSection'
+import { FaqSection } from '../../components/FaqSection/FaqSection.tsx'
 
 export const Home = () => {
     return (
@@ -18,6 +19,7 @@ export const Home = () => {
                 <WhyChooseUs />
                 <SpecialistsSection />
                 <WhyUs />
+                <FaqSection />
                 <ContactSection />
             </main>
 

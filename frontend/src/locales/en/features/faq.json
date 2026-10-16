@@ -1,0 +1,34 @@
+{
+    "title": "Frequently asked questions",
+    "subtitle": "The most important things to know about Mental Health Platform and our services!",
+    "contact": {
+        "text": "Have more questions? Write to us — we will be happy to advise you in more detail.",
+        "button": "Contact us"
+    },
+    "items": {
+        "faq-1": {
+            "question": "How much does a consultation cost?",
+            "answer": "The price depends on the specialist, their experience and the session length. The price is shown in each psychologist's profile, so you see it before booking. There are no hidden fees."
+        },
+        "faq-2": {
+            "question": "How do I choose a psychologist on the platform?",
+            "answer": "You can browse our specialists' profiles and learn about their experience, therapy approaches and reviews. You can also use the convenient filters or take a quick AI matching test."
+        },
+        "faq-3": {
+            "question": "Can I change my psychologist?",
+            "answer": "Yes, of course. If after the first session you feel the approach or communication style does not suit you, you can choose another specialist. This is normal practice and helps you find someone you feel comfortable working with."
+        },
+        "faq-4": {
+            "question": "How does an online session work?",
+            "answer": "The session takes place by video at a time that suits you. You only need a device with a camera and a stable internet connection. It usually lasts about 50 minutes, and the meeting link arrives after booking."
+        },
+        "faq-5": {
+            "question": "Is confidentiality guaranteed?",
+            "answer": "Yes. Everything you discuss with your psychologist stays between you, and our specialists follow professional ethics. Your personal data is protected and is not shared with third parties."
+        },
+        "faq-6": {
+            "question": "How do I book my first consultation?",
+            "answer": "Choose a specialist in the catalog, pick a free time in their schedule and press “Book a session”. After confirmation you will receive the meeting details. The whole process takes a few minutes."
+        }
+    }
+}
