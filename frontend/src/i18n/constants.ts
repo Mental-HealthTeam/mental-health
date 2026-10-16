@@ -18,6 +18,8 @@ export const NAMESPACES = [
     'whyUs',
     'aiChat',
     'faq',
+    'reviews',
+    'aiChat'
 ] as const
 
 export type Namespace = (typeof NAMESPACES)[number]
