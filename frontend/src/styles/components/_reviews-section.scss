@@ -1,0 +1,69 @@
+// ======================================================
+// Reviews section
+// ======================================================
+
+$reviews-section-max-width: 1280px;
+
+$reviews-section-container-padding: 32px 16px 0;
+$reviews-section-container-margin-bottom: 64px;
+$reviews-section-container-gap: 28px;
+
+// ======================================================
+// Reviews section header
+// ======================================================
+
+$reviews-section-header-gap: 12px;
+
+// ======================================================
+// Reviews section media
+// ======================================================
+
+$reviews-section-media-border-radius: 20px;
+
+// ======================================================
+// Reviews section slider
+// ======================================================
+
+$reviews-section-slider-gap: 16px;
+$reviews-section-card-width: 350px;
+
+$reviews-section-slider-max-width: 354px;
+
+$reviews-section-region-gap: 16px;
+$reviews-section-region-padding-inline: 14px;
+$reviews-section-region-overlap: -80px;
+
+$reviews-section-controls-gap: 16px;
+
+// ======================================================
+// Reviews section layout (tablet and up)
+// ======================================================
+
+$reviews-section-grid-columns: minmax(0, 1fr) minmax(0, 1fr);
+$reviews-section-grid-columns-wide: minmax(0, 1fr) minmax(0, 1.5fr);
+
+$reviews-section-region-overlap-inline: -100px;
+$reviews-section-region-padding-top: 25px;
+
+// ======================================================
+// Review card
+// ======================================================
+
+$review-card-padding: 32px 24px;
+$review-card-border-radius: 20px;
+
+$review-card-gradient-angle: 135deg;
+$review-card-gradient-start: #ffffffc6;
+$review-card-blur: 12px;
+
+// ======================================================
+// Review card elements
+// ======================================================
+
+$review-card-icon-margin-bottom: 24px;
+
+$review-card-header-gap: 12px;
+$review-card-author-gap: 4px;
+
+$review-card-rating-margin-top: 12px;
+$review-card-rating-margin-bottom: 16px;
