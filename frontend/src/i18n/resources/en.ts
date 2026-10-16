@@ -9,6 +9,7 @@ import whyChooseUs from '../../locales/en/features/whyChooseUs.json'
 import auth from '../../locales/en/features/auth.json'
 import footer from '../../locales/en/features/footer.json'
 import whyUs from '../../locales/en/features/whyUs.json'
+import aiChat from '../../locales/en/features/aiChat.json'
 import contact from '../../locales/en/features/contact.json'
 import reviews from '../../locales/en/features/reviews.json'
 
@@ -23,6 +24,7 @@ export const enResources = {
     footer,
     whyChooseUs,
     whyUs,
+    aiChat,
     contact,
     reviews,
 } as const

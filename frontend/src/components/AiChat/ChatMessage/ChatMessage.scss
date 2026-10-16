@@ -1,0 +1,26 @@
+@use '../../../styles/abstracts' as a;
+@use '../../../styles/components' as c;
+
+.chat-message {
+    min-width: 0;
+    max-width: c.$chat-message-max-width;
+    border-radius: a.$border-radius-ai-chat-region-avatar;
+    padding: c.$chat-message-padding;
+
+    &__text {
+        color: a.$color-primary;
+        overflow-wrap: anywhere;
+    }
+
+    &--bot {
+        background: a.$color-secondary-gradient;
+        border-bottom-left-radius: 0;
+        align-self: flex-start;
+    }
+
+    &--user {
+        background-color: a.$color-background;
+        border-bottom-right-radius: 0;
+        align-self: flex-end;
+    }
+}
