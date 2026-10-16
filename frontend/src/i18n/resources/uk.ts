@@ -10,7 +10,7 @@ import auth from '../../locales/uk/features/auth.json'
 import footer from '../../locales/uk/features/footer.json'
 import whyUs from '../../locales/uk/features/whyUs.json'
 import contact from '../../locales/uk/features/contact.json'
-import reviews from '../../locales/en/features/reviews.json'
+import reviews from '../../locales/uk/features/reviews.json'
 
 export const ukResources = {
     common,
