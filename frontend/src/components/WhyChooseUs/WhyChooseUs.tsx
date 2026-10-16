@@ -4,6 +4,8 @@ import handshakeImage from '../../assets/images/why-choose-us/handshake.png'
 import womanImage from '../../assets/images/why-choose-us/woman.png'
 
 import { whyChooseUs } from '../../constants/whyChooseUs'
+import { useAppDispatch } from '../../app/hooks'
+import { openAiChat } from '../../app/store/slices/aiChatSlice'
 
 import { PrimaryButton } from '../UI/Buttons'
 import { ArrowIcon } from '../UI/Icons'
@@ -13,6 +15,11 @@ import './WhyChooseUs.scss'
 
 export const WhyChooseUs = () => {
     const { t } = useTranslation('whyChooseUs')
+    const dispatch = useAppDispatch()
+
+    const handleOpenChat = () => {
+        dispatch(openAiChat())
+    }
 
     return (
         <section className="why-choose-platform" id="about">
@@ -57,6 +64,7 @@ export const WhyChooseUs = () => {
                             className="why-choose-platform__button"
                             endIcon={<ArrowIcon />}
                             aria-label={t('cta')}
+                            onClick={handleOpenChat}
                         >
                             {t('cta')}
                         </PrimaryButton>

@@ -1,0 +1,70 @@
+@use '../../../styles/abstracts' as a;
+@use '../../../styles/components' as c;
+
+.chat-header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: c.$chat-header-gap;
+    flex-shrink: 0;
+
+    &__close {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: c.$chat-header-close-size;
+        height: c.$chat-header-close-size;
+        padding: 0;
+        border: none;
+        border-radius: 0;
+        overflow: visible;
+        color: a.$color-gray-20;
+
+        &:hover {
+            background: transparent;
+            color: a.$color-primary;
+        }
+    }
+
+    &__region-avatar-ai {
+        display: flex;
+        align-items: center;
+        gap: c.$chat-header-profile-gap;
+        width: 100%;
+        background-color: a.$color-background;
+        border-radius: c.$chat-header-profile-radius;
+        padding: c.$chat-header-profile-padding;
+    }
+
+    &__info {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: c.$chat-header-info-gap;
+    }
+
+    &__name {
+        font-size: a.$font-size-h4;
+        line-height: a.$line-height-h4;
+        letter-spacing: a.$letter-spacing-h4;
+        font-weight: a.$font-weight-h4;
+        color: a.$color-primary;
+        text-align: left;
+    }
+
+    &__role {
+        color: a.$color-gray-80;
+    }
+
+    &__status {
+        width: max-content;
+        font-size: a.$font-size-button-small;
+        line-height: a.$line-height-button-small;
+        font-weight: a.$font-weight-button-small;
+        text-transform: uppercase;
+        padding: c.$chat-header-status-padding;
+        background: a.$color-secondary-gradient;
+        color: a.$color-primary;
+        border-radius: c.$chat-header-status-radius;
+    }
+}

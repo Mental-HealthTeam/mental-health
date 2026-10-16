@@ -1,0 +1,38 @@
+@use '../../styles/abstracts' as a;
+@use '../../styles/components' as c;
+
+.ai-chat {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: c.$ai-chat-top;
+    right: c.$ai-chat-right;
+    bottom: c.$ai-chat-bottom;
+    min-width: 0;
+    max-width: c.$ai-chat-max-width;
+    max-height: c.$ai-chat-max-height;
+    background-color: a.$color-gray-0;
+    padding: c.$ai-chat-padding;
+    border-radius: a.$border-radius-ai-chat;
+    box-shadow: c.$ai-chat-shadow;
+    z-index: c.$ai-chat-z-index;
+
+    &__content {
+        flex: 1;
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        gap: c.$ai-chat-content-gap;
+        min-height: 100%;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+    }
+}
+
+@media (max-width: a.$breakpoint-mobile) {
+    .ai-chat {
+        right: c.$ai-chat-right-mobile;
+    }
+}
