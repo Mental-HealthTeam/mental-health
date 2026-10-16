@@ -1,0 +1,190 @@
+@use '../../styles/abstracts' as a;
+@use '../../styles/components' as c;
+
+.reviews-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+
+    overflow: hidden;
+
+    background-color: a.$color-gray-0;
+
+    &__container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        width: 100%;
+        max-width: c.$reviews-section-max-width;
+
+        margin-inline: auto;
+        margin-bottom: c.$reviews-section-container-margin-bottom;
+
+        padding: c.$reviews-section-container-padding;
+        gap: c.$reviews-section-container-gap;
+    }
+
+    &__header {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        gap: c.$reviews-section-header-gap;
+    }
+
+    &__title {
+        color: a.$color-text-primary;
+        font-size: a.$font-size-h2;
+        line-height: a.$line-height-h2;
+        letter-spacing: a.$letter-spacing-h2;
+        font-weight: a.$font-weight-h2;
+        text-align: center;
+    }
+
+    &__subtitle {
+        color: a.$color-gray-60;
+        font-size: a.$font-size-caption-secondary;
+        line-height: a.$line-height-caption-secondary;
+        letter-spacing: a.$letter-spacing-caption-secondary;
+        font-weight: a.$font-weight-caption-secondary;
+        text-align: center;
+    }
+
+    &__content {
+        display: flex;
+        flex-direction: column;
+        max-width: 100%;
+    }
+
+    &__media {
+        position: relative;
+        z-index: 0;
+        width: 100%;
+        min-width: 0;
+        overflow: hidden;
+        border-radius: c.$reviews-section-media-border-radius;
+    }
+
+    &__image {
+        display: block;
+        width: 100%;
+        max-width: 100%;
+        height: auto;
+        object-fit: cover;
+    }
+
+    &__slider-wrapper {
+        position: relative;
+        z-index: 1;
+
+        --slider-gap: #{c.$reviews-section-slider-gap};
+        --card-width: #{c.$reviews-section-card-width};
+        --slide-width: calc(
+            (100% - var(--slider-gap) * (var(--visible-cards) - 1)) / var(--visible-cards)
+        );
+
+        width: 100%;
+        max-width: c.$reviews-section-slider-max-width;
+
+        margin-inline: auto;
+
+        overflow: hidden;
+    }
+
+    &__slider {
+        display: flex;
+        align-items: flex-start;
+
+        gap: var(--slider-gap);
+
+        width: 100%;
+
+        overflow-x: auto;
+        overflow-y: hidden;
+
+        scroll-behavior: smooth;
+        scroll-snap-type: x mandatory;
+
+        scrollbar-width: none;
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
+    }
+
+    &__slide {
+        flex-grow: 0;
+        flex-shrink: 0;
+        flex-basis: var(--slide-width);
+
+        min-width: 0;
+
+        scroll-snap-align: start;
+    }
+
+    &__region-reviews {
+        display: flex;
+        flex-direction: column;
+        gap: c.$reviews-section-region-gap;
+        margin-top: c.$reviews-section-region-overlap;
+        padding-inline: c.$reviews-section-region-padding-inline;
+    }
+
+    &__controls {
+        display: flex;
+        justify-content: center;
+        gap: c.$reviews-section-controls-gap;
+    }
+}
+
+@media (min-width: a.$reviews-section-grid-breakpoint) {
+    .reviews-section {
+        &__content {
+            display: grid;
+            grid-template-columns: c.$reviews-section-grid-columns;
+            align-items: center;
+        }
+
+        &__region-reviews {
+            margin-top: 0;
+            margin-left: c.$reviews-section-region-overlap-inline;
+            padding-top: c.$reviews-section-region-padding-top;
+        }
+
+        &__slider-wrapper {
+            max-width: calc(
+                var(--card-width) * var(--visible-cards) + var(--slider-gap) *
+                    (var(--visible-cards) - 1)
+            );
+        }
+
+        &__media {
+            align-self: stretch;
+        }
+
+        &__image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    }
+}
+
+@media (min-width: a.$breakpoint-tablet) {
+    .reviews-section {
+        &__title {
+            font-size: a.$font-size-h1;
+            line-height: a.$line-height-h1;
+            letter-spacing: a.$letter-spacing-h1;
+            font-weight: a.$font-weight-h1;
+        }
+
+        &__content {
+            display: grid;
+            grid-template-columns: c.$reviews-section-grid-columns-wide;
+            align-items: center;
+        }
+    }
+}
