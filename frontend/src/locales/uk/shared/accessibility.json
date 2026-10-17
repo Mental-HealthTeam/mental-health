@@ -6,5 +6,11 @@
     "changeLanguage": "Змінити мову",
     "footer": "Нижня частина сайту",
     "footerLegalNavigation": "Правова інформація",
-    "mainNavigation": "Головна навігація"
+    "mainNavigation": "Головна навігація",
+    "specialistsFilters": "Фільтри фахівців",
+    "previousSpecialist": "Попередній фахівець",
+    "nextSpecialist": "Наступний фахівець",
+    "specialistCard": {
+        "availableTimes": "Доступний час для запису до {{name}}"
+    }
 }

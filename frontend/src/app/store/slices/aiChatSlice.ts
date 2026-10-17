@@ -1,8 +1,9 @@
 import { createAsyncThunk, createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import { createMessage } from '../../../utils/createMessage'
-import type { MatchData, Psychologist } from '../../../types/aiChat'
+import type { MatchData } from '../../../types/aiChat'
 import type { RootState } from '../store'
 import { streamChatMessage } from '../../../api/chatApi'
+import type { Psychologist } from '../../../types/psychologist.ts'
 
 export type MessageAuthor = 'bot' | 'user'
 

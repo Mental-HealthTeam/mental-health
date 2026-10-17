@@ -6,5 +6,11 @@
     "changeLanguage": "Change language",
     "footer": "Website footer",
     "footerLegalNavigation": "Legal information",
-    "mainNavigation": "Main navigation"
+    "mainNavigation": "Main navigation",
+    "specialistsFilters": "Specialist filters",
+    "previousSpecialist": "Previous specialist",
+    "nextSpecialist": "Next specialist",
+    "specialistCard": {
+        "availableTimes": "Available appointment times for {{name}}"
+    }
 }

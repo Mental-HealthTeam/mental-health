@@ -12,6 +12,7 @@ import whyUs from '../../locales/en/features/whyUs.json'
 import aiChat from '../../locales/en/features/aiChat.json'
 import contact from '../../locales/en/features/contact.json'
 import reviews from '../../locales/en/features/reviews.json'
+import symptoms from '../../locales/en/features/symptoms.json'
 
 export const enResources = {
     common,
@@ -27,4 +28,5 @@ export const enResources = {
     aiChat,
     contact,
     reviews,
+    symptoms,
 } as const
