@@ -16,6 +16,8 @@ export const NAMESPACES = [
     'psychologists',
     'auth',
     'whyUs',
+    'aiChat',
+    'faq',
     'reviews',
     'aiChat'
 ] as const
