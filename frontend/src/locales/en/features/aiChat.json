@@ -1,0 +1,32 @@
+{
+    "window": {
+        "ariaLabel": "Chat with the AI consultant"
+    },
+    "greeting": "Hello! My name is Anna, I'm your AI assistant at “Mental Health Platform”. Please tell me what's troubling you — it will help me find the right psychologist for you faster.",
+    "header": {
+        "closeAriaLabel": "Close chat",
+        "avatarAlt": "Anna's avatar",
+        "name": "Anna",
+        "role": "Your AI consultant",
+        "status": "ONLINE"
+    },
+    "input": {
+        "label": "Message",
+        "placeholder": "Describe how you feel",
+        "sendAriaLabel": "Send message"
+    },
+    "messageList": {
+        "retry": "Try again",
+        "searchPsychologist": "Find a psychologist"
+    },
+    "typing": {
+        "text": "Anna is typing..."
+    },
+    "errors": {
+        "unavailable": "The service is unavailable. Please try again.",
+        "noAnswer": "Anna couldn't answer.",
+        "timeout": "Anna didn't respond in time. Please try again.",
+        "network": "No connection to the server. Check your internet.",
+        "unknown": "Oops. Something went wrong."
+    }
+}

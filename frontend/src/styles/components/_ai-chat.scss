@@ -1,0 +1,71 @@
+// ======================================================
+// AI chat window
+// ======================================================
+
+$ai-chat-top: 80px;
+$ai-chat-right: 40px;
+$ai-chat-right-mobile: 20px;
+$ai-chat-bottom: 40px;
+
+$ai-chat-max-width: 353px;
+$ai-chat-max-height: calc(100vh - 80px);
+$ai-chat-padding: 8px 16px 16px 16px;
+$ai-chat-content-gap: 16px;
+
+$ai-chat-shadow: 9px 45px 32px #00000034;
+$ai-chat-z-index: 1000;
+
+// ======================================================
+// Chat header
+// ======================================================
+
+$chat-header-gap: 8px;
+$chat-header-close-size: 36px;
+
+$chat-header-profile-gap: 12px;
+$chat-header-profile-padding: 16px 24px;
+$chat-header-profile-radius: 20px;
+$chat-header-info-gap: 8px;
+
+$chat-header-status-padding: 4.5px 8px;
+$chat-header-status-radius: 8px;
+
+// ======================================================
+// Chat message
+// ======================================================
+
+$chat-message-max-width: 242px;
+$chat-message-padding: 12px 16px;
+
+// ======================================================
+// Chat input
+// ======================================================
+
+$chat-input-gap: 16px;
+$chat-input-min-height: 70px;
+$chat-input-padding: 16px;
+$chat-input-border-width: 1px;
+$chat-input-send-size: 36px;
+
+// ======================================================
+// Message list
+// ======================================================
+
+$message-list-gap: 16px;
+$message-list-padding-inline: 16px;
+$message-list-messages-gap: 8px;
+
+$message-list-scrollbar-width: 2px;
+$message-list-scrollbar-track-margin: 6px;
+$message-list-scrollbar-radius: 999px;
+
+$message-list-search-button-padding: 12px;
+
+// ======================================================
+// Typing indicator
+// ======================================================
+
+$typing-indicator-gap: 4px;
+$typing-indicator-duration: 0.8s;
+$typing-indicator-opacity-from: 0.7;
+$typing-indicator-scale-from: 0.95;

@@ -10,8 +10,11 @@ import { OutlineButton, PrimaryButton } from '../UI/Buttons'
 import { ArrowIcon, CloseIcon, LogoIcon, MenuIcon, SparkIcon } from '../UI/Icons'
 
 import './Header.scss'
+import { useAppDispatch } from '../../app/hooks'
+import { openAiChat } from '../../app/store/slices/aiChatSlice'
 
 export const Header = () => {
+    const dispatch = useAppDispatch()
     const [isMenuOpen, setIsMenuOpen] = useState(false)
     const [activeHref, setActiveHref] = useState('#about')
 
@@ -36,6 +39,11 @@ export const Header = () => {
         document.querySelector(href)?.scrollIntoView({
             behavior: 'smooth',
         })
+    }
+
+    const handleOpenChat = () => {
+        closeMenu()
+        dispatch(openAiChat())
     }
 
     useEffect(() => {
@@ -106,7 +114,7 @@ export const Header = () => {
                                     </span>
                                 }
                                 aria-label={tActions('findPsychologist')}
-                                onClick={() => handleNavigation('#ai-search')}
+                                onClick={handleOpenChat}
                             >
                                 <span className="header__ai-label">
                                     {tActions('findPsychologist')}

@@ -14,8 +14,8 @@ export const StarIcon = ({ width = 16, height = 16, ...props }: Props) => {
         >
             <path
                 d="M8.00004 1.33331L10.06 5.50665L14.6667 6.17998L11.3334 9.42665L12.12 14.0133L8.00004 11.8466L3.88004 14.0133L4.66671 9.42665L1.33337 6.17998L5.94004 5.50665L8.00004 1.33331Z"
-                fill="#FFCC33"
-                stroke="#FFCC33"
+                fill="currentColor"
+                stroke="currentColor"
                 strokeWidth="0.333333"
                 strokeLinecap="round"
                 strokeLinejoin="round"
