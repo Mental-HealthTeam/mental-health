@@ -6,7 +6,7 @@ import { OutlineButton, PrimaryButton } from '../UI/Buttons'
 import { TimeSlot } from '../UI/TimeSlot'
 
 import './SpecialistCard.scss'
-import type { SymptomCode } from '../../services/psychologistsApi.ts'
+import type { SymptomCode } from '../../types/psychologist.ts'
 
 type TimeSlotItem = {
     time: string
@@ -118,7 +118,9 @@ export const SpecialistCard = ({
 
                     <strong>
                         {t('psychologists:card.price', {
-                            price,
+                            price: new Intl.NumberFormat('uk-UA', {
+                                maximumFractionDigits: 0,
+                            }).format(Number(price)),
                         })}
                     </strong>
                 </div>

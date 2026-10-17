@@ -12,7 +12,6 @@ import { formatChatDate } from '../../../utils/formatChatDate'
 import { TypingIndicator } from '../TypingIndicator/TypingIndicator'
 import { Button } from '../../UI/Button'
 import { useAppDispatch, useAppSelector } from '../../../app/hooks'
-import { SpecialistCard } from '../../SpecialistCard'
 import { useTranslation } from 'react-i18next'
 
 type Props = {
@@ -25,9 +24,7 @@ export const MessageList = ({ isTyping, className }: Props) => {
     const { i18n } = useTranslation()
 
     const dispatch = useAppDispatch()
-    const { messages, error, lastUserText, matchData, psychologists } = useAppSelector(
-        (state) => state.aiChat,
-    )
+    const { messages, error, lastUserText, matchData } = useAppSelector((state) => state.aiChat)
     const endRef = useRef<HTMLDivElement>(null)
 
     const firstCreatedAt = messages[0].createdAt
@@ -81,8 +78,9 @@ export const MessageList = ({ isTyping, className }: Props) => {
                     {t('messageList.searchPsychologist')}
                 </Button>
             )}
+            {/* TODO: Integrate AI-matched psychologists with SpecialistCard once the backend response shape and mapping are finalized. */}
 
-            {psychologists.length > 0 && <SpecialistCard />}
+            {/*{psychologists.length > 0 && <SpecialistCard />}*/}
 
             <div ref={endRef} />
         </div>

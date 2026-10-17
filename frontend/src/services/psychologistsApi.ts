@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import type { GetPsychologistsParams, Psychologist, SymptomCode } from '../types/psychologist.ts'
+
+import type { GetPsychologistsParams, Psychologist, SymptomCode } from '../types/psychologist'
 
 export const psychologistsApi = createApi({
     reducerPath: 'psychologistsApi',
@@ -37,4 +38,5 @@ export const psychologistsApi = createApi({
     }),
 })
 
-export const { useGetPsychologistsQuery, useGetSymptomCodesQuery } = psychologistsApi
+export const { useGetPsychologistsQuery, useLazyGetPsychologistsQuery, useGetSymptomCodesQuery } =
+    psychologistsApi
