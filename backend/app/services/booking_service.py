@@ -163,11 +163,19 @@ async def get_booking_for_user(
             detail="Booking not found.",
         )
 
-    if booking.status in {
+    if (
+            booking.status
+            in {
         BookingStatus.CONFIRMED,
         BookingStatus.COMPLETED,
         BookingStatus.DISPUTED,
-    }:
+    }
+            and booking.payment_status
+            in {
+        PaymentStatus.HELD,
+        PaymentStatus.PAID,
+    }
+    ):
         booking.meet_link = booking.psychologist.meet_link
     else:
         booking.meet_link = None
@@ -216,11 +224,19 @@ async def list_bookings_for_user(
     bookings = list(result.scalars().all())
 
     for booking in bookings:
-        if booking.status in {
-            BookingStatus.CONFIRMED,
-            BookingStatus.COMPLETED,
-            BookingStatus.DISPUTED,
-        }:
+        if (
+            booking.status
+            in {
+                BookingStatus.CONFIRMED,
+                BookingStatus.COMPLETED,
+                BookingStatus.DISPUTED,
+            }
+            and booking.payment_status
+            in {
+                PaymentStatus.HELD,
+                PaymentStatus.PAID,
+            }
+        ):
             booking.meet_link = booking.psychologist.meet_link
         else:
             booking.meet_link = None
@@ -555,11 +571,19 @@ async def resolve_dispute(
     )
     booking = result.scalar_one()
 
-    if booking.status in {
-        BookingStatus.CONFIRMED,
-        BookingStatus.COMPLETED,
-        BookingStatus.DISPUTED,
-    }:
+    if (
+        booking.status
+        in {
+            BookingStatus.CONFIRMED,
+            BookingStatus.COMPLETED,
+            BookingStatus.DISPUTED,
+        }
+        and booking.payment_status
+        in {
+            PaymentStatus.HELD,
+            PaymentStatus.PAID,
+        }
+    ):
         booking.meet_link = booking.psychologist.meet_link
     else:
         booking.meet_link = None
