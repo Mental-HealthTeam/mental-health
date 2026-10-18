@@ -11,6 +11,7 @@ import footer from '../../locales/en/features/footer.json'
 import whyUs from '../../locales/en/features/whyUs.json'
 import aiChat from '../../locales/en/features/aiChat.json'
 import contact from '../../locales/en/features/contact.json'
+import faq from '../../locales/en/features/faq.json'
 import reviews from '../../locales/en/features/reviews.json'
 
 export const enResources = {
@@ -26,5 +27,6 @@ export const enResources = {
     whyUs,
     aiChat,
     contact,
+    faq,
     reviews,
 } as const
