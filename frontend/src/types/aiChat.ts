@@ -11,17 +11,6 @@ export type MatchData = {
     ready_for_search: boolean
 }
 
-export type Psychologist = {
-    psychologist_id: string | number
-    full_name: string
-    title: string
-    avatar_url: string | null
-    price_per_hour: number
-    languages: string[]
-    mock_slots: { time_label: string; time: string }[]
-    matched_symptom_codes: string[]
-}
-
 export type TypeData = {
     content?: string
     match_data?: MatchData
