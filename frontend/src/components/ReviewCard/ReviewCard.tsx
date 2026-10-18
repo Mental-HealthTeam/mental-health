@@ -22,7 +22,7 @@ export const ReviewCard = ({ age, avatar, date, name, rating, text }: Props) => 
             <ReviewIcon className="review-card__icon" />
 
             <div className="review-card__header">
-                <Avatar className="review-card__avatar" src={avatar} />
+                <Avatar className="review-card__avatar" src={avatar} alt="" />
                 <div className="review-card__author">
                     <h3 className="review-card__name">{`${name}, ${age} ${t('ageSuffix')}`}</h3>
                     <time className="review-card__date" dateTime={date}>
