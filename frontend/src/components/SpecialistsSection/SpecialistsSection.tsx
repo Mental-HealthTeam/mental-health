@@ -1,6 +1,12 @@
-import { type CSSProperties, useRef, useState } from 'react'
+import { type CSSProperties, useEffect, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { useScreenLayout } from '../../hooks'
+import {
+    useGetSymptomCodesQuery,
+    useLazyGetPsychologistsQuery,
+} from '../../services/psychologistsApi'
+import type { Psychologist, SymptomCode } from '../../types/psychologist'
 
 import { Container } from '../Container'
 import { SpecialistCard } from '../SpecialistCard'
@@ -8,35 +14,123 @@ import { ArrowButton } from '../UI/ArrowButton'
 import { OutlineButton } from '../UI/Buttons'
 import { SectionIndex } from '../UI/SectionIndex'
 
+import { SPECIALISTS_FILTER_CODES } from './specialistsFilters'
+
 import './SpecialistsSection.scss'
 
-const FILTERS = [
-    'ВСІ',
-    'ВИГОРАННЯ',
-    'ТРИВОЖНІСТЬ',
-    'ДЕПРЕСІЯ',
-    'СТРЕС',
-    'САМООЦІНКА',
-    'СТОСУНКИ',
-    'ЕКСТРЕНИЙ ЗАПИС',
-] as const
-
-const MOCK_SPECIALISTS = Array.from({ length: 5 }, (_, index) => ({
-    id: index + 1,
-}))
-
 const SLIDER_GAP = 16
+const DEFAULT_LIMIT = 5
+
+const ALL_FILTER = 'all'
+const EMERGENCY_FILTER = 'emergency'
 
 export const SpecialistsSection = () => {
     const sliderRef = useRef<HTMLDivElement>(null)
 
+    const { t } = useTranslation(['psychologists', 'symptoms', 'accessibility'])
+
     const { visibleCards } = useScreenLayout()
 
-    const [activeFilter, setActiveFilter] = useState<(typeof FILTERS)[number]>('ВСІ')
+    const [activeFilter, setActiveFilter] = useState<string>(ALL_FILTER)
+
+    const [specialists, setSpecialists] = useState<Psychologist[]>([])
+
+    const [offset, setOffset] = useState(0)
+    const [hasMore, setHasMore] = useState(true)
+
+    const [isInitialLoading, setIsInitialLoading] = useState(true)
+
+    const {
+        data: symptomCodes = [],
+        isLoading: isSymptomsLoading,
+        isError: isSymptomsError,
+    } = useGetSymptomCodesQuery()
+
+    const [getPsychologists, { isFetching: isSpecialistsFetching, isError: isSpecialistsError }] =
+        useLazyGetPsychologistsQuery()
+
+    const availableFilters = SPECIALISTS_FILTER_CODES.filter((code) => symptomCodes.includes(code))
+
+    const selectedSymptomCodes: SymptomCode[] | undefined =
+        activeFilter !== ALL_FILTER &&
+        activeFilter !== EMERGENCY_FILTER &&
+        symptomCodes.includes(activeFilter as SymptomCode)
+            ? [activeFilter as SymptomCode]
+            : undefined
 
     const sliderStyle = {
         '--visible-cards': visibleCards,
     } as CSSProperties
+
+    const isAllActive = activeFilter === ALL_FILTER
+
+    const isEmergencyActive = activeFilter === EMERGENCY_FILTER
+
+    const hasSpecialists = specialists.length > 0
+
+    const hasDesktopNavigation = specialists.length > visibleCards || hasMore
+
+    const hasMobileNavigation = specialists.length > 1 || hasMore
+
+    const loadSpecialists = async (nextOffset: number, replace = false) => {
+        try {
+            const result = await getPsychologists({
+                limit: DEFAULT_LIMIT,
+                offset: nextOffset,
+                symptomCodes: selectedSymptomCodes,
+            }).unwrap()
+
+            setSpecialists((current) => (replace ? result : [...current, ...result]))
+
+            setOffset(nextOffset)
+
+            setHasMore(result.length === DEFAULT_LIMIT)
+        } catch {
+            if (replace) {
+                setSpecialists([])
+            }
+        } finally {
+            if (replace) {
+                setIsInitialLoading(false)
+            }
+        }
+    }
+
+    useEffect(() => {
+        sliderRef.current?.scrollTo({
+            left: 0,
+        })
+
+        void getPsychologists({
+            limit: DEFAULT_LIMIT,
+            offset: 0,
+            symptomCodes: selectedSymptomCodes,
+        })
+            .unwrap()
+            .then((result) => {
+                setSpecialists(result)
+                setOffset(0)
+                setHasMore(result.length === DEFAULT_LIMIT)
+            })
+            .catch(() => {
+                setSpecialists([])
+            })
+            .finally(() => {
+                setIsInitialLoading(false)
+            })
+    }, [activeFilter])
+
+    const handleFilterChange = (filter: string) => {
+        if (filter === activeFilter) {
+            return
+        }
+
+        setSpecialists([])
+        setOffset(0)
+        setHasMore(true)
+        setIsInitialLoading(true)
+        setActiveFilter(filter)
+    }
 
     const handlePrevious = () => {
         const slider = sliderRef.current
@@ -51,10 +145,25 @@ export const SpecialistsSection = () => {
         })
     }
 
-    const handleNext = () => {
+    const handleNext = async () => {
         const slider = sliderRef.current
 
         if (!slider) {
+            return
+        }
+
+        const isAtEnd = slider.scrollLeft + slider.clientWidth >= slider.scrollWidth - SLIDER_GAP
+
+        if (isAtEnd && hasMore && !isSpecialistsFetching) {
+            await loadSpecialists(offset + DEFAULT_LIMIT)
+
+            requestAnimationFrame(() => {
+                slider.scrollBy({
+                    left: slider.clientWidth + SLIDER_GAP,
+                    behavior: 'smooth',
+                })
+            })
+
             return
         }
 
@@ -63,78 +172,153 @@ export const SpecialistsSection = () => {
             behavior: 'smooth',
         })
     }
-
     return (
         <section className="specialists-section">
             <Container className="specialists-section__container">
                 <SectionIndex index={3} className="specialists-section__section-index" />
 
-                <h2 className="specialists-section__title">Наші фахівці</h2>
+                <h2 className="specialists-section__title">{t('psychologists:section.title')}</h2>
 
-                <div className="specialists-section__filters" aria-label="Фільтри фахівців">
-                    {FILTERS.map((filter) => {
-                        const isActive = activeFilter === filter
+                {!isSymptomsLoading && !isSymptomsError && (
+                    <div
+                        className="specialists-section__filters"
+                        aria-label={t('accessibility:specialistsFilters')}
+                    >
+                        <button
+                            className={`specialists-section__filter ${
+                                isAllActive ? 'specialists-section__filter--active' : ''
+                            }`}
+                            type="button"
+                            aria-pressed={isAllActive}
+                            onClick={() => handleFilterChange(ALL_FILTER)}
+                        >
+                            {t('psychologists:section.all')}
+                        </button>
 
-                        return (
-                            <button
-                                className={`specialists-section__filter ${
-                                    isActive ? 'specialists-section__filter--active' : ''
-                                }`}
-                                type="button"
-                                key={filter}
-                                aria-pressed={isActive}
-                                onClick={() => setActiveFilter(filter)}
-                            >
-                                {filter}
-                            </button>
-                        )
-                    })}
-                </div>
+                        {availableFilters.map((code) => {
+                            const isActive = activeFilter === code
 
-                <div className="specialists-section__carousel">
-                    <div className="specialists-section__side-navigation">
-                        <ArrowButton
-                            direction="left"
-                            ariaLabel="Попередній фахівець"
-                            onClick={handlePrevious}
-                        />
+                            return (
+                                <button
+                                    className={`specialists-section__filter ${
+                                        isActive ? 'specialists-section__filter--active' : ''
+                                    }`}
+                                    type="button"
+                                    key={code}
+                                    aria-pressed={isActive}
+                                    onClick={() => handleFilterChange(code)}
+                                >
+                                    {t(`symptoms:${code}`)}
+                                </button>
+                            )
+                        })}
+
+                        <button
+                            className={`specialists-section__filter ${
+                                isEmergencyActive ? 'specialists-section__filter--active' : ''
+                            }`}
+                            type="button"
+                            aria-pressed={isEmergencyActive}
+                            onClick={() => handleFilterChange(EMERGENCY_FILTER)}
+                        >
+                            {t('psychologists:section.emergency')}
+                        </button>
                     </div>
+                )}
 
-                    <div className="specialists-section__slider-wrapper" style={sliderStyle}>
-                        <div className="specialists-section__slider" ref={sliderRef}>
-                            {MOCK_SPECIALISTS.map((specialist) => (
-                                <div className="specialists-section__slide" key={specialist.id}>
-                                    <SpecialistCard />
+                {isSymptomsError && (
+                    <p className="specialists-section__status">
+                        {t('psychologists:section.filtersError')}
+                    </p>
+                )}
+
+                {isInitialLoading && (
+                    <p className="specialists-section__status">
+                        {t('psychologists:section.loading')}
+                    </p>
+                )}
+
+                {!isInitialLoading && isSpecialistsError && !hasSpecialists && (
+                    <p className="specialists-section__status">
+                        {t('psychologists:section.specialistsError')}
+                    </p>
+                )}
+
+                {!isInitialLoading && !isSpecialistsError && !hasSpecialists && (
+                    <p className="specialists-section__status">
+                        {t('psychologists:section.empty')}
+                    </p>
+                )}
+
+                {!isInitialLoading && hasSpecialists && (
+                    <>
+                        <div className="specialists-section__carousel">
+                            {hasDesktopNavigation && (
+                                <div className="specialists-section__side-navigation">
+                                    <ArrowButton
+                                        direction="left"
+                                        ariaLabel={t('accessibility:previousSpecialist')}
+                                        onClick={handlePrevious}
+                                    />
                                 </div>
-                            ))}
+                            )}
+
+                            <div
+                                className="specialists-section__slider-wrapper"
+                                style={sliderStyle}
+                            >
+                                <div className="specialists-section__slider" ref={sliderRef}>
+                                    {specialists.map((specialist) => (
+                                        <div
+                                            className="specialists-section__slide"
+                                            key={specialist.psychologist_id}
+                                        >
+                                            <SpecialistCard
+                                                id={specialist.psychologist_id}
+                                                name={specialist.full_name}
+                                                avatar={specialist.avatar_url}
+                                                experience={specialist.experience_years}
+                                                price={specialist.price_per_hour}
+                                                methods={specialist.methods}
+                                                topics={specialist.specialization}
+                                                timeSlots={specialist.mock_slots}
+                                            />
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+
+                            {hasDesktopNavigation && (
+                                <div className="specialists-section__side-navigation">
+                                    <ArrowButton
+                                        direction="right"
+                                        ariaLabel={t('accessibility:nextSpecialist')}
+                                        onClick={handleNext}
+                                    />
+                                </div>
+                            )}
                         </div>
-                    </div>
 
-                    <div className="specialists-section__side-navigation">
-                        <ArrowButton
-                            direction="right"
-                            ariaLabel="Наступний фахівець"
-                            onClick={handleNext}
-                        />
-                    </div>
-                </div>
+                        {hasMobileNavigation && (
+                            <div className="specialists-section__mobile-navigation">
+                                <ArrowButton
+                                    direction="left"
+                                    ariaLabel={t('accessibility:previousSpecialist')}
+                                    onClick={handlePrevious}
+                                />
 
-                <div className="specialists-section__mobile-navigation">
-                    <ArrowButton
-                        direction="left"
-                        ariaLabel="Попередній фахівець"
-                        onClick={handlePrevious}
-                    />
-
-                    <ArrowButton
-                        direction="right"
-                        ariaLabel="Наступний фахівець"
-                        onClick={handleNext}
-                    />
-                </div>
+                                <ArrowButton
+                                    direction="right"
+                                    ariaLabel={t('accessibility:nextSpecialist')}
+                                    onClick={handleNext}
+                                />
+                            </div>
+                        )}
+                    </>
+                )}
 
                 <OutlineButton className="specialists-section__all-button" variant="secondary">
-                    ПЕРЕГЛЯНУТИ ВСІХ
+                    {t('psychologists:section.viewAll')}
                 </OutlineButton>
             </Container>
         </section>

@@ -1,1 +1,29 @@
-{}
+{
+    "section": {
+        "title": "Наші фахівці",
+        "all": "ВСІ",
+        "emergency": "ЕКСТРЕНИЙ ЗАПИС",
+        "loading": "Завантаження...",
+        "filtersError": "Не вдалося завантажити фільтри",
+        "specialistsError": "Не вдалося завантажити фахівців",
+        "viewAll": "ПЕРЕГЛЯНУТИ ВСІХ",
+        "empty": "Фахівців за цим фільтром не знайдено"
+    },
+    "card": {
+        "verified": "ПЕРЕВІРЕНО",
+        "experience": "Досвід",
+        "experienceYears_one": "{{count}} рік",
+        "experienceYears_few": "{{count}} роки",
+        "experienceYears_many": "{{count}} років",
+        "experienceYears_other": "{{count}} років",
+        "sessionDuration": "Сесія 1,5 години",
+        "price": "{{price}} ₴",
+        "therapeuticApproach": "Терапевтичний підхід",
+        "worksWith": "Працює з темами:",
+        "bookSession": "ЗАБРОНЮВАТИ СЕСІЮ",
+        "availableTime": "Вільний час",
+        "viewProfile": "ПЕРЕЙТИ ДО ПРОФІЛЮ",
+        "today": "СЬОГОДНІ",
+        "tomorrow": "ЗАВТРА"
+    }
+}

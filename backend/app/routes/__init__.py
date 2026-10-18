@@ -4,3 +4,5 @@ from routes.payments import router as payments_router  # noqa: F401
 from routes.bookings import router as bookings_router  # noqa: F401
 from routes.auth import router as auth_router  # noqa: F401
 from routes.symptom_codes import router as symptom_codes_router  # noqa: F401
+from routes.sessions import router as sessions_router  # noqa: F401
+from routes.users import router as users_router  # noqa: F401
