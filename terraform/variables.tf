@@ -20,5 +20,5 @@ variable "instance_type" {
 
 variable "volume_size" {
   description = "Volume Size"
-  type = string
+  type        = string
 }
