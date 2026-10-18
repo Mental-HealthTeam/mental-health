@@ -32,3 +32,18 @@ async def get_postgresql_db() -> AsyncGenerator[AsyncSession, None]:
 async def get_postgresql_db_contextmanager() -> AsyncGenerator[AsyncSession, None]:
     async with AsyncPostgresqlSessionLocal() as session:
         yield session
+
+
+@asynccontextmanager
+async def get_postgresql_db_contextmanager_celery_task() -> AsyncGenerator[AsyncSession, None]:
+    engine = create_async_engine(POSTGRESQL_DATABASE_URL, echo=False)
+    session_local = async_sessionmaker(
+        bind=engine,
+        autoflush=False,
+        expire_on_commit=False
+    )
+    try:
+        async with session_local() as session:
+            yield session
+    finally:
+        await engine.dispose()
