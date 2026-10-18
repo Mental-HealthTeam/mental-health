@@ -1,0 +1,33 @@
+from datetime import timedelta
+
+from celery import Celery
+
+from config.settings import Settings
+
+settings = Settings()
+
+app = Celery(
+    "mental_health",
+    broker=settings.CELERY_BROKER_URL,
+    include=["tasks.celery_tasks"]
+)
+
+
+app.conf.update(
+    timezone=settings.CELERY_TIMEZONE,
+    task_ignore_result=True,
+    beat_schedule={
+        # "expire-pending-bookings-task": {
+        #     "task": "tasks.celery_tasks.expire_pending_bookings_task",
+        #     "schedule": timedelta(minutes=1),
+        # },
+        # "payout-monthly-salary-task": {
+        #     "task": "tasks.celery_tasks.payout_monthly_salary_task",
+        #     "schedule": crontab(minute=0, hour=5, day_of_month=2),
+        # },
+        "test-task": {
+            "task": "tasks.celery_tasks.test_task",
+            "schedule": timedelta(minutes=1)
+        }
+    },
+)

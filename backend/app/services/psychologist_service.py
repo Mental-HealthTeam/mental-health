@@ -82,7 +82,9 @@ async def get_psychologists(
                 for specialization in psychologist.psychologist_specializations
             ],
             mock_slots=[
-                MockSlot(time=slot)
+                MockSlot(
+                    time=slot["datetime"],
+                )
                 for slot in (psychologist.mock_slots or [])
             ],
         )
@@ -99,7 +101,10 @@ async def get_psychologist_by_id(
         .options(
             selectinload(Psychologist.psychologist_specializations)
         )
-        .where(Psychologist.psychologist_id == psychologist_id)
+        .where(
+            Psychologist.psychologist_id == psychologist_id,
+            Psychologist.profile_status == PsychologistStatus.ACTIVE,
+        )
     )
 
     response = await db.execute(stmt)
@@ -128,7 +133,9 @@ async def get_psychologist_by_id(
         ],
         meet_link=psychologist.meet_link or "",
         mock_slots=[
-            MockSlot(time=slot)
+            MockSlot(
+                time=slot["datetime"],
+            )
             for slot in (psychologist.mock_slots or [])
         ],
     )

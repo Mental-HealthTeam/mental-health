@@ -1,0 +1,74 @@
+@use '../../styles/abstracts' as a;
+@use '../../styles/components' as c;
+
+.review-card {
+    display: flex;
+    flex-direction: column;
+    padding: c.$review-card-padding;
+    border-radius: c.$review-card-border-radius;
+
+    background: linear-gradient(
+        c.$review-card-gradient-angle,
+        c.$review-card-gradient-start,
+        a.$color-background
+    );
+
+    backdrop-filter: blur(c.$review-card-blur);
+
+    &__icon {
+        margin-bottom: c.$review-card-icon-margin-bottom;
+    }
+
+    &__rating {
+        width: max-content;
+        display: flex;
+        margin-top: c.$review-card-rating-margin-top;
+        margin-bottom: c.$review-card-rating-margin-bottom;
+    }
+
+    &__star {
+        color: a.$color-warning;
+    }
+
+    &__star--empty {
+        color: a.$color-gray-20;
+    }
+
+    &__header {
+        display: flex;
+        gap: c.$review-card-header-gap;
+    }
+
+    &__author {
+        display: flex;
+        flex-direction: column;
+        gap: c.$review-card-author-gap;
+    }
+
+    &__name {
+        color: a.$color-text-primary;
+        font-size: a.$font-size-h5;
+        line-height: a.$line-height-h5;
+        letter-spacing: a.$letter-spacing-h5;
+        font-weight: a.$font-weight-h5;
+        text-align: left;
+    }
+
+    &__date {
+        color: a.$color-gray-40;
+        font-size: a.$font-size-caption-secondary;
+        line-height: a.$line-height-caption-secondary;
+        letter-spacing: a.$letter-spacing-caption-secondary;
+        font-weight: a.$font-weight-caption-secondary;
+        text-align: left;
+    }
+
+    &__text {
+        color: a.$color-gray-80;
+        font-size: a.$font-size-body;
+        line-height: a.$line-height-body;
+        letter-spacing: a.$letter-spacing-body;
+        font-weight: a.$font-weight-body-semibold;
+        text-align: left;
+    }
+}

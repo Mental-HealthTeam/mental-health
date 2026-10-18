@@ -1,0 +1,48 @@
+// ======================================================
+// FAQ section
+// ======================================================
+
+$faq-section-breakpoint: 1023px;
+
+$faq-section-container-gap: 24px;
+$faq-section-container-margin-bottom: 64px;
+$faq-section-container-padding: 32px 16px 0;
+
+$faq-section-container-column-gap-desktop: 122px;
+$faq-section-container-row-gap-desktop: 28px;
+$faq-section-container-padding-inline-desktop: 92px;
+$faq-section-padding-inline-desktop: 30px;
+$faq-section-grid-columns-desktop: minmax(0, 386px) minmax(0, 1fr);
+
+// ======================================================
+// FAQ section intro
+// ======================================================
+
+$faq-section-intro-gap: 12px;
+
+// ======================================================
+// FAQ section contact
+// ======================================================
+
+$faq-section-contact-gap: 16px;
+$faq-section-contact-padding-top: 20px;
+$faq-section-button-max-width: 222px;
+
+// ======================================================
+// FAQ section list
+// ======================================================
+
+$faq-section-list-gap: 8px;
+$faq-section-list-max-width: 700px;
+
+// ======================================================
+// FAQ item
+// ======================================================
+
+$faq-item-padding: 16px;
+$faq-item-border-width: 1px;
+$faq-item-border-radius: 16px;
+
+$faq-item-header-gap: 10px;
+$faq-item-icon-border-width: 1px;
+$faq-item-answer-padding-top: 12px;

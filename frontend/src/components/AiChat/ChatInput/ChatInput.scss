@@ -1,0 +1,31 @@
+@use '../../../styles/abstracts' as a;
+@use '../../../styles/components' as c;
+
+.chat-input {
+    display: flex;
+    gap: c.$chat-input-gap;
+    justify-content: space-between;
+    align-items: center;
+    background-color: a.$color-background;
+    border-radius: a.$border-radius-ai-chat-region-avatar;
+    border: c.$chat-input-border-width solid a.$color-gray-20;
+    min-height: c.$chat-input-min-height;
+    padding: c.$chat-input-padding;
+
+    &__field {
+        height: 100%;
+        outline: none;
+        border: none;
+
+        resize: none;
+
+        scrollbar-width: none;
+    }
+
+    &__send {
+        width: c.$chat-input-send-size;
+        height: c.$chat-input-send-size;
+        background: a.$color-secondary-gradient;
+        border-radius: 50%;
+    }
+}

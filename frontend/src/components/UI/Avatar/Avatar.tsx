@@ -5,9 +5,9 @@ import './Avatar.scss'
 export type AvatarSize = 'small' | 'medium' | 'large'
 
 type Props = {
-    src: string
-    alt?: string
-    size?: AvatarSize
+    src?: string
+    alt: string
+    size?: 'small' | 'medium' | 'large'
     className?: string
 }
 

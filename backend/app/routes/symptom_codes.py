@@ -1,3 +1,4 @@
+
 from fastapi import APIRouter
 
 from database.models.models import SymptomCode
@@ -6,7 +7,7 @@ router = APIRouter()
 
 
 @router.get(
-    "/symptom-codes",
+    "/symptoms",
     response_model=list[str],
     summary="Get available symptom codes",
 )
