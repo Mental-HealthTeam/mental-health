@@ -1,1 +1,27 @@
-{}
+{
+    "section": {
+        "title": "Our specialists",
+        "all": "ALL",
+        "emergency": "URGENT BOOKING",
+        "loading": "Loading...",
+        "filtersError": "Failed to load filters",
+        "specialistsError": "Failed to load specialists",
+        "viewAll": "VIEW ALL",
+        "empty": "No specialists found for this filter"
+    },
+    "card": {
+        "verified": "VERIFIED",
+        "experience": "Experience",
+        "experienceYears_one": "{{count}} year",
+        "experienceYears_other": "{{count}} years",
+        "sessionDuration": "1.5 hour session",
+        "price": "₴{{price}}",
+        "therapeuticApproach": "Therapeutic approach",
+        "worksWith": "Works with:",
+        "bookSession": "BOOK A SESSION",
+        "availableTime": "Available time",
+        "viewProfile": "VIEW PROFILE",
+        "today": "TODAY",
+        "tomorrow": "TOMORROW"
+    }
+}
