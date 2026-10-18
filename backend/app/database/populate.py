@@ -92,20 +92,25 @@ def resolve_gender(full_name: str) -> Gender:
 
 KYIV_TZ = ZoneInfo("Europe/Kyiv")
 
-DAY_OFFSET = {
-    "Сьогодні": 0,
-    "Завтра": 1,
-}
+SLOT_DAYS_AHEAD = 10
 
 
-def parse_mock_slot(label: str) -> dict:
-    day_word, time_str = label.split(" ", 1)
-    hour, minute = map(int, time_str.split(":"))
-    offset = DAY_OFFSET[day_word]
-    slot_dt = datetime.now(KYIV_TZ).replace(
-        hour=hour, minute=minute, second=0, microsecond=0
-    ) + timedelta(days=offset)
-    return {"label": label, "datetime": slot_dt.isoformat()}
+def build_mock_slots(labels: list[str]) -> list[dict]:
+    times = sorted({label.split(" ", 1)[1] for label in labels})
+    today = datetime.now(KYIV_TZ).date()
+    slots = []
+    for offset in range(1, SLOT_DAYS_AHEAD + 1):
+        day = today + timedelta(days=offset)
+        for time_str in times:
+            hour, minute = map(int, time_str.split(":"))
+            slot_dt = datetime(
+                day.year, day.month, day.day, hour, minute, tzinfo=KYIV_TZ
+            )
+            slots.append({
+                "label": slot_dt.strftime("%d.%m %H:%M"),
+                "datetime": slot_dt.isoformat(),
+            })
+    return slots
 
 
 def mock_email(source_id: str) -> str:
@@ -123,7 +128,7 @@ def populate_psychologists() -> None:
         refreshed = 0
 
         for entry in dataset:
-            mock_slots = [parse_mock_slot(s) for s in entry["mock_slots"]]
+            mock_slots = build_mock_slots(entry["mock_slots"])
 
             user = session.query(User).filter_by(email=mock_email(entry["id"])).first()
             if user is not None:
