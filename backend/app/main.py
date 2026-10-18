@@ -11,6 +11,8 @@ from routes import (
     auth_router,
     bookings_router,
     symptom_codes_router,
+    sessions_router,
+    users_router,
 )
 
 
@@ -59,9 +61,19 @@ app.include_router(
     tags=["Bookings"],
 )
 app.include_router(
+    sessions_router,
+    prefix=BASE_PREFIX,
+    tags=["Sessions"],
+)
+app.include_router(
     symptom_codes_router,
     prefix=BASE_PREFIX,
     tags=["Symptom Codes"],
+)
+app.include_router(
+    users_router,
+    prefix=f"{BASE_PREFIX}/users",
+    tags=["Users"],
 )
 
 
