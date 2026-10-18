@@ -61,6 +61,8 @@ services:
         "8001",
         "--reload"
       ]
+    env_file:
+      - ai_service/.env
     depends_on:
       redis:
         condition: service_healthy
