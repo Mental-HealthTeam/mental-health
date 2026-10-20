@@ -610,12 +610,12 @@ async def mark_paid_out(
         booking_id: UUID,
         payout_amount: Decimal,
         platform_fee: Decimal,
-        payout_reference: str,
         released_at: datetime,
 ) -> Booking:
     """COMPLETED / HELD -> PAID and store the payout data.
 
-    Idempotent by payout_reference. Raises 404, 409.
+    Idempotent: a booking that is already PAID is returned unchanged.
+    payout_reference is set by the payout task before the payout. Raises 404, 409.
     Route: none, called by the automatic payout task.
     """
 
@@ -636,7 +636,6 @@ async def mark_paid_out(
     if (
             booking.status == BookingStatus.COMPLETED
             and booking.payment_status == PaymentStatus.PAID
-            and booking.payout_reference == payout_reference
     ):
         return booking
 
@@ -652,7 +651,6 @@ async def mark_paid_out(
     booking.payment_status = PaymentStatus.PAID
     booking.payout_amount = payout_amount
     booking.platform_fee = platform_fee
-    booking.payout_reference = payout_reference
     booking.released_at = released_at
 
     await db.commit()
@@ -696,30 +694,80 @@ async def expire_pending_bookings(
     return len(bookings)
 
 
-async def list_ready_for_payout(
+async def complete_session_with_psychologist(
         db: AsyncSession,
         now: datetime,
-        session_duration_min: int,
-        limit: int,
-) -> list[Booking]:
-    """Return CONFIRMED / HELD bookings whose session is over, except DISPUTED.
+        session_time_min: int
+) -> int:
+    """CONFIRMED / HELD -> COMPLETED for sessions that are over; return the count.
 
-    Over means selected_time + session_duration_min <= now. Rows are locked
-    with FOR UPDATE SKIP LOCKED, oldest first, at most limit.
-    Route: none, called by the automatic payout task.
+    Over means selected_time + session_time_min <= now. Rows are locked with
+    FOR UPDATE SKIP LOCKED.
+    Route: none, called by the session completion task.
     """
 
-    cutoff_time = now - timedelta(minutes=session_duration_min)
+    stmt = select(Booking).where(
+        Booking.status == BookingStatus.CONFIRMED,
+        Booking.payment_status == PaymentStatus.HELD,
+        Booking.selected_time + timedelta(minutes=session_time_min) <= now
+    ).with_for_update(skip_locked=True)
+
+    result = await db.execute(stmt)
+    bookings = result.scalars().all()
+    for booking in bookings:
+        booking.completed_at = now
+        booking.status = BookingStatus.COMPLETED
+    await db.commit()
+    return len(bookings)
+
+
+async def list_ids_ready_for_payout(
+        db: AsyncSession,
+) -> list[UUID]:
+    """Return ids of psychologists with COMPLETED / HELD bookings not yet paid out.
+
+    Not paid out means payout_reference is empty. Each id is returned once,
+    sorted. Rows are not locked: the payout task locks each psychologist's
+    bookings separately.
+    Route: none, called by the monthly payout task.
+    """
+
+    stmt = select(Booking.psychologist_id).where(
+        Booking.status == BookingStatus.COMPLETED,
+        Booking.payment_status == PaymentStatus.HELD,
+        Booking.payout_reference.is_(None)
+    ).order_by(Booking.psychologist_id).distinct()
+
+    result = await db.execute(stmt)
+    psychologist_ids = result.scalars().all()
+
+    return psychologist_ids
+
+
+async def list_ready_for_payout(
+        db: AsyncSession,
+        psychologist_id: UUID
+) -> list[Booking]:
+    """Return COMPLETED / HELD bookings of one psychologist not yet paid out.
+
+    Not paid out means payout_reference is empty. Rows are locked with
+    FOR UPDATE SKIP LOCKED until the caller commits, oldest first; the
+    psychologist is loaded. Does not change or commit anything.
+    Route: none, called by the monthly payout task.
+    """
 
     result = await db.execute(
         select(Booking)
         .where(
-            Booking.status == BookingStatus.CONFIRMED,
+            Booking.status == BookingStatus.COMPLETED,
             Booking.payment_status == PaymentStatus.HELD,
-            Booking.selected_time <= cutoff_time,
+            Booking.payout_reference.is_(None),
+            Booking.psychologist_id == psychologist_id
+        )
+        .options(
+            selectinload(Booking.psychologist)
         )
         .order_by(Booking.selected_time.asc())
-        .limit(limit)
         .with_for_update(skip_locked=True)
     )
 
