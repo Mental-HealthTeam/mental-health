@@ -7,7 +7,16 @@ from sqlalchemy import select, func
 from tasks.celery_app import app
 from database.models.models import Booking, BookingStatus
 from database import get_postgresql_db_contextmanager_celery_task
-from services.booking_service import expire_pending_bookings
+from services.booking_service import (
+    expire_pending_bookings,
+    complete_session_with_psychologist
+)
+
+from config.settings import Settings
+
+from services.payment_service import payout_service
+
+from config.dependencies import get_payment_provider
 
 logger = logging.getLogger(__name__)
 
@@ -32,7 +41,43 @@ async def _expire_pending_bookings() -> int:
 
 @app.task
 def payout_monthly_salary_task():
-    pass
+    asyncio.run(_payout_monthly_salary_task())
+
+
+async def _payout_monthly_salary_task():
+    settings = Settings()
+    payment_provider = get_payment_provider(
+        settings=settings
+    )
+    async with get_postgresql_db_contextmanager_celery_task() as db:
+        await payout_service(
+            db=db,
+            payment_provider=payment_provider,
+            settings=settings
+        )
+
+
+@app.task
+def complete_session_with_psychologist_task():
+    asyncio.run(
+        _complete_session_with_psychologist_task()
+    )
+
+
+async def _complete_session_with_psychologist_task():
+    settings = Settings()
+    async with get_postgresql_db_contextmanager_celery_task() as db:
+        now = datetime.now(timezone.utc)
+        count_bookings_completed = await complete_session_with_psychologist(
+            db=db,
+            now=now,
+            session_time_min=settings.SESSION_DURATION_MIN
+        )
+        logger.info(
+            "Session completion task: %s bookings completed",
+            count_bookings_completed,
+        )
+        return count_bookings_completed
 
 
 @app.task()
