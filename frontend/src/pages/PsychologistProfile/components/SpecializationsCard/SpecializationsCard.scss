@@ -1,12 +1,12 @@
 @use '../../../../styles/abstracts' as a;
 
-.specializations {
+.specializations-card {
     display: flex;
     flex-direction: column;
     gap: 16px;
     background-color: a.$color-background;
     padding: 30px 16px;
-    border: 1px solid a.$color-secondary-start;
+    border: 1px solid a.$color-secondary-end;
     border-radius: 10px;
 
     &__tags {

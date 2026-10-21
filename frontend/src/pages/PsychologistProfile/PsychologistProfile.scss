@@ -10,21 +10,30 @@
         flex: 1;
     }
 
-    &__title {
-        margin-bottom: 24px;
-    }
-
     &__container {
         display: flex;
         flex-direction: column;
-        align-items: center;
+        align-items: flex-start;
+        gap: 16px;
 
         width: 100%;
+        max-width: 1000px;
 
         margin-inline: auto;
-        margin-bottom: 64px;
+        margin-bottom: 24px;
 
         padding-inline: 20px;
+    }
+
+    &__back {
+        color: a.$color-optional;
+        font-size: a.$font-size-button-large;
+        line-height: a.$line-height-button-large;
+        letter-spacing: a.$letter-spacing-button-large;
+        font-weight: a.$font-weight-button-large;
+        text-align: left;
+        border-bottom: 2px solid a.$color-optional;
+        cursor: pointer;
     }
 
     &__title {
@@ -33,6 +42,7 @@
         line-height: a.$line-height-h4;
         letter-spacing: a.$letter-spacing-h4;
         font-weight: a.$font-weight-h4;
+        text-align: left;
     }
 
     &__region-about {

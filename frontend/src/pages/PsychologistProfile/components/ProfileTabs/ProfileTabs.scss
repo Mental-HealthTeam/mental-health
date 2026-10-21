@@ -1,0 +1,25 @@
+@use '../../../../styles/abstracts' as a;
+
+.profile-tabs {
+    display: grid;
+    flex-direction: column;
+    gap: 16px;
+    padding: 24px 16px;
+    background-color: a.$color-background;
+    border-radius: 20px;
+    min-width: 0;
+    max-width: 100%;
+    width: 100%;
+    border: 1px solid a.$color-gray-10;
+
+    &__switch {
+        display: flex;
+        gap: 12px;
+    }
+
+    &__basic-information {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+}

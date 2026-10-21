@@ -1,38 +1,46 @@
 import classNames from 'classnames'
-import { CreateIcon } from '../../../../components/UI/Icons/WhyChoosePlatform'
-import { SectionLabel } from '../../../../components/UI/SectionLabel'
-import './Reviews.scss'
+import './ReviewsCard.scss'
+import { useState } from 'react'
 
 type Props = {
     className?: string
 }
 
-export const Reviews = ({ className }: Props) => {
-    return (
-        <section className={classNames('reviews', className)}>
-            <SectionLabel className="reviews__section-label" startIcon={<CreateIcon />}>
-                Відгуки
-            </SectionLabel>
+type Category = 'anxiety' | 'stress' | 'relationships' | 'depression' | 'self-esteem'
 
-            <div className="reviews__tabs" role="tablist" aria-label="Категорії відгуків">
-                <button className="tab tab--active" role="tab" aria-selected="true" type="button">
-                    Стрес та депресія
-                </button>
-                <button className="tab" role="tab" aria-selected="false" type="button">
-                    Самооцінка
-                </button>
-                <button className="tab" role="tab" aria-selected="false" type="button">
-                    Стосунки
-                </button>
-                <button className="tab" role="tab" aria-selected="false" type="button">
-                    Тривожність
-                </button>
-                <button className="tab" role="tab" aria-selected="false" type="button">
-                    Вигорання та втома
-                </button>
+type FILTER = {
+    id: number
+    category: Category
+    label: string
+}
+
+const FILTERS: FILTER[] = [
+    { id: 1, category: 'anxiety', label: 'Тривожність' },
+    { id: 2, category: 'stress', label: 'Стрес' },
+    { id: 3, category: 'relationships', label: 'Стосунки' },
+    { id: 4, category: 'depression', label: 'Депресія' },
+    { id: 5, category: 'self-esteem', label: 'Самооцінка' },
+]
+
+export const ReviewsCard = ({ className }: Props) => {
+    const [category, setCategory] = useState<Category>('anxiety')
+
+    return (
+        <section className={classNames('reviews-card-card', className)}>
+            <div className="reviews-card__tabs" role="tablist" aria-label="Категорії відгуків">
+                {FILTERS.map((tab) => (
+                    <button
+                        className={classNames('reviews-card__tab', {
+                            'reviews-card__tab--is-active': category === tab.category,
+                        })}
+                        onClick={() => setCategory(tab.category)}
+                    >
+                        {tab.label}
+                    </button>
+                ))}
             </div>
 
-            <div className="reviews__panel" role="tabpanel">
+            <div className="reviews-card__panel" role="tabpanel">
                 <article className="review-card">
                     <header className="review-card__header">
                         <img
@@ -68,11 +76,19 @@ export const Reviews = ({ className }: Props) => {
                     </time>
                 </article>
 
-                <div className="reviews__controls">
-                    <button className="reviews__arrow" type="button" aria-label="Попередній відгук">
+                <div className="reviews-card__controls">
+                    <button
+                        className="reviews-card__arrow"
+                        type="button"
+                        aria-label="Попередній відгук"
+                    >
                         ←
                     </button>
-                    <button className="reviews__arrow" type="button" aria-label="Наступний відгук">
+                    <button
+                        className="reviews-card__arrow"
+                        type="button"
+                        aria-label="Наступний відгук"
+                    >
                         →
                     </button>
                 </div>
