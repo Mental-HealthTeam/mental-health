@@ -331,6 +331,10 @@ class Booking(Base):
         ForeignKey("ai_session_logs.ai_session_id"),
         nullable=True
     )
+    refund_error: Mapped[bool] = mapped_column(
+        default=False,
+        server_default=text("false")
+    )
 
     __table_args__ = (
         Index(
