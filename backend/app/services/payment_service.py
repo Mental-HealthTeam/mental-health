@@ -1,8 +1,9 @@
 import logging
 from datetime import datetime, timezone
 from collections.abc import Mapping
-from decimal import Decimal
+from decimal import Decimal, ROUND_HALF_UP
 from uuid import UUID
+from zoneinfo import ZoneInfo
 
 from fastapi import HTTPException, status
 from sqlalchemy import select
@@ -14,7 +15,8 @@ from database.models.models import (
     BookingStatus,
     PaymentStatus,
     PaymentEvent,
-    Booking
+    Booking,
+    PsychologistStatus
 )
 from schemas.payments import CheckoutRequest, CheckoutResponse
 from payment_provider.payment_interface import PaymentProviderInterface
@@ -23,19 +25,28 @@ from payment_provider.payment_types import (
     WebhookAcknowledgement,
     CheckoutParams,
     PaymentEventType,
-    PaymentWebhook
+    PaymentWebhook,
+    Recipient,
+    PayoutRequest,
+    PayoutStatus
 )
 from services.booking_service import (
     get_booking_for_user,
     find_booking_by_payment,
     mark_paid,
     mark_payment_failed,
-    mark_cancelled
+    mark_cancelled,
+    list_ids_ready_for_payout,
+    list_ready_for_payout,
+    mark_paid_out
 )
 from exceptions.payments import (
     PaymentProviderError,
     WebhookVerificationError
 )
+
+from config.settings import BaseAppSettings
+
 
 logger = logging.getLogger(__name__)
 
@@ -336,3 +347,168 @@ async def handle_webhook(
         event=response_webhook
     )
     return acknowledgement
+
+
+def _set_reference_payout_for_bookings(
+    bookings: list[Booking],
+    reference: str
+):
+    for booking in bookings:
+        booking.payout_reference = reference
+
+
+def _calculate_payout(
+        bookings: list[Booking],
+        fee_percent: int
+) -> tuple[Decimal, dict]:
+    amount = Decimal(0)
+    payout_sums = {}
+    for booking in bookings:
+        platform_fee = (
+            booking.price * Decimal(fee_percent) / Decimal(100)
+        ).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
+        payout_amount = booking.price - platform_fee
+        amount += payout_amount
+        payout_sums[booking.id] = (payout_amount, platform_fee)
+    return amount, payout_sums
+
+
+async def payout_service(
+        db: AsyncSession,
+        payment_provider: PaymentProviderInterface,
+        settings: BaseAppSettings
+) -> None:
+    now = datetime.now(timezone.utc)
+    now_ukraine_tz = now.astimezone(ZoneInfo(settings.CELERY_TIMEZONE))
+    if settings.PLATFORM_FEE_PERCENT <= 0:
+        logger.error(
+            "Monthly payout skipped: PLATFORM_FEE_PERCENT must be positive, got %s",
+            settings.PLATFORM_FEE_PERCENT
+        )
+        return
+    psychologist_ids = await list_ids_ready_for_payout(db=db)
+    errors_payout = 0
+    paid_count = 0
+    skipped_count = 0
+    failed_count = 0
+    total_paid = Decimal(0)
+    for psychologist_id in psychologist_ids:
+        bookings = await list_ready_for_payout(
+            db=db,
+            psychologist_id=psychologist_id
+        )
+        if not bookings:
+            continue
+        if bookings[0].psychologist.profile_status != PsychologistStatus.ACTIVE:
+            skipped_count += 1
+            logger.warning(
+                "Payout skipped for psychologist %s: profile is %s, %s bookings are waiting",
+                psychologist_id, bookings[0].psychologist.profile_status.value, len(bookings)
+            )
+            continue
+        try:
+            amount, payout_sums = _calculate_payout(
+                bookings=bookings,
+                fee_percent=settings.PLATFORM_FEE_PERCENT
+            )
+            payout_date = now_ukraine_tz.date().strftime("%Y%m%d")
+            reference_amount = int(amount.quantize(Decimal("0.01"), rounding=ROUND_HALF_UP) * 100)
+            reference = f"payout_{psychologist_id}_{payout_date}_{reference_amount}"
+            _set_reference_payout_for_bookings(
+                bookings=bookings,
+                reference=reference
+            )
+            await db.commit()
+        except SQLAlchemyError:
+            errors_payout += 1
+            failed_count += 1
+            await db.rollback()
+            logger.exception(
+                "Payout for psychologist %s not started: could not save the payout reference",
+                psychologist_id
+            )
+            if errors_payout >= 3:
+                logger.error(
+                    "Monthly payout stopped after %s failures in a row",
+                    errors_payout
+                )
+                return
+            continue
+        try:
+            recipient = Recipient(
+                iban=bookings[0].psychologist.iban,
+                tax_id=bookings[0].psychologist.tax_id,
+                account_name=bookings[0].psychologist.account_name,
+            )
+            request = PayoutRequest(
+                reference=reference,
+                amount=amount,
+                currency=settings.WAYFORPAY_CURRENCY,
+                recipient=recipient
+            )
+            payout_result = await payment_provider.payout(
+                request=request
+            )
+
+            if payout_result.status in (
+                    PayoutStatus.PAID,
+                    PayoutStatus.PENDING,
+                    PayoutStatus.SIMULATED
+            ):
+                for booking in bookings:
+                    await mark_paid_out(
+                        db=db,
+                        booking_id=booking.id,
+                        payout_amount=payout_sums[booking.id][0],
+                        platform_fee=payout_sums[booking.id][1],
+                        released_at=now_ukraine_tz
+                    )
+                errors_payout = 0
+                paid_count += 1
+                total_paid += amount
+                logger.info(
+                    "Payout %s for psychologist %s: %s bookings, amount %s, status %s",
+                    reference, psychologist_id, len(bookings), amount, payout_result.status.value
+                )
+        except (SQLAlchemyError, HTTPException, PaymentProviderError) as e:
+            errors_payout += 1
+            failed_count += 1
+            if isinstance(e, SQLAlchemyError):
+                await db.rollback()
+                logger.exception(
+                    "Payout %s for psychologist %s was paid by the provider but not recorded, "
+                    "manual check needed",
+                    reference, psychologist_id
+                )
+            if isinstance(e, HTTPException):
+                logger.error(
+                    "Payout %s for psychologist %s was paid by the provider but not recorded (%s), "
+                    "manual check needed",
+                    reference, psychologist_id, e.detail
+                )
+            if isinstance(e, PaymentProviderError):
+                logger.error(
+                    "Payout %s for psychologist %s failed: %s",
+                    reference, psychologist_id, e
+                )
+            if errors_payout >= 3:
+                logger.error(
+                    "Monthly payout stopped after %s failures in a row",
+                    errors_payout
+                )
+                return
+        except ValueError:
+            # Pydantic ValidationError is a ValueError: invalid payout details,
+            # the payout was not sent. A data problem of one psychologist,
+            # so it does not count towards stopping the whole run.
+            # The error text is not logged: it contains the IBAN and tax id.
+            failed_count += 1
+            logger.error(
+                "Payout %s for psychologist %s not sent: invalid payout details, manual check needed",
+                reference, psychologist_id
+            )
+
+    logger.info(
+        "Monthly payout finished: paid %s, skipped %s, failed %s, total amount %s",
+        paid_count, skipped_count, failed_count, total_paid
+    )
