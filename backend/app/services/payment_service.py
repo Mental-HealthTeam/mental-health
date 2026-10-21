@@ -16,8 +16,7 @@ from database.models.models import (
     PaymentStatus,
     PaymentEvent,
     Booking,
-    PsychologistStatus,
-    Bookings
+    PsychologistStatus
 )
 from schemas.payments import CheckoutRequest, CheckoutResponse
 from payment_provider.payment_interface import PaymentProviderInterface
@@ -351,7 +350,7 @@ async def handle_webhook(
 
 
 def _set_reference_payout_for_bookings(
-    bookings: list[Bookings],
+    bookings: list[Booking],
     reference: str
 ):
     for booking in bookings:
