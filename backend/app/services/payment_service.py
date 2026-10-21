@@ -1,5 +1,5 @@
 import logging
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from collections.abc import Mapping
 from decimal import Decimal, ROUND_HALF_UP
 from uuid import UUID
@@ -12,6 +12,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from database.models.models import (
     User,
+    UserRole,
     BookingStatus,
     PaymentStatus,
     PaymentEvent,
@@ -28,7 +29,8 @@ from payment_provider.payment_types import (
     PaymentWebhook,
     Recipient,
     PayoutRequest,
-    PayoutStatus
+    PayoutStatus,
+    RefundRequest
 )
 from services.booking_service import (
     get_booking_for_user,
@@ -38,7 +40,9 @@ from services.booking_service import (
     mark_cancelled,
     list_ids_ready_for_payout,
     list_ready_for_payout,
-    mark_paid_out
+    mark_paid_out,
+    mark_completed,
+    mark_refund_failed
 )
 from exceptions.payments import (
     PaymentProviderError,
@@ -512,3 +516,176 @@ async def payout_service(
         "Monthly payout finished: paid %s, skipped %s, failed %s, total amount %s",
         paid_count, skipped_count, failed_count, total_paid
     )
+
+
+def _refund_allowed(
+        user: User,
+        booking: Booking,
+        now: datetime,
+        settings: BaseAppSettings,
+        confirm_no_refund: bool
+) -> bool:
+    refund_allowed = False
+    if booking.selected_time < now:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="The session has already started, the booking cannot be cancelled."
+        )
+    if user.role in (UserRole.ADMIN, UserRole.PSYCHOLOGIST):
+        refund_allowed = True
+    else:
+        time_left = booking.selected_time - now
+        if time_left < timedelta(hours=settings.BOOKING_FREE_CANCEL_HOURS):
+            if not confirm_no_refund:
+                raise HTTPException(
+                    status_code=status.HTTP_409_CONFLICT,
+                    detail=(
+                        f"The session starts in less than {settings.BOOKING_FREE_CANCEL_HOURS} hours, "
+                        "the payment will not be refunded. Confirm to cancel."
+                    )
+                )
+        else:
+            refund_allowed = True
+    return refund_allowed
+
+
+async def cancel_booking_service(
+        db: AsyncSession,
+        user: User,
+        payment_provider: PaymentProviderInterface,
+        settings: BaseAppSettings,
+        booking_id: UUID,
+        confirm_no_refund: bool = False
+) -> Booking:
+    now = datetime.now(ZoneInfo(settings.CELERY_TIMEZONE))
+    booking = await get_booking_for_user(
+        db=db,
+        booking_id=booking_id,
+        user=user
+    )
+    if booking.status == BookingStatus.CANCELLED:
+        return booking
+    if booking.payment_status == PaymentStatus.UNPAID:
+        try:
+            booking = await mark_cancelled(
+                db=db,
+                booking_id=booking.id,
+                refunded=False
+            )
+        except SQLAlchemyError as e:
+            logger.exception(
+                "Could not cancel unpaid booking %s",
+                booking_id
+            )
+            await db.rollback()
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Could not cancel the booking."
+            ) from e
+        logger.info("Unpaid booking %s cancelled by user %s", booking_id, user.id)
+        return booking
+    if booking.payment_status != PaymentStatus.HELD:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="The booking cannot be cancelled automatically, contact support."
+        )
+    refund_allowed = _refund_allowed(
+        user=user,
+        booking=booking,
+        now=now,
+        settings=settings,
+        confirm_no_refund=confirm_no_refund
+    )
+    if booking.payment_status == PaymentStatus.HELD and not refund_allowed:
+        try:
+            booking = await mark_completed(
+                db=db,
+                booking_id=booking.id,
+                completed_at=now
+            )
+            logger.info(
+                "Booking %s cancelled late by the client: no refund, the session is paid out "
+                "to the psychologist",
+                booking_id
+            )
+            return booking
+        except SQLAlchemyError as e:
+            logger.exception(
+                "Could not complete late-cancelled booking %s",
+                booking_id
+            )
+            await db.rollback()
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Could not cancel the booking."
+            ) from e
+    if booking.payment_status == PaymentStatus.HELD and refund_allowed:
+        try:
+            if not booking.payment_reference:
+                logger.error(
+                    "Booking %s is paid but has no payment reference, refund is not possible",
+                    booking_id
+                )
+                raise HTTPException(
+                    status_code=status.HTTP_409_CONFLICT,
+                    detail="The payment for this booking cannot be refunded automatically, contact support."
+                )
+            locked_booking = (await db.execute(
+                select(Booking)
+                .where(Booking.id == booking_id)
+                .with_for_update()
+                .execution_options(populate_existing=True)
+            )).scalar_one_or_none()
+            if locked_booking.status == BookingStatus.CANCELLED:
+                await db.commit()
+                return booking
+            booking = await mark_cancelled(
+                db=db,
+                booking_id=booking.id,
+                refunded=False
+            )
+            refund_request = RefundRequest(
+                payment_reference=booking.payment_reference,
+                amount=booking.price,
+                reason="Booking canceled"
+            )
+            await payment_provider.refund(refund_request)
+            booking = await mark_cancelled(
+                db=db,
+                booking_id=booking.id,
+                refunded=True
+            )
+            logger.info(
+                "Booking %s cancelled and refunded (amount %s)",
+                booking_id, booking.price
+            )
+            return booking
+        except SQLAlchemyError as e:
+            logger.exception(
+                "Could not save the cancellation or refund of booking %s, manual check needed",
+                booking_id
+            )
+            await db.rollback()
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Could not cancel the booking, contact support."
+            ) from e
+        except PaymentProviderError as e:
+            logger.error(
+                "Refund failed for booking %s, manual check needed: %s",
+                booking_id, e
+            )
+            await db.rollback()
+            booking = await get_booking_for_user(
+                db=db,
+                booking_id=booking_id,
+                user=user
+            )
+            await mark_refund_failed(
+                db=db,
+                booking_id=booking.id
+            )
+            raise HTTPException(
+                status_code=502,
+                detail="The refund failed, contact support."
+            ) from e

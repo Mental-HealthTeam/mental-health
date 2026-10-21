@@ -76,3 +76,7 @@ class BookingListResponse(BaseModel):
     total: int
     limit: int
     offset: int
+
+
+class BookingCancelRequest(BaseModel):
+    confirm_no_refund: bool = False
