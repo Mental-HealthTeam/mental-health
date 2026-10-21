@@ -1,100 +1,153 @@
-import { useState } from 'react'
-
-import avatarImage from '../../assets/avatars/avatar-1.png'
+import { useId, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { Avatar } from '../UI/Avatar'
 import { Button } from '../UI/Button'
 import { TimeSlot } from '../UI/TimeSlot'
 
 import './SpecialistCard.scss'
-import { OutlineButton } from '../UI/Buttons'
-import { useNavigate } from 'react-router-dom'
-import classNames from 'classnames'
+import type { SymptomCode } from '../../types/psychologist.ts'
+import { OutlineButton } from '../UI/Buttons/index.ts'
 
-type Props = {
-    className?: string
-    variant?: 'preview' | 'full'
+type TimeSlotItem = {
+    time: string
 }
 
-const TIME_SLOTS = [
-    {
-        value: 'today-12',
-        label: 'СЬОГОДНІ 12:00',
-    },
-    {
-        value: 'tomorrow-19',
-        label: 'ЗАВТРА 19:00',
-    },
-]
+type Props = {
+    id: string
+    name: string
+    avatar: string | null
+    experience: number
+    price: string
+    methods: string[]
+    topics: SymptomCode[]
+    timeSlots: TimeSlotItem[]
+}
 
-const TOPICS = ['СТРЕС', 'СДВГ', 'СТОСУНКИ', 'ПТСР']
+const isSameDay = (firstDate: Date, secondDate: Date) =>
+    firstDate.getFullYear() === secondDate.getFullYear() &&
+    firstDate.getMonth() === secondDate.getMonth() &&
+    firstDate.getDate() === secondDate.getDate()
 
-export const SpecialistCard = ({ className, variant = 'full' }: Props) => {
-    const navigate = useNavigate()
+export const SpecialistCard = ({
+    id,
+    name,
+    avatar,
+    experience,
+    price,
+    methods,
+    topics,
+    timeSlots,
+}: Props) => {
+    const { t, i18n } = useTranslation(['psychologists', 'symptoms', 'accessibility'])
+
+    const radioGroupId = useId()
+
     const [isBooking, setIsBooking] = useState(false)
     const [selectedSlot, setSelectedSlot] = useState('')
-    const isPreview = variant === 'full'
+
+    const formatTimeSlot = (time: string) => {
+        const date = new Date(time)
+        const today = new Date()
+        const tomorrow = new Date(today)
+
+        tomorrow.setDate(today.getDate() + 1)
+
+        const formattedTime = new Intl.DateTimeFormat(i18n.language, {
+            hour: '2-digit',
+            minute: '2-digit',
+        }).format(date)
+
+        if (isSameDay(date, today)) {
+            return `${t('psychologists:card.today')} ${formattedTime}`
+        }
+
+        if (isSameDay(date, tomorrow)) {
+            return `${t('psychologists:card.tomorrow')} ${formattedTime}`
+        }
+
+        const formattedDate = new Intl.DateTimeFormat(i18n.language, {
+            day: '2-digit',
+            month: '2-digit',
+        }).format(date)
+
+        return `${formattedDate} ${formattedTime}`
+    }
 
     return (
-        <article
-            className={classNames('specialist-card', `specialist-card--${variant}`, className)}
-        >
+        <article className="specialist-card" aria-labelledby={`specialist-${id}-name`}>
             <header className="specialist-card__header">
                 <Avatar
-                    src={avatarImage}
-                    alt="Катерина Ковальська"
+                    src={avatar ?? undefined}
+                    alt=""
                     size="large"
                     className="specialist-card__avatar"
                 />
 
                 <div className="specialist-card__identity">
-                    <h3 className="specialist-card__name">Катерина Ковальська</h3>
+                    <h3 className="specialist-card__name" id={`specialist-${id}-name`}>
+                        {name}
+                    </h3>
 
-                    <span className="specialist-card__verified">ПЕРЕВІРЕНО</span>
+                    <span className="specialist-card__verified">
+                        {t('psychologists:card.verified')}
+                    </span>
                 </div>
             </header>
 
             <div className="specialist-card__meta">
                 <div className="specialist-card__meta-row">
-                    <span>Досвід</span>
+                    <span>{t('psychologists:card.experience')}</span>
 
                     <span className="specialist-card__dot" aria-hidden="true">
                         ·
                     </span>
 
-                    <strong>8 років</strong>
+                    <strong>
+                        {t('psychologists:card.experienceYears', {
+                            count: experience,
+                        })}
+                    </strong>
                 </div>
 
                 <div className="specialist-card__meta-row">
-                    <span>Сесія 1,5 години</span>
+                    <span>{t('psychologists:card.sessionDuration')}</span>
 
                     <span className="specialist-card__dot" aria-hidden="true">
                         ·
                     </span>
 
-                    <strong>2 500 ₴</strong>
+                    <strong>
+                        {t('psychologists:card.price', {
+                            price: new Intl.NumberFormat('uk-UA', {
+                                maximumFractionDigits: 0,
+                            }).format(Number(price)),
+                        })}
+                    </strong>
                 </div>
             </div>
 
             <section className="specialist-card__section">
-                <span className="specialist-card__section-title">Терапевтичний підхід</span>
+                <span className="specialist-card__section-title">
+                    {t('psychologists:card.therapeuticApproach')}
+                </span>
 
-                <strong className="specialist-card__section-value">Гештальт-терапія, КПТ</strong>
+                <strong className="specialist-card__section-value">{methods.join(', ')}</strong>
             </section>
 
-            {isPreview && (
-                <section className="specialist-card__section specialist-card__topics">
-                    <span className="specialist-card__section-title">Працює з темами:</span>
+            <section className="specialist-card__section specialist-card__topics">
+                <span className="specialist-card__section-title">
+                    {t('psychologists:card.worksWith')}
+                </span>
 
-                    <div className="specialist-card__topic-list">
-                        {TOPICS.map((topic) => (
-                            <span className="specialist-card__topic" key={topic}>
-                                {topic}
-                            </span>
-                        ))}
-                    </div>
-                </section>
-            )}
+                <div className="specialist-card__topic-list">
+                    {topics.map((topic) => (
+                        <span className="specialist-card__topic" key={topic}>
+                            {t(`symptoms:${topic}`)}
+                        </span>
+                    ))}
+                </div>
+            </section>
 
             <div className="specialist-card__actions">
                 {!isBooking && (
@@ -105,22 +158,28 @@ export const SpecialistCard = ({ className, variant = 'full' }: Props) => {
                         fullWidth
                         onClick={() => setIsBooking(true)}
                     >
-                        ЗАБРОНЮВАТИ СЕСІЮ
+                        {t('psychologists:card.bookSession')}
                     </Button>
                 )}
 
                 {isBooking && (
                     <div className="specialist-card__availability">
-                        <span className="specialist-card__availability-title">Вільний час</span>
+                        <span className="specialist-card__availability-title">
+                            {t('psychologists:card.availableTime')}
+                        </span>
 
-                        <div className="specialist-card__slots">
-                            {TIME_SLOTS.map((slot) => (
+                        <div
+                            className="specialist-card__slots"
+                            role="radiogroup"
+                            aria-label={t('accessibility:specialistCard.availableTimes', { name })}
+                        >
+                            {timeSlots.map((slot) => (
                                 <TimeSlot
-                                    key={slot.value}
-                                    label={slot.label}
-                                    value={slot.value}
-                                    name="specialist-time"
-                                    checked={selectedSlot === slot.value}
+                                    key={slot.time}
+                                    label={formatTimeSlot(slot.time)}
+                                    value={slot.time}
+                                    name={`specialist-time-${radioGroupId}`}
+                                    checked={selectedSlot === slot.time}
                                     onChange={setSelectedSlot}
                                 />
                             ))}
@@ -128,16 +187,13 @@ export const SpecialistCard = ({ className, variant = 'full' }: Props) => {
                     </div>
                 )}
 
-                {isPreview && (
-                    <OutlineButton
-                        className="specialist-card__profile-button"
-                        variant="secondary"
-                        fullWidth
-                        onClick={() => navigate('/psychologist-profile')}
-                    >
-                        ПЕРЕЙТИ ДО ПРОФІЛЮ
-                    </OutlineButton>
-                )}
+                <OutlineButton
+                    className="specialist-card__profile-button"
+                    variant="secondary"
+                    fullWidth
+                >
+                    {t('psychologists:card.viewProfile')}
+                </OutlineButton>
             </div>
         </article>
     )

@@ -40,6 +40,9 @@ class BaseAppSettings(BaseSettings):
 
     PUBLIC_BASE_URL: str = "http://localhost:8000"
 
+    CELERY_BROKER_URL: str = "redis://redis:6379/1"
+    CELERY_TIMEZONE: str = "Europe/Kyiv"
+
     @property
     def order_timeout_sec(self):
         return self.BOOKING_HOLD_MINUTES * 60

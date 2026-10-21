@@ -1,0 +1,94 @@
+@use '../../styles/abstracts' as a;
+@use '../../styles/components' as c;
+
+.faq-item {
+    display: flex;
+    flex-direction: column;
+    border: c.$faq-item-border-width solid a.$color-gray-20;
+    border-radius: c.$faq-item-border-radius;
+    width: 100%;
+    height: max-content;
+    padding: c.$faq-item-padding;
+
+    transition: border a.$transition-default;
+
+    &--is-open {
+        border: c.$faq-item-border-width solid a.$color-optional;
+    }
+
+    &__header {
+        display: flex;
+        gap: c.$faq-item-header-gap;
+        justify-content: space-between;
+        align-items: center;
+        min-width: 0;
+        width: 100%;
+    }
+
+    &__question {
+        display: inline-block;
+        color: a.$color-optional;
+        font-size: a.$font-size-h5;
+        line-height: a.$line-height-h5;
+        letter-spacing: a.$letter-spacing-h5;
+        font-weight: a.$font-weight-h5;
+        text-align: left;
+    }
+
+    &__wrapper-icon {
+        display: grid;
+        place-items: center;
+        color: a.$color-background;
+        width: c.$chat-input-send-size;
+        height: c.$chat-input-send-size;
+        background: a.$color-secondary-gradient;
+        border-radius: 50%;
+        flex-shrink: 0;
+        border: c.$faq-item-icon-border-width solid a.$color-background;
+
+        transition:
+            color a.$transition-default,
+            background a.$transition-default,
+            border-color a.$transition-default;
+    }
+
+    &--is-open &__wrapper-icon {
+        color: a.$color-optional;
+        background: transparent;
+        border-color: a.$color-optional;
+    }
+
+    &__arrow-icon {
+        transform: rotate(-180deg);
+        transition: transform a.$transition-default;
+
+        &--rotate {
+            transform: rotate(0deg);
+        }
+    }
+
+    &__panel {
+        display: grid;
+        grid-template-rows: 0fr;
+        transition: grid-template-rows a.$transition-default;
+    }
+
+    &__panel-inner {
+        overflow: hidden;
+        min-height: 0;
+    }
+
+    &__answer {
+        padding-top: c.$faq-item-answer-padding-top;
+        color: a.$color-gray-80;
+        font-size: a.$font-size-body;
+        line-height: a.$line-height-body;
+        letter-spacing: a.$letter-spacing-body;
+        font-weight: a.$font-weight-body-semibold;
+        text-align: left;
+    }
+
+    &--is-open &__panel {
+        grid-template-rows: 1fr;
+    }
+}

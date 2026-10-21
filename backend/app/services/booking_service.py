@@ -163,11 +163,19 @@ async def get_booking_for_user(
             detail="Booking not found.",
         )
 
-    if booking.status in {
+    if (
+            booking.status
+            in {
         BookingStatus.CONFIRMED,
         BookingStatus.COMPLETED,
         BookingStatus.DISPUTED,
-    }:
+    }
+            and booking.payment_status
+            in {
+        PaymentStatus.HELD,
+        PaymentStatus.PAID,
+    }
+    ):
         booking.meet_link = booking.psychologist.meet_link
     else:
         booking.meet_link = None
@@ -216,11 +224,19 @@ async def list_bookings_for_user(
     bookings = list(result.scalars().all())
 
     for booking in bookings:
-        if booking.status in {
-            BookingStatus.CONFIRMED,
-            BookingStatus.COMPLETED,
-            BookingStatus.DISPUTED,
-        }:
+        if (
+            booking.status
+            in {
+                BookingStatus.CONFIRMED,
+                BookingStatus.COMPLETED,
+                BookingStatus.DISPUTED,
+            }
+            and booking.payment_status
+            in {
+                PaymentStatus.HELD,
+                PaymentStatus.PAID,
+            }
+        ):
             booking.meet_link = booking.psychologist.meet_link
         else:
             booking.meet_link = None
@@ -266,18 +282,17 @@ async def find_booking_by_payment(
 
 
 async def mark_paid(
-        db: AsyncSession,
-        booking_id: UUID,
-        provider: PaymentProviderName,
-        provider_session_id: str,
-        payment_reference: str | None,
-        paid_at: datetime,
+    db: AsyncSession,
+    booking_id: UUID,
+    provider: PaymentProviderName,
+    provider_session_id: str,
+    payment_reference: str | None,
+    paid_at: datetime,
 ) -> Booking:
     """PENDING / UNPAID -> CONFIRMED / HELD. Idempotent. Raises 404, 409.
 
-    Route: POST /api/payments/webhook/{provider} ("paid" event)
+    Route: POST /api/payments/webhook/{provider} ("paid" event).
     """
-
     result = await db.execute(
         select(Booking)
         .where(Booking.id == booking_id)
@@ -312,6 +327,21 @@ async def mark_paid(
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
             detail="Booking cannot be marked as paid in its current state.",
+        )
+
+    # Reject payment confirmation after the hold has expired.
+    now = datetime.now(timezone.utc)
+    if (
+        booking.hold_expires_at is not None
+        and booking.hold_expires_at <= now
+    ):
+        booking.status = BookingStatus.CANCELLED
+        booking.payment_status = PaymentStatus.UNPAID
+        await db.commit()
+
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="Booking hold has expired.",
         )
 
     booking.status = BookingStatus.CONFIRMED
@@ -555,11 +585,19 @@ async def resolve_dispute(
     )
     booking = result.scalar_one()
 
-    if booking.status in {
-        BookingStatus.CONFIRMED,
-        BookingStatus.COMPLETED,
-        BookingStatus.DISPUTED,
-    }:
+    if (
+        booking.status
+        in {
+            BookingStatus.CONFIRMED,
+            BookingStatus.COMPLETED,
+            BookingStatus.DISPUTED,
+        }
+        and booking.payment_status
+        in {
+            PaymentStatus.HELD,
+            PaymentStatus.PAID,
+        }
+    ):
         booking.meet_link = booking.psychologist.meet_link
     else:
         booking.meet_link = None

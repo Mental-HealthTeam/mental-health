@@ -1,0 +1,129 @@
+@use '../../styles/abstracts' as a;
+@use '../../styles/components' as c;
+
+.faq-section {
+    &__container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: c.$faq-section-container-gap;
+
+        width: 100%;
+
+        margin-inline: auto;
+        margin-bottom: c.$faq-section-container-margin-bottom;
+
+        padding: c.$faq-section-container-padding;
+    }
+
+    &__intro {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+        gap: c.$faq-section-intro-gap;
+    }
+
+    &__title {
+        color: transparent;
+        font-size: a.$font-size-h2;
+        line-height: a.$line-height-h2;
+        letter-spacing: a.$letter-spacing-h2;
+        font-weight: a.$font-weight-h2;
+        background: a.$color-tertiary-gradient;
+        background-clip: text;
+    }
+
+    &__subtitle {
+        display: none;
+        color: a.$color-gray-80;
+        font-size: a.$font-size-caption-secondary;
+        line-height: a.$line-height-caption-secondary;
+        letter-spacing: a.$letter-spacing-caption-secondary;
+        font-weight: a.$font-weight-caption-secondary;
+    }
+
+    &__contact {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+        gap: c.$faq-section-contact-gap;
+        padding-top: c.$faq-section-contact-padding-top;
+        border-top: 1px solid a.$color-gray-20;
+    }
+
+    &__contact-text {
+        color: a.$color-gray-60;
+        font-size: a.$font-size-caption-secondary;
+        line-height: a.$line-height-caption-secondary;
+        letter-spacing: a.$letter-spacing-caption-secondary;
+        font-weight: a.$font-weight-caption-secondary;
+        text-align: center;
+    }
+
+    &__button {
+        max-width: c.$faq-section-button-max-width;
+    }
+
+    &__list {
+        display: flex;
+        flex-direction: column;
+        gap: c.$faq-section-list-gap;
+        max-width: c.$faq-section-list-max-width;
+    }
+
+    &__media {
+        display: none;
+    }
+}
+
+@media (min-width: c.$faq-section-breakpoint) {
+    .faq-section {
+        padding-inline: c.$faq-section-padding-inline-desktop;
+
+        &__container {
+            display: grid;
+            grid-template-columns: c.$faq-section-grid-columns-desktop;
+            grid-template-areas:
+                'intro   list'
+                'contact list'
+                'media   list'
+                '.       list';
+
+            column-gap: c.$faq-section-container-column-gap-desktop;
+            row-gap: c.$faq-section-container-row-gap-desktop;
+            padding-inline: c.$faq-section-container-padding-inline-desktop;
+
+            align-items: start;
+        }
+
+        &__intro {
+            grid-area: intro;
+            align-items: flex-start;
+        }
+
+        &__contact {
+            grid-area: contact;
+            align-items: flex-start;
+        }
+
+        &__media {
+            display: block;
+            grid-area: media;
+        }
+
+        &__list {
+            grid-area: list;
+            max-width: 100%;
+        }
+
+        &__subtitle {
+            display: block;
+        }
+
+        &__contact-text {
+            text-align: left;
+        }
+    }
+}
