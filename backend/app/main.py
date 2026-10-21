@@ -1,5 +1,7 @@
 import logging
+from pathlib import Path
 
+from fastapi.staticfiles import StaticFiles
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -17,6 +19,15 @@ from routes import (
 
 
 app = FastAPI()
+
+AVATAR_STORAGE_DIR = Path("media/avatars")
+AVATAR_STORAGE_DIR.mkdir(parents=True, exist_ok=True)
+
+app.mount(
+    "/media/avatars",
+    StaticFiles(directory=AVATAR_STORAGE_DIR),
+    name="avatars",
+)
 
 settings = get_settings()
 
