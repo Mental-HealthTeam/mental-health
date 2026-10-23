@@ -4,18 +4,22 @@ import { Header } from '../../components/Header'
 import { Container } from '../../components/Container'
 
 import { SpecialistProfileCard } from './components/SpecialistProfileCard'
-import { SPECIALIST_MOCK } from '../../constants/specialistMock'
 
 import './PsychologistProfile.scss'
 import { ProfileTabs } from './components/ProfileTabs'
 import { useNavigate } from 'react-router-dom'
+import { useAppDispatch, useAppSelector } from '../../app/hooks'
+import { setSpecialistProfile } from '../../app/store/slices/specialistProfileSlice'
+import { SPECIALIST_MOCK } from '../../mocks/specialistMock'
 
 export const PsychologistProfile = () => {
-    const handleBook = () => {}
+    const { profile } = useAppSelector((state) => state.specialistProfile)
+    const dispatch = useAppDispatch()
     const navigate = useNavigate()
 
     useEffect(() => {
         window.scrollTo({ top: 0, behavior: 'instant' })
+        dispatch(setSpecialistProfile(SPECIALIST_MOCK))
     }, [])
 
     return (
@@ -24,15 +28,22 @@ export const PsychologistProfile = () => {
 
             <main className="psychologist-profile__content">
                 <Container className="psychologist-profile__container">
-                    <a className="psychologist-profile__back" onClick={() => navigate(-1)}>НАЗАД</a>
-                    <h1 className="psychologist-profile__title">Профіль фахівця</h1>
-                    <SpecialistProfileCard
-                        className="psychologist-profile__specialist-card"
-                        specialist={SPECIALIST_MOCK}
-                        onBook={handleBook}
-                    />
+                    <a className="psychologist-profile__back" onClick={() => navigate(-1)}>
+                        НАЗАД
+                    </a>
+                    {profile && <h1 className="psychologist-profile__title">Профіль фахівця</h1>}
 
-                    <ProfileTabs className="psychologist-profile__profile-tabs" />
+                    {profile && (
+                        <SpecialistProfileCard className="psychologist-profile__specialist-card" />
+                    )}
+
+                    {profile && <ProfileTabs className="psychologist-profile__profile-tabs" />}
+
+                    {!profile && (
+                        <div className="psychologist-profile__text-no-profile">
+                            Фахівець ще не має профілю
+                        </div>
+                    )}
                 </Container>
             </main>
 

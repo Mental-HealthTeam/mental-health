@@ -1,18 +1,39 @@
 @use '../../../../styles/abstracts' as a;
+@use '../../../../styles/components' as c;
 
 .reviews-card {
     display: flex;
     flex-direction: column;
     gap: 16px;
     background-color: a.$color-background;
-    padding: 30px 16px;
-    border: 1px solid a.$color-gray-20;
     border-radius: 10px;
+    min-width: 0;
+    max-width: 100%;
 
-    &__tags {
+    &__tabs {
         display: flex;
         flex-wrap: wrap;
         gap: 6px;
+    }
+
+    &__tab {
+        padding: 5.5px 8px;
+        color: a.$color-optional;
+        background-color: transparent;
+        border: 1px solid a.$color-optional;
+        border-radius: 8px;
+        font-size: a.$font-size-button-small;
+        line-height: a.$line-height-button-small;
+        letter-spacing: a.$letter-spacing-button-small;
+        font-weight: a.$font-weight-button-small;
+        transition:
+            color a.$transition-default,
+            background-color a.$transition-default;
+
+        &--is-active {
+            color: a.$color-gray-0;
+            background-color: a.$color-optional;
+        }
     }
 
     &__divider {
@@ -32,5 +53,49 @@
 
     &__item {
         color: a.$color-gray-60;
+    }
+
+    &__panel {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        min-width: 0;
+    }
+
+    &__slider-wrapper {
+        min-width: 0;
+        width: 100%;
+        overflow: hidden;
+    }
+
+    &__slider {
+        display: flex;
+        align-items: flex-start;
+        gap: 16px;
+        min-width: 0;
+        width: 100%;
+
+        overflow-x: auto;
+        overflow-y: hidden;
+
+        scroll-snap-type: x mandatory;
+
+        scrollbar-width: none;
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
+    }
+
+    &__slide {
+        flex: 0 0 100%;
+        min-width: 0;
+        scroll-snap-align: start;
+    }
+
+    &__controls {
+        display: flex;
+        justify-content: flex-start;
+        gap: 8px;
     }
 }

@@ -1,98 +1,132 @@
 import classNames from 'classnames'
 import './ReviewsCard.scss'
-import { useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import { ArrowButton } from '../../../../components/UI/ArrowButton'
+import { SpecialistReviewCard } from '../SpecialistReviewCard'
+import { useAppSelector } from '../../../../app/hooks'
+import type { SymptomCode } from '../../../../types/psychologist'
+import { useTranslation } from 'react-i18next'
 
 type Props = {
     className?: string
 }
 
-type Category = 'anxiety' | 'stress' | 'relationships' | 'depression' | 'self-esteem'
-
-type FILTER = {
-    id: number
-    category: Category
-    label: string
-}
-
-const FILTERS: FILTER[] = [
-    { id: 1, category: 'anxiety', label: 'Тривожність' },
-    { id: 2, category: 'stress', label: 'Стрес' },
-    { id: 3, category: 'relationships', label: 'Стосунки' },
-    { id: 4, category: 'depression', label: 'Депресія' },
-    { id: 5, category: 'self-esteem', label: 'Самооцінка' },
-]
-
 export const ReviewsCard = ({ className }: Props) => {
-    const [category, setCategory] = useState<Category>('anxiety')
+    const { profile } = useAppSelector((state) => state.specialistProfile)
+
+    const [category, setCategory] = useState<SymptomCode>('anxiety')
+    const [index, setIndex] = useState(0)
+
+    const trackRef = useRef<HTMLDivElement>(null)
+
+    const { t: tSymptoms } = useTranslation('symptoms')
+
+    const scrollToIndex = (i: number) => {
+        const element = trackRef.current
+
+        if (!element) return
+
+        const slide = element.children[i] as HTMLElement | undefined
+
+        if (!slide) return
+
+        const left =
+            slide.getBoundingClientRect().left -
+            element.getBoundingClientRect().left +
+            element.scrollLeft
+
+        element.scrollTo({
+            left,
+            behavior: 'smooth',
+        })
+    }
+
+    const handleScroll = () => {
+        const element = trackRef.current
+
+        if (!element) return
+
+        setIndex(Math.round(element.scrollLeft / element.clientWidth))
+    }
+
+    const reviewCategories = useMemo(() => {
+        return [...new Set((profile?.reviews ?? []).map(({ topic_id }) => topic_id))]
+    }, [profile?.reviews])
+
+    const filteredReviews = useMemo(() => {
+        return profile?.reviews.filter((review) => review.topic_id === category)
+    }, [category, profile?.reviews])
+
+    useEffect(() => {
+        trackRef.current?.scrollTo({ left: 0 })
+    }, [category])
+
+    if (!profile) {
+        return (
+            <div className="reviews-card">
+                <p className="reviews-card__text-no-reviews">Немає ще відгуків</p>
+            </div>
+        )
+    }
 
     return (
-        <section className={classNames('reviews-card-card', className)}>
-            <div className="reviews-card__tabs" role="tablist" aria-label="Категорії відгуків">
-                {FILTERS.map((tab) => (
-                    <button
-                        className={classNames('reviews-card__tab', {
-                            'reviews-card__tab--is-active': category === tab.category,
-                        })}
-                        onClick={() => setCategory(tab.category)}
-                    >
-                        {tab.label}
-                    </button>
-                ))}
-            </div>
-
-            <div className="reviews-card__panel" role="tabpanel">
-                <article className="review-card">
-                    <header className="review-card__header">
-                        <img
-                            className="review-card__avatar"
-                            src="./img/reviewer.jpg"
-                            alt="Олена Колченовська"
-                            width="40"
-                            height="40"
-                        />
-                        <div className="review-card__author">
-                            <h3 className="review-card__name">Олена Колченовська</h3>
-                            <div
-                                className="review-card__rating"
-                                role="img"
-                                aria-label="Оцінка 5 з 5"
-                            >
-                                <span className="review-card__star">★</span>
-                                <span className="review-card__star">★</span>
-                                <span className="review-card__star">★</span>
-                                <span className="review-card__star">★</span>
-                                <span className="review-card__star">★</span>
-                            </div>
-                        </div>
-                    </header>
-
-                    <p className="review-card__text">
-                        Проходила важкий період після розлучення. Дуже бережний підхід фахівця зумів
-                        повернути мені відчуття ґрунту під ногами.
-                    </p>
-
-                    <time className="review-card__date" dateTime="2026-09-27">
-                        27.09.2026
-                    </time>
-                </article>
-
-                <div className="reviews-card__controls">
-                    <button
-                        className="reviews-card__arrow"
-                        type="button"
-                        aria-label="Попередній відгук"
-                    >
-                        ←
-                    </button>
-                    <button
-                        className="reviews-card__arrow"
-                        type="button"
-                        aria-label="Наступний відгук"
-                    >
-                        →
-                    </button>
+        <section className={classNames('reviews-card', className)}>
+            {filteredReviews && (
+                <div className="reviews-card__tabs" role="tablist" aria-label="Категорії відгуків">
+                    {reviewCategories.map((symptom) => (
+                        <button
+                            className={classNames('reviews-card__tab', {
+                                'reviews-card__tab--is-active': category === symptom,
+                            })}
+                            onClick={() => setCategory(symptom)}
+                            key={symptom}
+                        >
+                            {tSymptoms(`${symptom}.title`)}
+                        </button>
+                    ))}
                 </div>
-            </div>
+            )}
+
+            {filteredReviews && (
+                <div className="reviews-card__panel" role="tabpanel">
+                    <div className="reviews-card__slider-wrapper">
+                        <div
+                            className="reviews-card__slider"
+                            ref={trackRef}
+                            onScroll={handleScroll}
+                        >
+                            {filteredReviews.map((review) => (
+                                <div className="reviews-card__slide" key={review.id} role="group">
+                                    <SpecialistReviewCard
+                                        age={review.age}
+                                        avatar={review.avatar_url}
+                                        date={review.created_at}
+                                        name={review.author}
+                                        rating={review.rating}
+                                        text={review.text}
+                                    />
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    <div className="reviews-card__controls">
+                        <ArrowButton
+                            direction="left"
+                            ariaLabel="Попередній відгук"
+                            disabled={index === 0}
+                            onClick={() => scrollToIndex(index - 1)}
+                        />
+
+                        <ArrowButton
+                            direction="right"
+                            ariaLabel="Наступний відгук"
+                            disabled={index === filteredReviews.length - 1}
+                            onClick={() => scrollToIndex(index + 1)}
+                        />
+                    </div>
+                </div>
+            )}
         </section>
     )
 }

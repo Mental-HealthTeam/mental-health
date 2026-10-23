@@ -1,0 +1,77 @@
+@use '../../../../styles/abstracts' as a;
+
+.specialist-review-card {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-width: 0;
+    width: 100%;
+    padding: 24px 16px;
+    background-color: a.$color-background;
+    border: 1px solid a.$color-gray-20;
+    border-radius: 18px;
+
+    &__header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    &__avatar {
+        flex-shrink: 0;
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+    &__author {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        min-width: 0;
+    }
+
+    &__name {
+        color: a.$color-text-primary;
+        font-size: a.$font-size-body;
+        line-height: a.$line-height-body;
+        letter-spacing: a.$letter-spacing-body;
+        font-weight: a.$font-weight-body-extrabold;
+        text-align: left;
+    }
+
+    &__rating {
+        display: flex;
+        gap: 4px;
+        line-height: 1;
+    }
+
+    &__star {
+        color: a.$color-warning;
+        font-size: 16px;
+    }
+
+    &__star--empty {
+        color: a.$color-gray-20;
+    }
+
+    &__text {
+        color: a.$color-gray-80;
+        font-size: a.$font-size-body;
+        line-height: a.$line-height-body;
+        letter-spacing: a.$letter-spacing-body;
+        font-weight: a.$font-weight-body-semibold;
+        text-align: left;
+        overflow-wrap: anywhere;
+    }
+
+    &__date {
+        color: a.$color-gray-40;
+        font-size: a.$font-size-caption-secondary;
+        line-height: a.$line-height-caption-secondary;
+        letter-spacing: a.$letter-spacing-caption-secondary;
+        font-weight: a.$font-weight-caption-secondary;
+        text-align: left;
+    }
+}

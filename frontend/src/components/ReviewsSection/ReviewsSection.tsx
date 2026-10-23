@@ -5,35 +5,10 @@ import { SectionIndex } from '../UI/SectionIndex'
 import { useScreenLayout } from '../../hooks'
 import reviewsImage from '../../assets/images/reviews-image.png'
 import { Container } from '../Container'
-import avatar1 from '../../assets/avatars/avatar-1.png'
 
 import './ReviewsSection.scss'
 import { useTranslation } from 'react-i18next'
-
-export type Review = {
-    id: string
-    name: string
-    age: number
-    date: string
-    rating: 1 | 2 | 3 | 4 | 5
-    text: string
-    avatar: string
-}
-
-const REVIEW_MOCK: Review = {
-    id: 'review-1',
-    name: 'Олена',
-    age: 29,
-    date: '2026-09-27',
-    rating: 4,
-    text: 'Вже після 2-х сесій відчула значне полегшення. Психолог допомогла розібратися з причинами втоми та навчила простим технікам самодопомоги.',
-    avatar: avatar1,
-}
-
-const REVIEWS_MOCK: Review[] = Array.from({ length: 5 }, (_, i) => ({
-    ...REVIEW_MOCK,
-    id: `review-${i + 1}`,
-}))
+import { REVIEWS_MOCK } from '../../mocks/reviewsMock'
 
 const SLIDER_GAP = 16
 
@@ -111,9 +86,9 @@ export const ReviewsSection = () => {
                                     >
                                         <ReviewCard
                                             age={review.age}
-                                            avatar={review.avatar}
-                                            date={review.date}
-                                            name={review.name}
+                                            avatar={review.avatar_url}
+                                            date={review.created_at}
+                                            name={review.author}
                                             rating={review.rating}
                                             text={review.text}
                                         />

@@ -115,6 +115,28 @@
         grid-area: button;
         margin-top: 16px;
     }
+
+    &__availability {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        align-items: center;
+    }
+
+    &__availability-title {
+        color: a.$color-gray-60;
+        font-size: a.$font-size-body;
+        line-height: a.$line-height-body;
+        letter-spacing: a.$letter-spacing-body;
+        font-weight: a.$font-weight-body-semibold;
+        white-space: nowrap;
+    }
+
+    &__slots {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
 }
 
 @media (min-width: a.$breakpoint-mobile) {
@@ -164,7 +186,7 @@
             margin-block: 16px;
         }
 
-        &__region-button {
+        &__booking-button {
             max-width: 209px;
         }
 
@@ -178,6 +200,10 @@
             gap: 4px;
             padding-block: 16px;
             border-top: 1px solid a.$color-gray-10;
+        }
+
+        &__availability {
+            flex-direction: row;
         }
     }
 }

@@ -23,4 +23,12 @@
         letter-spacing: a.$letter-spacing-body;
         font-weight: a.$font-weight-body-extrabold;
     }
+
+    &__text-no-education {
+        color: a.$color-gray-0;
+        font-size: a.$font-size-body;
+        line-height: a.$line-height-body;
+        letter-spacing: a.$letter-spacing-body;
+        font-weight: a.$font-weight-body-extrabold;
+    }
 }

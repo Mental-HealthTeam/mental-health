@@ -143,7 +143,7 @@ export const SpecialistCard = ({
                 <div className="specialist-card__topic-list">
                     {topics.map((topic) => (
                         <span className="specialist-card__topic" key={topic}>
-                            {t(`symptoms:${topic}`)}
+                            {t(`symptoms:${topic}.title`)}
                         </span>
                     ))}
                 </div>

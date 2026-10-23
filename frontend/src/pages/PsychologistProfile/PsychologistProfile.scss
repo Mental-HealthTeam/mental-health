@@ -64,4 +64,13 @@
     &__reviews {
         margin-top: 8px;
     }
+
+    &__text-no-profile {
+        color: a.$color-primary;
+        font-size: a.$font-size-h4;
+        line-height: a.$line-height-h4;
+        letter-spacing: a.$letter-spacing-h4;
+        font-weight: a.$font-weight-h4;
+        text-align: left;
+    }
 }

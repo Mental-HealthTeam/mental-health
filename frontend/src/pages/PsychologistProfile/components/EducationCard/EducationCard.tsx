@@ -2,12 +2,15 @@ import classNames from 'classnames'
 import { LearnIcon } from '../../../../components/UI/Icons/WhyChoosePlatform'
 import { SectionLabel } from '../../../../components/UI/SectionLabel'
 import './EducationCard.scss'
+import { useAppSelector } from '../../../../app/hooks'
 
 type Props = {
     className?: string
 }
 
 export const EducationCard = ({ className }: Props) => {
+    const { profile } = useAppSelector((state) => state.specialistProfile)
+
     return (
         <section
             className={classNames('education-card', className)}
@@ -16,21 +19,19 @@ export const EducationCard = ({ className }: Props) => {
             <SectionLabel className="education-card__section-label" startIcon={<LearnIcon />}>
                 Освіта
             </SectionLabel>
-            <ul className="education-card__list">
-                <li className="education-card__item">
-                    Диплом магістра психології (КНУ ім. Т. Шевченка, 2018)
-                </li>
-                <li className="education-card__item">
-                    Сертифікована програма: «Когнітивно-поведінкова терапія дипресивних та тривожних
-                    розладів» (Український Інститут КБТ)
-                </li>
-                <li className="education-card__item">
-                    Сертифікована програма: «Гештальт у консультуванні»{' '}
-                </li>
-                <li className="education-card__item">
-                    Сертифікована програма: «Cиндром дефіциту уваги»{' '}
-                </li>
-            </ul>
+            {profile && (
+                <ul className="education-card__list">
+                    {profile.certificates.map((item) => (
+                        <li className="education-card__item" key={item}>
+                            {item}
+                        </li>
+                    ))}
+                </ul>
+            )}
+
+            {!profile && (
+                <p className="education-card__text-no-education">Фахівець ще не надав інформції</p>
+            )}
         </section>
     )
 }
