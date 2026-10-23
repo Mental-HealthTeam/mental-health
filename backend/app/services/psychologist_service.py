@@ -131,7 +131,6 @@ async def get_psychologist_by_id(
             Review(**review)
             for review in (psychologist.reviews or [])
         ],
-        meet_link=psychologist.meet_link or "",
         mock_slots=[
             MockSlot(
                 time=slot["datetime"],
