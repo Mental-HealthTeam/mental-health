@@ -14,7 +14,7 @@ type Props = {
 export const ReviewsCard = ({ className }: Props) => {
     const { profile } = useAppSelector((state) => state.specialistProfile)
 
-    const [category, setCategory] = useState<SymptomCode>('anxiety')
+    const [category, setCategory] = useState<SymptomCode | undefined>(profile?.reviews[0].topic_id)
     const [index, setIndex] = useState(0)
 
     const trackRef = useRef<HTMLDivElement>(null)

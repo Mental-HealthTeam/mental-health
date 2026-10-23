@@ -1,0 +1,143 @@
+// ======================================================
+// Breakpoints
+// ======================================================
+
+$pp-breakpoint-tablet: 768px;
+
+// ======================================================
+// Page
+// ======================================================
+
+$pp-page-container-gap: 16px;
+$pp-page-container-max-width: 1000px;
+$pp-page-container-margin-bottom: 24px;
+$pp-page-container-padding-inline: 20px;
+
+$pp-page-back-border-width: 2px;
+
+$pp-page-region-about-gap: 8px;
+$pp-page-top-gap: 8px;
+$pp-page-specializations-margin-top: 8px;
+$pp-page-reviews-margin-top: 8px;
+
+// ======================================================
+// Profile card
+// ======================================================
+
+$pp-profile-card-padding-block: 24px;
+$pp-profile-card-padding-inline: 16px;
+$pp-profile-card-column-gap: 12px;
+$pp-profile-card-radius: 20px;
+
+$pp-profile-card-photo-size: 73px;
+$pp-profile-card-text-min-width: 10px;
+
+$pp-profile-card-heading-gap: 8px;
+
+$pp-profile-card-badge-padding-block: 4.5px;
+$pp-profile-card-badge-padding-inline: 8px;
+$pp-profile-card-badge-radius: 8px;
+
+$pp-profile-card-stats-gap: 8px;
+$pp-profile-card-stats-margin-top: 12px;
+$pp-profile-card-stats-margin-bottom: 8px;
+
+$pp-profile-card-info-tile-max-height: 57px;
+
+$pp-profile-card-approach-gap: 4px;
+$pp-profile-card-approach-padding-bottom: 8px;
+
+$pp-profile-card-button-margin-top: 16px;
+
+$pp-profile-card-availability-gap: 8px;
+$pp-profile-card-slots-gap: 8px;
+
+$pp-profile-card-column-gap-tablet: 24px;
+$pp-profile-card-photo-max-width-tablet: 340px;
+$pp-profile-card-photo-radius-tablet: 20px;
+$pp-profile-card-heading-padding-bottom-tablet: 16px;
+$pp-profile-card-stats-margin-block-tablet: 16px;
+$pp-profile-card-info-tile-max-height-tablet: 65px;
+$pp-profile-card-approach-padding-block-tablet: 16px;
+$pp-profile-card-button-max-width-tablet: 209px;
+
+// ======================================================
+// Profile tabs
+// ======================================================
+
+$pp-profile-tabs-gap: 16px;
+$pp-profile-tabs-padding-block: 24px;
+$pp-profile-tabs-padding-inline: 16px;
+$pp-profile-tabs-radius: 20px;
+
+$pp-profile-tabs-switch-gap: 12px;
+$pp-profile-tabs-basic-information-gap: 16px;
+
+$pp-profile-tabs-basic-information-row-gap-tablet: 16px;
+$pp-profile-tabs-basic-information-column-gap-tablet: 20px;
+
+// ======================================================
+// About card
+// ======================================================
+
+$pp-about-card-gap: 16px;
+$pp-about-card-padding-block: 30px;
+$pp-about-card-padding-inline: 16px;
+$pp-about-card-radius: 10px;
+
+// ======================================================
+// Education card
+// ======================================================
+
+$pp-education-card-gap: 16px;
+$pp-education-card-padding-block: 30px;
+$pp-education-card-padding-inline: 16px;
+$pp-education-card-radius: 10px;
+
+$pp-education-card-list-gap: 12px;
+$pp-education-card-list-padding-left: 18px;
+
+// ======================================================
+// Specializations card
+// ======================================================
+
+$pp-specializations-card-gap: 16px;
+$pp-specializations-card-padding-block: 30px;
+$pp-specializations-card-padding-inline: 16px;
+$pp-specializations-card-radius: 10px;
+
+$pp-specializations-card-tags-gap: 6px;
+$pp-specializations-card-divider-height: 1px;
+$pp-specializations-card-list-gap: 12px;
+$pp-specializations-card-list-padding-left: 18px;
+
+// ======================================================
+// Reviews card
+// ======================================================
+
+$pp-reviews-card-gap: 16px;
+$pp-reviews-card-radius: 10px;
+
+$pp-reviews-card-tabs-gap: 6px;
+$pp-reviews-card-tab-padding-block: 5.5px;
+$pp-reviews-card-tab-padding-inline: 8px;
+$pp-reviews-card-tab-radius: 8px;
+
+$pp-reviews-card-panel-gap: 12px;
+$pp-reviews-card-slider-gap: 16px;
+$pp-reviews-card-controls-gap: 8px;
+
+// ======================================================
+// Specialist review card
+// ======================================================
+
+$pp-review-card-gap: 12px;
+$pp-review-card-padding-block: 24px;
+$pp-review-card-padding-inline: 16px;
+$pp-review-card-radius: 18px;
+
+$pp-review-card-header-gap: 12px;
+$pp-review-card-avatar-size: 52px;
+$pp-review-card-author-gap: 6px;
+$pp-review-card-rating-gap: 4px;
+$pp-review-card-star-size: 16px;

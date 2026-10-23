@@ -82,7 +82,7 @@ export const SpecialistProfileCard = ({ className }: Props) => {
                     className="profile-card__info-tile"
                     icon={<LearnIcon />}
                     label={t('specialistProfile:card.stats.experience')}
-                    value={`${profile?.experience_years} років`}
+                    value={`${t('specialistProfile:card.stats.experienceValue', { count: profile?.experience_years })}`}
                 />
                 <InfoTile
                     className="profile-card__info-tile"
@@ -94,7 +94,7 @@ export const SpecialistProfileCard = ({ className }: Props) => {
                     className="profile-card__info-tile profile-card__info-tile--hide"
                     icon={<ClockCardIcon />}
                     label={t('specialistProfile:card.stats.sessionDuration')}
-                    value={`${profile?.session_minutes} хвилин`}
+                    value={`${t('specialistProfile:card.stats.sessionDurationValue', { count: profile?.session_minutes })}`}
                 />
             </ul>
 

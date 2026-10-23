@@ -22,7 +22,7 @@ export const PsychologistProfile = () => {
     useEffect(() => {
         window.scrollTo({ top: 0, behavior: 'instant' })
         dispatch(setSpecialistProfile(SPECIALIST_MOCK))
-    }, [])
+    }, [dispatch])
 
     return (
         <div className="psychologist-profile">

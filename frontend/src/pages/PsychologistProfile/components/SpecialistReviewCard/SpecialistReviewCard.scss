@@ -1,26 +1,27 @@
 @use '../../../../styles/abstracts' as a;
+@use '../../../../styles/components' as c;
 
 .specialist-review-card {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: c.$pp-review-card-gap;
     min-width: 0;
     width: 100%;
-    padding: 24px 16px;
+    padding: c.$pp-review-card-padding-block c.$pp-review-card-padding-inline;
     background-color: a.$color-background;
     border: 1px solid a.$color-gray-20;
-    border-radius: 18px;
+    border-radius: c.$pp-review-card-radius;
 
     &__header {
         display: flex;
         align-items: center;
-        gap: 12px;
+        gap: c.$pp-review-card-header-gap;
     }
 
     &__avatar {
         flex-shrink: 0;
-        width: 52px;
-        height: 52px;
+        width: c.$pp-review-card-avatar-size;
+        height: c.$pp-review-card-avatar-size;
         border-radius: 50%;
         object-fit: cover;
     }
@@ -28,7 +29,7 @@
     &__author {
         display: flex;
         flex-direction: column;
-        gap: 6px;
+        gap: c.$pp-review-card-author-gap;
         min-width: 0;
     }
 
@@ -43,13 +44,13 @@
 
     &__rating {
         display: flex;
-        gap: 4px;
+        gap: c.$pp-review-card-rating-gap;
         line-height: 1;
     }
 
     &__star {
         color: a.$color-warning;
-        font-size: 16px;
+        font-size: c.$pp-review-card-star-size;
     }
 
     &__star--empty {

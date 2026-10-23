@@ -1,18 +1,21 @@
 @use '../../../../styles/abstracts' as a;
+@use '../../../../styles/components' as c;
 
 .profile-card {
     display: grid;
-    grid-template-columns: minmax(73px, 73px) minmax(10px, 1fr);
-    column-gap: 12px;
+    grid-template-columns:
+        minmax(c.$pp-profile-card-photo-size, c.$pp-profile-card-photo-size)
+        minmax(c.$pp-profile-card-text-min-width, 1fr);
+    column-gap: c.$pp-profile-card-column-gap;
     grid-template-areas:
         'photo heading'
         'stats stats'
         'approach approach'
         'button button';
 
-    padding: 24px 16px;
+    padding: c.$pp-profile-card-padding-block c.$pp-profile-card-padding-inline;
     background-color: a.$color-background;
-    border-radius: 20px;
+    border-radius: c.$pp-profile-card-radius;
     min-width: 0;
     max-width: 100%;
     width: 100%;
@@ -20,8 +23,8 @@
 
     &__photo {
         grid-area: photo;
-        height: 73px;
-        width: 73px;
+        height: c.$pp-profile-card-photo-size;
+        width: c.$pp-profile-card-photo-size;
         border-radius: 50%;
     }
 
@@ -29,7 +32,7 @@
         grid-area: heading;
         display: flex;
         flex-direction: column-reverse;
-        gap: 8px;
+        gap: c.$pp-profile-card-heading-gap;
         justify-content: space-between;
         align-items: flex-start;
         align-self: center;
@@ -53,8 +56,8 @@
         text-align: left;
         text-transform: uppercase;
         background-color: a.$color-optional;
-        border-radius: 8px;
-        padding: 4.5px 8px;
+        border-radius: c.$pp-profile-card-badge-radius;
+        padding: c.$pp-profile-card-badge-padding-block c.$pp-profile-card-badge-padding-inline;
         max-width: max-content;
     }
 
@@ -72,13 +75,13 @@
         display: flex;
         justify-content: flex-start;
         flex-wrap: wrap;
-        gap: 8px;
-        margin-bottom: 8px;
-        margin-top: 12px;
+        gap: c.$pp-profile-card-stats-gap;
+        margin-bottom: c.$pp-profile-card-stats-margin-bottom;
+        margin-top: c.$pp-profile-card-stats-margin-top;
     }
 
     &__info-tile {
-        max-height: 57px;
+        max-height: c.$pp-profile-card-info-tile-max-height;
     }
 
     .profile-card__info-tile--hide {
@@ -90,8 +93,8 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 4px;
-        padding-bottom: 8px;
+        gap: c.$pp-profile-card-approach-gap;
+        padding-bottom: c.$pp-profile-card-approach-padding-bottom;
         border-bottom: 1px solid a.$color-gray-10;
     }
 
@@ -113,7 +116,7 @@
 
     &__region-button {
         grid-area: button;
-        margin-top: 16px;
+        margin-top: c.$pp-profile-card-button-margin-top;
     }
 
     &__booking-button {
@@ -124,7 +127,7 @@
     &__availability {
         display: flex;
         flex-direction: column;
-        gap: 8px;
+        gap: c.$pp-profile-card-availability-gap;
         align-items: center;
     }
 
@@ -139,7 +142,7 @@
 
     &__slots {
         display: flex;
-        gap: 8px;
+        gap: c.$pp-profile-card-slots-gap;
         flex-wrap: wrap;
     }
 }
@@ -152,10 +155,12 @@
     }
 }
 
-@media (min-width: 768px) {
+@media (min-width: c.$pp-breakpoint-tablet) {
     .profile-card {
-        grid-template-columns: minmax(73px, 340px) minmax(10px, 1fr);
-        column-gap: 24px;
+        grid-template-columns:
+            minmax(c.$pp-profile-card-photo-size, c.$pp-profile-card-photo-max-width-tablet)
+            minmax(c.$pp-profile-card-text-min-width, 1fr);
+        column-gap: c.$pp-profile-card-column-gap-tablet;
         grid-template-areas:
             'photo heading'
             'photo stats'
@@ -164,7 +169,7 @@
 
         &__heading {
             flex-direction: column;
-            padding-bottom: 16px;
+            padding-bottom: c.$pp-profile-card-heading-padding-bottom-tablet;
             border-bottom: 1px solid a.$color-gray-10;
         }
 
@@ -183,27 +188,27 @@
             min-width: 0;
             width: 100%;
             min-height: 100%;
-            border-radius: 20px;
+            border-radius: c.$pp-profile-card-photo-radius-tablet;
             object-fit: cover;
         }
 
         &__stats {
-            margin-block: 16px;
+            margin-block: c.$pp-profile-card-stats-margin-block-tablet;
         }
 
         &__booking-button {
-            max-width: 209px;
+            max-width: c.$pp-profile-card-button-max-width-tablet;
         }
 
         &__info-tile {
-            max-height: 65px;
+            max-height: c.$pp-profile-card-info-tile-max-height-tablet;
         }
 
         &__approach {
             flex-direction: row;
             align-items: center;
-            gap: 4px;
-            padding-block: 16px;
+            gap: c.$pp-profile-card-approach-gap;
+            padding-block: c.$pp-profile-card-approach-padding-block-tablet;
             border-top: 1px solid a.$color-gray-10;
         }
 

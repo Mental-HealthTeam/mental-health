@@ -1,4 +1,5 @@
 @use '../../styles/abstracts' as a;
+@use '../../styles/components' as c;
 
 .psychologist-profile {
     display: flex;
@@ -14,15 +15,12 @@
         display: flex;
         flex-direction: column;
         align-items: flex-start;
-        gap: 16px;
-
+        gap: c.$pp-page-container-gap;
         width: 100%;
-        max-width: 1000px;
-
+        max-width: c.$pp-page-container-max-width;
         margin-inline: auto;
-        margin-bottom: 24px;
-
-        padding-inline: 20px;
+        margin-bottom: c.$pp-page-container-margin-bottom;
+        padding-inline: c.$pp-page-container-padding-inline;
     }
 
     &__back {
@@ -32,7 +30,7 @@
         letter-spacing: a.$letter-spacing-button-large;
         font-weight: a.$font-weight-button-large;
         text-align: left;
-        border-bottom: 2px solid a.$color-optional;
+        border-bottom: c.$pp-page-back-border-width solid a.$color-optional;
         cursor: pointer;
     }
 
@@ -48,21 +46,21 @@
     &__region-about {
         display: flex;
         flex-direction: column;
-        gap: 8px;
+        gap: c.$pp-page-region-about-gap;
     }
 
     &__top {
         display: flex;
         flex-direction: column;
-        gap: 8px;
+        gap: c.$pp-page-top-gap;
     }
 
     &__specializations {
-        margin-top: 8px;
+        margin-top: c.$pp-page-specializations-margin-top;
     }
 
     &__reviews {
-        margin-top: 8px;
+        margin-top: c.$pp-page-reviews-margin-top;
     }
 
     &__text-no-profile {
