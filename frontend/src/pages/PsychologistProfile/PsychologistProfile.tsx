@@ -11,8 +11,10 @@ import { useNavigate } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../../app/hooks'
 import { setSpecialistProfile } from '../../app/store/slices/specialistProfileSlice'
 import { SPECIALIST_MOCK } from '../../mocks/specialistMock'
+import { useTranslation } from 'react-i18next'
 
 export const PsychologistProfile = () => {
+    const { t } = useTranslation('specialistProfile')
     const { profile } = useAppSelector((state) => state.specialistProfile)
     const dispatch = useAppDispatch()
     const navigate = useNavigate()
@@ -29,9 +31,9 @@ export const PsychologistProfile = () => {
             <main className="psychologist-profile__content">
                 <Container className="psychologist-profile__container">
                     <a className="psychologist-profile__back" onClick={() => navigate(-1)}>
-                        НАЗАД
+                        {t('page.back')}
                     </a>
-                    {profile && <h1 className="psychologist-profile__title">Профіль фахівця</h1>}
+                    {profile && <h1 className="psychologist-profile__title">{t('page.title')}</h1>}
 
                     {profile && (
                         <SpecialistProfileCard className="psychologist-profile__specialist-card" />
@@ -41,7 +43,7 @@ export const PsychologistProfile = () => {
 
                     {!profile && (
                         <div className="psychologist-profile__text-no-profile">
-                            Фахівець ще не має профілю
+                            {t('page.noProfile')}
                         </div>
                     )}
                 </Container>

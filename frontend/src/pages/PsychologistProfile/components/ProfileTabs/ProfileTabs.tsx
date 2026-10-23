@@ -6,6 +6,7 @@ import { EducationCard } from '../EducationCard'
 import { SpecializationsCard } from '../SpecializationsCard'
 import { ReviewsCard } from '../ReviewsCard'
 import { Tab } from '../../../../components/UI/Tab'
+import { useTranslation } from 'react-i18next'
 
 type ProfileSection = 'basicInf' | 'reviews'
 
@@ -14,6 +15,7 @@ type Props = {
 }
 
 export const ProfileTabs = ({ className }: Props) => {
+    const { t } = useTranslation('specialistProfile')
     const [activeSection, setActiveSection] = useState<ProfileSection>('basicInf')
 
     return (
@@ -24,14 +26,14 @@ export const ProfileTabs = ({ className }: Props) => {
                     className="profile-tabs__item"
                     onClick={() => setActiveSection('basicInf')}
                 >
-                    Основна інформація
+                    {t('tabs.basicInfo')}
                 </Tab>
                 <Tab
                     isActive={activeSection === 'reviews'}
                     className="profile-tabs__item"
                     onClick={() => setActiveSection('reviews')}
                 >
-                    Відгуки
+                    {t('tabs.reviews')}
                 </Tab>
             </div>
 

@@ -3,6 +3,7 @@ import './SpecialistReviewCard.scss'
 import { Avatar } from '../../../../components/UI/Avatar'
 import { StarIcon } from '../../../../components/UI/Icons'
 import avatarDefault from '../../../../assets/avatars/avatar-1.png'
+import { useTranslation } from 'react-i18next'
 
 type Props = {
     name: string
@@ -25,7 +26,7 @@ export const SpecialistReviewCard = ({
     text,
     className,
 }: Props) => {
-    console.log(rating);
+    const { t } = useTranslation('specialistProfile')
 
     return (
         <article className={classNames('specialist-review-card', className)}>
@@ -45,7 +46,7 @@ export const SpecialistReviewCard = ({
                     <div
                         className="specialist-review-card__rating"
                         role="img"
-                        aria-label={`Оцінка ${rating} з ${MAX_RATING}`}
+                        aria-label={t('reviews.ratingAriaLabel', { rating, max: MAX_RATING })}
                     >
                         {Array.from({ length: MAX_RATING }, (_, i) => (
                             <span

@@ -116,6 +116,11 @@
         margin-top: 16px;
     }
 
+    &__booking-button {
+        background: a.$color-secondary-gradient;
+        color: a.$color-primary;
+    }
+
     &__availability {
         display: flex;
         flex-direction: column;

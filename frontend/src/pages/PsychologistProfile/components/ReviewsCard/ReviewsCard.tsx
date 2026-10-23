@@ -19,7 +19,7 @@ export const ReviewsCard = ({ className }: Props) => {
 
     const trackRef = useRef<HTMLDivElement>(null)
 
-    const { t: tSymptoms } = useTranslation('symptoms')
+    const { t } = useTranslation(['symptoms', 'specialistProfile'])
 
     const scrollToIndex = (i: number) => {
         const element = trackRef.current
@@ -64,7 +64,9 @@ export const ReviewsCard = ({ className }: Props) => {
     if (!profile) {
         return (
             <div className="reviews-card">
-                <p className="reviews-card__text-no-reviews">Немає ще відгуків</p>
+                <p className="reviews-card__text-no-reviews">
+                    {t('specialistProfile:reviews.empty')}
+                </p>
             </div>
         )
     }
@@ -72,7 +74,11 @@ export const ReviewsCard = ({ className }: Props) => {
     return (
         <section className={classNames('reviews-card', className)}>
             {filteredReviews && (
-                <div className="reviews-card__tabs" role="tablist" aria-label="Категорії відгуків">
+                <div
+                    className="reviews-card__tabs"
+                    role="tablist"
+                    aria-label={t('specialistProfile:reviews.categoriesAriaLabel')}
+                >
                     {reviewCategories.map((symptom) => (
                         <button
                             className={classNames('reviews-card__tab', {
@@ -81,7 +87,7 @@ export const ReviewsCard = ({ className }: Props) => {
                             onClick={() => setCategory(symptom)}
                             key={symptom}
                         >
-                            {tSymptoms(`${symptom}.title`)}
+                            {t(`symptoms:${symptom}.title`)}
                         </button>
                     ))}
                 </div>
@@ -113,14 +119,14 @@ export const ReviewsCard = ({ className }: Props) => {
                     <div className="reviews-card__controls">
                         <ArrowButton
                             direction="left"
-                            ariaLabel="Попередній відгук"
+                            ariaLabel={t('specialistProfile:reviews.previousAriaLabel')}
                             disabled={index === 0}
                             onClick={() => scrollToIndex(index - 1)}
                         />
 
                         <ArrowButton
                             direction="right"
-                            ariaLabel="Наступний відгук"
+                            ariaLabel={t('specialistProfile:reviews.nextAriaLabel')}
                             disabled={index === filteredReviews.length - 1}
                             onClick={() => scrollToIndex(index + 1)}
                         />

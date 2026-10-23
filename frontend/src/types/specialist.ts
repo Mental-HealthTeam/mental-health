@@ -45,13 +45,12 @@ export type SpecialistProfile = {
     price_uah: number
 
     // методи
-    tags_symptoms: string[]
+    tags_symptoms: SymptomCode[]
     methods: string[]
     languages: Language[]
 
     // сертифікати та опис
     certificates: string[]
-    topics: SpecialistTopic[]
     bio: SpecialistBio
 
     // відгуки

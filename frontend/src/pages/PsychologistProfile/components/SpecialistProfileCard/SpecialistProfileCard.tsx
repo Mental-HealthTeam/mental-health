@@ -20,7 +20,12 @@ const isSameDay = (firstDate: Date, secondDate: Date) =>
     firstDate.getDate() === secondDate.getDate()
 
 export const SpecialistProfileCard = ({ className }: Props) => {
-    const { t, i18n } = useTranslation(['psychologists', 'symptoms', 'accessibility'])
+    const { t, i18n } = useTranslation([
+        'psychologists',
+        'symptoms',
+        'accessibility',
+        'specialistProfile',
+    ])
     const { profile } = useAppSelector((state) => state.specialistProfile)
     const [isBooking, setIsBooking] = useState(false)
     const [selectedSlot, setSelectedSlot] = useState('')
@@ -59,38 +64,44 @@ export const SpecialistProfileCard = ({ className }: Props) => {
             <img className="profile-card__photo" src={profile?.avatar_url} alt="" />
 
             <div className="profile-card__heading">
-                {profile?.is_verified && <span className="profile-card__badge">Перевірено</span>}
+                {profile?.is_verified && (
+                    <span className="profile-card__badge">
+                        {t('specialistProfile:card.verified')}
+                    </span>
+                )}
 
                 <h2 className="profile-card__name" id="profile-card-name">
                     {profile?.name}
                 </h2>
 
-                <p className="profile-card__role">Практикуючий психолог</p>
+                <p className="profile-card__role">{t('specialistProfile:card.role')}</p>
             </div>
 
             <ul className="profile-card__stats">
                 <InfoTile
                     className="profile-card__info-tile"
                     icon={<LearnIcon />}
-                    label="Досвід"
+                    label={t('specialistProfile:card.stats.experience')}
                     value={`${profile?.experience_years} років`}
                 />
                 <InfoTile
                     className="profile-card__info-tile"
                     icon={<MoneyIcon />}
-                    label="Вартість"
+                    label={t('specialistProfile:card.stats.price')}
                     value={`${profile?.price_uah} ₴`}
                 />
                 <InfoTile
                     className="profile-card__info-tile profile-card__info-tile--hide"
                     icon={<ClockCardIcon />}
-                    label="Тривалість сесії"
+                    label={t('specialistProfile:card.stats.sessionDuration')}
                     value={`${profile?.session_minutes} хвилин`}
                 />
             </ul>
 
             <div className="profile-card__approach">
-                <p className="profile-card__approach-label">Терапевтичний підхід:</p>
+                <p className="profile-card__approach-label">
+                    {t('specialistProfile:card.approach')}
+                </p>
                 <p className="profile-card__approach-value">{profile?.methods.join(', ')}</p>
             </div>
 
@@ -109,7 +120,9 @@ export const SpecialistProfileCard = ({ className }: Props) => {
 
                 {isBooking && (
                     <div className="profile-card__availability">
-                        <span className="profile-card__availability-title">Вільний час</span>
+                        <span className="profile-card__availability-title">
+                            {t('specialistProfile:card.availability')}
+                        </span>
 
                         {profile?.mock_slots && (
                             <div
