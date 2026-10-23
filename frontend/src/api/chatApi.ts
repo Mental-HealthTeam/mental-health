@@ -2,7 +2,7 @@ import type { MatchData, TypeData } from '../types/aiChat'
 
 export class ChatApiError extends Error {}
 
-const AI_URL = import.meta.env.VITE_AI_SERVICE_URL
+const AI_URL = '/ai/chat/message'
 
 type Handlers = {
     onContent: (text: string) => void
@@ -14,7 +14,7 @@ export const streamChatMessage = async (
     handlers: Handlers,
     signal: AbortSignal,
 ) => {
-    const response = await fetch(`${AI_URL}/chat/message`, {
+    const response = await fetch(`${AI_URL}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),

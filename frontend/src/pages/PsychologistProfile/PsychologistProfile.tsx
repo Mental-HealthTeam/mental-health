@@ -12,6 +12,7 @@ import { useAppDispatch, useAppSelector } from '../../app/hooks'
 import { setSpecialistProfile } from '../../app/store/slices/specialistProfileSlice'
 import { SPECIALIST_MOCK } from '../../mocks/specialistMock'
 import { useTranslation } from 'react-i18next'
+import { AiChat } from '../../components/AiChat'
 
 export const PsychologistProfile = () => {
     const { t } = useTranslation('specialistProfile')
@@ -50,6 +51,8 @@ export const PsychologistProfile = () => {
             </main>
 
             <Footer />
+
+            <AiChat />
         </div>
     )
 }
