@@ -42,5 +42,4 @@ class PsychologistDetailResponse(BaseModel):
     bio: dict[str, str]
     certificates: list[Certificate]
     reviews: list[Review]
-    meet_link: str
     mock_slots: list[MockSlot]
