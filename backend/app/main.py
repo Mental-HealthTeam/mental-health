@@ -15,6 +15,7 @@ from routes import (
     symptom_codes_router,
     sessions_router,
     users_router,
+    contact_router,
 )
 
 
@@ -86,7 +87,10 @@ app.include_router(
     prefix=f"{BASE_PREFIX}/users",
     tags=["Users"],
 )
-
+app.include_router(
+    contact_router,
+    tags=["Contact"],
+)
 
 @app.get("/health")
 def health():
