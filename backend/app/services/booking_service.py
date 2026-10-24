@@ -1,10 +1,11 @@
+import logging
 from datetime import datetime, timedelta, timezone
 from decimal import Decimal
 from uuid import UUID
 
 from fastapi import HTTPException, status
 from sqlalchemy import func, select
-from sqlalchemy.exc import IntegrityError
+from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
@@ -17,10 +18,13 @@ from database.models.models import (
     Psychologist,
     PsychologistStatus,
     User,
-    UserRole,
+    UserRole
 )
 from payment_provider.payment_types import PaymentProviderName
 from schemas.booking import BookingCreateRequest
+
+
+logger = logging.getLogger(__name__)
 
 
 async def create_booking(
@@ -821,3 +825,68 @@ async def mark_completed(
         .where(Booking.id == booking_id)
     )
     return result.scalar_one()
+
+
+async def mark_refund_failed(
+        db: AsyncSession,
+        booking_id: UUID
+) -> Booking:
+    """CANCELLED / HELD -> DISPUTED with refund_error after a failed refund.
+
+    payment_status stays HELD: the money was not returned. If the slot was
+    taken again, the booking stays CANCELLED with refund_error. Idempotent.
+    Raises 404, 409.
+    Route: none, called by the booking cancellation service.
+    """
+    booking = (await db.execute(
+        select(Booking).where(
+            Booking.id == booking_id
+        ).with_for_update()
+    )).scalar_one_or_none()
+    if not booking:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Booking not found."
+        )
+    # Idempotency: the refund error is already recorded (DISPUTED or CANCELLED).
+    if booking.refund_error:
+        return booking
+
+    if (
+            booking.status == BookingStatus.CANCELLED
+            and booking.payment_status == PaymentStatus.HELD
+    ):
+        try:
+            booking.status = BookingStatus.DISPUTED
+            booking.refund_error = True
+            await db.commit()
+        except IntegrityError:
+            await db.rollback()
+            logger.error(
+                "Refund failed for booking %s and its slot is already taken: "
+                "booking kept CANCELLED with refund_error, manual check needed",
+                booking_id
+            )
+            booking = (await db.execute(
+                select(Booking).where(
+                    Booking.id == booking_id
+                ).with_for_update()
+            )).scalar_one_or_none()
+            booking.refund_error = True
+            await db.commit()
+        except SQLAlchemyError as e:
+            logger.exception(
+                "Could not save the refund error for booking %s",
+                booking_id
+            )
+            await db.rollback()
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Could not save the refund error."
+            ) from e
+    else:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="Booking cannot be marked as refund failed in its current state."
+        )
+    return booking

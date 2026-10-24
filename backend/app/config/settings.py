@@ -55,6 +55,8 @@ class BaseAppSettings(BaseSettings):
 
     PLATFORM_FEE_PERCENT: int = Field(default=35, gt=0, le=100)
 
+    BOOKING_FREE_CANCEL_HOURS: int = 24
+
     @property
     def order_timeout_sec(self):
         return self.BOOKING_HOLD_MINUTES * 60
