@@ -1,6 +1,7 @@
 from pathlib import Path
 from typing import Any
 
+from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 from payment_provider.payment_types import PaymentProviderName
@@ -18,6 +19,15 @@ class BaseAppSettings(BaseSettings):
     DB_HOST: str = "db"
     REDIS_URL: str = "redis://redis:6379/0"
 
+    CONTACT_SUPPORT_EMAIL: str = "support@platform.com"
+    SMTP_HOST: str = ""
+    SMTP_PORT: int = 587
+    SMTP_USERNAME: str = ""
+    SMTP_PASSWORD: str = ""
+    SMTP_FROM_EMAIL: str = ""
+    SMTP_USE_TLS: bool = True
+    APP_ENV: str = "development"
+
     STRIPE_SECRET_KEY: str = ""
     STRIPE_WEBHOOK_SECRET: str = ""
 
@@ -26,7 +36,7 @@ class BaseAppSettings(BaseSettings):
     PAYMENT_PROVIDER: PaymentProviderName = PaymentProviderName.WAYFORPAY
     BOOKING_HOLD_MINUTES: int = 20
     BOOKING_HORIZON_DAYS: int = 30
-    SESSION_DURATION_MIN: int = 60
+    SESSION_DURATION_MIN: int = 50
 
     WAYFORPAY_MERCHANT_ACCOUNT: str = ""
     WAYFORPAY_SECRET_KEY: str = ""
@@ -42,6 +52,8 @@ class BaseAppSettings(BaseSettings):
 
     CELERY_BROKER_URL: str = "redis://redis:6379/1"
     CELERY_TIMEZONE: str = "Europe/Kyiv"
+
+    PLATFORM_FEE_PERCENT: int = Field(default=35, gt=0, le=100)
 
     @property
     def order_timeout_sec(self):

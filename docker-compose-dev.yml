@@ -75,6 +75,8 @@ services:
       - ./backend/.env
     ports:
       - "${BACKEND_PORT:-8000}:8000"
+    volumes:
+      - avatars_data:/app/media/avatars
     command: uvicorn main:app --host 0.0.0.0 --port 8000
     healthcheck:
       test: [
@@ -140,4 +142,6 @@ volumes:
   postgres_data:
     driver: local
   pgadmin_data:
+    driver: local
+  avatars_data:
     driver: local
