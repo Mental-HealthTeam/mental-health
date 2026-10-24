@@ -1,5 +1,7 @@
 import logging
+from pathlib import Path
 
+from fastapi.staticfiles import StaticFiles
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -13,10 +15,20 @@ from routes import (
     symptom_codes_router,
     sessions_router,
     users_router,
+    contact_router,
 )
 
 
 app = FastAPI()
+
+AVATAR_STORAGE_DIR = Path("media/avatars")
+AVATAR_STORAGE_DIR.mkdir(parents=True, exist_ok=True)
+
+app.mount(
+    "/media/avatars",
+    StaticFiles(directory=AVATAR_STORAGE_DIR),
+    name="avatars",
+)
 
 settings = get_settings()
 
@@ -75,7 +87,10 @@ app.include_router(
     prefix=f"{BASE_PREFIX}/users",
     tags=["Users"],
 )
-
+app.include_router(
+    contact_router,
+    tags=["Contact"],
+)
 
 @app.get("/health")
 def health():

@@ -19,6 +19,15 @@ class BaseAppSettings(BaseSettings):
     DB_HOST: str = "db"
     REDIS_URL: str = "redis://redis:6379/0"
 
+    CONTACT_SUPPORT_EMAIL: str = "support@platform.com"
+    SMTP_HOST: str = ""
+    SMTP_PORT: int = 587
+    SMTP_USERNAME: str = ""
+    SMTP_PASSWORD: str = ""
+    SMTP_FROM_EMAIL: str = ""
+    SMTP_USE_TLS: bool = True
+    APP_ENV: str = "development"
+
     STRIPE_SECRET_KEY: str = ""
     STRIPE_WEBHOOK_SECRET: str = ""
 
