@@ -1,0 +1,1 @@
+export { SpecialistReviewCard } from './SpecialistReviewCard'

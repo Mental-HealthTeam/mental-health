@@ -14,6 +14,7 @@ import contact from '../../locales/uk/features/contact.json'
 import faq from '../../locales/uk/features/faq.json'
 import reviews from '../../locales/uk/features/reviews.json'
 import symptoms from '../../locales/uk/features/symptoms.json'
+import specialistProfile from '../../locales/uk/features/specialistProfile.json'
 
 export const ukResources = {
     common,
@@ -31,4 +32,5 @@ export const ukResources = {
     faq,
     reviews,
     symptoms,
+    specialistProfile
 } as const

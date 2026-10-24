@@ -1,0 +1,45 @@
+{
+    "page": {
+        "back": "BACK",
+        "title": "Specialist profile",
+        "noProfile": "This specialist doesn't have a profile yet"
+    },
+    "card": {
+        "verified": "Verified",
+        "role": "Practicing psychologist",
+        "photoAlt": "",
+        "stats": {
+            "experience": "Experience",
+            "experienceValue_one": "{{count}} year",
+            "experienceValue_other": "{{count}} years",
+            "price": "Price",
+            "sessionDuration": "Session duration",
+            "sessionDurationValue_one": "{{count}} minute",
+            "sessionDurationValue_other": "{{count}} minutes"
+        },
+        "approach": "Therapeutic approach:",
+        "availability": "Available time"
+    },
+    "tabs": {
+        "basicInfo": "Basic information",
+        "reviews": "Reviews"
+    },
+    "about": {
+        "title": "About the specialist",
+        "empty": "The specialist hasn't provided any information yet"
+    },
+    "education": {
+        "title": "Education",
+        "empty": "The specialist hasn't provided any information yet"
+    },
+    "specializations": {
+        "title": "Areas of work"
+    },
+    "reviews": {
+        "empty": "No reviews yet",
+        "categoriesAriaLabel": "Review categories",
+        "previousAriaLabel": "Previous review",
+        "nextAriaLabel": "Next review",
+        "ratingAriaLabel": "Rating {{rating}} out of {{max}}"
+    }
+}

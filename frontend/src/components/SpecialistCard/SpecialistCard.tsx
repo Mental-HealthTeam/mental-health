@@ -2,11 +2,12 @@ import { useId, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Avatar } from '../UI/Avatar'
-import { OutlineButton, PrimaryButton } from '../UI/Buttons'
+import { Button } from '../UI/Button'
 import { TimeSlot } from '../UI/TimeSlot'
 
 import './SpecialistCard.scss'
 import type { SymptomCode } from '../../types/psychologist.ts'
+import { OutlineButton } from '../UI/Buttons/index.ts'
 
 type TimeSlotItem = {
     time: string
@@ -142,7 +143,7 @@ export const SpecialistCard = ({
                 <div className="specialist-card__topic-list">
                     {topics.map((topic) => (
                         <span className="specialist-card__topic" key={topic}>
-                            {t(`symptoms:${topic}`)}
+                            {t(`symptoms:${topic}.title`)}
                         </span>
                     ))}
                 </div>
@@ -150,13 +151,15 @@ export const SpecialistCard = ({
 
             <div className="specialist-card__actions">
                 {!isBooking && (
-                    <PrimaryButton
+                    <Button
                         className="specialist-card__booking-button"
+                        variant="primary"
+                        size="medium"
                         fullWidth
                         onClick={() => setIsBooking(true)}
                     >
                         {t('psychologists:card.bookSession')}
-                    </PrimaryButton>
+                    </Button>
                 )}
 
                 {isBooking && (

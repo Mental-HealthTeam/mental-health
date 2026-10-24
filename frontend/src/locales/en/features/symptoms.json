@@ -1,19 +1,70 @@
 {
-    "anxiety": "Anxiety",
-    "burnout": "Burnout",
-    "relationship": "Relationships",
-    "stress": "Stress",
-    "grief": "Grief and loss",
-    "self_esteem": "Self-esteem",
-    "low_mood": "Low mood",
-    "sleep": "Sleep problems",
-    "family": "Family issues",
-    "anger": "Anger",
-    "trauma": "Trauma",
-    "addiction": "Addiction",
-    "eating": "Eating concerns",
-    "loneliness": "Loneliness",
-    "identity": "Identity",
-    "work_career": "Work and career",
-    "motivation": "Motivation"
+    "anxiety": {
+        "title": "Anxiety",
+        "description": "Worry, panic, panic attacks, fear, tension, and persistent feelings of unease"
+    },
+    "burnout": {
+        "title": "Burnout",
+        "description": "Emotional exhaustion, work-related fatigue, loss of motivation, and feeling drained"
+    },
+    "relationship": {
+        "title": "Relationships",
+        "description": "Conflicts with a partner, jealousy, breakups, and difficulties with trust and intimacy"
+    },
+    "stress": {
+        "title": "Stress",
+        "description": "Overload, pressure, deadlines, multiple competing tasks, and feeling that everything is falling apart"
+    },
+    "grief": {
+        "title": "Grief and loss",
+        "description": "Losing a loved one, experiencing grief, and difficulty coming to terms with a loss"
+    },
+    "self_esteem": {
+        "title": "Self-esteem",
+        "description": "Self-doubt, self-criticism, comparing yourself to others, and feelings of worthlessness"
+    },
+    "low_mood": {
+        "title": "Low mood",
+        "description": "Apathy, loss of joy, low mood, lack of energy for everyday activities, and feelings of emptiness"
+    },
+    "sleep": {
+        "title": "Sleep problems",
+        "description": "Insomnia, difficulty falling asleep, waking during the night, nightmares, and disrupted sleep routines"
+    },
+    "family": {
+        "title": "Family issues",
+        "description": "Conflicts with parents or children, parenting challenges, and strained relationships with relatives"
+    },
+    "anger": {
+        "title": "Anger",
+        "description": "Anger, irritability, outbursts, aggression, and difficulty managing emotions"
+    },
+    "trauma": {
+        "title": "Trauma",
+        "description": "Traumatic experiences, past abuse, flashbacks, and difficulty processing past events"
+    },
+    "addiction": {
+        "title": "Addiction",
+        "description": "Alcohol or gambling addiction, difficulty giving up harmful habits, and addictive behaviors"
+    },
+    "eating": {
+        "title": "Eating concerns",
+        "description": "Difficulties with food, compulsive overeating, fear of gaining weight, and eating disorders"
+    },
+    "loneliness": {
+        "title": "Loneliness",
+        "description": "Lack of social connections, feelings of isolation, and difficulties connecting with other people"
+    },
+    "identity": {
+        "title": "Identity",
+        "description": "Finding yourself, searching for meaning, difficulties with self-discovery, and navigating life crises"
+    },
+    "work_career": {
+        "title": "Work and career",
+        "description": "Job dissatisfaction, fear of changing jobs, career choices, and professional self-discovery"
+    },
+    "motivation": {
+        "title": "Motivation",
+        "description": "Procrastination, putting tasks off, difficulty getting started, and trouble finishing tasks"
+    }
 }
