@@ -29,10 +29,6 @@ app.conf.update(
         "payout-monthly-salary-task": {
             "task": "tasks.celery_tasks.payout_monthly_salary_task",
             "schedule": crontab(minute=0, hour=5, day_of_month=2),
-        },
-        "test-task": {
-            "task": "tasks.celery_tasks.test_task",
-            "schedule": timedelta(minutes=1)
         }
     },
 )
