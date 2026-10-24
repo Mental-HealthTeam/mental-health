@@ -1,0 +1,43 @@
+@use '../../../../styles/abstracts' as a;
+
+.my-sessions {
+    display: flex;
+    flex-direction: column;
+    padding: 24px 16px;
+    background-color: a.$color-background;
+    border-radius: 20px;
+    min-width: 0;
+    max-width: 100%;
+    width: 100%;
+    border: 1px solid a.$color-gray-10;
+
+    &__heading {
+        display: flex;
+        justify-content: space-between;
+        max-width: 100%;
+        gap: 20px;
+        max-height: max-content;
+    }
+
+    &__title {
+        color: a.$color-primary;
+        font-size: a.$font-size-h4;
+        line-height: a.$line-height-h4;
+        letter-spacing: a.$letter-spacing-h4;
+        font-weight: a.$font-weight-h4;
+        text-align: left;
+        white-space: nowrap;
+    }
+
+    &__button {
+        color: a.$color-gray-60;
+        text-transform: uppercase;
+        border: 1px solid a.$color-gray-60;
+        width: max-content;
+    }
+
+    &__filter-tabs {
+        display: flex;
+        gap: 8px;
+    }
+}

@@ -3,10 +3,10 @@ import { Footer } from '../../components/Footer'
 import { Header } from '../../components/Header'
 import { Container } from '../../components/Container'
 
-import { SpecialistProfileCard } from './components/SpecialistProfileCard'
+import { SpecialistProfileCard } from '../../components/specialist/SpecialistProfileCard'
 
 import './PsychologistProfile.scss'
-import { ProfileTabs } from './components/ProfileTabs'
+import { ProfileTabs } from '../../components/specialist/ProfileTabs'
 import { useNavigate } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../../app/hooks'
 import { setSpecialistProfile } from '../../app/store/slices/specialistProfileSlice'
@@ -47,7 +47,13 @@ export const PsychologistProfile = () => {
                         />
                     )}
 
-                    {profile && <ProfileTabs className="psychologist-profile__profile-tabs" />}
+                    {profile && (
+                        <ProfileTabs
+                            className="psychologist-profile__profile-tabs"
+                            specialist={profile}
+                            showReviews
+                        />
+                    )}
 
                     {!profile && (
                         <div className="psychologist-profile__text-no-profile">

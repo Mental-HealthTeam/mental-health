@@ -1,12 +1,12 @@
 import classNames from 'classnames'
 
 import './SpecialistProfileCard.scss'
-import { InfoTile } from '../../../../components/InfoTile'
-import { LearnIcon } from '../../../../components/UI/Icons/WhyChoosePlatform'
-import { ClockCardIcon, MoneyIcon } from '../../../../components/UI/Icons'
+import { InfoTile } from '../../InfoTile'
+import { ClockCardIcon, MoneyIcon } from '../../UI/Icons'
 import { type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
-import type { SpecialistProfile } from '../../../../types/specialist'
+import type { SpecialistProfile } from '../../../types/specialist'
+import { LearnIcon } from '../../UI/Icons/WhyChoosePlatform'
 
 type Props = {
     specialist: Pick<
