@@ -90,11 +90,18 @@ async def create_checkout_service(
                 status_code=status.HTTP_409_CONFLICT,
                 detail="Booking hold has expired, create a new booking."
             )
+        elif booking.hold_expires_at <= datetime.now(timezone.utc) + timedelta(minutes=2):
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail="The booking hold expires in less than 2 minutes. "
+                       "Create a new booking after it expires."
+            )
     check_out_params = CheckoutParams(
         booking_id=booking.id,
         amount=booking.price,
         currency=booking.currency,
-        description="Consultation with psychologist"
+        description="Consultation with psychologist",
+        hold_expires_at=booking.hold_expires_at
     )
     try:
         check_out_result = await payment_provider.create_checkout_session(
