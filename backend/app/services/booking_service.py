@@ -536,6 +536,50 @@ async def mark_disputed(
     return result.scalar_one()
 
 
+async def mark_dispute_refunded(
+        db: AsyncSession,
+        booking_id: UUID
+) -> Booking:
+    """DISPUTED -> CANCELLED / REFUNDED after the provider confirmed the refund.
+
+    Clears refund_error. Idempotent. Raises 404, 409.
+    Route: POST /api/payments/webhook/{provider} ("refunded" event).
+    """
+    result = await db.execute(
+        select(Booking)
+        .execution_options(populate_existing=True)
+        .where(Booking.id == booking_id)
+        .with_for_update()
+    )
+    booking = result.scalar_one_or_none()
+
+    if booking is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Booking not found.",
+        )
+
+    if (
+            booking.status == BookingStatus.CANCELLED
+            and booking.payment_status == PaymentStatus.REFUNDED
+    ):
+        return booking
+
+    if booking.status != BookingStatus.DISPUTED:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="Booking is not in a disputed state.",
+        )
+
+    booking.status = BookingStatus.CANCELLED
+    booking.payment_status = PaymentStatus.REFUNDED
+    booking.refund_error = False
+
+    await db.commit()
+
+    return booking
+
+
 async def resolve_dispute(
         db: AsyncSession,
         booking_id: UUID,
@@ -579,6 +623,7 @@ async def resolve_dispute(
 
     if new_status == BookingStatus.CANCELLED:
         booking.payment_status = PaymentStatus.REFUNDED
+        booking.refund_error = False
 
     await db.commit()
 
