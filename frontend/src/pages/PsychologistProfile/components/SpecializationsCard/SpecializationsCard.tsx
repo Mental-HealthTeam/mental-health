@@ -3,22 +3,18 @@ import { BalanceIcon } from '../../../../components/UI/Icons/WhyChoosePlatform'
 import { SectionLabel } from '../../../../components/UI/SectionLabel'
 import './SpecializationsCard.scss'
 import { Tag } from '../../../../components/UI/Tag'
-import { useAppSelector } from '../../../../app/hooks'
 import { useTranslation } from 'react-i18next'
+import type { SymptomCode } from '../../../../types/psychologist'
 
 type Props = {
     className?: string
+    tags_symptoms?: SymptomCode[]
 }
 
-export const SpecializationsCard = ({ className }: Props) => {
-    const { t } = useTranslation(['symptoms', 'specialistProfile'])
-    const { profile } = useAppSelector((state) => state.specialistProfile)
+export const SpecializationsCard = ({ className, tags_symptoms }: Props) => {
+    const { t } = useTranslation(['symptoms', 'specialistProfile', 'specialistProfile'])
 
-    if (!profile) {
-        return null
-    }
-
-    const symptoms = [...new Set(profile.tags_symptoms)]
+    const symptoms = [...new Set(tags_symptoms)]
 
     return (
         <section className={classNames('specializations-card', className)}>
@@ -29,25 +25,34 @@ export const SpecializationsCard = ({ className }: Props) => {
                 {t('specialistProfile:specializations.title')}
             </SectionLabel>
 
-            <div className="specializations-card__tags">
-                {symptoms.map((code, i) => {
-                    return (
-                        <Tag className="specializations-card__tag" key={`${code}-${i}`}>
-                            {t(`symptoms:${code}.title`)}
-                        </Tag>
-                    )
-                })}
-            </div>
+            {symptoms.length !== 0 && (
+                <>
+                    <div className="specializations-card__tags">
+                        {symptoms.map((code, i) => {
+                            return (
+                                <Tag className="specializations-card__tag" key={`${code}-${i}`}>
+                                    {t(`symptoms:${code}.title`)}
+                                </Tag>
+                            )
+                        })}
+                    </div>
 
-            <hr className="specializations-card__divider" />
+                    <hr className="specializations-card__divider" />
 
-            <ul className="specializations-card__list">
-                {symptoms.map((code, i) => (
-                    <li className="specializations-card__item" key={`${code}-${i}`}>
-                        {t(`symptoms:${code}.description`)}
-                    </li>
-                ))}
-            </ul>
+                    <ul className="specializations-card__list">
+                        {symptoms.map((code, i) => (
+                            <li className="specializations-card__item" key={`${code}-${i}`}>
+                                {t(`symptoms:${code}.description`)}
+                            </li>
+                        ))}
+                    </ul>
+                </>
+            )}
+            {symptoms.length === 0 && (
+                <p className="specializations-card__text-no-specializations">
+                    {t('specialistProfile:education.empty')}
+                </p>
+            )}
         </section>
     )
 }

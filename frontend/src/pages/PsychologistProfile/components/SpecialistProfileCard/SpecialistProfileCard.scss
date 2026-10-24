@@ -114,37 +114,7 @@
         font-weight: a.$font-weight-body-extrabold;
     }
 
-    &__region-button {
-        grid-area: button;
-        margin-top: c.$pp-profile-card-button-margin-top;
-    }
-
-    &__booking-button {
-        background: a.$color-secondary-gradient;
-        color: a.$color-primary;
-    }
-
-    &__availability {
-        display: flex;
-        flex-direction: column;
-        gap: c.$pp-profile-card-availability-gap;
-        align-items: center;
-    }
-
-    &__availability-title {
-        color: a.$color-gray-60;
-        font-size: a.$font-size-body;
-        line-height: a.$line-height-body;
-        letter-spacing: a.$letter-spacing-body;
-        font-weight: a.$font-weight-body-semibold;
-        white-space: nowrap;
-    }
-
-    &__slots {
-        display: flex;
-        gap: c.$pp-profile-card-slots-gap;
-        flex-wrap: wrap;
-    }
+    
 }
 
 @media (min-width: a.$breakpoint-mobile) {

@@ -34,4 +34,12 @@
     &__item {
         color: a.$color-gray-60;
     }
+
+    &__text-no-specializations {
+        color: a.$color-primary;
+        font-size: a.$font-size-body;
+        line-height: a.$line-height-body;
+        letter-spacing: a.$letter-spacing-body;
+        font-weight: a.$font-weight-body-extrabold;
+    }
 }

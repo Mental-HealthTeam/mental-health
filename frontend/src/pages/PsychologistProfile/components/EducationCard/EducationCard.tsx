@@ -2,16 +2,15 @@ import classNames from 'classnames'
 import { LearnIcon } from '../../../../components/UI/Icons/WhyChoosePlatform'
 import { SectionLabel } from '../../../../components/UI/SectionLabel'
 import './EducationCard.scss'
-import { useAppSelector } from '../../../../app/hooks'
 import { useTranslation } from 'react-i18next'
 
 type Props = {
     className?: string
+    certificates?: string[]
 }
 
-export const EducationCard = ({ className }: Props) => {
+export const EducationCard = ({ className, certificates }: Props) => {
     const { t } = useTranslation('specialistProfile')
-    const { profile } = useAppSelector((state) => state.specialistProfile)
 
     return (
         <section
@@ -21,9 +20,9 @@ export const EducationCard = ({ className }: Props) => {
             <SectionLabel className="education-card__section-label" startIcon={<LearnIcon />}>
                 {t('education.title')}
             </SectionLabel>
-            {profile && (
+            {certificates && (
                 <ul className="education-card__list">
-                    {profile.certificates.map((item) => (
+                    {certificates.map((item) => (
                         <li className="education-card__item" key={item}>
                             {item}
                         </li>
@@ -31,7 +30,7 @@ export const EducationCard = ({ className }: Props) => {
                 </ul>
             )}
 
-            {!profile && (
+            {!certificates && (
                 <p className="education-card__text-no-education">{t('education.empty')}</p>
             )}
         </section>

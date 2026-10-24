@@ -13,6 +13,7 @@ import { setSpecialistProfile } from '../../app/store/slices/specialistProfileSl
 import { SPECIALIST_MOCK } from '../../mocks/specialistMock'
 import { useTranslation } from 'react-i18next'
 import { AiChat } from '../../components/AiChat'
+import { BookingBlock } from '../../components/BookingBlock'
 
 export const PsychologistProfile = () => {
     const { t } = useTranslation('specialistProfile')
@@ -37,7 +38,13 @@ export const PsychologistProfile = () => {
                     {profile && <h1 className="psychologist-profile__title">{t('page.title')}</h1>}
 
                     {profile && (
-                        <SpecialistProfileCard className="psychologist-profile__specialist-card" />
+                        <SpecialistProfileCard
+                            className="psychologist-profile__specialist-card"
+                            actions={
+                                <BookingBlock name={profile.name} slots={profile.mock_slots} />
+                            }
+                            specialist={profile}
+                        />
                     )}
 
                     {profile && <ProfileTabs className="psychologist-profile__profile-tabs" />}

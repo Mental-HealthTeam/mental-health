@@ -3,18 +3,19 @@ import './ReviewsCard.scss'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { ArrowButton } from '../../../../components/UI/ArrowButton'
 import { SpecialistReviewCard } from '../SpecialistReviewCard'
-import { useAppSelector } from '../../../../app/hooks'
 import type { SymptomCode } from '../../../../types/psychologist'
 import { useTranslation } from 'react-i18next'
+import type { SpecialistReview } from '../../../../types/specialist'
 
 type Props = {
     className?: string
+    reviews?: SpecialistReview[]
 }
 
-export const ReviewsCard = ({ className }: Props) => {
-    const { profile } = useAppSelector((state) => state.specialistProfile)
-
-    const [category, setCategory] = useState<SymptomCode | undefined>(profile?.reviews[0].topic_id)
+export const ReviewsCard = ({ className, reviews }: Props) => {
+    const [category, setCategory] = useState<SymptomCode | null>(
+        reviews ? reviews[0].topic_id : null,
+    )
     const [index, setIndex] = useState(0)
 
     const trackRef = useRef<HTMLDivElement>(null)
@@ -50,18 +51,18 @@ export const ReviewsCard = ({ className }: Props) => {
     }
 
     const reviewCategories = useMemo(() => {
-        return [...new Set((profile?.reviews ?? []).map(({ topic_id }) => topic_id))]
-    }, [profile?.reviews])
+        return [...new Set((reviews ?? []).map(({ topic_id }) => topic_id))]
+    }, [reviews])
 
     const filteredReviews = useMemo(() => {
-        return profile?.reviews.filter((review) => review.topic_id === category)
-    }, [category, profile?.reviews])
+        return reviews?.filter((review) => review.topic_id === category)
+    }, [category, reviews])
 
     useEffect(() => {
         trackRef.current?.scrollTo({ left: 0 })
     }, [category])
 
-    if (!profile) {
+    if (!reviews) {
         return (
             <div className="reviews-card">
                 <p className="reviews-card__text-no-reviews">
