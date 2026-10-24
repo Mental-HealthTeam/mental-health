@@ -42,7 +42,8 @@ from services.booking_service import (
     list_ready_for_payout,
     mark_paid_out,
     mark_completed,
-    mark_refund_failed
+    mark_refund_failed,
+    mark_dispute_refunded
 )
 from exceptions.payments import (
     PaymentProviderError,
@@ -198,15 +199,25 @@ async def _booking_action(
                 provider.value, response_webhook.event_id, booking.id
             )
         if response_webhook.event_type == PaymentEventType.REFUNDED:
-            await mark_cancelled(
-                db=db,
-                booking_id=booking.id,
-                refunded=True
-            )
-            logger.info(
-                "%s webhook %s: booking %s cancelled and refunded",
-                provider.value, response_webhook.event_id, booking.id
-            )
+            if booking.status == BookingStatus.DISPUTED:
+                await mark_dispute_refunded(
+                    db=db,
+                    booking_id=booking.id,
+                )
+                logger.info(
+                    "%s webhook %s: disputed booking %s refunded by the provider, dispute closed",
+                    provider.value, response_webhook.event_id, booking.id
+                )
+            else:
+                await mark_cancelled(
+                    db=db,
+                    booking_id=booking.id,
+                    refunded=True
+                )
+                logger.info(
+                    "%s webhook %s: booking %s cancelled and refunded",
+                    provider.value, response_webhook.event_id, booking.id
+                )
     except HTTPException as e:
         await db.commit()
         if response_webhook.event_type == PaymentEventType.PAID:
