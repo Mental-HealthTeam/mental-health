@@ -130,7 +130,7 @@ async def create_checkout_service(
     )
 
 
-def create_payment_event(
+def _create_payment_event(
     provider: PaymentProviderName,
     response_webhook: PaymentWebhook,
     booking_id: UUID | None = None
@@ -144,7 +144,7 @@ def create_payment_event(
     return payment_event
 
 
-async def find_booking(
+async def _find_booking(
     db: AsyncSession,
     provider: PaymentProviderName,
     response_webhook: PaymentWebhook
@@ -161,7 +161,7 @@ async def find_booking(
     return booking
 
 
-async def booking_action(
+async def _booking_action(
         db: AsyncSession,
         response_webhook: PaymentWebhook,
         booking: Booking,
@@ -181,16 +181,13 @@ async def booking_action(
                 "%s webhook %s: booking %s marked as paid",
                 provider.value, response_webhook.event_id, booking.id
             )
-        if response_webhook.event_type in (
-                PaymentEventType.EXPIRED,
-                PaymentEventType.FAILED
-        ):
+        if response_webhook.event_type == PaymentEventType.EXPIRED:
             await mark_payment_failed(
                 db=db,
                 booking_id=booking.id,
             )
             logger.info(
-                "%s webhook %s: booking %s cancelled after a failed or expired payment",
+                "%s webhook %s: booking %s cancelled after a expired payment",
                 provider.value, response_webhook.event_id, booking.id
             )
         if response_webhook.event_type == PaymentEventType.REFUNDED:
@@ -218,7 +215,7 @@ async def booking_action(
             )
 
 
-async def payment_flow(
+async def _payment_flow(
         db: AsyncSession,
         response_webhook: PaymentWebhook,
         booking: Booking,
@@ -239,7 +236,7 @@ async def payment_flow(
                         "%s webhook %s: paid amount %s does not match booking %s price %s",
                         provider.value, response_webhook.event_id, amount, booking.id, booking.price
                     )
-                    payment_event = create_payment_event(
+                    payment_event = _create_payment_event(
                         provider=provider,
                         response_webhook=response_webhook,
                         booking_id=booking.id
@@ -247,13 +244,20 @@ async def payment_flow(
                     db.add(payment_event)
                     await db.commit()
                     return
-        payment_event = create_payment_event(
+        payment_event = _create_payment_event(
             provider=provider,
             response_webhook=response_webhook,
             booking_id=booking.id
         )
         db.add(payment_event)
-        await booking_action(
+        if response_webhook.event_type == PaymentEventType.FAILED:
+            await db.commit()
+            logger.info(
+                "%s webhook %s: payment attempt for booking %s declined, booking stays pending",
+                provider.value, response_webhook.event_id, booking.id
+            )
+            return
+        await _booking_action(
             db=db,
             response_webhook=response_webhook,
             booking=booking,
@@ -303,7 +307,7 @@ async def handle_webhook(
             event=response_webhook
         )
         return acknowledgement
-    booking = await find_booking(
+    booking = await _find_booking(
         db=db,
         provider=provider,
         response_webhook=response_webhook
@@ -314,7 +318,7 @@ async def handle_webhook(
                 "%s webhook %s: booking not found",
                 provider.value, response_webhook.event_id
             )
-            payment = create_payment_event(
+            payment = _create_payment_event(
                 provider=provider,
                 response_webhook=response_webhook,
                 booking_id=None
@@ -325,7 +329,7 @@ async def handle_webhook(
                 event=response_webhook
             )
             return acknowledgement
-        await payment_flow(
+        await _payment_flow(
             db=db,
             response_webhook=response_webhook,
             booking=booking,
