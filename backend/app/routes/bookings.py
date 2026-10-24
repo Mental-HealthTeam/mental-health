@@ -188,11 +188,13 @@ async def dispute_booking_endpoint(
 async def resolve_dispute_endpoint(
         db: Annotated[AsyncSession, Depends(get_db)],
         admin: Annotated[User, Depends(require_roles(UserRole.ADMIN))],
+        payment_provider: Annotated[PaymentProviderInterface, Depends(get_payment_provider)],
         booking_id: UUID,
         data: ResolveDisputeRequest,
 ):
     return await resolve_dispute(
         db=db,
+        payment_provider=payment_provider,
         booking_id=booking_id,
         new_status=data.new_status,
         admin=admin,

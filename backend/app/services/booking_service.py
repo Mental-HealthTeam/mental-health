@@ -20,9 +20,10 @@ from database.models.models import (
     User,
     UserRole
 )
-from payment_provider.payment_types import PaymentProviderName
+from payment_provider.payment_types import PaymentProviderName, RefundRequest
 from schemas.booking import BookingCreateRequest
-
+from payment_provider.payment_interface import PaymentProviderInterface
+from exceptions.payments import PaymentProviderError
 
 logger = logging.getLogger(__name__)
 
@@ -586,6 +587,7 @@ async def mark_dispute_refunded(
 
 async def resolve_dispute(
         db: AsyncSession,
+        payment_provider: PaymentProviderInterface,
         booking_id: UUID,
         new_status: BookingStatus,
         admin: User,
@@ -623,12 +625,58 @@ async def resolve_dispute(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
             detail="A dispute can only be resolved as completed or cancelled.",
         )
-
-    booking.status = new_status
-
     if new_status == BookingStatus.CANCELLED:
-        booking.payment_status = PaymentStatus.REFUNDED
-        booking.refund_error = False
+        try:
+            if not booking.payment_reference:
+                logger.error(
+                    "Booking %s is paid but has no payment reference, refund is not possible",
+                    booking_id
+                )
+                raise HTTPException(
+                    status_code=status.HTTP_409_CONFLICT,
+                    detail="The payment for this booking cannot be refunded automatically, contact support."
+                )
+            if booking.payment_status != PaymentStatus.HELD:
+                logger.error(
+                    "Dispute on booking %s cannot be refunded: payment status is %s, expected held",
+                    booking_id, booking.payment_status.value
+                )
+                raise HTTPException(
+                    status_code=status.HTTP_409_CONFLICT,
+                    detail=(
+                        "The payment for this booking is no longer held by the platform "
+                        "and cannot be refunded automatically, contact support."
+                    )
+                )
+            booking.status = new_status
+            await db.commit()
+            refund_request = RefundRequest(
+                payment_reference=booking.payment_reference,
+                amount=booking.price,
+                reason="Dispute resolved in favour of the client"
+            )
+            await payment_provider.refund(refund_request)
+            booking.payment_status = PaymentStatus.REFUNDED
+            booking.refund_error = False
+            logger.info(
+                "Booking %s cancelled and refunded (amount %s)",
+                booking_id, booking.price
+            )
+        except PaymentProviderError as e:
+            logger.error(
+                "Refund failed for booking %s, manual check needed: %s",
+                booking_id, e
+            )
+            await mark_refund_failed(
+                db=db,
+                booking_id=booking.id
+            )
+            raise HTTPException(
+                status_code=status.HTTP_502_BAD_GATEWAY,
+                detail="The refund failed, contact the payment provider."
+            ) from e
+    else:
+        booking.status = new_status
 
     await db.commit()
 
