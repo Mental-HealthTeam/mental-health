@@ -41,6 +41,8 @@ services:
     restart: always
     env_file:
       - ./ai_service/.env
+    environment:
+      REDIS_URL: redis://${REDIS_HOST}:${REDIS_PORT}/0
     ports:
       - "${AI_SERVICE_PORT}:8001"
     depends_on:
@@ -60,11 +62,22 @@ services:
       REDIS_URL: redis://${REDIS_HOST}:${REDIS_PORT}/0
     ports:
       - "${BACKEND_PORT}:8000"
+    healthcheck:
+      test: [
+        "CMD", "python", "-c",
+        "import urllib.request; urllib.request.urlopen('http://localhost:8000/health', timeout=3)"
+      ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
     depends_on:
       db:
         condition: service_healthy
       redis:
         condition: service_healthy
+      ai_service:
+        condition: service_started
 
   # Frontend
   frontend:
@@ -79,6 +92,42 @@ services:
       - /opt/letsencrypt:/var/www/letsencrypt:ro
     depends_on:
       - backend
+
+  celery_worker:
+    image: vanyas627/mental-health-backend:${IMAGE_TAG}
+    container_name: ${PROJECT_NAME}_celery_worker
+    command: [ "celery", "-A", "tasks.celery_app", "worker", "--loglevel=info", "--concurrency=2" ]
+    env_file:
+      - ./backend/.env
+    environment:
+      CELERY_BROKER_URL: redis://${REDIS_HOST}:${REDIS_PORT}/1
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      backend:
+        condition: service_healthy
+    entrypoint: [ ]
+    restart: always
+
+  celery_beat:
+    image: vanyas627/mental-health-backend:${IMAGE_TAG}
+    container_name: ${PROJECT_NAME}_celery_beat
+    command: [ "celery", "-A", "tasks.celery_app", "beat", "--loglevel=info", "--schedule=/tmp/celerybeat-schedule" ]
+    env_file:
+      - ./backend/.env
+    environment:
+      CELERY_BROKER_URL: redis://${REDIS_HOST}:${REDIS_PORT}/1
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      backend:
+        condition: service_healthy
+    entrypoint: [ ]
+    restart: always
 
 volumes:
   postgres_data:

@@ -36,7 +36,7 @@ async def create_booking(
     """Create a PENDING / UNPAID booking and hold the slot for BOOKING_HOLD_MINUTES.
 
     Checks the psychologist, time, slot and AI session (422); the price comes
-    from the psychologist profile. Raises 422, 503 if the slot is taken.
+    from the psychologist profile. Raises 422, 409 if the slot is taken.
     Route: POST /api/bookings
     """
     now = datetime.now(timezone.utc)
@@ -126,7 +126,7 @@ async def create_booking(
     except IntegrityError as exc:
         await db.rollback()
         raise HTTPException(
-            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            status_code=status.HTTP_409_CONFLICT,
             detail="The time slot is already taken.",
         ) from exc
 
@@ -301,6 +301,7 @@ async def mark_paid(
         select(Booking)
         .where(Booking.id == booking_id)
         .with_for_update()
+        .execution_options(populate_existing=True)
     )
     booking = result.scalar_one_or_none()
 
@@ -378,6 +379,7 @@ async def mark_payment_failed(
         select(Booking)
         .where(Booking.id == booking_id)
         .with_for_update()
+        .execution_options(populate_existing=True)
     )
     booking = result.scalar_one_or_none()
 
@@ -432,6 +434,7 @@ async def mark_cancelled(
         select(Booking)
         .where(Booking.id == booking_id)
         .with_for_update()
+        .execution_options(populate_existing=True)
     )
     booking = result.scalar_one_or_none()
 
@@ -494,6 +497,7 @@ async def mark_disputed(
         select(Booking)
         .where(Booking.id == booking_id)
         .with_for_update()
+        .execution_options(populate_existing=True)
     )
     booking = result.scalar_one_or_none()
 
@@ -536,6 +540,50 @@ async def mark_disputed(
     return result.scalar_one()
 
 
+async def mark_dispute_refunded(
+        db: AsyncSession,
+        booking_id: UUID
+) -> Booking:
+    """DISPUTED -> CANCELLED / REFUNDED after the provider confirmed the refund.
+
+    Clears refund_error. Idempotent. Raises 404, 409.
+    Route: POST /api/payments/webhook/{provider} ("refunded" event).
+    """
+    result = await db.execute(
+        select(Booking)
+        .execution_options(populate_existing=True)
+        .where(Booking.id == booking_id)
+        .with_for_update()
+    )
+    booking = result.scalar_one_or_none()
+
+    if booking is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Booking not found.",
+        )
+
+    if (
+            booking.status == BookingStatus.CANCELLED
+            and booking.payment_status == PaymentStatus.REFUNDED
+    ):
+        return booking
+
+    if booking.status != BookingStatus.DISPUTED:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="Booking is not in a disputed state.",
+        )
+
+    booking.status = BookingStatus.CANCELLED
+    booking.payment_status = PaymentStatus.REFUNDED
+    booking.refund_error = False
+
+    await db.commit()
+
+    return booking
+
+
 async def resolve_dispute(
         db: AsyncSession,
         booking_id: UUID,
@@ -551,6 +599,7 @@ async def resolve_dispute(
         select(Booking)
         .where(Booking.id == booking_id)
         .with_for_update()
+        .execution_options(populate_existing=True)
     )
     booking = result.scalar_one_or_none()
 
@@ -579,6 +628,7 @@ async def resolve_dispute(
 
     if new_status == BookingStatus.CANCELLED:
         booking.payment_status = PaymentStatus.REFUNDED
+        booking.refund_error = False
 
     await db.commit()
 
@@ -627,6 +677,7 @@ async def mark_paid_out(
         select(Booking)
         .where(Booking.id == booking_id)
         .with_for_update()
+        .execution_options(populate_existing=True)
     )
     booking = result.scalar_one_or_none()
 
@@ -792,6 +843,7 @@ async def mark_completed(
         select(Booking)
         .where(Booking.id == booking_id)
         .with_for_update()
+        .execution_options(populate_existing=True)
     )
     booking = result.scalar_one_or_none()
 
@@ -842,6 +894,7 @@ async def mark_refund_failed(
         select(Booking).where(
             Booking.id == booking_id
         ).with_for_update()
+        .execution_options(populate_existing=True)
     )).scalar_one_or_none()
     if not booking:
         raise HTTPException(

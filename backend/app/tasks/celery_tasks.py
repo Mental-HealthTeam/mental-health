@@ -2,21 +2,17 @@ import asyncio
 import logging
 from datetime import datetime, timezone
 
-from sqlalchemy import select, func
-
 from tasks.celery_app import app
-from database.models.models import Booking, BookingStatus
 from database import get_postgresql_db_contextmanager_celery_task
 from services.booking_service import (
     expire_pending_bookings,
     complete_session_with_psychologist
 )
-
 from config.settings import Settings
-
 from services.payment_service import payout_service
+from exceptions.payments import PaymentProviderError
+from payment_provider.factory import build_payment_provider
 
-from config.dependencies import get_payment_provider
 
 logger = logging.getLogger(__name__)
 
@@ -46,9 +42,14 @@ def payout_monthly_salary_task():
 
 async def _payout_monthly_salary_task():
     settings = Settings()
-    payment_provider = get_payment_provider(
-        settings=settings
-    )
+    try:
+        payment_provider = build_payment_provider(
+            name=settings.PAYMENT_PROVIDER,
+            settings=settings
+        )
+    except PaymentProviderError as e:
+        logger.error("Monthly payout not started: payment provider is not configured (%s)", e)
+        return
     async with get_postgresql_db_contextmanager_celery_task() as db:
         await payout_service(
             db=db,
@@ -78,17 +79,3 @@ async def _complete_session_with_psychologist_task():
             count_bookings_completed,
         )
         return count_bookings_completed
-
-
-@app.task()
-def test_task():
-    asyncio.run(_count_bookings())
-
-
-async def _count_bookings():
-    async with get_postgresql_db_contextmanager_celery_task() as db:
-        stmt = select(func.count(Booking.id)).where(
-            Booking.status == BookingStatus.CONFIRMED
-        )
-        result = (await db.execute(stmt)).scalar()
-        logger.info("Test task: %s confirmed bookings", result)

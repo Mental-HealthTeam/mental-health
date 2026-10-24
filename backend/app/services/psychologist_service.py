@@ -60,8 +60,13 @@ async def get_psychologists(
                 == matching_count.c.psychologist_id,
             )
             .order_by(
-                matching_count.c.match_count.desc()
+                matching_count.c.match_count.desc(),
+                Psychologist.psychologist_id
             )
+        )
+    else:
+        stmt = stmt.order_by(
+            Psychologist.psychologist_id
         )
 
     stmt = stmt.limit(limit).offset(offset)
