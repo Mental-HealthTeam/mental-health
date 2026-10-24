@@ -56,7 +56,6 @@ def _build_wayforpay(
         merchant_domain=settings.WAYFORPAY_MERCHANT_DOMAIN,
         service_url=settings.PUBLIC_BASE_URL.rstrip("/") + settings.WAYFORPAY_SERVICE_URL_PART,
         return_url=settings.SUCCESS_PAYMENTS_REDIRECT,
-        order_timeout=settings.order_timeout_sec,
         simulate_payouts=settings.WAYFORPAY_SIMULATE_PAYOUTS,
         currency=settings.WAYFORPAY_CURRENCY,
         language=settings.WAYFORPAY_LANGUAGE,
