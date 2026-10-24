@@ -88,7 +88,7 @@ async def get_psychologists(
             ],
             mock_slots=[
                 MockSlot(
-                    time=slot["datetime"],
+                    time=slot,
                 )
                 for slot in (psychologist.mock_slots or [])
             ],
@@ -138,7 +138,7 @@ async def get_psychologist_by_id(
         ],
         mock_slots=[
             MockSlot(
-                time=slot["datetime"],
+                time=slot,
             )
             for slot in (psychologist.mock_slots or [])
         ],
