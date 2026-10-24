@@ -57,10 +57,6 @@ class BaseAppSettings(BaseSettings):
 
     BOOKING_FREE_CANCEL_HOURS: int = 24
 
-    @property
-    def order_timeout_sec(self):
-        return self.BOOKING_HOLD_MINUTES * 60
-
 
 class Settings(BaseAppSettings):
     GOOGLE_CLIENT_ID: str = "GOOGLE_CLIENT_ID"
