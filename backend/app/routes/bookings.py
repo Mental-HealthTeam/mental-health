@@ -50,7 +50,7 @@ def not_implemented() -> HTTPException:
     responses={
         401: NOT_AUTHENTICATED,
         422: {"description": "Invalid booking data"},
-        503: {"description": "The time slot is already taken"},
+        409: {"description": "The time slot is already taken"},
     },
 )
 async def create_booking_endpoint(

@@ -36,7 +36,7 @@ async def create_booking(
     """Create a PENDING / UNPAID booking and hold the slot for BOOKING_HOLD_MINUTES.
 
     Checks the psychologist, time, slot and AI session (422); the price comes
-    from the psychologist profile. Raises 422, 503 if the slot is taken.
+    from the psychologist profile. Raises 422, 409 if the slot is taken.
     Route: POST /api/bookings
     """
     now = datetime.now(timezone.utc)
@@ -126,7 +126,7 @@ async def create_booking(
     except IntegrityError as exc:
         await db.rollback()
         raise HTTPException(
-            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            status_code=status.HTTP_409_CONFLICT,
             detail="The time slot is already taken.",
         ) from exc
 
