@@ -301,6 +301,7 @@ async def mark_paid(
         select(Booking)
         .where(Booking.id == booking_id)
         .with_for_update()
+        .execution_options(populate_existing=True)
     )
     booking = result.scalar_one_or_none()
 
@@ -378,6 +379,7 @@ async def mark_payment_failed(
         select(Booking)
         .where(Booking.id == booking_id)
         .with_for_update()
+        .execution_options(populate_existing=True)
     )
     booking = result.scalar_one_or_none()
 
@@ -432,6 +434,7 @@ async def mark_cancelled(
         select(Booking)
         .where(Booking.id == booking_id)
         .with_for_update()
+        .execution_options(populate_existing=True)
     )
     booking = result.scalar_one_or_none()
 
@@ -494,6 +497,7 @@ async def mark_disputed(
         select(Booking)
         .where(Booking.id == booking_id)
         .with_for_update()
+        .execution_options(populate_existing=True)
     )
     booking = result.scalar_one_or_none()
 
@@ -551,6 +555,7 @@ async def resolve_dispute(
         select(Booking)
         .where(Booking.id == booking_id)
         .with_for_update()
+        .execution_options(populate_existing=True)
     )
     booking = result.scalar_one_or_none()
 
@@ -627,6 +632,7 @@ async def mark_paid_out(
         select(Booking)
         .where(Booking.id == booking_id)
         .with_for_update()
+        .execution_options(populate_existing=True)
     )
     booking = result.scalar_one_or_none()
 
@@ -792,6 +798,7 @@ async def mark_completed(
         select(Booking)
         .where(Booking.id == booking_id)
         .with_for_update()
+        .execution_options(populate_existing=True)
     )
     booking = result.scalar_one_or_none()
 
@@ -842,6 +849,7 @@ async def mark_refund_failed(
         select(Booking).where(
             Booking.id == booking_id
         ).with_for_update()
+        .execution_options(populate_existing=True)
     )).scalar_one_or_none()
     if not booking:
         raise HTTPException(
