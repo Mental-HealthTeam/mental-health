@@ -42,7 +42,8 @@ from services.booking_service import (
     list_ready_for_payout,
     mark_paid_out,
     mark_completed,
-    mark_refund_failed
+    mark_refund_failed,
+    mark_dispute_refunded
 )
 from exceptions.payments import (
     PaymentProviderError,
@@ -90,11 +91,18 @@ async def create_checkout_service(
                 status_code=status.HTTP_409_CONFLICT,
                 detail="Booking hold has expired, create a new booking."
             )
+        elif booking.hold_expires_at <= datetime.now(timezone.utc) + timedelta(minutes=2):
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail="The booking hold expires in less than 2 minutes. "
+                       "Create a new booking after it expires."
+            )
     check_out_params = CheckoutParams(
         booking_id=booking.id,
         amount=booking.price,
         currency=booking.currency,
-        description="Consultation with psychologist"
+        description="Consultation with psychologist",
+        hold_expires_at=booking.hold_expires_at
     )
     try:
         check_out_result = await payment_provider.create_checkout_session(
@@ -130,7 +138,7 @@ async def create_checkout_service(
     )
 
 
-def create_payment_event(
+def _create_payment_event(
     provider: PaymentProviderName,
     response_webhook: PaymentWebhook,
     booking_id: UUID | None = None
@@ -144,7 +152,7 @@ def create_payment_event(
     return payment_event
 
 
-async def find_booking(
+async def _find_booking(
     db: AsyncSession,
     provider: PaymentProviderName,
     response_webhook: PaymentWebhook
@@ -161,7 +169,7 @@ async def find_booking(
     return booking
 
 
-async def booking_action(
+async def _booking_action(
         db: AsyncSession,
         response_webhook: PaymentWebhook,
         booking: Booking,
@@ -181,28 +189,35 @@ async def booking_action(
                 "%s webhook %s: booking %s marked as paid",
                 provider.value, response_webhook.event_id, booking.id
             )
-        if response_webhook.event_type in (
-                PaymentEventType.EXPIRED,
-                PaymentEventType.FAILED
-        ):
+        if response_webhook.event_type == PaymentEventType.EXPIRED:
             await mark_payment_failed(
                 db=db,
                 booking_id=booking.id,
             )
             logger.info(
-                "%s webhook %s: booking %s cancelled after a failed or expired payment",
+                "%s webhook %s: booking %s cancelled after a expired payment",
                 provider.value, response_webhook.event_id, booking.id
             )
         if response_webhook.event_type == PaymentEventType.REFUNDED:
-            await mark_cancelled(
-                db=db,
-                booking_id=booking.id,
-                refunded=True
-            )
-            logger.info(
-                "%s webhook %s: booking %s cancelled and refunded",
-                provider.value, response_webhook.event_id, booking.id
-            )
+            if booking.status == BookingStatus.DISPUTED:
+                await mark_dispute_refunded(
+                    db=db,
+                    booking_id=booking.id,
+                )
+                logger.info(
+                    "%s webhook %s: disputed booking %s refunded by the provider, dispute closed",
+                    provider.value, response_webhook.event_id, booking.id
+                )
+            else:
+                await mark_cancelled(
+                    db=db,
+                    booking_id=booking.id,
+                    refunded=True
+                )
+                logger.info(
+                    "%s webhook %s: booking %s cancelled and refunded",
+                    provider.value, response_webhook.event_id, booking.id
+                )
     except HTTPException as e:
         await db.commit()
         if response_webhook.event_type == PaymentEventType.PAID:
@@ -218,7 +233,7 @@ async def booking_action(
             )
 
 
-async def payment_flow(
+async def _payment_flow(
         db: AsyncSession,
         response_webhook: PaymentWebhook,
         booking: Booking,
@@ -239,7 +254,7 @@ async def payment_flow(
                         "%s webhook %s: paid amount %s does not match booking %s price %s",
                         provider.value, response_webhook.event_id, amount, booking.id, booking.price
                     )
-                    payment_event = create_payment_event(
+                    payment_event = _create_payment_event(
                         provider=provider,
                         response_webhook=response_webhook,
                         booking_id=booking.id
@@ -247,13 +262,20 @@ async def payment_flow(
                     db.add(payment_event)
                     await db.commit()
                     return
-        payment_event = create_payment_event(
+        payment_event = _create_payment_event(
             provider=provider,
             response_webhook=response_webhook,
             booking_id=booking.id
         )
         db.add(payment_event)
-        await booking_action(
+        if response_webhook.event_type == PaymentEventType.FAILED:
+            await db.commit()
+            logger.info(
+                "%s webhook %s: payment attempt for booking %s declined, booking stays pending",
+                provider.value, response_webhook.event_id, booking.id
+            )
+            return
+        await _booking_action(
             db=db,
             response_webhook=response_webhook,
             booking=booking,
@@ -303,7 +325,7 @@ async def handle_webhook(
             event=response_webhook
         )
         return acknowledgement
-    booking = await find_booking(
+    booking = await _find_booking(
         db=db,
         provider=provider,
         response_webhook=response_webhook
@@ -314,7 +336,7 @@ async def handle_webhook(
                 "%s webhook %s: booking not found",
                 provider.value, response_webhook.event_id
             )
-            payment = create_payment_event(
+            payment = _create_payment_event(
                 provider=provider,
                 response_webhook=response_webhook,
                 booking_id=None
@@ -325,7 +347,7 @@ async def handle_webhook(
                 event=response_webhook
             )
             return acknowledgement
-        await payment_flow(
+        await _payment_flow(
             db=db,
             response_webhook=response_webhook,
             booking=booking,
@@ -566,6 +588,22 @@ async def cancel_booking_service(
     if booking.status == BookingStatus.CANCELLED:
         return booking
     if booking.payment_status == PaymentStatus.UNPAID:
+        if (
+                booking.payment_provider
+                and booking.hold_expires_at is not None
+                and booking.hold_expires_at > now
+        ):
+            logger.info(
+                "Cancel of booking %s rejected for user %s: payment is in progress, hold expires at %s",
+                booking_id, user.id, booking.hold_expires_at
+            )
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail=(
+                    "Payment for this booking is in progress. "
+                    "If you do not pay, it will be cancelled automatically when the hold expires."
+                )
+            )
         try:
             booking = await mark_cancelled(
                 db=db,
