@@ -577,6 +577,22 @@ async def cancel_booking_service(
     if booking.status == BookingStatus.CANCELLED:
         return booking
     if booking.payment_status == PaymentStatus.UNPAID:
+        if (
+                booking.payment_provider
+                and booking.hold_expires_at is not None
+                and booking.hold_expires_at > now
+        ):
+            logger.info(
+                "Cancel of booking %s rejected for user %s: payment is in progress, hold expires at %s",
+                booking_id, user.id, booking.hold_expires_at
+            )
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail=(
+                    "Payment for this booking is in progress. "
+                    "If you do not pay, it will be cancelled automatically when the hold expires."
+                )
+            )
         try:
             booking = await mark_cancelled(
                 db=db,
