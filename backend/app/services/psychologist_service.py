@@ -9,6 +9,7 @@ from database.models.models import (
     PsychologistSpecialization,
     PsychologistStatus,
     SymptomCode,
+    Language
 )
 from schemas.psychologist import (
     Certificate,
@@ -21,12 +22,14 @@ from services.slot_service import (
     get_unavailable_slots,
     free_slots
 )
+from services.localization import pick
 
 
 async def get_psychologists(
     db: AsyncSession,
     limit: int,
     offset: int,
+    lang: Language,
     symptom_codes: list[SymptomCode] | None = None,
 ) -> list[PsychologistListItem]:
     stmt = (
@@ -94,11 +97,11 @@ async def get_psychologists(
     return [
         PsychologistListItem(
             psychologist_id=psychologist.psychologist_id,
-            full_name=psychologist.full_name,
+            full_name=pick(psychologist.full_name, psychologist.full_name_eng, lang),
             avatar_url=psychologist.avatar_url,
             experience_years=psychologist.experience_years,
             price_per_hour=psychologist.price_per_hour,
-            methods=psychologist.methods or [],
+            methods=pick(psychologist.methods, psychologist.methods_eng, lang) or [],
             specialization=[
                 specialization.symptom_code.value
                 for specialization in psychologist.psychologist_specializations
@@ -117,6 +120,7 @@ async def get_psychologists(
 async def get_psychologist_by_id(
     db: AsyncSession,
     psychologist_id: UUID,
+    lang: Language
 ) -> PsychologistDetailResponse | None:
     stmt = (
         select(Psychologist)
@@ -148,14 +152,15 @@ async def get_psychologist_by_id(
 
     return PsychologistDetailResponse(
         psychologist_id=psychologist.psychologist_id,
-        full_name=psychologist.full_name,
+        full_name=pick(psychologist.full_name, psychologist.full_name_eng, lang),
+        title=pick(psychologist.title, psychologist.title_eng, lang),
         specialization=[
             specialization.symptom_code.value
             for specialization in psychologist.psychologist_specializations
         ],
         experience=psychologist.experience_years,
-        methods=psychologist.methods or [],
-        bio=psychologist.bio,
+        methods=pick(psychologist.methods, psychologist.methods_eng, lang) or [],
+        bio=pick(psychologist.bio, psychologist.bio_eng, lang),
         certificates=[
             Certificate(title=certificate)
             for certificate in (psychologist.certificates or [])

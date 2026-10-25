@@ -133,9 +133,13 @@ def populate_psychologists() -> None:
                 existing = session.get(Psychologist, user.id)
                 if existing is not None:
                     existing.mock_slots = mock_slots
+                    existing.full_name = entry["name"]
                     existing.full_name_eng = entry["name_eng"]
+                    existing.title = entry["title"]
                     existing.title_eng = entry["title_eng"]
+                    existing.bio = entry["bio"]
                     existing.bio_eng = entry["bio_eng"]
+                    existing.methods = entry["methods"]
                     existing.methods_eng = entry["methods_eng"]
                     existing.iban = entry["iban"]
                     existing.tax_id = entry["tax_id"]
