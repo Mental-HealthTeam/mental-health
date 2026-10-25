@@ -29,7 +29,6 @@ class SessionResponse(BaseModel):
 
     booking_id: UUID = Field(validation_alias="id")
     selected_time: datetime.datetime
-    selected_time_label: str
     status: BookingStatus
     payment_status: PaymentStatus
     price: Decimal

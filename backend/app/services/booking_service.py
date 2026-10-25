@@ -75,7 +75,7 @@ async def create_booking(
 
     for slot in psychologist.mock_slots or []:
         try:
-            slot_time = datetime.fromisoformat(slot["datetime"])
+            slot_time = datetime.fromisoformat(slot)
         except (KeyError, TypeError, ValueError):
             continue
 
@@ -109,7 +109,6 @@ async def create_booking(
         client_id=client.id,
         psychologist_id=psychologist.psychologist_id,
         selected_time=selected_time,
-        selected_time_label=selected_slot["label"],
         status=BookingStatus.PENDING,
         payment_status=PaymentStatus.UNPAID,
         price=psychologist.price_per_hour,
