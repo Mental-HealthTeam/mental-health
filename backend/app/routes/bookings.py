@@ -1,7 +1,7 @@
 from typing import Annotated
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, HTTPException, Query, status
+from fastapi import APIRouter, Depends, Query, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from auth.dependencies import get_current_user, require_roles
@@ -33,13 +33,6 @@ NOT_AUTHENTICATED = {"description": "Not authenticated"}
 NOT_ALLOWED = {"description": "Not enough permissions"}
 NOT_FOUND = {"description": "Booking not found"}
 WRONG_STATE = {"description": "Action is not allowed for the current booking state"}
-
-
-def not_implemented() -> HTTPException:
-    return HTTPException(
-        status_code=status.HTTP_501_NOT_IMPLEMENTED,
-        detail="Not implemented."
-    )
 
 
 @router.post(
@@ -188,11 +181,13 @@ async def dispute_booking_endpoint(
 async def resolve_dispute_endpoint(
         db: Annotated[AsyncSession, Depends(get_db)],
         admin: Annotated[User, Depends(require_roles(UserRole.ADMIN))],
+        payment_provider: Annotated[PaymentProviderInterface, Depends(get_payment_provider)],
         booking_id: UUID,
         data: ResolveDisputeRequest,
 ):
     return await resolve_dispute(
         db=db,
+        payment_provider=payment_provider,
         booking_id=booking_id,
         new_status=data.new_status,
         admin=admin,

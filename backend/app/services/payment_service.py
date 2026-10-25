@@ -195,7 +195,7 @@ async def _booking_action(
                 booking_id=booking.id,
             )
             logger.info(
-                "%s webhook %s: booking %s cancelled after a expired payment",
+                "%s webhook %s: booking %s cancelled after an expired payment",
                 provider.value, response_webhook.event_id, booking.id
             )
         if response_webhook.event_type == PaymentEventType.REFUNDED:

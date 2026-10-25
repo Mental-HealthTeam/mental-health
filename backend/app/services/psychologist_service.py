@@ -17,6 +17,10 @@ from schemas.psychologist import (
     PsychologistListItem,
     Review,
 )
+from services.slot_service import (
+    get_unavailable_slots,
+    free_slots
+)
 
 
 async def get_psychologists(
@@ -73,6 +77,19 @@ async def get_psychologists(
 
     response = await db.execute(stmt)
     psychologists = response.scalars().all()
+    psychologist_ids = [psychologist.psychologist_id for psychologist in psychologists]
+    taken_slots = await get_unavailable_slots(
+        db=db,
+        psychologist_ids=psychologist_ids
+    )
+    slots = {
+        psychologist.psychologist_id: free_slots(
+            mock_slots=psychologist.mock_slots,
+            taken_slots=taken_slots,
+            psychologist_id=psychologist.psychologist_id
+        )
+        for psychologist in psychologists
+    }
 
     return [
         PsychologistListItem(
@@ -88,9 +105,9 @@ async def get_psychologists(
             ],
             mock_slots=[
                 MockSlot(
-                    time=slot["datetime"],
+                    time=slot,
                 )
-                for slot in (psychologist.mock_slots or [])
+                for slot in (slots[psychologist.psychologist_id] or [])
             ],
         )
         for psychologist in psychologists
@@ -118,6 +135,17 @@ async def get_psychologist_by_id(
     if psychologist is None:
         return None
 
+    psychologist_ids = [psychologist.psychologist_id]
+    taken_slots = await get_unavailable_slots(
+        db=db,
+        psychologist_ids=psychologist_ids
+    )
+    slots = free_slots(
+        mock_slots=psychologist.mock_slots,
+        taken_slots=taken_slots,
+        psychologist_id=psychologist.psychologist_id
+    )
+
     return PsychologistDetailResponse(
         psychologist_id=psychologist.psychologist_id,
         full_name=psychologist.full_name,
@@ -138,8 +166,8 @@ async def get_psychologist_by_id(
         ],
         mock_slots=[
             MockSlot(
-                time=slot["datetime"],
+                time=slot,
             )
-            for slot in (psychologist.mock_slots or [])
+            for slot in slots
         ],
     )
