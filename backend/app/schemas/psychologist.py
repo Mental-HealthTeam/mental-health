@@ -10,12 +10,15 @@ class MockSlot(BaseModel):
 
 
 class Review(BaseModel):
+    id: UUID
     author: str
-    age: int
-    topic_tag: str
+    avatar_url: str | None = None
+    topic_id: str
+    age: int | None = None
     rating: int
     verified: bool
     text: str
+    created_at: datetime
 
 
 class Certificate(BaseModel):
