@@ -1,7 +1,6 @@
 import logging
 from datetime import datetime, timezone
 from typing import Annotated
-
 from fastapi import Depends, HTTPException, status
 from redis import RedisError
 from sqlalchemy import select, func
@@ -27,6 +26,10 @@ from redis_storage.redis_interface import SessionStorageInterface
 from config.dependencies import get_redis_storage
 from schemas.psychologist import MockSlot
 from auth.dependencies import get_current_user_optional
+from services.slot_service import (
+    get_unavailable_slots,
+    free_slots
+)
 
 logger = logging.getLogger(__name__)
 
@@ -77,13 +80,13 @@ def _filter_by_language(rows, languages):
     return rows
 
 
-def _filter_by_time(rows, min_time, max_time):
+def _filter_by_time(rows, min_time, max_time, free_slots: dict):
     if min_time is not None and max_time is not None:
         rows = [
             (psychologist, _) for psychologist, _ in rows
             if any(
                 min_time <= datetime.fromisoformat(time_slot) <= max_time
-                for time_slot in psychologist.mock_slots or []
+                for time_slot in free_slots[psychologist.psychologist_id] or []
             )
         ]
     elif min_time is not None or max_time is not None:
@@ -92,7 +95,7 @@ def _filter_by_time(rows, min_time, max_time):
                 (psychologist, _) for psychologist, _ in rows
                 if any(
                     datetime.fromisoformat(time_slot) >= min_time
-                    for time_slot in psychologist.mock_slots or []
+                    for time_slot in free_slots[psychologist.psychologist_id] or []
                 )
             ]
         if max_time is not None:
@@ -100,7 +103,7 @@ def _filter_by_time(rows, min_time, max_time):
                 (psychologist, _) for psychologist, _ in rows
                 if any(
                     datetime.fromisoformat(time_slot) <= max_time
-                    for time_slot in psychologist.mock_slots or []
+                    for time_slot in free_slots[psychologist.psychologist_id] or []
                 )
             ]
     return rows
@@ -178,7 +181,7 @@ async def _log_ai_session(db, redis_storage, info, rows, current_user):
             )
 
 
-def _to_match_result(rows, symptom_codes):
+def _to_match_result(rows, symptom_codes, free_slots: dict):
     result = [
         PsychologistMatchResult(
             psychologist_id=psychologist.psychologist_id,
@@ -188,7 +191,7 @@ def _to_match_result(rows, symptom_codes):
             price_per_hour=psychologist.price_per_hour,
             languages=psychologist.languages,
             mock_slots=[
-                MockSlot(time=slot) for slot in (psychologist.mock_slots or [])
+                MockSlot(time=slot) for slot in (free_slots[psychologist.psychologist_id] or [])
             ],
             matched_symptom_codes=list(
                 set(symptom_codes) & {
@@ -222,16 +225,45 @@ async def find_matching_psychologists(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Database error while searching psychologists"
         ) from e
-
+    psychologist_ids = [
+        psychologist.psychologist_id for psychologist, _ in rows
+    ]
+    taken_slots = await get_unavailable_slots(
+        db=db,
+        psychologist_ids=psychologist_ids
+    )
+    free_slots_by_id = {
+        psychologist.psychologist_id: free_slots(
+            mock_slots=psychologist.mock_slots,
+            taken_slots=taken_slots,
+            psychologist_id=psychologist.psychologist_id
+        )
+        for psychologist, _ in rows
+    }
+    rows = [
+        (psychologist, count)
+        for psychologist, count in rows
+        if free_slots_by_id[psychologist.psychologist_id]
+    ]
     rows = _filter_by_language(rows=rows, languages=info.language)
-    rows = _filter_by_time(rows=rows, min_time=info.min_range_suitable_time, max_time=info.max_range_suitable_time)
+    rows = _filter_by_time(
+        rows=rows,
+        min_time=info.min_range_suitable_time,
+        max_time=info.max_range_suitable_time,
+        free_slots=free_slots_by_id
+    )
     rows = rows[:3]
 
-    result = _to_match_result(rows=rows, symptom_codes=info.symptom_codes)
+    result = _to_match_result(
+        rows=rows,
+        symptom_codes=info.symptom_codes,
+        free_slots=free_slots_by_id
+    )
     await _log_ai_session(
         db=db,
         redis_storage=redis_storage,
-        info=info, rows=rows,
+        info=info,
+        rows=rows,
         current_user=current_user
     )
 
