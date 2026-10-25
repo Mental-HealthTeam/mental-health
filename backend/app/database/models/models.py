@@ -261,9 +261,6 @@ class Booking(Base):
         ForeignKey("psychologists.psychologist_id"),
         index=True
     )
-    selected_time_label: Mapped[str] = mapped_column(
-        String(100),
-    )
     selected_time: Mapped[datetime.datetime] = mapped_column(
         DateTime(timezone=True)
     )

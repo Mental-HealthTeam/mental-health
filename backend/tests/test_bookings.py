@@ -69,7 +69,6 @@ def booking_response(client_user):
             "avatar_url": None,
         },
         "selected_time": datetime.now(timezone.utc) + timedelta(days=2),
-        "selected_time_label": "Test appointment",
         "status": BookingStatus.PENDING,
         "payment_status": PaymentStatus.UNPAID,
         "price": Decimal("500.00"),

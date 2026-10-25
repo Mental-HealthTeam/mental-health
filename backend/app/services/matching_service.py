@@ -82,7 +82,7 @@ def _filter_by_time(rows, min_time, max_time):
         rows = [
             (psychologist, _) for psychologist, _ in rows
             if any(
-                min_time <= datetime.fromisoformat(time_slot["datetime"]) <= max_time
+                min_time <= datetime.fromisoformat(time_slot) <= max_time
                 for time_slot in psychologist.mock_slots or []
             )
         ]
@@ -91,7 +91,7 @@ def _filter_by_time(rows, min_time, max_time):
             rows = [
                 (psychologist, _) for psychologist, _ in rows
                 if any(
-                    datetime.fromisoformat(time_slot["datetime"]) >= min_time
+                    datetime.fromisoformat(time_slot) >= min_time
                     for time_slot in psychologist.mock_slots or []
                 )
             ]
@@ -99,7 +99,7 @@ def _filter_by_time(rows, min_time, max_time):
             rows = [
                 (psychologist, _) for psychologist, _ in rows
                 if any(
-                    datetime.fromisoformat(time_slot["datetime"]) <= max_time
+                    datetime.fromisoformat(time_slot) <= max_time
                     for time_slot in psychologist.mock_slots or []
                 )
             ]
@@ -188,7 +188,7 @@ def _to_match_result(rows, symptom_codes):
             price_per_hour=psychologist.price_per_hour,
             languages=psychologist.languages,
             mock_slots=[
-                MockSlot(time=slot["datetime"]) for slot in (psychologist.mock_slots or [])
+                MockSlot(time=slot) for slot in (psychologist.mock_slots or [])
             ],
             matched_symptom_codes=list(
                 set(symptom_codes) & {
