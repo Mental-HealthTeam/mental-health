@@ -29,13 +29,6 @@ router = APIRouter()
 logger = logging.getLogger(__name__)
 
 
-def not_implemented() -> HTTPException:
-    return HTTPException(
-        status_code=status.HTTP_501_NOT_IMPLEMENTED,
-        detail="Not implemented."
-    )
-
-
 @router.post(
     "/checkout",
     response_model=CheckoutResponse,
