@@ -22,6 +22,7 @@ from database.models.models import (
 )
 from payment_provider.payment_types import PaymentProviderName, RefundRequest
 from schemas.booking import BookingCreateRequest
+from services.session_service import set_meet_link
 from payment_provider.payment_interface import PaymentProviderInterface
 from exceptions.payments import PaymentProviderError
 
@@ -168,22 +169,7 @@ async def get_booking_for_user(
             detail="Booking not found.",
         )
 
-    if (
-            booking.status
-            in {
-        BookingStatus.CONFIRMED,
-        BookingStatus.COMPLETED,
-        BookingStatus.DISPUTED,
-    }
-            and booking.payment_status
-            in {
-        PaymentStatus.HELD,
-        PaymentStatus.PAID,
-    }
-    ):
-        booking.meet_link = booking.psychologist.meet_link
-    else:
-        booking.meet_link = None
+    set_meet_link(booking)
 
     return booking
 
@@ -229,22 +215,7 @@ async def list_bookings_for_user(
     bookings = list(result.scalars().all())
 
     for booking in bookings:
-        if (
-            booking.status
-            in {
-                BookingStatus.CONFIRMED,
-                BookingStatus.COMPLETED,
-                BookingStatus.DISPUTED,
-            }
-            and booking.payment_status
-            in {
-                PaymentStatus.HELD,
-                PaymentStatus.PAID,
-            }
-        ):
-            booking.meet_link = booking.psychologist.meet_link
-        else:
-            booking.meet_link = None
+        set_meet_link(booking)
 
     return bookings, total
 
@@ -687,22 +658,7 @@ async def resolve_dispute(
     )
     booking = result.scalar_one()
 
-    if (
-        booking.status
-        in {
-            BookingStatus.CONFIRMED,
-            BookingStatus.COMPLETED,
-            BookingStatus.DISPUTED,
-        }
-        and booking.payment_status
-        in {
-            PaymentStatus.HELD,
-            PaymentStatus.PAID,
-        }
-    ):
-        booking.meet_link = booking.psychologist.meet_link
-    else:
-        booking.meet_link = None
+    set_meet_link(booking)
 
     return booking
 

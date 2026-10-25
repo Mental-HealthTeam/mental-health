@@ -31,8 +31,8 @@ class BaseAppSettings(BaseSettings):
     STRIPE_SECRET_KEY: str = ""
     STRIPE_WEBHOOK_SECRET: str = ""
 
-    SUCCESS_PAYMENTS_REDIRECT: str = "http://localhost:3000/payment/success"
-    CANCEL_PAYMENTS_REDIRECT: str = "http://localhost:3000/payment/cancel"
+    SUCCESS_PAYMENTS_REDIRECT: str = "http://localhost/payment/success"
+    CANCEL_PAYMENTS_REDIRECT: str = "http://localhost/payment/cancel"
     PAYMENT_PROVIDER: PaymentProviderName = PaymentProviderName.WAYFORPAY
     BOOKING_HOLD_MINUTES: int = 20
     BOOKING_HORIZON_DAYS: int = 30
