@@ -19,10 +19,14 @@ from schemas.payout import PayoutDetailsFields, PayoutDetailsResponse
 from schemas.psychologist import (
     PsychologistDetailResponse,
     PsychologistListItem,
+    PsychologistProfileResponse,
+    PsychologistProfileUpdate,
 )
 from services.psychologist_service import (
     get_psychologists,
     get_psychologist_by_id as get_psychologist_by_id_service,
+    get_my_psychologist_profile,
+    update_my_psychologist_profile,
 )
 
 
@@ -177,6 +181,60 @@ async def update_my_payout_details(
         tax_id=psychologist.tax_id,
         account_name=psychologist.account_name,
     )
+
+
+@router.get(
+    "/me/profile",
+    response_model=PsychologistProfileResponse,
+    summary="Get own psychologist profile",
+)
+async def get_my_profile(
+    db: Annotated[AsyncSession, Depends(get_db)],
+    current_user: Annotated[
+        User,
+        Depends(require_roles(UserRole.PSYCHOLOGIST)),
+    ],
+):
+    profile = await get_my_psychologist_profile(
+        db=db,
+        psychologist_id=current_user.id,
+    )
+
+    if profile is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Psychologist profile not found",
+        )
+
+    return profile
+
+
+@router.patch(
+    "/me/profile",
+    response_model=PsychologistProfileResponse,
+    summary="Update own psychologist profile",
+)
+async def update_my_profile(
+    profile_data: PsychologistProfileUpdate,
+    db: Annotated[AsyncSession, Depends(get_db)],
+    current_user: Annotated[
+        User,
+        Depends(require_roles(UserRole.PSYCHOLOGIST)),
+    ],
+):
+    profile = await update_my_psychologist_profile(
+        db=db,
+        psychologist_id=current_user.id,
+        data=profile_data,
+    )
+
+    if profile is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Psychologist profile not found",
+        )
+
+    return profile
 
 
 @router.get(
