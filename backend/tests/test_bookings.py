@@ -64,8 +64,8 @@ def booking_response(client_user):
         "id": uuid.uuid4(),
         "psychologist": {
             "psychologist_id": psychologist_id,
-            "full_name": "Test Psychologist",
-            "title": "Clinical Psychologist",
+            "display_full_name": "Test Psychologist",
+            "display_title": "Clinical Psychologist",
             "avatar_url": None,
         },
         "selected_time": datetime.now(timezone.utc) + timedelta(days=2),

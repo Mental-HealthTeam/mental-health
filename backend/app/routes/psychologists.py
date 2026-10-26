@@ -13,6 +13,7 @@ from database.models.models import (
     SymptomCode,
     User,
     UserRole,
+    Language
 )
 from schemas.payout import PayoutDetailsFields, PayoutDetailsResponse
 from schemas.psychologist import (
@@ -45,6 +46,7 @@ async def list_psychologists(
     limit: int = Query(default=5, ge=1, le=100),
     offset: int = Query(default=0, ge=0),
     symptom_codes: list[SymptomCode] | None = Query(default=None),
+    lang: Language = Query(default=Language.UKRAINIAN)
 ):
     """
     Returns the psychologist catalog for the listing/catalog page.
@@ -57,6 +59,7 @@ async def list_psychologists(
         limit=limit,
         offset=offset,
         symptom_codes=symptom_codes,
+        lang=lang
     )
 
 
@@ -255,6 +258,7 @@ async def update_my_profile(
 async def get_psychologist_by_id(
     psychologist_id: UUID,
     db: Annotated[AsyncSession, Depends(get_db)],
+    lang: Language = Query(default=Language.UKRAINIAN)
 ):
     """
     Returns the full profile for a single psychologist.
@@ -262,6 +266,7 @@ async def get_psychologist_by_id(
     psychologist = await get_psychologist_by_id_service(
         psychologist_id=psychologist_id,
         db=db,
+        lang=lang
     )
 
     if psychologist is None:

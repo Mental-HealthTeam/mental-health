@@ -19,7 +19,8 @@ from database.models.models import (
     PsychologistStatus,
     AI_Session,
     AISessionSymptomCode,
-    User
+    User,
+    Language
 )
 from sqlalchemy.orm import selectinload
 from redis_storage.redis_interface import SessionStorageInterface
@@ -30,6 +31,8 @@ from services.slot_service import (
     get_unavailable_slots,
     free_slots
 )
+from services.localization import pick
+
 
 logger = logging.getLogger(__name__)
 
@@ -181,12 +184,12 @@ async def _log_ai_session(db, redis_storage, info, rows, current_user):
             )
 
 
-def _to_match_result(rows, symptom_codes, free_slots: dict):
+def _to_match_result(rows, symptom_codes, free_slots: dict, lang: Language):
     result = [
         PsychologistMatchResult(
             psychologist_id=psychologist.psychologist_id,
-            full_name=psychologist.full_name,
-            title=psychologist.title,
+            full_name=pick(psychologist.full_name, psychologist.full_name_eng, lang),
+            title=pick(psychologist.title, psychologist.title_eng, lang),
             avatar_url=psychologist.avatar_url,
             price_per_hour=psychologist.price_per_hour,
             languages=psychologist.languages,
@@ -208,7 +211,8 @@ async def find_matching_psychologists(
     db: Annotated[AsyncSession, Depends(get_db)],
     redis_storage: Annotated[SessionStorageInterface, Depends(get_redis_storage)],
     request: MatchingSearchRequest,
-    current_user: Annotated[User | None, Depends(get_current_user_optional)]
+    current_user: Annotated[User | None, Depends(get_current_user_optional)],
+    lang: Language
 ):
     if request.matching_info is None:
         raise HTTPException(
@@ -257,7 +261,8 @@ async def find_matching_psychologists(
     result = _to_match_result(
         rows=rows,
         symptom_codes=info.symptom_codes,
-        free_slots=free_slots_by_id
+        free_slots=free_slots_by_id,
+        lang=lang
     )
     await _log_ai_session(
         db=db,
