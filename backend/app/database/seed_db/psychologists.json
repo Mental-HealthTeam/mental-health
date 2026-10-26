@@ -18,7 +18,7 @@
     "bio": {"about": "Вітаю! Я практикуючий психолог. Допомагаю відновити внутрішню опору, подолати тривожність та навчитися краще розуміти свої емоції в безпечному та бережному просторі.", "approach": "КНУ ім. Т. Шевченка. Акредитація в Когнітивно-поведінковій терапії (КБТ) та Гештальт-підході. Освіта перевірена.", "scope": "Хвилювання, панічні атаки, хронічне вигорання на роботі, конфлікти з партнером та складності з довірою."},
     "bio_eng": {"about": "Hello! I am a practicing psychologist. I help you restore your inner support, overcome anxiety and better understand your emotions in a safe and caring space.", "approach": "Taras Shevchenko National University of Kyiv. Accredited in Cognitive Behavioral Therapy (CBT) and the Gestalt approach. Education verified.", "scope": "Worry, panic attacks, chronic burnout at work, conflicts with a partner and difficulties with trust."},
     "certificates": ["КНУ ім. Т. Шевченка (Практична психологія)", "Сертифікат з Когнітивно-поведінкової терапії (КБТ) та Гештальт-підходу"],
-    "reviews": [{"author": "Марина К.", "age": 26, "topic_tag": "Тривожність", "rating": 5, "verified": true, "text": "Дуже вдячна за сесії! Тривожність значно знизилася вже за місяць роботи."}],
+    "reviews": [{"id": "aa0573f0-0087-555c-8b28-1ed3853cda7c", "author": "Марина К.", "avatar_url": null, "created_at": "2026-09-14", "topic_id": "anxiety", "age": 26, "rating": 5, "verified": true, "text": "Дуже вдячна за сесії! Тривожність значно знизилася вже за місяць роботи."}],
     "mock_slots": ["18:00", "12:00"],
     "meet_link": "https://meet.google.com/psy-01-meet"
   },
@@ -41,7 +41,7 @@
     "bio": {"about": "Вітаю вас. Працюю з тими, хто втомився жити в постійній напрузі та прагне повернути радість від щоденного життя і роботи.", "approach": "НПУ ім. М.П. Драгоманова. Сертифікований КБТ-терапевт (УІКБТ). Освіта перевірена.", "scope": "Напруга, страхи, дедлайни, перевантаження на роботі, відчуття спустошеності та тремтіння від хвилювання."},
     "bio_eng": {"about": "Hello. I work with those who are tired of living in constant tension and want to bring back the joy of everyday life and work.", "approach": "Drahomanov National Pedagogical University. Certified CBT therapist (UICBT). Education verified.", "scope": "Tension, fears, deadlines, work overload, a feeling of emptiness and trembling from anxiety."},
     "certificates": ["НПУ ім. М.П. Драгоманова", "Сертифікат КБТ-терапевта (УІКБТ)"],
-    "reviews": [{"author": "Андрій Т.", "age": 31, "topic_tag": "Вигорання", "rating": 5, "verified": true, "text": "Професійний підхід, комфортна атмосфера та чіткі інструменти."}],
+    "reviews": [{"id": "1bf721ff-1e8f-5628-b865-505ed496841d", "author": "Андрій Т.", "avatar_url": null, "created_at": "2026-09-01", "topic_id": "burnout", "age": 31, "rating": 5, "verified": true, "text": "Професійний підхід, комфортна атмосфера та чіткі інструменти."}],
     "mock_slots": ["16:00", "15:00"],
     "meet_link": "https://meet.google.com/psy-02-meet"
   },
@@ -64,7 +64,7 @@
     "bio": {"about": "Доброго дня. Мій головний пріоритет — створити для вас довірчий простір, де можна прожити важкі почуття без страху засудження.", "approach": "ЛНУ ім. Івана Франка. Гештальт-терапевт (ВОПППГ). Освіта перевірена.", "scope": "Пригніченість, сум без явної причини, безсоння, нічні кошмари, неспокій та апатія до всього."},
     "bio_eng": {"about": "Good day. My main priority is to create a trusting space for you where you can go through difficult feelings without fear of judgment.", "approach": "Ivan Franko National University of Lviv. Gestalt therapist (VOPPPG). Education verified.", "scope": "Low mood, sadness without an obvious reason, insomnia, nightmares, restlessness and apathy toward everything."},
     "certificates": ["ЛНУ ім. Івана Франка", "Сертифікат гештальт-терапевта (ВОПППГ)"],
-    "reviews": [{"author": "Ірина С.", "age": 24, "topic_tag": "Пригніченість", "rating": 5, "verified": true, "text": "Допомогло поглянути на ситуацію під іншим кутом. Дуже задоволена."}],
+    "reviews": [{"id": "6f978a4c-c0e9-50c0-a101-a41826431699", "author": "Ірина С.", "avatar_url": null, "created_at": "2026-08-19", "topic_id": "low_mood", "age": 24, "rating": 5, "verified": true, "text": "Допомогло поглянути на ситуацію під іншим кутом. Дуже задоволена."}],
     "mock_slots": ["19:00", "11:00"],
     "meet_link": "https://meet.google.com/psy-03-meet"
   },
@@ -87,7 +87,7 @@
     "bio": {"about": "Вітаю! Допомагаю людям віднайти власну самоцінність, подолати самокритику та вийти з гнітючого стану байдужості.", "approach": "НаУКМА (Практична психологія). Схема-терапія та КБТ. Освіта перевірена.", "scope": "Низька самооцінка, відчуття власної нікчемності, відсутність сил на буденні справи, пошук сенсу життя."},
     "bio_eng": {"about": "Hello! I help people find their own self-worth, overcome self-criticism and get out of an oppressive state of indifference.", "approach": "National University of Kyiv-Mohyla Academy (Practical Psychology). Schema therapy and CBT. Education verified.", "scope": "Low self-esteem, a feeling of worthlessness, no strength for everyday tasks, a search for the meaning of life."},
     "certificates": ["НаУКМА (Практична психологія)", "Сертифікат зі схема-терапії та КБТ"],
-    "reviews": [{"author": "Олексій П.", "age": 29, "topic_tag": "Самооцінка", "rating": 5, "verified": true, "text": "Безпечний простір та повне розуміння мого запиту з першої зустрічі."}],
+    "reviews": [{"id": "d1f68e6d-b647-5efe-ad47-0742776826b8", "author": "Олексій П.", "avatar_url": null, "created_at": "2026-08-06", "topic_id": "self_esteem", "age": 29, "rating": 5, "verified": true, "text": "Безпечний простір та повне розуміння мого запиту з першої зустрічі."}],
     "mock_slots": ["10:00", "14:00"],
     "meet_link": "https://meet.google.com/psy-04-meet"
   },
@@ -110,7 +110,7 @@
     "bio": {"about": "Вітаю. Робота зі мною — це практичний крок до розуміння власних потреб та побудови гармонійного життя.", "approach": "КНУ ім. Т. Шевченка. Сертифікований психотерапевт у системному підході. Освіта перевірена.", "scope": "Розрив стосунків, ревнощі, втрата мотивації на роботі, невдоволення професією, вибір напрямку кар'єри."},
     "bio_eng": {"about": "Hello. Working with me is a practical step toward understanding your own needs and building a harmonious life.", "approach": "Taras Shevchenko National University of Kyiv. Certified psychotherapist in the systemic approach. Education verified.", "scope": "Breakup of a relationship, jealousy, loss of motivation at work, dissatisfaction with the profession, choosing a career direction."},
     "certificates": ["КНУ ім. Т. Шевченка", "Сертифікат системного сімейного терапевта"],
-    "reviews": [{"author": "Марина К.", "age": 26, "topic_tag": "Стосунки", "rating": 5, "verified": true, "text": "Дуже вдячна за сесії! Розуміння моїх меж значно покращилося."}],
+    "reviews": [{"id": "2d491289-e6fe-52c6-ba4a-a18e5dfe8eda", "author": "Марина К.", "avatar_url": null, "created_at": "2026-07-24", "topic_id": "relationship", "age": 26, "rating": 5, "verified": true, "text": "Дуже вдячна за сесії! Розуміння моїх меж значно покращилося."}],
     "mock_slots": ["17:30", "13:00"],
     "meet_link": "https://meet.google.com/psy-05-meet"
   },
@@ -133,7 +133,7 @@
     "bio": {"about": "Доброго дня! Навчаю ефективним технікам контролю емоцій, що допомагають повертати контроль над власним життям.", "approach": "ХНУ ім. В.Н. Каразіна. Спеціалізація з когнітивно-поведінкової терапії. Освіта перевірена.", "scope": "Відкладання справ, важко почати діяти, професійне виснаження, дедлайни, відчуття, що \"усе валиться\"."},
     "bio_eng": {"about": "Good day! I teach effective emotion-control techniques that help you regain control over your own life.", "approach": "V.N. Karazin Kharkiv National University. Specialization in cognitive behavioral therapy. Education verified.", "scope": "Procrastination, difficulty starting to act, professional exhaustion, deadlines, a feeling that \"everything is falling apart\"."},
     "certificates": ["ХНУ ім. В.Н. Каразіна", "Диплом КБТ-спеціаліста"],
-    "reviews": [{"author": "Андрій Т.", "age": 31, "topic_tag": "Вигорання", "rating": 5, "verified": true, "text": "Чіткі інструменти і ніякої води. Дуже допомагає."}],
+    "reviews": [{"id": "adc1101a-2c82-586d-a0af-e96730a02707", "author": "Андрій Т.", "avatar_url": null, "created_at": "2026-07-11", "topic_id": "burnout", "age": 31, "rating": 5, "verified": true, "text": "Чіткі інструменти і ніякої води. Дуже допомагає."}],
     "mock_slots": ["19:30", "16:00"],
     "meet_link": "https://meet.google.com/psy-06-meet"
   },
@@ -156,7 +156,7 @@
     "bio": {"about": "Вітаю. Моя мета — допомогти вам вийти з циклу самокритики та відновити довірливі стосунки з собою та близькими.", "approach": "ОНУ ім. І.І. Мечникова. Психодрама та Гештальт-терапія. Освіта перевірена.", "scope": "Розлучення, зрада, втрата близької людини, жалоба, відчуття ізольованості та брак соціальних зв'язків."},
     "bio_eng": {"about": "Hello. My goal is to help you break out of the cycle of self-criticism and restore trusting relationships with yourself and your loved ones.", "approach": "I.I. Mechnikov Odesa National University. Psychodrama and Gestalt therapy. Education verified.", "scope": "Divorce, betrayal, loss of a loved one, mourning, a feeling of isolation and a lack of social connections."},
     "certificates": ["ОНУ ім. І.І. Мечникова", "Сертифікат з психодрами та гештальт-терапії"],
-    "reviews": [{"author": "Ірина С.", "age": 24, "topic_tag": "Самотність", "rating": 5, "verified": true, "text": "Неймовірно м'який та професійний підхід до складних тем."}],
+    "reviews": [{"id": "9cb89250-62e9-5a16-a8aa-7e9abbd774cd", "author": "Ірина С.", "avatar_url": null, "created_at": "2026-06-28", "topic_id": "loneliness", "age": 24, "rating": 5, "verified": true, "text": "Неймовірно м'який та професійний підхід до складних тем."}],
     "mock_slots": ["11:30", "17:00"],
     "meet_link": "https://meet.google.com/psy-07-meet"
   },
@@ -179,7 +179,7 @@
     "bio": {"about": "Вітаю! Спеціалізуюся на роботі з гострими емоційними станами та швидкому заспокоєнні нервової системи.", "approach": "КПІ ім. Ігоря Сікорського (Мед. психологія). Тілесно-орієнтована терапія. Освіта перевірена.", "scope": "Панічні атаки, прискорене серцебиття від хвилювання, спалахи гніву, пережите потрясіння, флешбеки."},
     "bio_eng": {"about": "Hello! I specialize in working with acute emotional states and quickly calming the nervous system.", "approach": "Igor Sikorsky Kyiv Polytechnic Institute (Medical Psychology). Body-oriented therapy. Education verified.", "scope": "Panic attacks, racing heartbeat from anxiety, outbursts of anger, a recent shock, flashbacks."},
     "certificates": ["КПІ ім. Ігоря Сікорського (Медична психологія)", "Сертифікат з тілесно-орієнтованої терапії"],
-    "reviews": [{"author": "Олексій П.", "age": 29, "topic_tag": "Тривожність", "rating": 5, "verified": true, "text": "Допоміг впоратися з панічною атакою та навчив дихальним технікам."}],
+    "reviews": [{"id": "05a3fdee-3a5f-55cd-bc57-c2c33fef89b4", "author": "Олексій П.", "avatar_url": null, "created_at": "2026-06-15", "topic_id": "anxiety", "age": 29, "rating": 5, "verified": true, "text": "Допоміг впоратися з панічною атакою та навчив дихальним технікам."}],
     "mock_slots": ["20:00", "10:00"],
     "meet_link": "https://meet.google.com/psy-08-meet"
   },
@@ -202,7 +202,7 @@
     "bio": {"about": "Доброго дня. Допомагаю людям долати глибокі життєві кризи та знаходити сенси там, де здається, що все втрачено.", "approach": "НМУ ім. О.О. Богомольця. Психоаналітичний підхід. Освіта перевірена.", "scope": "Конфлікти з батьками чи дітьми, тиск з боку сім'ї, проблеми у взаєминах, пригніченість та втрата сенсу."},
     "bio_eng": {"about": "Good day. I help people overcome deep life crises and find meaning where it seems that everything is lost.", "approach": "Bogomolets National Medical University. Psychoanalytic approach. Education verified.", "scope": "Conflicts with parents or children, pressure from the family, relationship problems, low mood and loss of meaning."},
     "certificates": ["НМУ ім. О.О. Богомольця", "Диплом психотерапевта-психоаналітика"],
-    "reviews": [{"author": "Марина К.", "age": 26, "topic_tag": "Сім'я та батьківство", "rating": 5, "verified": true, "text": "Глибокий розбір моїх дитячих сценаріїв, дуже вдячна."}],
+    "reviews": [{"id": "3b1a90b9-ed5e-5b0f-8672-2e664a31eaab", "author": "Марина К.", "avatar_url": null, "created_at": "2026-06-02", "topic_id": "family", "age": 26, "rating": 5, "verified": true, "text": "Глибокий розбір моїх дитячих сценаріїв, дуже вдячна."}],
     "mock_slots": ["12:30", "18:00"],
     "meet_link": "https://meet.google.com/psy-09-meet"
   },
@@ -225,7 +225,7 @@
     "bio": {"about": "Вітаю. Працюю доказовими методами терапії. Навчаю, як змінити деструктивні думки на конструктивну поведінку.", "approach": "ДНУ ім. Олеся Гончара. Акредитований КБТ-спеціаліст. Освіта перевірена.", "scope": "Порівняння себе з іншими, самокритика, неспокій, прокрастинація, важкість довести справу до кінця."},
     "bio_eng": {"about": "Hello. I work with evidence-based methods of therapy. I teach how to turn destructive thoughts into constructive behavior.", "approach": "Oles Honchar Dnipro National University. Accredited CBT specialist. Education verified.", "scope": "Comparing yourself with others, self-criticism, restlessness, procrastination, difficulty finishing what you start."},
     "certificates": ["ДНУ ім. Олеся Гончара", "Сертифікат акредитованого КБТ-фахівця"],
-    "reviews": [{"author": "Андрій Т.", "age": 31, "topic_tag": "Мотивація", "rating": 5, "verified": true, "text": "Поборов прокрастинацію завдяки практичним домашнім завданням."}],
+    "reviews": [{"id": "2b910fbb-d99c-537f-82f9-59c755164858", "author": "Андрій Т.", "avatar_url": null, "created_at": "2026-05-20", "topic_id": "motivation", "age": 31, "rating": 5, "verified": true, "text": "Поборов прокрастинацію завдяки практичним домашнім завданням."}],
     "mock_slots": ["15:00", "14:30"],
     "meet_link": "https://meet.google.com/psy-10-meet"
   },
@@ -248,7 +248,7 @@
     "bio": {"about": "Вітаю! Допомагаю прожити важкі емоції тут і зараз, розставити межі у стосунках і повернути любов до себе.", "approach": "КНУ ім. Т. Шевченка. Гештальт-консультант. Освіта перевірена.", "scope": "Складнощі з довірою до партнера, невпевненість у собі, відчуття самотності, брак соціальних зв'язків."},
     "bio_eng": {"about": "Hello! I help you live through difficult emotions here and now, set boundaries in relationships and return love for yourself.", "approach": "Taras Shevchenko National University of Kyiv. Gestalt counselor. Education verified.", "scope": "Difficulty trusting a partner, insecurity, a feeling of loneliness, a lack of social connections."},
     "certificates": ["КНУ ім. Т. Шевченка", "Сертифікат гештальт-консультанта"],
-    "reviews": [{"author": "Ірина С.", "age": 24, "topic_tag": "Стосунки", "rating": 5, "verified": true, "text": "Чудовий спеціаліст, дуже комфортно на сесіях."}],
+    "reviews": [{"id": "38d9d6ef-62d6-51e1-9c8a-ff8f9757851b", "author": "Ірина С.", "avatar_url": null, "created_at": "2026-05-07", "topic_id": "relationship", "age": 24, "rating": 5, "verified": true, "text": "Чудовий спеціаліст, дуже комфортно на сесіях."}],
     "mock_slots": ["09:00", "13:00"],
     "meet_link": "https://meet.google.com/psy-11-meet"
   },
@@ -271,7 +271,7 @@
     "bio": {"about": "Доброго вечора. Працюю з ситуаціями, коли потрібна оперативна психологічна підтримка та стабілізація стану.", "approach": "ВНУ ім. Лесі Українки. Кризова психологія. Освіта перевірена.", "scope": "Тиск, багато задач одночасно, не можу заспокоїтись, розлади сну, прокидання вночі через неспокій."},
     "bio_eng": {"about": "Good evening. I work with situations that require prompt psychological support and stabilization of your condition.", "approach": "Lesya Ukrainka Volyn National University. Crisis psychology. Education verified.", "scope": "Pressure, many tasks at once, cannot calm down, sleep disorders, waking up at night because of anxiety."},
     "certificates": ["ВНУ ім. Лесі Українки", "Сертифікат з кризового консультування"],
-    "reviews": [{"author": "Олексій П.", "age": 29, "topic_tag": "Порушення сну", "rating": 5, "verified": true, "text": "Сон нормалізувався вже після кількох зустрічей."}],
+    "reviews": [{"id": "3db50433-8e3c-5bcd-b303-de86e759e2f8", "author": "Олексій П.", "avatar_url": null, "created_at": "2026-04-24", "topic_id": "sleep", "age": 29, "rating": 5, "verified": true, "text": "Сон нормалізувався вже після кількох зустрічей."}],
     "mock_slots": ["21:00", "16:00"],
     "meet_link": "https://meet.google.com/psy-12-meet"
   },
@@ -294,7 +294,7 @@
     "bio": {"about": "Вітаю вас. Робота зі мною допоможе знайти внутрішнє джерело сили та вийти з порожнього кола втоми й смутку.", "approach": "Прикарпатський НУ ім. В. Стефаника. Схема-терапія. Освіта перевірена.", "scope": "Нічого не радує, цинізм щодо роботи, \"не знаю, хто я\", пошук сенсу життя, відчуття порожнечі."},
     "bio_eng": {"about": "Hello. Working with me will help you find an inner source of strength and break out of the empty circle of fatigue and sadness.", "approach": "Vasyl Stefanyk Precarpathian National University. Schema therapy. Education verified.", "scope": "Nothing brings joy, cynicism about work, \"I don't know who I am\", a search for the meaning of life, a feeling of emptiness."},
     "certificates": ["Прикарпатський НУ ім. В. Стефаника", "Сертифікат зі схема-терапії"],
-    "reviews": [{"author": "Марина К.", "age": 26, "topic_tag": "Вигорання", "rating": 5, "verified": true, "text": "Дуже допомогла розібратися у власних пріоритетах."}],
+    "reviews": [{"id": "72f6a666-6fbb-56b6-b27b-f67ea14ddaa0", "author": "Марина К.", "avatar_url": null, "created_at": "2026-04-11", "topic_id": "burnout", "age": 26, "rating": 5, "verified": true, "text": "Дуже допомогла розібратися у власних пріоритетах."}],
     "mock_slots": ["10:30", "15:30"],
     "meet_link": "https://meet.google.com/psy-13-meet"
   },
@@ -317,7 +317,7 @@
     "bio": {"about": "Вітаю! Допомагаю молодим фахівцям впоратися з першим вигоранням та навчитися працювати без шкоди для здоров'я.", "approach": "СумДУ. Когнітивно-поведінковий підхід. Освіта перевірена.", "scope": "Страх змінити роботу, лінь, брак мотивації, дедлайни, перевантаження на робочому місці."},
     "bio_eng": {"about": "Hello! I help young professionals cope with their first burnout and learn to work without harming their health.", "approach": "Sumy State University. Cognitive behavioral approach. Education verified.", "scope": "Fear of changing jobs, laziness, lack of motivation, deadlines, overload at the workplace."},
     "certificates": ["СумДУ (Психологія)", "Сертифікат КБТ-практика"],
-    "reviews": [{"author": "Андрій Т.", "age": 31, "topic_tag": "Кар'єра", "rating": 5, "verified": true, "text": "Чудовий фахівець для тих, хто вигорів на роботі."}],
+    "reviews": [{"id": "bbf5727f-2e86-551b-965a-fcfd970a012f", "author": "Андрій Т.", "avatar_url": null, "created_at": "2026-09-15", "topic_id": "work_career", "age": 31, "rating": 5, "verified": true, "text": "Чудовий фахівець для тих, хто вигорів на роботі."}],
     "mock_slots": ["17:00", "19:00"],
     "meet_link": "https://meet.google.com/psy-14-meet"
   },
@@ -340,7 +340,7 @@
     "bio": {"about": "Доброго дня. Надаю підтримку під час важких сімейних та особистісних розривів.", "approach": "ЧНУ ім. Б. Хмельницького. Системна сімейна терапія. Освіта перевірена.", "scope": "Смерть близьких, розрив стосунків, пережите насильство, важко змиритись із втратою."},
     "bio_eng": {"about": "Good day. I provide support during difficult family and personal breakups.", "approach": "Bohdan Khmelnytsky Cherkasy National University. Systemic family therapy. Education verified.", "scope": "Death of loved ones, breakup of a relationship, experienced violence, difficulty accepting a loss."},
     "certificates": ["ЧНУ ім. Б. Хмельницького", "Сертифікат з системної сімейної терапії"],
-    "reviews": [{"author": "Ірина С.", "age": 24, "topic_tag": "Горе та втрата", "rating": 5, "verified": true, "text": "Дуже вдячна за емпатію та допомогу у важкий період."}],
+    "reviews": [{"id": "d41c53ef-494a-5388-9dd1-8796a0241203", "author": "Ірина С.", "avatar_url": null, "created_at": "2026-09-02", "topic_id": "grief", "age": 24, "rating": 5, "verified": true, "text": "Дуже вдячна за емпатію та допомогу у важкий період."}],
     "mock_slots": ["12:00", "17:30"],
     "meet_link": "https://meet.google.com/psy-15-meet"
   },
@@ -363,7 +363,7 @@
     "bio": {"about": "Доброго дня. Допомагаю побудувати раціональний підхід до власних страхів та здобути впевненість у прийнятті рішень.", "approach": "ЖДУ ім. Івана Франка. Сертифікований КБТ-фахівець. Освіта перевірена.", "scope": "Тривога, страх, невпевненість у собі, роздратованість, неможливість стримати емоції."},
     "bio_eng": {"about": "Good day. I help you build a rational approach to your own fears and gain confidence in making decisions.", "approach": "Ivan Franko Zhytomyr State University. Certified CBT specialist. Education verified.", "scope": "Anxiety, fear, insecurity, irritability, inability to hold back emotions."},
     "certificates": ["ЖДУ ім. Івана Франка", "Сертифікат КБТ-фахівця"],
-    "reviews": [{"author": "Олексій П.", "age": 29, "topic_tag": "Тривожність", "rating": 5, "verified": true, "text": "Швидко і по суті. Тривога значно зменшилась."}],
+    "reviews": [{"id": "40565572-02ec-54b6-b558-9c08d44d287f", "author": "Олексій П.", "avatar_url": null, "created_at": "2026-08-20", "topic_id": "anxiety", "age": 29, "rating": 5, "verified": true, "text": "Швидко і по суті. Тривога значно зменшилась."}],
     "mock_slots": ["18:30", "11:00"],
     "meet_link": "https://meet.google.com/psy-16-meet"
   },
@@ -386,7 +386,7 @@
     "bio": {"about": "Вітаю. Спеціалізуюся на роботі з внутрішньою самотністю та відновленні емоційної цілісності після важкого досвіду.", "approach": "ПНПУ ім. В.Г. Короленка. Гештальт-терапія та арт-терапія. Освіта перевірена.", "scope": "Компульсивне переїдання, страх набрати вагу, нелюбов до себе, криза середнього віку."},
     "bio_eng": {"about": "Hello. I specialize in working with inner loneliness and restoring emotional wholeness after a difficult experience.", "approach": "V.G. Korolenko Poltava National Pedagogical University. Gestalt therapy and art therapy. Education verified.", "scope": "Compulsive overeating, fear of gaining weight, not loving yourself, midlife crisis."},
     "certificates": ["ПНПУ ім. В.Г. Короленка", "Сертифікат з гештальт-терапії та арт-терапії"],
-    "reviews": [{"author": "Марина К.", "age": 26, "topic_tag": "Харчова поведінка", "rating": 5, "verified": true, "text": "Допомогла прийняти своє тіло і зупинити зриви."}],
+    "reviews": [{"id": "1051daeb-963a-5dfd-bc6d-4761e9538744", "author": "Марина К.", "avatar_url": null, "created_at": "2026-08-07", "topic_id": "eating", "age": 26, "rating": 5, "verified": true, "text": "Допомогла прийняти своє тіло і зупинити зриви."}],
     "mock_slots": ["11:00", "16:30"],
     "meet_link": "https://meet.google.com/psy-17-meet"
   },
@@ -409,7 +409,7 @@
     "bio": {"about": "Вітаю! Надаю невідкладну емоційну допомогу при різких змінах у житті та важких життєвих потрясіннях.", "approach": "ЧНТУ. Екстрена та кризова психологія. Освіта перевірена.", "scope": "Травматичний досвід, важко забути подію, гострий тиск, панічні стани."},
     "bio_eng": {"about": "Hello! I provide urgent emotional help during sudden changes in life and severe life shocks.", "approach": "Chernihiv National University of Technology. Emergency and crisis psychology. Education verified.", "scope": "Traumatic experience, difficulty forgetting an event, acute pressure, panic states."},
     "certificates": ["ЧНТУ (Психологія)", "Сертифікат з екстреної психології"],
-    "reviews": [{"author": "Андрій Т.", "age": 31, "topic_tag": "Травма", "rating": 5, "verified": true, "text": "Дуже підтримав у кризовій ситуації."}],
+    "reviews": [{"id": "ebbc962f-af7a-5435-a348-cfa0bed4d3ba", "author": "Андрій Т.", "avatar_url": null, "created_at": "2026-07-25", "topic_id": "trauma", "age": 31, "rating": 5, "verified": true, "text": "Дуже підтримав у кризовій ситуації."}],
     "mock_slots": ["20:30", "09:30"],
     "meet_link": "https://meet.google.com/psy-18-meet"
   },
@@ -432,7 +432,7 @@
     "bio": {"about": "Доброго дня. Робота зі мною допомагає опрацювати глибинні сценарії поведінки, що заважають рухатися далі.", "approach": "КНУ ім. Т. Шевченка. Схема-терапія. Освіта перевірена.", "scope": "Постійна самокритика, конфлікти з родичами, немає сил, відчуття спустошеності від роботи."},
     "bio_eng": {"about": "Good day. Working with me helps you process deep behavioral scripts that keep you from moving forward.", "approach": "Taras Shevchenko National University of Kyiv. Schema therapy. Education verified.", "scope": "Constant self-criticism, conflicts with relatives, no strength, a feeling of emptiness from work."},
     "certificates": ["КНУ ім. Т. Шевченка", "Сертифікат зі схема-терапії"],
-    "reviews": [{"author": "Ірина С.", "age": 24, "topic_tag": "Самооцінка", "rating": 5, "verified": true, "text": "Зрозуміла корінь своїх невпевненостей."}],
+    "reviews": [{"id": "d3e7d563-a1f9-55b6-aef9-0fed7ef5c2d3", "author": "Ірина С.", "avatar_url": null, "created_at": "2026-07-12", "topic_id": "self_esteem", "age": 24, "rating": 5, "verified": true, "text": "Зрозуміла корінь своїх невпевненостей."}],
     "mock_slots": ["14:00", "18:00"],
     "meet_link": "https://meet.google.com/psy-19-meet"
   },
@@ -455,7 +455,7 @@
     "bio": {"about": "Вітаю вас. Багаторічний досвід дозволяє мені підбирати найбільш точні інструменти для виходу з найскладніших станів.", "approach": "НМУ ім. О.О. Богомольця. Доказова психотерапія. Освіта перевірена.", "scope": "Залежна поведінка, важко відмовитись від шкідливої звички, відсутність сил, постійний тиск."},
     "bio_eng": {"about": "Hello. Many years of experience allow me to choose the most precise tools for getting out of the most difficult states.", "approach": "Bogomolets National Medical University. Evidence-based psychotherapy. Education verified.", "scope": "Addictive behavior, difficulty giving up a harmful habit, lack of strength, constant pressure."},
     "certificates": ["НМУ ім. О.О. Богомольця", "Диплом психотерапевта"],
-    "reviews": [{"author": "Олексій П.", "age": 29, "topic_tag": "Залежна поведінка", "rating": 5, "verified": true, "text": "Високий професіоналізм та результативність."}],
+    "reviews": [{"id": "425ae66c-d0e9-5c89-84c5-3f0d9c850d82", "author": "Олексій П.", "avatar_url": null, "created_at": "2026-06-29", "topic_id": "addiction", "age": 29, "rating": 5, "verified": true, "text": "Високий професіоналізм та результативність."}],
     "mock_slots": ["10:00", "15:00"],
     "meet_link": "https://meet.google.com/psy-20-meet"
   },
@@ -478,7 +478,7 @@
     "bio": {"about": "Вітаю. Допомагаю дослідити глибинні причини повторюваних життєвих помилок та знайти власну ідентичність.", "approach": "НаУКМА. Психоаналітичний підхід. Освіта перевірена.", "scope": "Самотність у стосунках, проблеми з вихованням дітей, конфлікти з партнером, ізольованість."},
     "bio_eng": {"about": "Hello. I help you explore the deep causes of repeated life mistakes and find your own identity.", "approach": "National University of Kyiv-Mohyla Academy. Psychoanalytic approach. Education verified.", "scope": "Loneliness in relationships, problems with raising children, conflicts with a partner, isolation."},
     "certificates": ["НаУКМА", "Сертифікат з психоаналізу"],
-    "reviews": [{"author": "Марина К.", "age": 26, "topic_tag": "Стосунки", "rating": 5, "verified": true, "text": "Дуже глибокий підхід, розібралися у старих травмах."}],
+    "reviews": [{"id": "836b39e0-70cd-5170-a302-05fc72766c5a", "author": "Марина К.", "avatar_url": null, "created_at": "2026-06-16", "topic_id": "relationship", "age": 26, "rating": 5, "verified": true, "text": "Дуже глибокий підхід, розібралися у старих травмах."}],
     "mock_slots": ["16:30", "12:30"],
     "meet_link": "https://meet.google.com/psy-21-meet"
   },
@@ -501,7 +501,7 @@
     "bio": {"about": "Вітаю! Спеціалізуюся на роботі зі стресом у високотехнологічних галузях та поверненні продуктивності без шкоди для здоров'я.", "approach": "ХНУ ім. В.Н. Каразіна. Когнітивно-поведінковий підхід. Освіта перевірена.", "scope": "\"Не хочу нічого робити\", страх змінити роботу, прокрастинація, втрата мотивації на роботі."},
     "bio_eng": {"about": "Hello! I specialize in working with stress in high-tech industries and restoring productivity without harming your health.", "approach": "V.N. Karazin Kharkiv National University. Cognitive behavioral approach. Education verified.", "scope": "\"I don't want to do anything\", fear of changing jobs, procrastination, loss of motivation at work."},
     "certificates": ["ХНУ ім. В.Н. Каразіна", "Сертифікат КБТ-консультанта"],
-    "reviews": [{"author": "Андрій Т.", "age": 31, "topic_tag": "Вигорання", "rating": 5, "verified": true, "text": "Чудово розуміє болі айтівців та працівників сфери послуг."}],
+    "reviews": [{"id": "b5f9945d-0f56-511b-93b8-843845e1e3d9", "author": "Андрій Т.", "avatar_url": null, "created_at": "2026-06-03", "topic_id": "burnout", "age": 31, "rating": 5, "verified": true, "text": "Чудово розуміє болі айтівців та працівників сфери послуг."}],
     "mock_slots": ["15:00", "19:00"],
     "meet_link": "https://meet.google.com/psy-22-meet"
   },
@@ -524,7 +524,7 @@
     "bio": {"about": "Доброго дня. Створюю бережне середовище для проживання важких почуттів та відновлення балансу у житті.", "approach": "ДНУ ім. Олеся Гончара. Гештальт-терапія. Освіта перевірена.", "scope": "Постійний неспокій, сум без явної причини, погано сплю, не можу заснути від думок."},
     "bio_eng": {"about": "Good day. I create a caring environment for living through difficult feelings and restoring balance in life.", "approach": "Oles Honchar Dnipro National University. Gestalt therapy. Education verified.", "scope": "Constant restlessness, sadness without an obvious reason, sleeping badly, cannot fall asleep because of thoughts."},
     "certificates": ["ДНУ ім. Олеся Гончара", "Сертифікат гештальт-терапевта"],
-    "reviews": [{"author": "Ірина С.", "age": 24, "topic_tag": "Тривожність", "rating": 5, "verified": true, "text": "Дуже затишна атмосфера на сесіях."}],
+    "reviews": [{"id": "d45acfdb-106e-5a96-b482-d73403343f22", "author": "Ірина С.", "avatar_url": null, "created_at": "2026-05-21", "topic_id": "anxiety", "age": 24, "rating": 5, "verified": true, "text": "Дуже затишна атмосфера на сесіях."}],
     "mock_slots": ["13:00", "17:00"],
     "meet_link": "https://meet.google.com/psy-23-meet"
   },
@@ -547,7 +547,7 @@
     "bio": {"about": "Вітаю! Працюю із запитами, що потребують термінового включення, стабілізації та зниження рівня тривоги.", "approach": "ТНПУ ім. Г. Якубова. Екстрена психологія. Освіта перевірена.", "scope": "Агресія, злість, важкі життєві потрясіння, не встигаю, відчуття, що \"усе валиться\"."},
     "bio_eng": {"about": "Hello! I work with requests that need immediate engagement, stabilization and a lower level of anxiety.", "approach": "Ternopil National Pedagogical University (named after H. Yakubov). Emergency psychology. Education verified.", "scope": "Aggression, anger, severe life shocks, I can't keep up, a feeling that \"everything is falling apart\"."},
     "certificates": ["ТНПУ ім. Г. Якубова", "Сертифікат з екстреної психології"],
-    "reviews": [{"author": "Олексій П.", "age": 29, "topic_tag": "Гнів та агресія", "rating": 5, "verified": true, "text": "Допоміг взяти емоції під контроль."}],
+    "reviews": [{"id": "e627d615-ba7d-567a-9cc6-0ddbfcccda78", "author": "Олексій П.", "avatar_url": null, "created_at": "2026-05-08", "topic_id": "anger", "age": 29, "rating": 5, "verified": true, "text": "Допоміг взяти емоції під контроль."}],
     "mock_slots": ["19:00", "10:30"],
     "meet_link": "https://meet.google.com/psy-24-meet"
   },
@@ -570,7 +570,7 @@
     "bio": {"about": "Доброго дня. Допомагаю сформувати здорове ставлення до себе та навчитися обирати власний комфорт без відчуття провини.", "approach": "КНУ ім. Т. Шевченка. Схема-терапія. Освіта перевірена.", "scope": "Не люблю себе, складні стосунки з їжею, конфлікти з коханою людиною, проблема довіри."},
     "bio_eng": {"about": "Good day. I help you form a healthy attitude toward yourself and learn to choose your own comfort without guilt.", "approach": "Taras Shevchenko National University of Kyiv. Schema therapy. Education verified.", "scope": "I don't love myself, a difficult relationship with food, conflicts with a loved one, trust issues."},
     "certificates": ["КНУ ім. Т. Шевченка", "Сертифікат зі схема-терапії"],
-    "reviews": [{"author": "Марина К.", "age": 26, "topic_tag": "Самооцінка", "rating": 5, "verified": true, "text": "Навчилася говорити \"ні\" без почуття провини."}],
+    "reviews": [{"id": "321408ac-bcd4-5d8b-993c-3c09110270f7", "author": "Марина К.", "avatar_url": null, "created_at": "2026-04-25", "topic_id": "self_esteem", "age": 26, "rating": 5, "verified": true, "text": "Навчилася говорити \"ні\" без почуття провини."}],
     "mock_slots": ["12:00", "16:00"],
     "meet_link": "https://meet.google.com/psy-25-meet"
   },
@@ -593,7 +593,7 @@
     "bio": {"about": "Вітаю! Практичний підхід до подолання повсякденного стресу, відновлення концентрації та енергії.", "approach": "ЧНУ ім. Ю. Федьковича. КБТ-практик. Освіта перевірена.", "scope": "Перевантаження на роботі, дедлайни, апатія до роботи, постійне хвилювання та тремтіння."},
     "bio_eng": {"about": "Hello! A practical approach to overcoming everyday stress and restoring concentration and energy.", "approach": "Yuriy Fedkovych Chernivtsi National University. CBT practitioner. Education verified.", "scope": "Work overload, deadlines, apathy toward work, constant worry and trembling."},
     "certificates": ["ЧНУ ім. Ю. Федьковича", "Сертифікат КБТ-практика"],
-    "reviews": [{"author": "Андрій Т.", "age": 31, "topic_tag": "Стрес", "rating": 5, "verified": true, "text": "Дуже практичні поради для зняття щоденного стресу."}],
+    "reviews": [{"id": "3f3695e0-04d5-5260-ad42-4b6611197b4a", "author": "Андрій Т.", "avatar_url": null, "created_at": "2026-04-12", "topic_id": "stress", "age": 31, "rating": 5, "verified": true, "text": "Дуже практичні поради для зняття щоденного стресу."}],
     "mock_slots": ["17:30", "14:00"],
     "meet_link": "https://meet.google.com/psy-26-meet"
   },
@@ -616,7 +616,7 @@
     "bio": {"about": "Вітаю. Спеціалізуюся на глибокій роботі з почуттям самотності та поверненні інтересу до життя після важких подій.", "approach": "УКУ (Практична психологія). Гештальт-терапія. Освіта перевірена.", "scope": "Відчуття самотності, смерть близької людини, горе, пригніченість, \"не бачу сенсу\"."},
     "bio_eng": {"about": "Hello. I specialize in deep work with the feeling of loneliness and in bringing back interest in life after difficult events.", "approach": "Ukrainian Catholic University (Practical Psychology). Gestalt therapy. Education verified.", "scope": "A feeling of loneliness, death of a loved one, grief, low mood, \"I don't see the point\"."},
     "certificates": ["УКУ (Практична психологія)", "Сертифікат гештальт-терапевта"],
-    "reviews": [{"author": "Ірина С.", "age": 24, "topic_tag": "Самотність", "rating": 5, "verified": true, "text": "Неймовірно підтримлива терапевтка."}],
+    "reviews": [{"id": "74f7f3ca-32d4-5622-abf6-39cfd54189e1", "author": "Ірина С.", "avatar_url": null, "created_at": "2026-09-16", "topic_id": "loneliness", "age": 24, "rating": 5, "verified": true, "text": "Неймовірно підтримлива терапевтка."}],
     "mock_slots": ["16:30", "19:30"],
     "meet_link": "https://meet.google.com/psy-27-meet"
   },
@@ -639,7 +639,7 @@
     "bio": {"about": "Доброго дня. Структурована доказова допомога для подолання складних емоційних станів і тривожних розладів.", "approach": "НПУ ім. М.П. Драгоманова. Сертифікований КБТ-фахівець. Освіта перевірена.", "scope": "Страх, паніка, безсоння, кошмари, порушений режим сну, відчуття тиску та дедлайнів."},
     "bio_eng": {"about": "Good day. Structured, evidence-based help for overcoming difficult emotional states and anxiety disorders.", "approach": "Drahomanov National Pedagogical University. Certified CBT specialist. Education verified.", "scope": "Fear, panic, insomnia, nightmares, a disrupted sleep pattern, a feeling of pressure and deadlines."},
     "certificates": ["НПУ ім. М.П. Драгоманова", "Сертифікат КБТ-фахівця"],
-    "reviews": [{"author": "Олексій П.", "age": 29, "topic_tag": "Тривожність", "rating": 5, "verified": true, "text": "Чудовий фахівець із роботи з тривогою."}],
+    "reviews": [{"id": "69e1454b-443b-54fe-8530-6bb774da6232", "author": "Олексій П.", "avatar_url": null, "created_at": "2026-09-03", "topic_id": "anxiety", "age": 29, "rating": 5, "verified": true, "text": "Чудовий фахівець із роботи з тривогою."}],
     "mock_slots": ["09:30", "13:30"],
     "meet_link": "https://meet.google.com/psy-28-meet"
   },
@@ -662,7 +662,7 @@
     "bio": {"about": "Вітаю! Допомагаю знайти баланс між роботою та особистим життям і позбутися синдрому самозванця.", "approach": "ЛНУ ім. Івана Франка. Когнітивний підхід. Освіта перевірена.", "scope": "Сумніви у своїх силах, професійне самовизначення, відкладання справ, лінь."},
     "bio_eng": {"about": "Hello! I help you find a balance between work and personal life and get rid of impostor syndrome.", "approach": "Ivan Franko National University of Lviv. Cognitive approach. Education verified.", "scope": "Doubts about your abilities, professional self-determination, procrastination, laziness."},
     "certificates": ["ЛНУ ім. Івана Франка", "Сертифікат з когнітивного підходу"],
-    "reviews": [{"author": "Марина К.", "age": 26, "topic_tag": "Самооцінка", "rating": 5, "verified": true, "text": "Позбулася синдрому самозванця завдяки сесіям."}],
+    "reviews": [{"id": "f7eddccb-f775-5b29-8a5d-2411e1565529", "author": "Марина К.", "avatar_url": null, "created_at": "2026-08-21", "topic_id": "self_esteem", "age": 26, "rating": 5, "verified": true, "text": "Позбулася синдрому самозванця завдяки сесіям."}],
     "mock_slots": ["15:30", "18:00"],
     "meet_link": "https://meet.google.com/psy-29-meet"
   },
@@ -685,7 +685,7 @@
     "bio": {"about": "Вітаю. Екстрена та короткострокова допомога в ситуаціях гострого конфлікту чи важкого життєвого вибору.", "approach": "КПІ ім. Ігоря Сікорського. Екстрена психологія. Освіта перевірена.", "scope": "Сварки в сім'ї, спалахи гніву, агресія, розлучення, розрив стосунків з коханою людиною."},
     "bio_eng": {"about": "Hello. Emergency and short-term help in situations of acute conflict or a difficult life choice.", "approach": "Igor Sikorsky Kyiv Polytechnic Institute. Emergency psychology. Education verified.", "scope": "Family quarrels, outbursts of anger, aggression, divorce, a breakup with a loved one."},
     "certificates": ["КПІ ім. Ігоря Сікорського", "Сертифікат з кризової психології"],
-    "reviews": [{"author": "Андрій Т.", "age": 31, "topic_tag": "Стосунки", "rating": 5, "verified": true, "text": "Допоміг пережити складний розрив."}],
+    "reviews": [{"id": "bf1a10ce-a8f5-5c6e-8885-c4f0e360f045", "author": "Андрій Т.", "avatar_url": null, "created_at": "2026-08-08", "topic_id": "relationship", "age": 31, "rating": 5, "verified": true, "text": "Допоміг пережити складний розрив."}],
     "mock_slots": ["18:00", "20:00"],
     "meet_link": "https://meet.google.com/psy-30-meet"
   },
@@ -708,7 +708,7 @@
     "bio": {"about": "Вітаю вас. Робота зі мною спрямована на глибокі та тривалі зміни, відновлення сенсу та любові до себе.", "approach": "КНУ ім. Т. Шевченка. Схема-терапія та Гештальт-підхід. Освіта перевірена.", "scope": "Пригнічений стан, складний життєвий перехід, пошук сенсу життя, відчуття власної нікчемності."},
     "bio_eng": {"about": "Hello. Working with me is aimed at deep and lasting change, restoring meaning and love for yourself.", "approach": "Taras Shevchenko National University of Kyiv. Schema therapy and Gestalt approach. Education verified.", "scope": "A depressed state, a difficult life transition, a search for the meaning of life, a feeling of worthlessness."},
     "certificates": ["КНУ ім. Т. Шевченка", "Сертифікат зі схема-терапії"],
-    "reviews": [{"author": "Марина К.", "age": 26, "topic_tag": "Пригніченість", "rating": 5, "verified": true, "text": "Неймовірна терапевтка, яка повернула смак до життя."}],
+    "reviews": [{"id": "648aded4-55b1-554e-92f4-d82e04cbe6d0", "author": "Марина К.", "avatar_url": null, "created_at": "2026-07-26", "topic_id": "low_mood", "age": 26, "rating": 5, "verified": true, "text": "Неймовірна терапевтка, яка повернула смак до життя."}],
     "mock_slots": ["11:30", "15:30"],
     "meet_link": "https://meet.google.com/psy-31-meet"
   },
@@ -731,7 +731,7 @@
     "bio": {"about": "Доброго дня! Навчаю роботі з тривожними думками та ефективним алгоритмам подолання вигорання.", "approach": "СНУ ім. В. Даля. Доказова психотерапія. Освіта перевірена.", "scope": "Втома від роботи, панічні атаки, \"не можу заспокоїтись\", брак мотивації, прокрастинація."},
     "bio_eng": {"about": "Good day! I teach how to work with anxious thoughts and effective algorithms for overcoming burnout.", "approach": "Volodymyr Dahl East Ukrainian National University. Evidence-based psychotherapy. Education verified.", "scope": "Tiredness from work, panic attacks, \"I can't calm down\", lack of motivation, procrastination."},
     "certificates": ["СНУ ім. В. Даля", "Сертифікат КБТ-консультанта"],
-    "reviews": [{"author": "Олексій П.", "age": 29, "topic_tag": "Вигорання", "rating": 5, "verified": true, "text": "Практичний підхід і чіткі плани дій."}],
+    "reviews": [{"id": "b43d43c9-f95b-5a8e-a1f5-58d00af4d37f", "author": "Олексій П.", "avatar_url": null, "created_at": "2026-07-13", "topic_id": "burnout", "age": 29, "rating": 5, "verified": true, "text": "Практичний підхід і чіткі плани дій."}],
     "mock_slots": ["18:00", "12:30"],
     "meet_link": "https://meet.google.com/psy-32-meet"
   },
@@ -754,7 +754,7 @@
     "bio": {"about": "Вітаю! Допомагаю побудувати щирі та безпечні взаємини з собою та найближчим оточенням.", "approach": "ОНУ ім. І.І. Мечникова. Гештальт-підхід. Освіта перевірена.", "scope": "Конфлікти з партнером, роздратованість у спілкуванні з дітьми, тиск з боку сім'ї."},
     "bio_eng": {"about": "Hello! I help you build sincere and safe relationships with yourself and your closest circle.", "approach": "I.I. Mechnikov Odesa National University. Gestalt approach. Education verified.", "scope": "Conflicts with a partner, irritability when talking with children, pressure from the family."},
     "certificates": ["ОНУ ім. І.І. Мечникова", "Сертифікат гештальт-терапевта"],
-    "reviews": [{"author": "Ірина С.", "age": 24, "topic_tag": "Стосунки", "rating": 5, "verified": true, "text": "Змогла налагодити контакт із батьками."}],
+    "reviews": [{"id": "459ae290-493e-5093-93e5-3d34cb86078f", "author": "Ірина С.", "avatar_url": null, "created_at": "2026-06-30", "topic_id": "relationship", "age": 24, "rating": 5, "verified": true, "text": "Змогла налагодити контакт із батьками."}],
     "mock_slots": ["14:30", "17:30"],
     "meet_link": "https://meet.google.com/psy-33-meet"
   },
@@ -777,7 +777,7 @@
     "bio": {"about": "Вітаю. Експертна допомога у вирішенні складних та затяжних емоційних станів.", "approach": "НМУ ім. О.О. Богомольця. Психотерапія. Освіта перевірена.", "scope": "Травматичний досвід, алкогольна або ігрова залежність, глибока апатія до всього."},
     "bio_eng": {"about": "Hello. Expert help with complex and prolonged emotional states.", "approach": "Bogomolets National Medical University. Psychotherapy. Education verified.", "scope": "Traumatic experience, alcohol or gambling addiction, deep apathy toward everything."},
     "certificates": ["НМУ ім. О.О. Богомольця", "Диплом психотерапевта"],
-    "reviews": [{"author": "Андрій Т.", "age": 31, "topic_tag": "Травма", "rating": 5, "verified": true, "text": "Справжній професіонал із великим досвідом."}],
+    "reviews": [{"id": "4de29785-f34e-58b3-b377-2b1b4e2c1e4d", "author": "Андрій Т.", "avatar_url": null, "created_at": "2026-06-17", "topic_id": "trauma", "age": 31, "rating": 5, "verified": true, "text": "Справжній професіонал із великим досвідом."}],
     "mock_slots": ["10:00", "14:00"],
     "meet_link": "https://meet.google.com/psy-34-meet"
   },
@@ -800,7 +800,7 @@
     "bio": {"about": "Вітаю! М'яка підтримка у формуванні самоповаги та подоланні повсякденної напруги.", "approach": "КНУ ім. Т. Шевченка. Гуманістичний підхід. Освіта перевірена.", "scope": "Низька самооцінка, страх оцінки іншими, перевантаження на роботі, важко почати справу."},
     "bio_eng": {"about": "Hello! Gentle support in building self-respect and overcoming everyday tension.", "approach": "Taras Shevchenko National University of Kyiv. Humanistic approach. Education verified.", "scope": "Low self-esteem, fear of being judged by others, work overload, difficulty starting a task."},
     "certificates": ["КНУ ім. Т. Шевченка", "Сертифікат з гуманістичної психології"],
-    "reviews": [{"author": "Марина К.", "age": 26, "topic_tag": "Самооцінка", "rating": 5, "verified": true, "text": "Дуже приємна і затишна атмосфера."}],
+    "reviews": [{"id": "f786b339-952d-58e7-b4d7-5f9d78782c3e", "author": "Марина К.", "avatar_url": null, "created_at": "2026-06-04", "topic_id": "self_esteem", "age": 26, "rating": 5, "verified": true, "text": "Дуже приємна і затишна атмосфера."}],
     "mock_slots": ["16:00", "18:30"],
     "meet_link": "https://meet.google.com/psy-35-meet"
   },
@@ -823,7 +823,7 @@
     "bio": {"about": "Доброго дня. Допомагаю повертати працездатність та відчуття безпеки в умовах невизначеності.", "approach": "ХНУ ім. В.Н. Каразіна. Кризова психологія. Освіта перевірена.", "scope": "Виснаження, перевантаження задач, криза середнього віку, \"не знаю, куди рухатися\"."},
     "bio_eng": {"about": "Good day. I help restore working capacity and a sense of safety in conditions of uncertainty.", "approach": "V.N. Karazin Kharkiv National University. Crisis psychology. Education verified.", "scope": "Exhaustion, task overload, midlife crisis, \"I don't know where to go\"."},
     "certificates": ["ХНУ ім. В.Н. Каразіна", "Сертифікат з кризової психології"],
-    "reviews": [{"author": "Олексій П.", "age": 29, "topic_tag": "Вигорання", "rating": 5, "verified": true, "text": "Допоміг вийти з емоційного глухого кута."}],
+    "reviews": [{"id": "f95940c1-e56c-5830-9b79-4bcb76baec2b", "author": "Олексій П.", "avatar_url": null, "created_at": "2026-05-22", "topic_id": "burnout", "age": 29, "rating": 5, "verified": true, "text": "Допоміг вийти з емоційного глухого кута."}],
     "mock_slots": ["17:00", "19:30"],
     "meet_link": "https://meet.google.com/psy-36-meet"
   },
@@ -846,7 +846,7 @@
     "bio": {"about": "Вітаю! Створюю безпечний простір для пізнання своїх емоцій та побудови здорових кордонів.", "approach": "ЧНУ ім. Б. Хмельницького. Гештальт-терапія. Освіта перевірена.", "scope": "Складнощі у стосунках, почуття провини, низька самооцінка, хвилювання та тривога."},
     "bio_eng": {"about": "Hello! I create a safe space for getting to know your emotions and building healthy boundaries.", "approach": "Bohdan Khmelnytsky Cherkasy National University. Gestalt therapy. Education verified.", "scope": "Difficulties in relationships, feelings of guilt, low self-esteem, worry and anxiety."},
     "certificates": ["ЧНУ ім. Б. Хмельницького", "Сертифікат гештальт-консультанта"],
-    "reviews": [{"author": "Ірина С.", "age": 24, "topic_tag": "Стосунки", "rating": 5, "verified": true, "text": "Чудова консультантка, відчувається турбота."}],
+    "reviews": [{"id": "cf0e27f7-79da-545e-aa90-b279c64beead", "author": "Ірина С.", "avatar_url": null, "created_at": "2026-05-09", "topic_id": "relationship", "age": 24, "rating": 5, "verified": true, "text": "Чудова консультантка, відчувається турбота."}],
     "mock_slots": ["20:00", "11:30"],
     "meet_link": "https://meet.google.com/psy-37-meet"
   },
@@ -869,7 +869,7 @@
     "bio": {"about": "Вітаю. Доказові техніки для подолання страху оцінки, хронічної тривожності та напруження.", "approach": "СумДУ. Акредитований КБТ-фахівець. Освіта перевірена.", "scope": "Страх виступати або змінити роботу, стрес від дедлайнів, постійний неспокій."},
     "bio_eng": {"about": "Hello. Evidence-based techniques for overcoming fear of judgment, chronic anxiety and tension.", "approach": "Sumy State University. Accredited CBT specialist. Education verified.", "scope": "Fear of public speaking or changing jobs, stress from deadlines, constant restlessness."},
     "certificates": ["СумДУ", "Сертифікат КБТ-фахівця"],
-    "reviews": [{"author": "Андрій Т.", "age": 31, "topic_tag": "Тривожність", "rating": 5, "verified": true, "text": "Поборов страх публічних виступів."}],
+    "reviews": [{"id": "4273df87-2481-5f81-a9e8-2732c1e4e2a4", "author": "Андрій Т.", "avatar_url": null, "created_at": "2026-04-26", "topic_id": "anxiety", "age": 31, "rating": 5, "verified": true, "text": "Поборов страх публічних виступів."}],
     "mock_slots": ["13:30", "16:30"],
     "meet_link": "https://meet.google.com/psy-38-meet"
   },
@@ -892,7 +892,7 @@
     "bio": {"about": "Доброго дня. Допомагаю змінити застарілі життєві паттерни, що призводять до апатії й втоми.", "approach": "НПУ ім. М.П. Драгоманова. Схема-терапія. Освіта перевірена.", "scope": "Компульсивне переїдання, невдоволення тілом, самокритика, сум без причини."},
     "bio_eng": {"about": "Good day. I help you change outdated life patterns that lead to apathy and fatigue.", "approach": "Drahomanov National Pedagogical University. Schema therapy. Education verified.", "scope": "Compulsive overeating, dissatisfaction with your body, self-criticism, sadness without a reason."},
     "certificates": ["НПУ ім. М.П. Драгоманова", "Сертифікат зі схема-терапії"],
-    "reviews": [{"author": "Марина К.", "age": 26, "topic_tag": "Харчова поведінка", "rating": 5, "verified": true, "text": "Дуже допомогла у питаннях прийняття себе."}],
+    "reviews": [{"id": "38ed7a2a-c796-533f-93bd-4b034721a9b8", "author": "Марина К.", "avatar_url": null, "created_at": "2026-04-13", "topic_id": "eating", "age": 26, "rating": 5, "verified": true, "text": "Дуже допомогла у питаннях прийняття себе."}],
     "mock_slots": ["12:30", "15:00"],
     "meet_link": "https://meet.google.com/psy-39-meet"
   },
@@ -915,7 +915,7 @@
     "bio": {"about": "Вітаю! Практична допомога новачкам у терапії: пошук ресурсу, робота зі стресом і втомою.", "approach": "ДНУ ім. Олеся Гончара. Загальна психологія. Освіта перевірена.", "scope": "Втома від роботи, важко довести справу до кінця, тривога через дедлайни."},
     "bio_eng": {"about": "Hello! Practical help for newcomers to therapy: finding resources, working with stress and fatigue.", "approach": "Oles Honchar Dnipro National University. General psychology. Education verified.", "scope": "Tiredness from work, difficulty finishing what you start, anxiety about deadlines."},
     "certificates": ["ДНУ ім. Олеся Гончара", "Диплом психолога"],
-    "reviews": [{"author": "Олексій П.", "age": 29, "topic_tag": "Вигорання", "rating": 5, "verified": true, "text": "Легко та комфортно на сесіях."}],
+    "reviews": [{"id": "d4b70c35-4b8e-5392-895e-629e87deb086", "author": "Олексій П.", "avatar_url": null, "created_at": "2026-09-17", "topic_id": "burnout", "age": 29, "rating": 5, "verified": true, "text": "Легко та комфортно на сесіях."}],
     "mock_slots": ["19:30", "13:00"],
     "meet_link": "https://meet.google.com/psy-40-meet"
   },
@@ -938,7 +938,7 @@
     "bio": {"about": "Доброго дня. Навчаю здорової комунікації з собою та партнером на основі доказових методик.", "approach": "ЛНУ ім. Івана Франка. Когнітивно-поведінкова терапія. Освіта перевірена.", "scope": "Страх втратити стосунки, тривожність у парі, тиск з боку батьків чи родичів."},
     "bio_eng": {"about": "Good day. I teach healthy communication with yourself and your partner based on evidence-based methods.", "approach": "Ivan Franko National University of Lviv. Cognitive behavioral therapy. Education verified.", "scope": "Fear of losing a relationship, anxiety in a couple, pressure from parents or relatives."},
     "certificates": ["ЛНУ ім. Івана Франка", "Сертифікат КБТ"],
-    "reviews": [{"author": "Ірина С.", "age": 24, "topic_tag": "Стосунки", "rating": 5, "verified": true, "text": "Допомогла розібратися у тривогах у стосунках."}],
+    "reviews": [{"id": "a72a0e67-4cc1-50dd-b7b0-cf71d7e7a91d", "author": "Ірина С.", "avatar_url": null, "created_at": "2026-09-04", "topic_id": "relationship", "age": 24, "rating": 5, "verified": true, "text": "Допомогла розібратися у тривогах у стосунках."}],
     "mock_slots": ["15:00", "18:00"],
     "meet_link": "https://meet.google.com/psy-41-meet"
   },
@@ -961,7 +961,7 @@
     "bio": {"about": "Вітаю! Забезпечую операційну психологічну підтримку під час важких подій і стресу.", "approach": "ВНУ ім. Лесі Українки. Кризова психологія. Освіта перевірена.", "scope": "Пережите потрясіння, спалахи гніву, відчуття, що \"все валиться\", агресія."},
     "bio_eng": {"about": "Hello! I provide operational psychological support during difficult events and stress.", "approach": "Lesya Ukrainka Volyn National University. Crisis psychology. Education verified.", "scope": "A recent shock, outbursts of anger, a feeling that \"everything is falling apart\", aggression."},
     "certificates": ["ВНУ ім. Лесі Українки", "Сертифікат з кризової психології"],
-    "reviews": [{"author": "Андрій Т.", "age": 31, "topic_tag": "Травма", "rating": 5, "verified": true, "text": "Дуже чітка та оперативна допомога."}],
+    "reviews": [{"id": "0ab77613-8cc9-5816-80f9-1caf257a64e2", "author": "Андрій Т.", "avatar_url": null, "created_at": "2026-08-22", "topic_id": "trauma", "age": 31, "rating": 5, "verified": true, "text": "Дуже чітка та оперативна допомога."}],
     "mock_slots": ["21:00", "18:00"],
     "meet_link": "https://meet.google.com/psy-42-meet"
   },
@@ -984,7 +984,7 @@
     "bio": {"about": "Вітаю вас. Глибока підтримка на шляху виходу з емоційної кризи та повернення смаку до життя.", "approach": "КНУ ім. Т. Шевченка. Сертифікований гештальт-терапевт. Освіта перевірена.", "scope": "Жалоба після втрати близкої людини, важка самотність, відсутність сил на життя."},
     "bio_eng": {"about": "Hello. Deep support on the way out of an emotional crisis and back to a taste for life.", "approach": "Taras Shevchenko National University of Kyiv. Certified Gestalt therapist. Education verified.", "scope": "Mourning after the loss of a loved one, severe loneliness, no strength for life."},
     "certificates": ["КНУ ім. Т. Шевченка", "Сертифікат гештальт-терапевта"],
-    "reviews": [{"author": "Марина К.", "age": 26, "topic_tag": "Горе та втрата", "rating": 5, "verified": true, "text": "Неймовірна підтримка у найтемніші часи."}],
+    "reviews": [{"id": "7c3cb18c-77da-5f65-81f7-37b3cbc8069e", "author": "Марина К.", "avatar_url": null, "created_at": "2026-08-09", "topic_id": "grief", "age": 26, "rating": 5, "verified": true, "text": "Неймовірна підтримка у найтемніші часи."}],
     "mock_slots": ["10:30", "14:30"],
     "meet_link": "https://meet.google.com/psy-43-meet"
   },
@@ -1007,7 +1007,7 @@
     "bio": {"about": "Вітаю! Практичні КБТ-техніки для повернення продуктивності та зняття повсякденної тривоги.", "approach": "ЖДУ ім. Івана Франка. Когнітивно-поведінкова терапія. Освіта перевірена.", "scope": "Відчуття виснаженості, не можу почати роботу, прокрастинація, робочий тиск."},
     "bio_eng": {"about": "Hello! Practical CBT techniques for returning productivity and relieving everyday anxiety.", "approach": "Ivan Franko Zhytomyr State University. Cognitive behavioral therapy. Education verified.", "scope": "A feeling of exhaustion, cannot start work, procrastination, work pressure."},
     "certificates": ["ЖДУ ім. Івана Франка", "Сертифікат КБТ"],
-    "reviews": [{"author": "Олексій П.", "age": 29, "topic_tag": "Стрес", "rating": 5, "verified": true, "text": "Чудові інструменти для роботи зі стресом."}],
+    "reviews": [{"id": "30e6d5c1-ced9-59a6-bc8c-239dd0060c1c", "author": "Олексій П.", "avatar_url": null, "created_at": "2026-07-27", "topic_id": "stress", "age": 29, "rating": 5, "verified": true, "text": "Чудові інструменти для роботи зі стресом."}],
     "mock_slots": ["16:00", "19:00"],
     "meet_link": "https://meet.google.com/psy-44-meet"
   },
@@ -1030,7 +1030,7 @@
     "bio": {"about": "Доброго дня. Допомагаю звільнитися від надмірної самокритики та відновити довіру до себе.", "approach": "ПНПУ ім. В.Г. Короленка. Схема-терапія. Освіта перевірена.", "scope": "Відчуття власної нікчемності, \"не знаю, хто я\", розрив стосунків, ревнощі."},
     "bio_eng": {"about": "Good day. I help you free yourself from excessive self-criticism and restore trust in yourself.", "approach": "V.G. Korolenko Poltava National Pedagogical University. Schema therapy. Education verified.", "scope": "A feeling of worthlessness, \"I don't know who I am\", breakup of a relationship, jealousy."},
     "certificates": ["ПНПУ ім. В.Г. Короленка", "Сертифікат зі схема-терапії"],
-    "reviews": [{"author": "Ірина С.", "age": 24, "topic_tag": "Самооцінка", "rating": 5, "verified": true, "text": "Дуже глибокий та дбайливий фахівець."}],
+    "reviews": [{"id": "a392d81e-a310-5e49-9388-c04c2eec7dfb", "author": "Ірина С.", "avatar_url": null, "created_at": "2026-07-14", "topic_id": "self_esteem", "age": 24, "rating": 5, "verified": true, "text": "Дуже глибокий та дбайливий фахівець."}],
     "mock_slots": ["17:00", "12:00"],
     "meet_link": "https://meet.google.com/psy-45-meet"
   },
@@ -1053,7 +1053,7 @@
     "bio": {"about": "Вітаю! Працюю із відновленням особистих ресурсів та подоланням синдрому самозванця.", "approach": "ЧНТУ. Практична психологія. Освіта перевірена.", "scope": "Невдоволення професією, вибір напрямку кар'єри, самокритика, виснаження."},
     "bio_eng": {"about": "Hello! I work on restoring personal resources and overcoming impostor syndrome.", "approach": "Chernihiv National University of Technology. Practical psychology. Education verified.", "scope": "Dissatisfaction with the profession, choosing a career direction, self-criticism, exhaustion."},
     "certificates": ["ЧНТУ", "Диплом практичного психолога"],
-    "reviews": [{"author": "Андрій Т.", "age": 31, "topic_tag": "Кар'єра", "rating": 5, "verified": true, "text": "Допоміг визначитись із професійним вектором."}],
+    "reviews": [{"id": "6d654975-63bb-5589-8260-f810d9dae0c8", "author": "Андрій Т.", "avatar_url": null, "created_at": "2026-07-01", "topic_id": "work_career", "age": 31, "rating": 5, "verified": true, "text": "Допоміг визначитись із професійним вектором."}],
     "mock_slots": ["11:00", "15:30"],
     "meet_link": "https://meet.google.com/psy-46-meet"
   },
@@ -1076,7 +1076,7 @@
     "bio": {"about": "Вітаю. Дбайлива підтримка у проходженні складних сімейних розривів та криз самовизначення.", "approach": "НаУКМА. Гештальт-терапія. Освіта перевірена.", "scope": "Конфлікти з родинним оточенням, зрада, самотність у взаєминах, брак соціальних контактів."},
     "bio_eng": {"about": "Hello. Caring support through difficult family breakups and crises of self-determination.", "approach": "National University of Kyiv-Mohyla Academy. Gestalt therapy. Education verified.", "scope": "Conflicts with family, betrayal, loneliness in relationships, a lack of social contacts."},
     "certificates": ["НаУКМА", "Сертифікат гештальт-терапевта"],
-    "reviews": [{"author": "Марина К.", "age": 26, "topic_tag": "Стосунки", "rating": 5, "verified": true, "text": "Дуже комфортні та результативні сесії."}],
+    "reviews": [{"id": "21242f92-516b-598d-9e08-85ea78ca9809", "author": "Марина К.", "avatar_url": null, "created_at": "2026-06-18", "topic_id": "relationship", "age": 26, "rating": 5, "verified": true, "text": "Дуже комфортні та результативні сесії."}],
     "mock_slots": ["14:00", "18:00"],
     "meet_link": "https://meet.google.com/psy-47-meet"
   },
@@ -1099,7 +1099,7 @@
     "bio": {"about": "Доброго дня. Спеціалізована допомога при гострому психоемоційному напруженні та паніці.", "approach": "КПІ ім. Ігоря Сікорського. Екстрена психологія. Освіта перевірена.", "scope": "Панічні атаки, кошмари, не можу заснути від неспокою, пережите потрясіння."},
     "bio_eng": {"about": "Good day. Specialized help for acute psycho-emotional tension and panic.", "approach": "Igor Sikorsky Kyiv Polytechnic Institute. Emergency psychology. Education verified.", "scope": "Panic attacks, nightmares, cannot fall asleep from anxiety, a recent shock."},
     "certificates": ["КПІ ім. Ігоря Сікорського", "Сертифікат з екстреної психології"],
-    "reviews": [{"author": "Олексій П.", "age": 29, "topic_tag": "Тривожність", "rating": 5, "verified": true, "text": "Швидко і ефективно стабілізував мій стан."}],
+    "reviews": [{"id": "2cd4f5a7-5574-5312-a3aa-24c98d8ef70f", "author": "Олексій П.", "avatar_url": null, "created_at": "2026-06-05", "topic_id": "anxiety", "age": 29, "rating": 5, "verified": true, "text": "Швидко і ефективно стабілізував мій стан."}],
     "mock_slots": ["18:30", "10:00"],
     "meet_link": "https://meet.google.com/psy-48-meet"
   },
@@ -1122,7 +1122,7 @@
     "bio": {"about": "Вітаю! Навчаю приймати себе та будувати стійку внутрішню опору без постійного самоосуду.", "approach": "ТНПУ ім. Г. Якубова. Когнітивний підхід. Освіта перевірена.", "scope": "Порівняння себе з іншими, тиск дедлайнів, складні стосунки з їжею, низька самооцінка."},
     "bio_eng": {"about": "Hello! I teach you to accept yourself and build a stable inner support without constant self-blame.", "approach": "Ternopil National Pedagogical University (named after H. Yakubov). Cognitive approach. Education verified.", "scope": "Comparing yourself with others, deadline pressure, a difficult relationship with food, low self-esteem."},
     "certificates": ["ТНПУ ім. Г. Якубова", "Сертифікат КБТ-консультанта"],
-    "reviews": [{"author": "Ірина С.", "age": 24, "topic_tag": "Самооцінка", "rating": 5, "verified": true, "text": "Чудовий фахівець, дуже допомогла повірити в себе."}],
+    "reviews": [{"id": "8d2c2133-9e85-5138-a830-ceff8917740e", "author": "Ірина С.", "avatar_url": null, "created_at": "2026-05-23", "topic_id": "self_esteem", "age": 24, "rating": 5, "verified": true, "text": "Чудовий фахівець, дуже допомогла повірити в себе."}],
     "mock_slots": ["12:00", "16:30"],
     "meet_link": "https://meet.google.com/psy-49-meet"
   },
@@ -1145,7 +1145,7 @@
     "bio": {"about": "Вітаю вас. Багаторічний досвід роботи з найскладнішими емоційними станами та відновленням ресурсів.", "approach": "НМУ ім. О.О. Богомольця. Доказова психотерапія. Освіта перевірена.", "scope": "Відсутність сил на буденні справи, втрата мотивації на роботі, залежна поведінка."},
     "bio_eng": {"about": "Hello. Many years of experience working with the most difficult emotional states and restoring resources.", "approach": "Bogomolets National Medical University. Evidence-based psychotherapy. Education verified.", "scope": "No strength for everyday tasks, loss of motivation at work, addictive behavior."},
     "certificates": ["НМУ ім. О.О. Богомольця", "Диплом психотерапевта"],
-    "reviews": [{"author": "Андрій Т.", "age": 31, "topic_tag": "Вигорання", "rating": 5, "verified": true, "text": "Експертний підхід найвищого рівня."}],
+    "reviews": [{"id": "c6d44920-fd70-5bf7-ac8f-31eb070b21b9", "author": "Андрій Т.", "avatar_url": null, "created_at": "2026-05-10", "topic_id": "burnout", "age": 31, "rating": 5, "verified": true, "text": "Експертний підхід найвищого рівня."}],
     "mock_slots": ["09:00", "13:00"],
     "meet_link": "https://meet.google.com/psy-50-meet"
   }

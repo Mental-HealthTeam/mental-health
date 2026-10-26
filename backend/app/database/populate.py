@@ -155,6 +155,7 @@ def populate_psychologists() -> None:
                     existing.title_eng = entry["title_eng"]
                     existing.bio = entry["bio"]
                     existing.bio_eng = entry["bio_eng"]
+                    existing.reviews = entry["reviews"]
                     existing.methods = entry["methods"]
                     existing.methods_eng = entry["methods_eng"]
                     existing.iban = entry["iban"]
