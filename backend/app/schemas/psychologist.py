@@ -41,6 +41,7 @@ class PsychologistListItem(BaseModel):
 class PsychologistDetailResponse(BaseModel):
     psychologist_id: UUID
     full_name: str
+    title: str
     specialization: list[str]
     experience: int
     methods: list[str]
