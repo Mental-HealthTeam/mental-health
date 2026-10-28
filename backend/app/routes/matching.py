@@ -1,5 +1,5 @@
 from typing import Annotated
-from fastapi import APIRouter, status, Depends
+from fastapi import APIRouter, status, Depends, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from services.matching_service import find_matching_psychologists
@@ -8,7 +8,7 @@ from schemas.matching import MatchingSearchResponse, MatchingSearchRequest
 from redis_storage.redis_interface import SessionStorageInterface
 from config.dependencies import get_redis_storage
 from auth.dependencies import get_current_user_optional
-from database.models.models import User
+from database.models.models import User, Language
 
 router = APIRouter()
 
@@ -61,7 +61,8 @@ async def search_psychologists(
     db: Annotated[AsyncSession, Depends(get_db)],
     redis_storage: Annotated[SessionStorageInterface, Depends(get_redis_storage)],
     current_user: Annotated[User | None, Depends(get_current_user_optional)],
-    request: MatchingSearchRequest
+    request: MatchingSearchRequest,
+    lang: Language = Query(default=Language.UKRAINIAN)
 ):
     """
     Called when the client presses the "find a psychologist" button in the AI chat.
@@ -82,5 +83,6 @@ async def search_psychologists(
         db=db,
         redis_storage=redis_storage,
         request=request,
-        current_user=current_user
+        current_user=current_user,
+        lang=lang
     )

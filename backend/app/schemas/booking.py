@@ -49,8 +49,8 @@ class BookingPsychologist(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
     psychologist_id: UUID
-    full_name: str
-    title: str
+    full_name: str = Field(validation_alias="display_full_name")
+    title: str = Field(validation_alias="display_title")
     avatar_url: str | None
 
 
@@ -60,7 +60,6 @@ class BookingResponse(BaseModel):
     booking_id: UUID = Field(validation_alias="id")
     psychologist: BookingPsychologist
     selected_time: datetime.datetime
-    selected_time_label: str
     status: BookingStatus
     payment_status: PaymentStatus
     price: Decimal
@@ -76,3 +75,7 @@ class BookingListResponse(BaseModel):
     total: int
     limit: int
     offset: int
+
+
+class BookingCancelRequest(BaseModel):
+    confirm_no_refund: bool = False
