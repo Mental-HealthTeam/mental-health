@@ -114,7 +114,9 @@
         font-weight: a.$font-weight-body-extrabold;
     }
 
-    
+    &__actions {
+      grid-area: button;
+    }
 }
 
 @media (min-width: a.$breakpoint-mobile) {
