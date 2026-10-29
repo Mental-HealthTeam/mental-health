@@ -41,7 +41,7 @@ export const PsychologistProfile = () => {
                         <SpecialistProfileCard
                             className="psychologist-profile__specialist-card"
                             actions={
-                                <BookingBlock name={profile.name} slots={profile.mock_slots} />
+                                <BookingBlock name={profile.full_name} slots={profile.mock_slots} />
                             }
                             specialist={profile}
                         />

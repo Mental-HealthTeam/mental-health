@@ -32,7 +32,6 @@ async def read_user_sessions(
             {
                 "id": booking.id,
                 "selected_time": booking.selected_time,
-                "selected_time_label": booking.selected_time_label,
                 "status": booking.status,
                 "payment_status": booking.payment_status,
                 "price": booking.price,
@@ -67,7 +66,6 @@ async def read_psychologist_sessions(
             {
                 "id": booking.id,
                 "selected_time": booking.selected_time,
-                "selected_time_label": booking.selected_time_label,
                 "status": booking.status,
                 "payment_status": booking.payment_status,
                 "price": booking.price,

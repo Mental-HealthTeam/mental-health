@@ -1,3 +1,4 @@
+from datetime import datetime
 from enum import Enum
 from decimal import Decimal
 from uuid import UUID
@@ -35,6 +36,7 @@ class CheckoutParams(BaseModel):
     amount: Decimal
     currency: str = Field(max_length=3)
     description: str
+    hold_expires_at: datetime
 
     @field_validator("amount")
     @classmethod

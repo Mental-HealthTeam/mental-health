@@ -23,7 +23,7 @@ PAID_STATUSES = {
 }
 
 
-def _set_meet_link(booking: Booking) -> None:
+def set_meet_link(booking: Booking) -> None:
     """Expose the meeting link only for eligible, paid sessions."""
     eligible_status = booking.status in SESSION_STATUSES
     paid_status = booking.payment_status in PAID_STATUSES
@@ -53,7 +53,7 @@ async def get_sessions_for_user(
     bookings = list(result.scalars().all())
 
     for booking in bookings:
-        _set_meet_link(booking)
+        set_meet_link(booking)
 
     return bookings
 
@@ -80,6 +80,6 @@ async def get_sessions_for_psychologist(
     bookings = list(result.scalars().all())
 
     for booking in bookings:
-        _set_meet_link(booking)
+        set_meet_link(booking)
 
     return bookings

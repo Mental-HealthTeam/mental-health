@@ -50,7 +50,6 @@ class WayForPayPaymentProvider(PaymentProviderInterface):
             merchant_domain: str,
             service_url: str,
             return_url: str,
-            order_timeout: int,
             simulate_payouts: bool,
             currency: str,
             language: str,
@@ -62,7 +61,6 @@ class WayForPayPaymentProvider(PaymentProviderInterface):
         self.merchant_domain = merchant_domain
         self.service_url = service_url
         self.return_url = return_url
-        self.order_timeout = order_timeout
         self.simulate_payouts = simulate_payouts
         self.currency = currency
         self.language = language
@@ -135,7 +133,9 @@ class WayForPayPaymentProvider(PaymentProviderInterface):
             self,
             params: CheckoutParams,
     ) -> CheckoutResult:
-        order_time = int(datetime.now(timezone.utc).timestamp())
+        now = datetime.now(timezone.utc)
+        time_left = params.hold_expires_at - now
+        order_time = int(now.timestamp())
         order_reference = f"{params.booking_id}_{order_time}"
         amount = self._format_amount(params.amount)
 
@@ -174,7 +174,7 @@ class WayForPayPaymentProvider(PaymentProviderInterface):
             "orderDate": order_time,
             "amount": amount,
             "currency": self.currency,
-            "orderTimeout": self.order_timeout,
+            "orderTimeout": int(time_left.total_seconds()),
             "productName": product_name,
             "productPrice": product_price,
             "productCount": product_count,

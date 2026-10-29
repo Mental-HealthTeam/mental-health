@@ -10,7 +10,7 @@ import type { Rating } from '../../types/specialist'
 
 type Props = {
     name: string
-    age: number | undefined
+    age: number | null
     date: string
     rating: Rating
     text: string

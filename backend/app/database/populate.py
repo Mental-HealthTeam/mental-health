@@ -95,8 +95,9 @@ KYIV_TZ = ZoneInfo("Europe/Kyiv")
 SLOT_DAYS_AHEAD = 10
 
 
-def build_mock_slots(labels: list[str]) -> list[dict]:
-    times = sorted({label.split(" ", 1)[1] for label in labels})
+def build_mock_slots(times_of_day: list[str]) -> list[str]:
+    # The seed gives times of day ("18:00"); older entries may still carry a word before it.
+    times = sorted({value.split()[-1] for value in times_of_day})
     today = datetime.now(KYIV_TZ).date()
     slots = []
     for offset in range(1, SLOT_DAYS_AHEAD + 1):
@@ -106,14 +107,15 @@ def build_mock_slots(labels: list[str]) -> list[dict]:
             slot_dt = datetime(
                 day.year, day.month, day.day, hour, minute, tzinfo=KYIV_TZ
             )
-            slots.append({
-                "label": slot_dt.strftime("%d.%m %H:%M"),
-                "datetime": slot_dt.isoformat(),
-            })
+            slots.append(slot_dt.isoformat())
     return slots
 
 
 def mock_email(source_id: str) -> str:
+    return f"{source_id}@example.com"
+
+
+def legacy_mock_email(source_id: str) -> str:
     return f"{source_id}@mock.mentalhealth.local"
 
 
@@ -130,14 +132,31 @@ def populate_psychologists() -> None:
         for entry in dataset:
             mock_slots = build_mock_slots(entry["mock_slots"])
 
-            user = session.query(User).filter_by(email=mock_email(entry["id"])).first()
+            email = mock_email(entry["id"])
+
+            user = session.query(User).filter_by(email=email).first()
+
+            if user is None:
+                user = (
+                    session.query(User)
+                    .filter_by(email=legacy_mock_email(entry["id"]))
+                    .first()
+                )
+                if user is not None:
+                    user.email = email
+
             if user is not None:
                 existing = session.get(Psychologist, user.id)
                 if existing is not None:
                     existing.mock_slots = mock_slots
+                    existing.full_name = entry["name"]
                     existing.full_name_eng = entry["name_eng"]
+                    existing.title = entry["title"]
                     existing.title_eng = entry["title_eng"]
+                    existing.bio = entry["bio"]
                     existing.bio_eng = entry["bio_eng"]
+                    existing.reviews = entry["reviews"]
+                    existing.methods = entry["methods"]
                     existing.methods_eng = entry["methods_eng"]
                     existing.iban = entry["iban"]
                     existing.tax_id = entry["tax_id"]

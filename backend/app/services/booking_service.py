@@ -1,10 +1,11 @@
+import logging
 from datetime import datetime, timedelta, timezone
 from decimal import Decimal
 from uuid import UUID
 
 from fastapi import HTTPException, status
 from sqlalchemy import func, select
-from sqlalchemy.exc import IntegrityError
+from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
@@ -17,10 +18,15 @@ from database.models.models import (
     Psychologist,
     PsychologistStatus,
     User,
-    UserRole,
+    UserRole
 )
-from payment_provider.payment_types import PaymentProviderName
+from payment_provider.payment_types import PaymentProviderName, RefundRequest
 from schemas.booking import BookingCreateRequest
+from services.session_service import set_meet_link
+from payment_provider.payment_interface import PaymentProviderInterface
+from exceptions.payments import PaymentProviderError
+
+logger = logging.getLogger(__name__)
 
 
 async def create_booking(
@@ -32,7 +38,7 @@ async def create_booking(
     """Create a PENDING / UNPAID booking and hold the slot for BOOKING_HOLD_MINUTES.
 
     Checks the psychologist, time, slot and AI session (422); the price comes
-    from the psychologist profile. Raises 422, 503 if the slot is taken.
+    from the psychologist profile. Raises 422, 409 if the slot is taken.
     Route: POST /api/bookings
     """
     now = datetime.now(timezone.utc)
@@ -70,7 +76,7 @@ async def create_booking(
 
     for slot in psychologist.mock_slots or []:
         try:
-            slot_time = datetime.fromisoformat(slot["datetime"])
+            slot_time = datetime.fromisoformat(slot)
         except (KeyError, TypeError, ValueError):
             continue
 
@@ -104,7 +110,6 @@ async def create_booking(
         client_id=client.id,
         psychologist_id=psychologist.psychologist_id,
         selected_time=selected_time,
-        selected_time_label=selected_slot["label"],
         status=BookingStatus.PENDING,
         payment_status=PaymentStatus.UNPAID,
         price=psychologist.price_per_hour,
@@ -122,7 +127,7 @@ async def create_booking(
     except IntegrityError as exc:
         await db.rollback()
         raise HTTPException(
-            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            status_code=status.HTTP_409_CONFLICT,
             detail="The time slot is already taken.",
         ) from exc
 
@@ -163,22 +168,7 @@ async def get_booking_for_user(
             detail="Booking not found.",
         )
 
-    if (
-            booking.status
-            in {
-        BookingStatus.CONFIRMED,
-        BookingStatus.COMPLETED,
-        BookingStatus.DISPUTED,
-    }
-            and booking.payment_status
-            in {
-        PaymentStatus.HELD,
-        PaymentStatus.PAID,
-    }
-    ):
-        booking.meet_link = booking.psychologist.meet_link
-    else:
-        booking.meet_link = None
+    set_meet_link(booking)
 
     return booking
 
@@ -224,22 +214,7 @@ async def list_bookings_for_user(
     bookings = list(result.scalars().all())
 
     for booking in bookings:
-        if (
-            booking.status
-            in {
-                BookingStatus.CONFIRMED,
-                BookingStatus.COMPLETED,
-                BookingStatus.DISPUTED,
-            }
-            and booking.payment_status
-            in {
-                PaymentStatus.HELD,
-                PaymentStatus.PAID,
-            }
-        ):
-            booking.meet_link = booking.psychologist.meet_link
-        else:
-            booking.meet_link = None
+        set_meet_link(booking)
 
     return bookings, total
 
@@ -297,6 +272,7 @@ async def mark_paid(
         select(Booking)
         .where(Booking.id == booking_id)
         .with_for_update()
+        .execution_options(populate_existing=True)
     )
     booking = result.scalar_one_or_none()
 
@@ -374,6 +350,7 @@ async def mark_payment_failed(
         select(Booking)
         .where(Booking.id == booking_id)
         .with_for_update()
+        .execution_options(populate_existing=True)
     )
     booking = result.scalar_one_or_none()
 
@@ -428,6 +405,7 @@ async def mark_cancelled(
         select(Booking)
         .where(Booking.id == booking_id)
         .with_for_update()
+        .execution_options(populate_existing=True)
     )
     booking = result.scalar_one_or_none()
 
@@ -490,6 +468,7 @@ async def mark_disputed(
         select(Booking)
         .where(Booking.id == booking_id)
         .with_for_update()
+        .execution_options(populate_existing=True)
     )
     booking = result.scalar_one_or_none()
 
@@ -532,8 +511,53 @@ async def mark_disputed(
     return result.scalar_one()
 
 
+async def mark_dispute_refunded(
+        db: AsyncSession,
+        booking_id: UUID
+) -> Booking:
+    """DISPUTED -> CANCELLED / REFUNDED after the provider confirmed the refund.
+
+    Clears refund_error. Idempotent. Raises 404, 409.
+    Route: POST /api/payments/webhook/{provider} ("refunded" event).
+    """
+    result = await db.execute(
+        select(Booking)
+        .execution_options(populate_existing=True)
+        .where(Booking.id == booking_id)
+        .with_for_update()
+    )
+    booking = result.scalar_one_or_none()
+
+    if booking is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Booking not found.",
+        )
+
+    if (
+            booking.status == BookingStatus.CANCELLED
+            and booking.payment_status == PaymentStatus.REFUNDED
+    ):
+        return booking
+
+    if booking.status != BookingStatus.DISPUTED:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="Booking is not in a disputed state.",
+        )
+
+    booking.status = BookingStatus.CANCELLED
+    booking.payment_status = PaymentStatus.REFUNDED
+    booking.refund_error = False
+
+    await db.commit()
+
+    return booking
+
+
 async def resolve_dispute(
         db: AsyncSession,
+        payment_provider: PaymentProviderInterface,
         booking_id: UUID,
         new_status: BookingStatus,
         admin: User,
@@ -547,6 +571,7 @@ async def resolve_dispute(
         select(Booking)
         .where(Booking.id == booking_id)
         .with_for_update()
+        .execution_options(populate_existing=True)
     )
     booking = result.scalar_one_or_none()
 
@@ -570,11 +595,58 @@ async def resolve_dispute(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
             detail="A dispute can only be resolved as completed or cancelled.",
         )
-
-    booking.status = new_status
-
     if new_status == BookingStatus.CANCELLED:
-        booking.payment_status = PaymentStatus.REFUNDED
+        try:
+            if not booking.payment_reference:
+                logger.error(
+                    "Booking %s is paid but has no payment reference, refund is not possible",
+                    booking_id
+                )
+                raise HTTPException(
+                    status_code=status.HTTP_409_CONFLICT,
+                    detail="The payment for this booking cannot be refunded automatically, contact support."
+                )
+            if booking.payment_status != PaymentStatus.HELD:
+                logger.error(
+                    "Dispute on booking %s cannot be refunded: payment status is %s, expected held",
+                    booking_id, booking.payment_status.value
+                )
+                raise HTTPException(
+                    status_code=status.HTTP_409_CONFLICT,
+                    detail=(
+                        "The payment for this booking is no longer held by the platform "
+                        "and cannot be refunded automatically, contact support."
+                    )
+                )
+            booking.status = new_status
+            await db.commit()
+            refund_request = RefundRequest(
+                payment_reference=booking.payment_reference,
+                amount=booking.price,
+                reason="Dispute resolved in favour of the client"
+            )
+            await payment_provider.refund(refund_request)
+            booking.payment_status = PaymentStatus.REFUNDED
+            booking.refund_error = False
+            logger.info(
+                "Booking %s cancelled and refunded (amount %s)",
+                booking_id, booking.price
+            )
+        except PaymentProviderError as e:
+            logger.error(
+                "Refund failed for booking %s, manual check needed: %s",
+                booking_id, e
+            )
+            await mark_refund_failed(
+                db=db,
+                booking_id=booking.id
+            )
+            raise HTTPException(
+                status_code=status.HTTP_502_BAD_GATEWAY,
+                detail="The refund failed, contact the payment provider."
+            ) from e
+    else:
+        booking.status = new_status
 
     await db.commit()
 
@@ -585,22 +657,7 @@ async def resolve_dispute(
     )
     booking = result.scalar_one()
 
-    if (
-        booking.status
-        in {
-            BookingStatus.CONFIRMED,
-            BookingStatus.COMPLETED,
-            BookingStatus.DISPUTED,
-        }
-        and booking.payment_status
-        in {
-            PaymentStatus.HELD,
-            PaymentStatus.PAID,
-        }
-    ):
-        booking.meet_link = booking.psychologist.meet_link
-    else:
-        booking.meet_link = None
+    set_meet_link(booking)
 
     return booking
 
@@ -623,6 +680,7 @@ async def mark_paid_out(
         select(Booking)
         .where(Booking.id == booking_id)
         .with_for_update()
+        .execution_options(populate_existing=True)
     )
     booking = result.scalar_one_or_none()
 
@@ -788,6 +846,7 @@ async def mark_completed(
         select(Booking)
         .where(Booking.id == booking_id)
         .with_for_update()
+        .execution_options(populate_existing=True)
     )
     booking = result.scalar_one_or_none()
 
@@ -821,3 +880,69 @@ async def mark_completed(
         .where(Booking.id == booking_id)
     )
     return result.scalar_one()
+
+
+async def mark_refund_failed(
+        db: AsyncSession,
+        booking_id: UUID
+) -> Booking:
+    """CANCELLED / HELD -> DISPUTED with refund_error after a failed refund.
+
+    payment_status stays HELD: the money was not returned. If the slot was
+    taken again, the booking stays CANCELLED with refund_error. Idempotent.
+    Raises 404, 409.
+    Route: none, called by the booking cancellation service.
+    """
+    booking = (await db.execute(
+        select(Booking).where(
+            Booking.id == booking_id
+        ).with_for_update()
+        .execution_options(populate_existing=True)
+    )).scalar_one_or_none()
+    if not booking:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Booking not found."
+        )
+    # Idempotency: the refund error is already recorded (DISPUTED or CANCELLED).
+    if booking.refund_error:
+        return booking
+
+    if (
+            booking.status == BookingStatus.CANCELLED
+            and booking.payment_status == PaymentStatus.HELD
+    ):
+        try:
+            booking.status = BookingStatus.DISPUTED
+            booking.refund_error = True
+            await db.commit()
+        except IntegrityError:
+            await db.rollback()
+            logger.error(
+                "Refund failed for booking %s and its slot is already taken: "
+                "booking kept CANCELLED with refund_error, manual check needed",
+                booking_id
+            )
+            booking = (await db.execute(
+                select(Booking).where(
+                    Booking.id == booking_id
+                ).with_for_update()
+            )).scalar_one_or_none()
+            booking.refund_error = True
+            await db.commit()
+        except SQLAlchemyError as e:
+            logger.exception(
+                "Could not save the refund error for booking %s",
+                booking_id
+            )
+            await db.rollback()
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Could not save the refund error."
+            ) from e
+    else:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="Booking cannot be marked as refund failed in its current state."
+        )
+    return booking

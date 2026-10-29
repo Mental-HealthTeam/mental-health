@@ -1,7 +1,9 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field, ConfigDict
 
 
 class ChatRequest(BaseModel):
-    session_id: str
-    message: str
+    model_config = ConfigDict(str_strip_whitespace=True)
+
+    session_id: str = Field(min_length=1)
+    message: str = Field(min_length=1)
     tz_name: str | None = None

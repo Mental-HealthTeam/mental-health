@@ -7,7 +7,7 @@ router = APIRouter()
 
 
 @router.get(
-    "/symptoms",
+    "/symptom-codes",
     response_model=list[str],
     summary="Get available symptom codes",
 )

@@ -31,8 +31,8 @@ class BaseAppSettings(BaseSettings):
     STRIPE_SECRET_KEY: str = ""
     STRIPE_WEBHOOK_SECRET: str = ""
 
-    SUCCESS_PAYMENTS_REDIRECT: str = "http://localhost:3000/payment/success"
-    CANCEL_PAYMENTS_REDIRECT: str = "http://localhost:3000/payment/cancel"
+    SUCCESS_PAYMENTS_REDIRECT: str = "http://localhost/payment/success"
+    CANCEL_PAYMENTS_REDIRECT: str = "http://localhost/payment/cancel"
     PAYMENT_PROVIDER: PaymentProviderName = PaymentProviderName.WAYFORPAY
     BOOKING_HOLD_MINUTES: int = 20
     BOOKING_HORIZON_DAYS: int = 30
@@ -55,9 +55,7 @@ class BaseAppSettings(BaseSettings):
 
     PLATFORM_FEE_PERCENT: int = Field(default=35, gt=0, le=100)
 
-    @property
-    def order_timeout_sec(self):
-        return self.BOOKING_HOLD_MINUTES * 60
+    BOOKING_FREE_CANCEL_HOURS: int = 24
 
 
 class Settings(BaseAppSettings):

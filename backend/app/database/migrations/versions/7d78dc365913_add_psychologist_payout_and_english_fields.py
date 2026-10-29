@@ -21,16 +21,36 @@ depends_on: Union[str, Sequence[str], None] = None
 def upgrade() -> None:
     """Upgrade schema.
 
-    The new columns are NOT NULL, so the psychologists table must be empty:
-    recreate the database (or clear the table) and run ``database.populate``.
+    Works on a non-empty psychologists table: the new columns are added as
+    nullable, existing rows are filled, then the columns become NOT NULL.
+    English fields copy the Ukrainian ones. Payout details get unique
+    placeholders that fail payout validation, so no payout is sent until
+    real details are set (``database.populate`` refreshes them for seed data).
     """
-    op.add_column('psychologists', sa.Column('full_name_eng', sa.String(length=100), nullable=False))
-    op.add_column('psychologists', sa.Column('title_eng', sa.String(length=255), nullable=False))
-    op.add_column('psychologists', sa.Column('bio_eng', sa.JSON(), nullable=False))
+    op.add_column('psychologists', sa.Column('full_name_eng', sa.String(length=100), nullable=True))
+    op.add_column('psychologists', sa.Column('title_eng', sa.String(length=255), nullable=True))
+    op.add_column('psychologists', sa.Column('bio_eng', sa.JSON(), nullable=True))
     op.add_column('psychologists', sa.Column('methods_eng', sa.JSON(), nullable=True))
-    op.add_column('psychologists', sa.Column('iban', sa.String(length=29), nullable=False))
-    op.add_column('psychologists', sa.Column('tax_id', sa.String(length=10), nullable=False))
-    op.add_column('psychologists', sa.Column('account_name', sa.String(length=255), nullable=False))
+    op.add_column('psychologists', sa.Column('iban', sa.String(length=29), nullable=True))
+    op.add_column('psychologists', sa.Column('tax_id', sa.String(length=10), nullable=True))
+    op.add_column('psychologists', sa.Column('account_name', sa.String(length=255), nullable=True))
+
+    op.execute(
+        """
+        UPDATE psychologists
+        SET full_name_eng = full_name,
+            title_eng = title,
+            bio_eng = bio,
+            methods_eng = methods,
+            iban = 'TMP' || left(replace(psychologist_id::text, '-', ''), 26),
+            tax_id = left(replace(psychologist_id::text, '-', ''), 10),
+            account_name = full_name
+        """
+    )
+
+    for column in ('full_name_eng', 'title_eng', 'bio_eng', 'iban', 'tax_id', 'account_name'):
+        op.alter_column('psychologists', column, nullable=False)
+
     op.create_unique_constraint('psychologists_iban_key', 'psychologists', ['iban'])
     op.create_unique_constraint('psychologists_tax_id_key', 'psychologists', ['tax_id'])
     op.drop_column('psychologists', 'payout_card_token')

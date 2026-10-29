@@ -13,7 +13,7 @@ from sqlalchemy import (
     String,
     func,
     Numeric,
-    UniqueConstraint, Index, text
+    UniqueConstraint, Index, text, CheckConstraint
 )
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -86,6 +86,11 @@ class AuthProvider(str, Enum):
     PASSWORD = "password"
 
 
+class Language(str, Enum):
+    UKRAINIAN = "uk"
+    ENGLISH = "en"
+
+
 class User(Base):
     __tablename__ = "users"
 
@@ -145,16 +150,16 @@ class Psychologist(Base):
         ForeignKey("users.id"),
         primary_key=True
     )
-    full_name: Mapped[str] = mapped_column(
+    full_name: Mapped[str | None] = mapped_column(
         String(100),
     )
-    full_name_eng: Mapped[str] = mapped_column(
+    full_name_eng: Mapped[str | None] = mapped_column(
         String(100)
     )
-    title: Mapped[str] = mapped_column(
+    title: Mapped[str | None] = mapped_column(
         String(255)
     )
-    title_eng: Mapped[str] = mapped_column(
+    title_eng: Mapped[str | None] = mapped_column(
         String(255)
     )
     avatar_url: Mapped[str | None] = mapped_column(
@@ -166,10 +171,10 @@ class Psychologist(Base):
     certificates: Mapped[list[str] | None] = mapped_column(
         JSON,
     )
-    bio: Mapped[dict] = mapped_column(
+    bio: Mapped[dict | None] = mapped_column(
         JSON,
     )
-    bio_eng: Mapped[dict] = mapped_column(
+    bio_eng: Mapped[dict | None] = mapped_column(
         JSON
     )
     reviews: Mapped[list[dict] | None] = mapped_column(
@@ -227,6 +232,36 @@ class Psychologist(Base):
         back_populates="psychologist"
     )
 
+    @property
+    def display_full_name(self) -> str | None:
+        return self.full_name or self.full_name_eng
+
+    @property
+    def display_title(self) -> str | None:
+        return self.title or self.title_eng
+
+    __table_args__ = (
+        CheckConstraint(
+            "NULLIF(TRIM(full_name), '') IS NOT NULL "
+            "OR NULLIF(TRIM(full_name_eng), '') IS NOT NULL",
+            name="ck_psychologist_full_name_any_lang"
+        ),
+        CheckConstraint(
+            "NULLIF(TRIM(title), '') IS NOT NULL "
+            "OR NULLIF(TRIM(title_eng), '') IS NOT NULL",
+            name="ck_psychologist_title_any_lang"
+        ),
+        CheckConstraint(
+            "(NULLIF(TRIM(bio ->> 'about'), '') IS NOT NULL AND "
+            "NULLIF(TRIM(bio ->> 'approach'), '') IS NOT NULL AND "
+            "NULLIF(TRIM(bio ->> 'scope'), '') IS NOT NULL) "
+            "OR (NULLIF(TRIM(bio_eng ->> 'about'), '') IS NOT NULL AND "
+            "NULLIF(TRIM(bio_eng ->> 'approach'), '') IS NOT NULL AND "
+            "NULLIF(TRIM(bio_eng ->> 'scope'), '') IS NOT NULL)",
+            name="ck_psychologist_bio_any_lang"
+        ),
+    )
+
 
 class PsychologistSpecialization(Base):
     __tablename__ = "psychologist_specializations"
@@ -260,9 +295,6 @@ class Booking(Base):
     psychologist_id: Mapped[uuid.UUID] = mapped_column(
         ForeignKey("psychologists.psychologist_id"),
         index=True
-    )
-    selected_time_label: Mapped[str] = mapped_column(
-        String(100),
     )
     selected_time: Mapped[datetime.datetime] = mapped_column(
         DateTime(timezone=True)
@@ -330,6 +362,10 @@ class Booking(Base):
     ai_session_id: Mapped[str | None] = mapped_column(
         ForeignKey("ai_session_logs.ai_session_id"),
         nullable=True
+    )
+    refund_error: Mapped[bool] = mapped_column(
+        default=False,
+        server_default=text("false")
     )
 
     __table_args__ = (

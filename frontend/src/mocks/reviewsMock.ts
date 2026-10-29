@@ -10,6 +10,7 @@ export const REVIEWS_MOCK: SpecialistReview[] = [
         author: 'Олена Колченовська',
         avatar_url: avatar1,
         created_at: '2026-09-27',
+        age: null,
         topic_id: 'anxiety',
         rating: 5,
         verified: true,
