@@ -7,18 +7,10 @@ import { ClockCardIcon, MoneyIcon } from '../../../../components/UI/Icons'
 import { type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { SpecialistProfile } from '../../../../types/specialist'
+import defaultPhoto from '../../../../assets/images/specialist-photo.png'
 
 type Props = {
-    specialist: Pick<
-        SpecialistProfile,
-        | 'name'
-        | 'avatar_url'
-        | 'is_verified'
-        | 'experience_years'
-        | 'price_uah'
-        | 'session_minutes'
-        | 'methods'
-    >
+    specialist: SpecialistProfile
     actions: ReactNode
     className?: string
 }
@@ -33,7 +25,11 @@ export const SpecialistProfileCard = ({ className, specialist, actions }: Props)
 
     return (
         <section className={classNames('profile-card', className)}>
-            <img className="profile-card__photo" src={specialist?.avatar_url} alt="" />
+            <img
+                className="profile-card__photo"
+                src={specialist.avatar_url ? specialist.avatar_url : defaultPhoto}
+                alt=""
+            />
 
             <div className="profile-card__heading">
                 {specialist?.is_verified && (
@@ -43,7 +39,7 @@ export const SpecialistProfileCard = ({ className, specialist, actions }: Props)
                 )}
 
                 <h2 className="profile-card__name" id="profile-card-name">
-                    {specialist?.name}
+                    {specialist?.full_name}
                 </h2>
 
                 <p className="profile-card__role">{t('specialistProfile:card.role')}</p>
@@ -60,7 +56,7 @@ export const SpecialistProfileCard = ({ className, specialist, actions }: Props)
                     className="profile-card__info-tile"
                     icon={<MoneyIcon />}
                     label={t('specialistProfile:card.stats.price')}
-                    value={`${specialist?.price_uah} ₴`}
+                    value={`${specialist?.price_per_hour} ₴`}
                 />
                 <InfoTile
                     className="profile-card__info-tile profile-card__info-tile--hide"

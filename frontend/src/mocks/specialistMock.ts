@@ -5,10 +5,10 @@ import avatar2 from '../assets/avatars/avatar-2.png'
 import avatar3 from '../assets/avatars/avatar-3.png'
 
 export const SPECIALIST_MOCK: SpecialistProfile = {
-    id: 'kateryna-kovalska',
+    psychologist_id: '3f2b8c1e-6a4d-4e5b-9c7a-1d2e3f4a5b6c',
 
     // Особисті дані
-    name: 'Катерина Ковальська',
+    full_name: 'Катерина Ковальська',
     title: 'Практикуючий психолог',
     avatar_url: specialistPhoto,
 
@@ -16,10 +16,10 @@ export const SPECIALIST_MOCK: SpecialistProfile = {
     is_verified: true,
     experience_years: 8,
     session_minutes: 50,
-    price_uah: 2500,
+    price_per_hour: '2500.00',
 
-    // Спеціалізації
-    tags_symptoms: ['anxiety', 'burnout', 'trauma', 'self_esteem', 'relationship'],
+    // Теми
+    topics: ['anxiety', 'burnout', 'trauma', 'self_esteem', 'relationship'],
 
     // Методи роботи
     methods: ['Гештальт-терапія', 'КПТ'],
@@ -29,10 +29,12 @@ export const SPECIALIST_MOCK: SpecialistProfile = {
 
     // Освіта та сертифікати
     certificates: [
-        'Диплом магістра психології (КНУ ім. Т. Шевченка, 2018)',
-        'Сертифікована програма: «Когнітивно-поведінкова терапія депресивних та тривожних розладів» (Український Інститут КБТ)',
-        'Сертифікована програма: «Гештальт у консультуванні»',
-        'Сертифікована програма: «Синдром дефіциту уваги»',
+        { title: 'Диплом магістра психології (КНУ ім. Т. Шевченка, 2018)' },
+        {
+            title: 'Сертифікована програма: «Когнітивно-поведінкова терапія депресивних та тривожних розладів» (Український Інститут КБТ)',
+        },
+        { title: 'Сертифікована програма: «Гештальт у консультуванні»' },
+        { title: 'Сертифікована програма: «Синдром дефіциту уваги»' },
     ],
 
     // Біографія психолога
@@ -75,6 +77,7 @@ export const SPECIALIST_MOCK: SpecialistProfile = {
             avatar_url: avatar2,
             created_at: '2026-06-15',
             topic_id: 'grief',
+            age: null,
             rating: 4,
             verified: true,
             text: 'Довгий час нічого особливо не радувало, навіть звичні речі вимагали багато сил. Робота з психологом допомогла краще зрозуміти свій стан і поступово повернутися до повсякденних справ.',
@@ -228,6 +231,7 @@ export const SPECIALIST_MOCK: SpecialistProfile = {
             avatar_url: avatar1,
             created_at: '2025-10-30',
             topic_id: 'trauma',
+            age: null,
             rating: 5,
             verified: true,
             text: 'Спочатку думала, що мені просто потрібно трохи відпочити, але сил усе одно не вистачало. На консультаціях я почала краще розуміти свої межі та переглянула ставлення до навантаження.',
@@ -245,15 +249,10 @@ export const SPECIALIST_MOCK: SpecialistProfile = {
         },
     ],
 
-    // Мокові слоти запису та зустріч
+    // Мокові слоти запису
     mock_slots: [
-        '2026-10-23T18:00:00+03:00',
-        '2026-10-24T12:00:00+03:00',
-        '2026-10-27T12:00:00+03:00',
+        { time: '2026-10-23T18:00:00+03:00' },
+        { time: '2026-10-24T12:00:00+03:00' },
+        { time: '2026-10-27T12:00:00+03:00' },
     ],
-    meet_link: 'https://meet.google.com/kat-kov-meet',
-
-    iban: 'UA589999992600000000000000002',
-    tax_id: '9900000002',
-    account_name: 'ФОП Катерина Ковальська',
 }

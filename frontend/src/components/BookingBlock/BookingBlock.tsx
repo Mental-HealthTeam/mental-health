@@ -4,10 +4,11 @@ import { useId, useState } from 'react'
 import { TimeSlot } from '../UI/TimeSlot'
 
 import './BookingBlock.scss'
+import type { Slot } from '../../types/specialist'
 
 type Props = {
     name: string
-    slots: string[]
+    slots: Slot[]
 }
 
 const isSameDay = (firstDate: Date, secondDate: Date) =>
@@ -81,11 +82,11 @@ export const BookingBlock = ({ name, slots }: Props) => {
                                 console.log('slot:', slot)
                                 return (
                                     <TimeSlot
-                                        key={slot}
-                                        label={formatTimeSlot(slot)}
-                                        value={slot}
+                                        key={slot.time}
+                                        label={formatTimeSlot(slot.time)}
+                                        value={slot.time}
                                         name={`specialist-time-${radioGroupId}`}
-                                        checked={selectedSlot === slot}
+                                        checked={selectedSlot === slot.time}
                                         onChange={setSelectedSlot}
                                     />
                                 )

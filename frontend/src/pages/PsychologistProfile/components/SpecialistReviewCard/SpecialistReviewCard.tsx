@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next'
 
 type Props = {
     name: string
-    age?: number
+    age?: number | null
     avatar: string | null
     date: string
     rating: number

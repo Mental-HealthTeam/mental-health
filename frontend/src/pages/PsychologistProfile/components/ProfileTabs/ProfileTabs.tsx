@@ -58,7 +58,7 @@ export const ProfileTabs = ({ className }: Props) => {
                         />
                         <SpecializationsCard
                             className="profile-tabs__specializations"
-                            tags_symptoms={profile.tags_symptoms}
+                            tags_symptoms={profile.topics}
                         />
                     </div>
                 ) : (
