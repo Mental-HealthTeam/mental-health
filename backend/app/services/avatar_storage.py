@@ -81,12 +81,24 @@ async def save_avatar(file: UploadFile, user_id: uuid.UUID) -> str:
     return f"/media/avatars/{filename}"
 
 
-def delete_avatar_file(avatar_url: str | None) -> None:
+def delete_avatar_file(
+    avatar_url: str | None,
+    user_id: uuid.UUID,
+) -> None:
     if not avatar_url or not avatar_url.startswith("/media/avatars/"):
         return
 
     filename = avatar_url.removeprefix("/media/avatars/")
+
     if not filename or Path(filename).name != filename:
+        return
+
+    # Ensure that the avatar belongs to the current user.
+    if not filename.startswith(f"{user_id}_"):
+        logger.warning(
+            "Refusing to delete avatar not owned by user %s",
+            user_id,
+        )
         return
 
     path = AVATAR_STORAGE_DIR / filename
