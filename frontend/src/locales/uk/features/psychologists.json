@@ -10,20 +10,20 @@
         "empty": "Фахівців за цим фільтром не знайдено"
     },
     "card": {
-        "verified": "ПЕРЕВІРЕНО",
+        "verified": "Перевірено",
         "experience": "Досвід",
         "experienceYears_one": "{{count}} рік",
         "experienceYears_few": "{{count}} роки",
         "experienceYears_many": "{{count}} років",
         "experienceYears_other": "{{count}} років",
-        "sessionDuration": "Сесія 1,5 години",
+        "sessionDuration": "Вартість 50 хв",
         "price": "{{price}} ₴",
         "therapeuticApproach": "Терапевтичний підхід",
         "worksWith": "Працює з темами:",
-        "bookSession": "ЗАБРОНЮВАТИ СЕСІЮ",
+        "bookSession": "Забронювати сесію",
         "availableTime": "Вільний час",
-        "viewProfile": "ПЕРЕЙТИ ДО ПРОФІЛЮ",
-        "today": "СЬОГОДНІ",
-        "tomorrow": "ЗАВТРА"
+        "viewProfile": "Перейти до профілю",
+        "today": "Сьогодні",
+        "tomorrow": "Завтра"
     }
 }

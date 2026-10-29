@@ -1,12 +1,14 @@
-import { useId, useState } from 'react'
+import { useEffect, useId, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Avatar } from '../UI/Avatar'
 import { OutlineButton, PrimaryButton } from '../UI/Buttons'
+import { AvatarFallbackIcon, AwardIcon, MoneyIcon } from '../UI/Icons'
 import { TimeSlot } from '../UI/TimeSlot'
 
-import './SpecialistCard.scss'
 import type { SymptomCode } from '../../types/psychologist.ts'
+
+import './SpecialistCard.scss'
 
 type TimeSlotItem = {
     time: string
@@ -28,22 +30,90 @@ const isSameDay = (firstDate: Date, secondDate: Date) =>
     firstDate.getMonth() === secondDate.getMonth() &&
     firstDate.getDate() === secondDate.getDate()
 
+const getNearestTimeSlots = (timeSlots: TimeSlotItem[]) => {
+    const sortedSlots = [...timeSlots].sort(
+        (firstSlot, secondSlot) =>
+            new Date(firstSlot.time).getTime() - new Date(secondSlot.time).getTime(),
+    )
+
+    if (sortedSlots.length <= 2) {
+        return sortedSlots
+    }
+
+    const nearestSlots: TimeSlotItem[] = []
+
+    for (const slot of sortedSlots) {
+        const slotDate = new Date(slot.time)
+
+        const alreadyHasSameDay = nearestSlots.some((nearestSlot) =>
+            isSameDay(new Date(nearestSlot.time), slotDate),
+        )
+
+        if (!alreadyHasSameDay) {
+            nearestSlots.push(slot)
+        }
+
+        if (nearestSlots.length === 2) {
+            return nearestSlots
+        }
+    }
+
+    for (const slot of sortedSlots) {
+        const alreadyAdded = nearestSlots.some((nearestSlot) => nearestSlot.time === slot.time)
+
+        if (!alreadyAdded) {
+            nearestSlots.push(slot)
+        }
+
+        if (nearestSlots.length === 2) {
+            break
+        }
+    }
+
+    return nearestSlots
+}
+
 export const SpecialistCard = ({
     id,
     name,
     avatar,
     experience,
     price,
-    methods,
     topics,
     timeSlots,
 }: Props) => {
     const { t, i18n } = useTranslation(['psychologists', 'symptoms', 'accessibility'])
 
+    const cardRef = useRef<HTMLElement>(null)
     const radioGroupId = useId()
 
     const [isBooking, setIsBooking] = useState(false)
     const [selectedSlot, setSelectedSlot] = useState('')
+
+    const nearestTimeSlots = getNearestTimeSlots(timeSlots)
+
+    useEffect(() => {
+        if (!isBooking) {
+            return
+        }
+
+        const handleClickOutside = (event: PointerEvent) => {
+            if (!cardRef.current) {
+                return
+            }
+
+            if (!cardRef.current.contains(event.target as Node)) {
+                setIsBooking(false)
+                setSelectedSlot('')
+            }
+        }
+
+        document.addEventListener('pointerdown', handleClickOutside)
+
+        return () => {
+            document.removeEventListener('pointerdown', handleClickOutside)
+        }
+    }, [isBooking])
 
     const formatTimeSlot = (time: string) => {
         const date = new Date(time)
@@ -73,11 +143,20 @@ export const SpecialistCard = ({
         return `${formattedDate} ${formattedTime}`
     }
 
+    const formattedPrice = new Intl.NumberFormat('uk-UA', {
+        maximumFractionDigits: 0,
+    }).format(Number(price))
+
     return (
-        <article className="specialist-card" aria-labelledby={`specialist-${id}-name`}>
+        <article
+            ref={cardRef}
+            className="specialist-card"
+            aria-labelledby={`specialist-${id}-name`}
+        >
             <header className="specialist-card__header">
                 <Avatar
                     src={avatar ?? undefined}
+                    fallback={<AvatarFallbackIcon />}
                     alt=""
                     size="large"
                     className="specialist-card__avatar"
@@ -94,48 +173,46 @@ export const SpecialistCard = ({
                 </div>
             </header>
 
-            <div className="specialist-card__meta">
-                <div className="specialist-card__meta-row">
-                    <span>{t('psychologists:card.experience')}</span>
-
-                    <span className="specialist-card__dot" aria-hidden="true">
-                        ·
+            <div className="specialist-card__stats">
+                <div className="specialist-card__stat">
+                    <span className="specialist-card__stat-icon" aria-hidden="true">
+                        <AwardIcon />
                     </span>
 
-                    <strong>
-                        {t('psychologists:card.experienceYears', {
-                            count: experience,
-                        })}
-                    </strong>
+                    <div className="specialist-card__stat-content">
+                        <span className="specialist-card__stat-label">
+                            {t('psychologists:card.experience')}
+                        </span>
+
+                        <strong className="specialist-card__stat-value">
+                            {t('psychologists:card.experienceYears', {
+                                count: experience,
+                            })}
+                        </strong>
+                    </div>
                 </div>
 
-                <div className="specialist-card__meta-row">
-                    <span>{t('psychologists:card.sessionDuration')}</span>
-
-                    <span className="specialist-card__dot" aria-hidden="true">
-                        ·
+                <div className="specialist-card__stat">
+                    <span className="specialist-card__stat-icon" aria-hidden="true">
+                        <MoneyIcon />
                     </span>
 
-                    <strong>
-                        {t('psychologists:card.price', {
-                            price: new Intl.NumberFormat('uk-UA', {
-                                maximumFractionDigits: 0,
-                            }).format(Number(price)),
-                        })}
-                    </strong>
+                    <div className="specialist-card__stat-content">
+                        <span className="specialist-card__stat-label">
+                            {t('psychologists:card.sessionDuration')}
+                        </span>
+
+                        <strong className="specialist-card__stat-value">
+                            {t('psychologists:card.price', {
+                                price: formattedPrice,
+                            })}
+                        </strong>
+                    </div>
                 </div>
             </div>
 
-            <section className="specialist-card__section">
-                <span className="specialist-card__section-title">
-                    {t('psychologists:card.therapeuticApproach')}
-                </span>
-
-                <strong className="specialist-card__section-value">{methods.join(', ')}</strong>
-            </section>
-
-            <section className="specialist-card__section specialist-card__topics">
-                <span className="specialist-card__section-title">
+            <section className="specialist-card__topics">
+                <span className="specialist-card__topics-title">
                     {t('psychologists:card.worksWith')}
                 </span>
 
@@ -170,7 +247,7 @@ export const SpecialistCard = ({
                             role="radiogroup"
                             aria-label={t('accessibility:specialistCard.availableTimes', { name })}
                         >
-                            {timeSlots.map((slot) => (
+                            {nearestTimeSlots.map((slot) => (
                                 <TimeSlot
                                     key={slot.time}
                                     label={formatTimeSlot(slot.time)}
