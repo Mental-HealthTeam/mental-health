@@ -25,6 +25,7 @@ from services.slot_service import (
     get_unavailable_slots,
     free_slots
 )
+from config.settings import BaseAppSettings
 from services.localization import pick
 
 
@@ -105,7 +106,7 @@ async def get_psychologists(
             experience_years=psychologist.experience_years,
             price_per_hour=psychologist.price_per_hour,
             methods=pick(psychologist.methods, psychologist.methods_eng, lang) or [],
-            specialization=[
+            topics=[
                 specialization.symptom_code.value
                 for specialization in psychologist.psychologist_specializations
             ],
@@ -122,6 +123,7 @@ async def get_psychologists(
 
 async def get_psychologist_by_id(
     db: AsyncSession,
+    settings: BaseAppSettings,
     psychologist_id: UUID,
     lang: Language
 ) -> PsychologistDetailResponse | None:
@@ -152,16 +154,22 @@ async def get_psychologist_by_id(
         taken_slots=taken_slots,
         psychologist_id=psychologist.psychologist_id
     )
+    is_verified = psychologist.profile_status == PsychologistStatus.ACTIVE
 
     return PsychologistDetailResponse(
         psychologist_id=psychologist.psychologist_id,
         full_name=pick(psychologist.full_name, psychologist.full_name_eng, lang),
         title=pick(psychologist.title, psychologist.title_eng, lang),
-        specialization=[
+        avatar_url=psychologist.avatar_url,
+        languages=psychologist.languages,
+        price_per_hour=psychologist.price_per_hour,
+        is_verified=is_verified,
+        session_minutes=settings.SESSION_DURATION_MIN,
+        topics=[
             specialization.symptom_code.value
             for specialization in psychologist.psychologist_specializations
         ],
-        experience=psychologist.experience_years,
+        experience_years=psychologist.experience_years,
         methods=pick(psychologist.methods, psychologist.methods_eng, lang) or [],
         bio=pick(psychologist.bio, psychologist.bio_eng, lang),
         certificates=[

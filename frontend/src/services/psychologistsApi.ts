@@ -33,7 +33,7 @@ export const psychologistsApi = createApi({
 
         getSymptomCodes: builder.query<SymptomCode[], void>({
             query: () => ({
-                url: '/symptom-codes',
+                url: '/symptoms',
                 method: 'GET',
             }),
         }),
