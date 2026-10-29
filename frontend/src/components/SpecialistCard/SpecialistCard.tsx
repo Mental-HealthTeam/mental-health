@@ -6,31 +6,18 @@ import { OutlineButton, PrimaryButton } from '../UI/Buttons'
 import { AvatarFallbackIcon, AwardIcon, MoneyIcon } from '../UI/Icons'
 import { TimeSlot } from '../UI/TimeSlot'
 
-import type { SymptomCode } from '../../types/psychologist.ts'
+import type { Psychologist } from '../../types/psychologist.ts'
 
 import './SpecialistCard.scss'
 
-type TimeSlotItem = {
-    time: string
-}
-
-type Props = {
-    id: string
-    name: string
-    avatar: string | null
-    experience: number
-    price: string
-    methods: string[]
-    topics: SymptomCode[]
-    timeSlots: TimeSlotItem[]
-}
+type Props = Omit<Psychologist, 'methods'>
 
 const isSameDay = (firstDate: Date, secondDate: Date) =>
     firstDate.getFullYear() === secondDate.getFullYear() &&
     firstDate.getMonth() === secondDate.getMonth() &&
     firstDate.getDate() === secondDate.getDate()
 
-const getNearestTimeSlots = (timeSlots: TimeSlotItem[]) => {
+const getNearestTimeSlots = (timeSlots: Psychologist['mock_slots']) => {
     const sortedSlots = [...timeSlots].sort(
         (firstSlot, secondSlot) =>
             new Date(firstSlot.time).getTime() - new Date(secondSlot.time).getTime(),
@@ -40,7 +27,7 @@ const getNearestTimeSlots = (timeSlots: TimeSlotItem[]) => {
         return sortedSlots
     }
 
-    const nearestSlots: TimeSlotItem[] = []
+    const nearestSlots: Psychologist['mock_slots'] = []
 
     for (const slot of sortedSlots) {
         const slotDate = new Date(slot.time)
@@ -74,13 +61,13 @@ const getNearestTimeSlots = (timeSlots: TimeSlotItem[]) => {
 }
 
 export const SpecialistCard = ({
-    id,
-    name,
-    avatar,
-    experience,
-    price,
+    psychologist_id: id,
+    full_name: name,
+    avatar_url: avatar,
+    experience_years: experience,
+    price_per_hour: price,
     topics,
-    timeSlots,
+    mock_slots: timeSlots,
 }: Props) => {
     const { t, i18n } = useTranslation(['psychologists', 'symptoms', 'accessibility'])
 
@@ -90,7 +77,10 @@ export const SpecialistCard = ({
     const [isBooking, setIsBooking] = useState(false)
     const [selectedSlot, setSelectedSlot] = useState('')
 
-    const nearestTimeSlots = getNearestTimeSlots(timeSlots)
+    const safeTopics = Array.isArray(topics) ? topics : []
+    const safeTimeSlots = Array.isArray(timeSlots) ? timeSlots : []
+
+    const nearestTimeSlots = getNearestTimeSlots(safeTimeSlots)
 
     useEffect(() => {
         if (!isBooking) {
@@ -217,7 +207,7 @@ export const SpecialistCard = ({
                 </span>
 
                 <div className="specialist-card__topic-list">
-                    {topics.map((topic) => (
+                    {safeTopics.map((topic) => (
                         <span className="specialist-card__topic" key={topic}>
                             {t(`symptoms:${topic}`)}
                         </span>
