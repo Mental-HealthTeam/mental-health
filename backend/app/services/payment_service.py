@@ -737,17 +737,18 @@ async def cancel_booking_service(
                 "Refund failed for booking %s, manual check needed: %s",
                 booking_id, e
             )
-            await db.rollback()
-            booking = await get_booking_for_user(
-                db=db,
-                booking_id=booking_id,
-                user=user
-            )
-            await mark_refund_failed(
-                db=db,
-                booking_id=booking.id
-            )
+            try:
+                await mark_refund_failed(
+                    db=db,
+                    booking_id=booking.id
+                )
+            except SQLAlchemyError:
+                await db.rollback()
+                logger.exception(
+                    "Could not mark the failed refund of booking %s, manual check needed",
+                    booking_id
+                )
             raise HTTPException(
-                status_code=502,
+                status_code=status.HTTP_502_BAD_GATEWAY,
                 detail="The refund failed, contact support."
             ) from e
