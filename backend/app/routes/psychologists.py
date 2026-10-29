@@ -13,17 +13,23 @@ from database.models.models import (
     SymptomCode,
     User,
     UserRole,
+    Language
 )
 from schemas.payout import PayoutDetailsFields, PayoutDetailsResponse
 from schemas.psychologist import (
     PsychologistDetailResponse,
     PsychologistListItem,
+    PsychologistProfileResponse,
+    PsychologistProfileUpdate,
 )
 from services.psychologist_service import (
     get_psychologists,
     get_psychologist_by_id as get_psychologist_by_id_service,
+    get_my_psychologist_profile,
+    update_my_psychologist_profile,
 )
-
+from config.dependencies import get_settings
+from config.settings import BaseAppSettings
 
 router = APIRouter()
 
@@ -33,7 +39,7 @@ router = APIRouter()
     response_model=list[PsychologistListItem],
     summary="Get all psychologists",
     response_description=(
-        "Catalog of psychologists with specializations and available slots"
+        "Catalog of psychologists with topics and available slots"
     ),
 )
 async def list_psychologists(
@@ -41,6 +47,7 @@ async def list_psychologists(
     limit: int = Query(default=5, ge=1, le=100),
     offset: int = Query(default=0, ge=0),
     symptom_codes: list[SymptomCode] | None = Query(default=None),
+    lang: Language = Query(default=Language.UKRAINIAN)
 ):
     """
     Returns the psychologist catalog for the listing/catalog page.
@@ -53,6 +60,7 @@ async def list_psychologists(
         limit=limit,
         offset=offset,
         symptom_codes=symptom_codes,
+        lang=lang
     )
 
 
@@ -177,11 +185,67 @@ async def update_my_payout_details(
 
 
 @router.get(
+    "/me/profile",
+    response_model=PsychologistProfileResponse,
+    summary="Get own psychologist profile",
+)
+async def get_my_profile(
+    db: Annotated[AsyncSession, Depends(get_db)],
+    current_user: Annotated[
+        User,
+        Depends(require_roles(UserRole.PSYCHOLOGIST)),
+    ],
+):
+    profile = await get_my_psychologist_profile(
+        db=db,
+        psychologist_id=current_user.id,
+    )
+
+    if profile is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Psychologist profile not found",
+        )
+
+    return profile
+
+
+@router.patch(
+    "/me/profile",
+    response_model=PsychologistProfileResponse,
+    summary="Update own psychologist profile",
+)
+async def update_my_profile(
+    profile_data: PsychologistProfileUpdate,
+    db: Annotated[AsyncSession, Depends(get_db)],
+    current_user: Annotated[
+        User,
+        Depends(require_roles(UserRole.PSYCHOLOGIST)),
+    ],
+):
+    profile = await update_my_psychologist_profile(
+        db=db,
+        psychologist_id=current_user.id,
+        data=profile_data,
+    )
+
+    if profile is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Psychologist profile not found",
+        )
+
+    return profile
+
+
+@router.get(
     "/{psychologist_id}",
     response_model=PsychologistDetailResponse,
     summary="Get a single psychologist's full profile",
     response_description=(
-        "Full profile with bio, certificates, reviews and available slots"
+        "Full profile with title, avatar, price per hour, languages, "
+        "verification status, session duration, topics, experience, bio, "
+        "certificates, reviews and available slots"
     ),
     responses={
         404: {
@@ -196,14 +260,22 @@ async def update_my_payout_details(
 )
 async def get_psychologist_by_id(
     psychologist_id: UUID,
+    settings: Annotated[BaseAppSettings, Depends(get_settings)],
     db: Annotated[AsyncSession, Depends(get_db)],
+    lang: Language = Query(default=Language.UKRAINIAN)
 ):
     """
     Returns the full profile for a single psychologist.
+
+    `is_verified` is true when the profile status is active.
+    `session_minutes` is the session duration from the platform settings.
+    Payout and meeting details are not part of the public response.
     """
     psychologist = await get_psychologist_by_id_service(
         psychologist_id=psychologist_id,
         db=db,
+        lang=lang,
+        settings=settings
     )
 
     if psychologist is None:

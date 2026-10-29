@@ -1,11 +1,11 @@
 from typing import Annotated
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, HTTPException, Query, status
+from fastapi import APIRouter, Depends, Query, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from auth.dependencies import get_current_user, require_roles
-from config.dependencies import get_settings
+from config.dependencies import get_settings, get_payment_provider
 from config.settings import Settings
 from database import get_db
 from database.models.models import BookingStatus, User, UserRole
@@ -13,7 +13,6 @@ from services.booking_service import (
     create_booking,
     get_booking_for_user,
     list_bookings_for_user,
-    mark_cancelled,
     mark_disputed,
     resolve_dispute,
 )
@@ -23,8 +22,10 @@ from schemas.booking import (
     BookingResponse,
     DisputeRequest,
     ResolveDisputeRequest,
+    BookingCancelRequest
 )
-
+from payment_provider.payment_interface import PaymentProviderInterface
+from services.payment_service import cancel_booking_service
 
 router = APIRouter()
 
@@ -32,13 +33,6 @@ NOT_AUTHENTICATED = {"description": "Not authenticated"}
 NOT_ALLOWED = {"description": "Not enough permissions"}
 NOT_FOUND = {"description": "Booking not found"}
 WRONG_STATE = {"description": "Action is not allowed for the current booking state"}
-
-
-def not_implemented() -> HTTPException:
-    return HTTPException(
-        status_code=status.HTTP_501_NOT_IMPLEMENTED,
-        detail="Not implemented."
-    )
 
 
 @router.post(
@@ -49,7 +43,7 @@ def not_implemented() -> HTTPException:
     responses={
         401: NOT_AUTHENTICATED,
         422: {"description": "Invalid booking data"},
-        503: {"description": "The time slot is already taken"},
+        409: {"description": "The time slot is already taken"},
     },
 )
 async def create_booking_endpoint(
@@ -129,20 +123,20 @@ async def get_booking_endpoint(
 )
 async def cancel_booking_endpoint(
         db: Annotated[AsyncSession, Depends(get_db)],
+        settings: Annotated[Settings, Depends(get_settings)],
         current_user: Annotated[User, Depends(get_current_user)],
+        payment_provider: Annotated[PaymentProviderInterface, Depends(get_payment_provider)],
         booking_id: UUID,
+        data: BookingCancelRequest | None = None
 ):
-
-    booking = await get_booking_for_user(
+    confirm_no_refund = data.confirm_no_refund if data else False
+    return await cancel_booking_service(
         db=db,
-        booking_id=booking_id,
+        payment_provider=payment_provider,
         user=current_user,
-    )
-
-    return await mark_cancelled(
-        db=db,
-        booking_id=booking.id,
-        refunded=False,
+        settings=settings,
+        booking_id=booking_id,
+        confirm_no_refund=confirm_no_refund,
     )
 
 
@@ -187,11 +181,13 @@ async def dispute_booking_endpoint(
 async def resolve_dispute_endpoint(
         db: Annotated[AsyncSession, Depends(get_db)],
         admin: Annotated[User, Depends(require_roles(UserRole.ADMIN))],
+        payment_provider: Annotated[PaymentProviderInterface, Depends(get_payment_provider)],
         booking_id: UUID,
         data: ResolveDisputeRequest,
 ):
     return await resolve_dispute(
         db=db,
+        payment_provider=payment_provider,
         booking_id=booking_id,
         new_status=data.new_status,
         admin=admin,
