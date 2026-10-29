@@ -27,7 +27,9 @@ const EMERGENCY_FILTER = 'emergency'
 export const SpecialistsSection = () => {
     const sliderRef = useRef<HTMLDivElement>(null)
 
-    const { t } = useTranslation(['psychologists', 'symptoms', 'accessibility'])
+    const { t, i18n } = useTranslation(['psychologists', 'symptoms', 'accessibility'])
+
+    const lang = i18n.language === 'en' ? 'en' : 'uk'
 
     const { visibleCards } = useScreenLayout()
 
@@ -78,6 +80,7 @@ export const SpecialistsSection = () => {
                 limit: DEFAULT_LIMIT,
                 offset: nextOffset,
                 symptomCodes: selectedSymptomCodes,
+                lang,
             }).unwrap()
 
             setSpecialists((current) => (replace ? result : [...current, ...result]))
@@ -105,6 +108,7 @@ export const SpecialistsSection = () => {
             limit: DEFAULT_LIMIT,
             offset: 0,
             symptomCodes: selectedSymptomCodes,
+            lang,
         })
             .unwrap()
             .then((result) => {
@@ -118,7 +122,7 @@ export const SpecialistsSection = () => {
             .finally(() => {
                 setIsInitialLoading(false)
             })
-    }, [activeFilter])
+    }, [activeFilter, lang])
 
     const handleFilterChange = (filter: string) => {
         if (filter === activeFilter) {

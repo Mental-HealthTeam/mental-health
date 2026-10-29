@@ -18,6 +18,8 @@ export const psychologistsApi = createApi({
 
                 searchParams.set('offset', String(params?.offset ?? 0))
 
+                searchParams.set('lang', params?.lang ?? 'uk')
+
                 params?.symptomCodes?.forEach((code) => {
                     searchParams.append('symptom_codes', code)
                 })

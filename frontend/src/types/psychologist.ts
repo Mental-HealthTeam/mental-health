@@ -34,4 +34,5 @@ export type GetPsychologistsParams = {
     limit?: number
     offset?: number
     symptomCodes?: SymptomCode[]
+    lang?: 'uk' | 'en'
 }
