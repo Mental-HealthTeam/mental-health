@@ -112,6 +112,10 @@ def build_mock_slots(times_of_day: list[str]) -> list[str]:
 
 
 def mock_email(source_id: str) -> str:
+    return f"{source_id}@example.com"
+
+
+def legacy_mock_email(source_id: str) -> str:
     return f"{source_id}@mock.mentalhealth.local"
 
 
@@ -128,14 +132,31 @@ def populate_psychologists() -> None:
         for entry in dataset:
             mock_slots = build_mock_slots(entry["mock_slots"])
 
-            user = session.query(User).filter_by(email=mock_email(entry["id"])).first()
+            email = mock_email(entry["id"])
+
+            user = session.query(User).filter_by(email=email).first()
+
+            if user is None:
+                user = (
+                    session.query(User)
+                    .filter_by(email=legacy_mock_email(entry["id"]))
+                    .first()
+                )
+                if user is not None:
+                    user.email = email
+
             if user is not None:
                 existing = session.get(Psychologist, user.id)
                 if existing is not None:
                     existing.mock_slots = mock_slots
+                    existing.full_name = entry["name"]
                     existing.full_name_eng = entry["name_eng"]
+                    existing.title = entry["title"]
                     existing.title_eng = entry["title_eng"]
+                    existing.bio = entry["bio"]
                     existing.bio_eng = entry["bio_eng"]
+                    existing.reviews = entry["reviews"]
+                    existing.methods = entry["methods"]
                     existing.methods_eng = entry["methods_eng"]
                     existing.iban = entry["iban"]
                     existing.tax_id = entry["tax_id"]

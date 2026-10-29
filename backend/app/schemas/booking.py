@@ -49,8 +49,8 @@ class BookingPsychologist(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
     psychologist_id: UUID
-    full_name: str
-    title: str
+    full_name: str = Field(validation_alias="display_full_name")
+    title: str = Field(validation_alias="display_title")
     avatar_url: str | None
 
 
