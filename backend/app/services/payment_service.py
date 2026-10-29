@@ -377,7 +377,7 @@ async def handle_webhook(
 
 def _set_reference_payout_for_bookings(
     bookings: list[Booking],
-    reference: str
+    reference: str | None
 ):
     for booking in bookings:
         booking.payout_reference = reference
@@ -513,6 +513,18 @@ async def payout_service(
                     reference, psychologist_id, e.detail
                 )
             if isinstance(e, PaymentProviderError):
+                try:
+                    _set_reference_payout_for_bookings(
+                        bookings=bookings,
+                        reference=None
+                    )
+                    await db.commit()
+                except SQLAlchemyError:
+                    await db.rollback()
+                    logger.exception(
+                        "Payout %s for psychologist %s: could not release the payout reference, bookings stay blocked",
+                        reference, psychologist_id
+                    )
                 logger.error(
                     "Payout %s for psychologist %s failed: %s",
                     reference, psychologist_id, e
@@ -528,6 +540,18 @@ async def payout_service(
             # the payout was not sent. A data problem of one psychologist,
             # so it does not count towards stopping the whole run.
             # The error text is not logged: it contains the IBAN and tax id.
+            try:
+                _set_reference_payout_for_bookings(
+                    bookings=bookings,
+                    reference=None
+                )
+                await db.commit()
+            except SQLAlchemyError:
+                await db.rollback()
+                logger.error(
+                    "Payout %s for psychologist %s: could not release the payout reference, bookings stay blocked",
+                    reference, psychologist_id
+                )
             failed_count += 1
             logger.error(
                 "Payout %s for psychologist %s not sent: invalid payout details, manual check needed",
