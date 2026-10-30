@@ -129,7 +129,8 @@ class User(Base):
 
     bookings: Mapped[List["Booking"]] = relationship(
         "Booking",
-        back_populates="client"
+        back_populates="client",
+        foreign_keys="Booking.client_id"
     )
 
     user_identities: Mapped[List["UserIdentity"]] = relationship(
@@ -140,6 +141,16 @@ class User(Base):
     auth_sessions: Mapped[List["AuthSession"]] = relationship(
         "AuthSession",
         back_populates="user"
+    )
+    disputed_bookings: Mapped[list["Booking"] | None] = relationship(
+        "Booking",
+        back_populates="disputed_by",
+        foreign_keys="Booking.disputed_by_id"
+    )
+    dispute_resolved_bookings: Mapped[list["Booking"] | None] = relationship(
+        "Booking",
+        back_populates="dispute_resolved_by",
+        foreign_keys="Booking.dispute_resolved_by_id"
     )
 
 
@@ -367,6 +378,15 @@ class Booking(Base):
         default=False,
         server_default=text("false")
     )
+    disputed_by_id: Mapped[uuid.UUID | None] = mapped_column(
+        ForeignKey("users.id", ondelete="SET NULL")
+    )
+    dispute_resolved_by_id: Mapped[uuid.UUID | None] = mapped_column(
+        ForeignKey("users.id", ondelete="SET NULL")
+    )
+    dispute_note: Mapped[str | None] = mapped_column(
+        String(550)
+    )
 
     __table_args__ = (
         Index(
@@ -382,10 +402,20 @@ class Booking(Base):
             "status", "payment_status", "hold_expires_at"
         ),
     )
-
+    disputed_by: Mapped[User | None] = relationship(
+        "User",
+        back_populates="disputed_bookings",
+        foreign_keys=[disputed_by_id]
+    )
+    dispute_resolved_by: Mapped[User | None] = relationship(
+        "User",
+        back_populates="dispute_resolved_bookings",
+        foreign_keys=[dispute_resolved_by_id]
+    )
     client: Mapped[User] = relationship(
         "User",
-        back_populates="bookings"
+        back_populates="bookings",
+        foreign_keys=[client_id]
     )
 
     psychologist: Mapped["Psychologist"] = relationship(
