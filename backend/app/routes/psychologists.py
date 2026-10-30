@@ -28,7 +28,8 @@ from services.psychologist_service import (
     get_my_psychologist_profile,
     update_my_psychologist_profile,
 )
-
+from config.dependencies import get_settings
+from config.settings import BaseAppSettings
 
 router = APIRouter()
 
@@ -38,7 +39,7 @@ router = APIRouter()
     response_model=list[PsychologistListItem],
     summary="Get all psychologists",
     response_description=(
-        "Catalog of psychologists with specializations and available slots"
+        "Catalog of psychologists with topics and available slots"
     ),
 )
 async def list_psychologists(
@@ -242,7 +243,9 @@ async def update_my_profile(
     response_model=PsychologistDetailResponse,
     summary="Get a single psychologist's full profile",
     response_description=(
-        "Full profile with bio, certificates, reviews and available slots"
+        "Full profile with title, avatar, price per hour, languages, "
+        "verification status, session duration, topics, experience, bio, "
+        "certificates, reviews and available slots"
     ),
     responses={
         404: {
@@ -257,16 +260,22 @@ async def update_my_profile(
 )
 async def get_psychologist_by_id(
     psychologist_id: UUID,
+    settings: Annotated[BaseAppSettings, Depends(get_settings)],
     db: Annotated[AsyncSession, Depends(get_db)],
     lang: Language = Query(default=Language.UKRAINIAN)
 ):
     """
     Returns the full profile for a single psychologist.
+
+    `is_verified` is true when the profile status is active.
+    `session_minutes` is the session duration from the platform settings.
+    Payout and meeting details are not part of the public response.
     """
     psychologist = await get_psychologist_by_id_service(
         psychologist_id=psychologist_id,
         db=db,
-        lang=lang
+        lang=lang,
+        settings=settings
     )
 
     if psychologist is None:

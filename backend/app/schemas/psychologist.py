@@ -1,8 +1,13 @@
-from datetime import datetime
+from datetime import datetime, date
 from decimal import Decimal
 from uuid import UUID
 
-from pydantic import BaseModel, ConfigDict, Field, model_validator
+from pydantic import (
+    BaseModel,
+    ConfigDict,
+    model_validator,
+    Field
+)
 
 from database.models.models import SymptomCode
 
@@ -20,7 +25,7 @@ class Review(BaseModel):
     rating: int
     verified: bool
     text: str
-    created_at: datetime
+    created_at: date
 
 
 class Certificate(BaseModel):
@@ -34,7 +39,7 @@ class PsychologistListItem(BaseModel):
     experience_years: int
     price_per_hour: Decimal
     methods: list[str]
-    specialization: list[str]
+    topics: list[str]
     mock_slots: list[MockSlot]
 
 
@@ -42,8 +47,13 @@ class PsychologistDetailResponse(BaseModel):
     psychologist_id: UUID
     full_name: str
     title: str
-    specialization: list[str]
-    experience: int
+    avatar_url: str | None
+    price_per_hour: Decimal
+    languages: list[str]
+    is_verified: bool
+    session_minutes: int
+    topics: list[str]
+    experience_years: int
     methods: list[str]
     bio: dict[str, str]
     certificates: list[Certificate]

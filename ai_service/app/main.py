@@ -69,7 +69,8 @@ async def event_generator(
     ai_client: AIClientInterface,
     redis_storage: SessionStorageInterface,
     messages_for_api: list[dict],
-    session_id: str
+    session_id: str,
+    user_message: str
 ):
     reply = ""
     match_data_started = False
@@ -109,6 +110,11 @@ async def event_generator(
         yield f"data: {error_payload}\n\n"
     else:
         try:
+            await redis_storage.append_message(
+                session_id=session_id,
+                role="user",
+                content=user_message
+            )
             await redis_storage.append_message(
                 session_id=session_id,
                 role="assistant",
@@ -190,17 +196,19 @@ async def send_message(
     redis_storage: Annotated[SessionStorageInterface, Depends(get_redis_storage)]
 ) -> StreamingResponse:
     """
-    Appends the user's message to the session history, sends the full
-    history plus the system prompt (with the current date and time in the
-    user's timezone, `tz_name`, falling back to Europe/Kyiv) to the AI
-    provider, and streams the reply back as it's generated.
+    Sends the session history, the user's message and the system prompt
+    (with the current date and time in the user's timezone, `tz_name`,
+    falling back to Europe/Kyiv) to the AI provider, and streams the reply
+    back as it's generated. The user's message and the reply are saved to
+    history only after the stream completes.
 
     The raw `{...}` matching-info block the AI emits at the end of the
     conversation is not streamed as text. It is parsed and sent as a
     separate `match_data` event.
 
     If the stream breaks after it has started, an `error` event is sent
-    instead of an HTTP error and the partial reply is not saved to history.
+    instead of an HTTP error and neither the user's message nor the
+    partial reply is saved to history.
 
     Raises 503 if the AI provider or Redis fails before the stream starts.
     """
@@ -216,13 +224,13 @@ async def send_message(
                 )
             },
         ] + history
-        await redis_storage.append_message(session_id=request.session_id, role="user", content=request.message)
         return StreamingResponse(
             event_generator(
                 ai_client=ai_client,
                 redis_storage=redis_storage,
                 messages_for_api=messages_for_api,
-                session_id=request.session_id
+                session_id=request.session_id,
+                user_message=request.message
             ),
             media_type="text/event-stream"
         )

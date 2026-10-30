@@ -60,6 +60,8 @@ services:
     environment:
       DATABASE_URL: postgresql://${DB_USER}:${DB_PASSWORD}@db:5432/${DB_NAME}
       REDIS_URL: redis://${REDIS_HOST}:${REDIS_PORT}/0
+    volumes:
+      - /opt/mental-health/media:/app/media
     ports:
       - "${BACKEND_PORT}:8000"
     healthcheck:
@@ -79,6 +81,42 @@ services:
       ai_service:
         condition: service_started
 
+  celery_worker:
+    image: vanyas627/mental-health-backend:${IMAGE_TAG}
+    container_name: ${PROJECT_NAME}_celery_worker
+    restart: always
+    entrypoint: []
+    command: celery -A tasks.celery_app:app worker --loglevel=info --concurrency=2
+    env_file:
+      - ./backend/.env
+    environment:
+      DATABASE_URL: postgresql://${DB_USER}:${DB_PASSWORD}@db:${DB_PORT}/${DB_NAME}
+      REDIS_URL: redis://${REDIS_HOST}:${REDIS_PORT}/0
+      CELERY_BROKER_URL: redis://${REDIS_HOST}:${REDIS_PORT}/1
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  celery_beat:
+    image: vanyas627/mental-health-backend:${IMAGE_TAG}
+    container_name: ${PROJECT_NAME}_celery_beat
+    restart: always
+    entrypoint: []
+    command: celery -A tasks.celery_app:app beat --loglevel=info --schedule=/tmp/celerybeat-schedule
+    env_file:
+      - ./backend/.env
+    environment:
+      DATABASE_URL: postgresql://${DB_USER}:${DB_PASSWORD}@db:${DB_PORT}/${DB_NAME}
+      REDIS_URL: redis://${REDIS_HOST}:${REDIS_PORT}/0
+      CELERY_BROKER_URL: redis://${REDIS_HOST}:${REDIS_PORT}/1
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
   # Frontend
   frontend:
     image: vanyas627/mental-health-frontend:${IMAGE_TAG}
@@ -90,6 +128,7 @@ services:
     volumes:
       - /etc/letsencrypt:/etc/letsencrypt:ro
       - /opt/letsencrypt:/var/www/letsencrypt:ro
+      - /opt/mental-health/media:/usr/share/nginx/html/media:ro
     depends_on:
       - backend
 

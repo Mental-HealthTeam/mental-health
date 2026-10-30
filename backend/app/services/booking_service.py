@@ -460,7 +460,7 @@ async def mark_disputed(
 ) -> Booking:
     """CONFIRMED / COMPLETED (HELD) -> DISPUTED; payout skips it.
 
-    The note and the admin are only logged for now. Raises 404, 409.
+    Stores the note and the admin who opened the dispute. Raises 404, 409.
     Route: POST /api/bookings/{booking_id}/dispute
     """
 
@@ -491,14 +491,13 @@ async def mark_disputed(
         )
 
     booking.status = BookingStatus.DISPUTED
-
-    import logging
-
-    logging.getLogger(__name__).info(
-        "Booking disputed: booking_id=%s admin_id=%s note=%s",
+    booking.disputed_by_id = admin.id
+    booking.dispute_note = note
+    booking.dispute_resolved_by_id = None
+    logger.info(
+        "Booking disputed: booking_id=%s admin_id=%s",
         booking_id,
         admin.id,
-        note,
     )
 
     await db.commit()
@@ -639,7 +638,8 @@ async def resolve_dispute(
             )
             await mark_refund_failed(
                 db=db,
-                booking_id=booking.id
+                booking_id=booking.id,
+                resolve_dispute_error=True
             )
             raise HTTPException(
                 status_code=status.HTTP_502_BAD_GATEWAY,
@@ -647,6 +647,8 @@ async def resolve_dispute(
             ) from e
     else:
         booking.status = new_status
+
+    booking.dispute_resolved_by_id = admin.id
 
     await db.commit()
 
@@ -884,7 +886,8 @@ async def mark_completed(
 
 async def mark_refund_failed(
         db: AsyncSession,
-        booking_id: UUID
+        booking_id: UUID,
+        resolve_dispute_error: bool = False
 ) -> Booking:
     """CANCELLED / HELD -> DISPUTED with refund_error after a failed refund.
 
@@ -914,6 +917,15 @@ async def mark_refund_failed(
     ):
         try:
             booking.status = BookingStatus.DISPUTED
+            booking.dispute_resolved_by_id = None
+            if (
+                    resolve_dispute_error and
+                    booking.dispute_note is not None and
+                    booking.dispute_note.strip() != ""
+            ):
+                booking.dispute_note = "Resolve dispute failed: " + booking.dispute_note
+            else:
+                booking.dispute_note = "Refund failed"
             booking.refund_error = True
             await db.commit()
         except IntegrityError:
