@@ -74,6 +74,22 @@ export const SpecialistsSection = () => {
 
     const hasMobileNavigation = specialists.length > 1 || hasMore
 
+    const getSlideStep = () => {
+        const slider = sliderRef.current
+
+        if (!slider) {
+            return 0
+        }
+
+        const firstSlide = slider.querySelector<HTMLElement>('.specialists-section__slide')
+
+        if (!firstSlide) {
+            return 0
+        }
+
+        return firstSlide.offsetWidth + SLIDER_GAP
+    }
+
     const loadSpecialists = async (nextOffset: number, replace = false) => {
         try {
             const result = await getPsychologists({
@@ -138,21 +154,23 @@ export const SpecialistsSection = () => {
 
     const handlePrevious = () => {
         const slider = sliderRef.current
+        const slideStep = getSlideStep()
 
-        if (!slider) {
+        if (!slider || !slideStep) {
             return
         }
 
         slider.scrollBy({
-            left: -(slider.clientWidth + SLIDER_GAP),
+            left: -slideStep,
             behavior: 'smooth',
         })
     }
 
     const handleNext = async () => {
         const slider = sliderRef.current
+        const slideStep = getSlideStep()
 
-        if (!slider) {
+        if (!slider || !slideStep) {
             return
         }
 
@@ -163,7 +181,7 @@ export const SpecialistsSection = () => {
 
             requestAnimationFrame(() => {
                 slider.scrollBy({
-                    left: slider.clientWidth + SLIDER_GAP,
+                    left: slideStep,
                     behavior: 'smooth',
                 })
             })
@@ -172,10 +190,11 @@ export const SpecialistsSection = () => {
         }
 
         slider.scrollBy({
-            left: slider.clientWidth + SLIDER_GAP,
+            left: slideStep,
             behavior: 'smooth',
         })
     }
+
     return (
         <section className="specialists-section">
             <Container className="specialists-section__container">
@@ -230,6 +249,7 @@ export const SpecialistsSection = () => {
                     </div>
                 )}
 
+                {/* TODO: Extract loading, error and empty states into a reusable Status/ErrorState component. */}
                 {isSymptomsError && (
                     <p className="specialists-section__status">
                         {t('psychologists:section.filtersError')}
@@ -280,16 +300,7 @@ export const SpecialistsSection = () => {
                                             className="specialists-section__slide"
                                             key={specialist.psychologist_id}
                                         >
-                                            <SpecialistCard
-                                                id={specialist.psychologist_id}
-                                                name={specialist.full_name}
-                                                avatar={specialist.avatar_url}
-                                                experience={specialist.experience_years}
-                                                price={specialist.price_per_hour}
-                                                methods={specialist.methods}
-                                                topics={specialist.specialization}
-                                                timeSlots={specialist.mock_slots}
-                                            />
+                                            <SpecialistCard {...specialist} />
                                         </div>
                                     ))}
                                 </div>
