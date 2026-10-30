@@ -236,6 +236,9 @@ export const SpecialistsSection = () => {
                     </p>
                 )}
 
+                {/* TODO: Add reusable StatusState for loading/error/empty states,
+                    ErrorBoundary for runtime/render errors,
+                    and Zod runtime validation for psychologists API responses. */}
                 {isInitialLoading && (
                     <p className="specialists-section__status">
                         {t('psychologists:section.loading')}
