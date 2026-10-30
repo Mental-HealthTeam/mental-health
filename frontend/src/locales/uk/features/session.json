@@ -1,0 +1,8 @@
+{
+  "sessionStatus": {
+    "title": "Статус сесії",
+    "scheduled": "Запланована",
+    "available": "Вільно",
+    "completed": "Завершена"
+  }
+}

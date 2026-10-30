@@ -1,4 +1,4 @@
-export type SessionStatus = 'scheduled' | 'completed' | 'free'
+export type SessionStatus = 'scheduled' | 'completed' | 'available'
 
 export type Session = {
     id: string

@@ -32,7 +32,7 @@ const session = ({ id, offsetDays, hour, status, client, topics = [] }: Params):
     meet_link: status === 'scheduled' ? `https://meet.google.com/mock-${id}` : null,
 })
 
-const OLENA = { name: 'Олена Колченовська', avatar: avatar1 }
+const OLENA = { name: 'Олена Колченовська Аліксоновська', avatar: avatar1 }
 const ANDRII = { name: 'Андрій Мельник', avatar: avatar2 }
 const MARYNA = { name: 'Марина Іваненко', avatar: avatar3 }
 const IRYNA = { name: 'Ірина Шевчук', avatar: avatar1 }
@@ -62,7 +62,7 @@ export const SESSIONS_MOCK: Session[] = [
         id: 's-03',
         offsetDays: -1,
         hour: 19,
-        status: 'completed',
+        status: 'available',
         client: MARYNA,
         topics: ['Стосунки'],
     }),
@@ -70,7 +70,7 @@ export const SESSIONS_MOCK: Session[] = [
         id: 's-04',
         offsetDays: -1,
         hour: 20,
-        status: 'completed',
+        status: 'available',
         client: IRYNA,
         topics: ['Депресія', 'Самооцінка'],
     }),
@@ -84,7 +84,6 @@ export const SESSIONS_MOCK: Session[] = [
         client: OLENA,
         topics: ['Тривожність', 'Депресія'],
     }),
-    session({ id: 's-06', offsetDays: 0, hour: 20, status: 'free' }),
 
     // завтра
     session({
@@ -95,7 +94,6 @@ export const SESSIONS_MOCK: Session[] = [
         client: DMYTRO,
         topics: ['Самооцінка'],
     }),
-    session({ id: 's-08', offsetDays: 1, hour: 18, status: 'free' }),
     session({
         id: 's-09',
         offsetDays: 1,
@@ -106,7 +104,6 @@ export const SESSIONS_MOCK: Session[] = [
     }),
 
     // післязавтра
-    session({ id: 's-10', offsetDays: 2, hour: 11, status: 'free' }),
     session({
         id: 's-11',
         offsetDays: 2,
@@ -115,7 +112,6 @@ export const SESSIONS_MOCK: Session[] = [
         client: ANDRII,
         topics: ['Вигорання', 'Тривожність'],
     }),
-    session({ id: 's-12', offsetDays: 2, hour: 18, status: 'free' }),
 
     // +3 дні
     session({
@@ -126,11 +122,8 @@ export const SESSIONS_MOCK: Session[] = [
         client: IRYNA,
         topics: ['Депресія'],
     }),
-    session({ id: 's-14', offsetDays: 3, hour: 16, status: 'free' }),
 
     // +4 дні
-    session({ id: 's-15', offsetDays: 4, hour: 12, status: 'free' }),
-    session({ id: 's-16', offsetDays: 4, hour: 13, status: 'free' }),
     session({
         id: 's-17',
         offsetDays: 4,

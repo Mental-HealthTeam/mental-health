@@ -56,7 +56,6 @@ export const SpecialistCabinet = () => {
                         <ProfileTabs
                             className="specialist-cabinet__profile-tabs"
                             specialist={specialist}
-
                         />
                     )}
 

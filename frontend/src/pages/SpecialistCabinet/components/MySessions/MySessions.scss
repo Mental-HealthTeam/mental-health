@@ -10,6 +10,7 @@
     max-width: 100%;
     width: 100%;
     border: 1px solid a.$color-gray-10;
+    gap: 16px;
 
     &__heading {
         display: flex;
@@ -17,6 +18,13 @@
         max-width: 100%;
         gap: 20px;
         max-height: max-content;
+        position: relative;
+    }
+
+    &__availability-popup {
+        position: absolute;
+        top: 60px;
+        right: 5px;
     }
 
     &__title {
@@ -39,5 +47,97 @@
     &__filter-tabs {
         display: flex;
         gap: 8px;
+    }
+
+    &__scroll {
+        min-width: 0;
+        overflow-x: auto;
+        padding-bottom: 16px;
+
+        scrollbar-width: 9px;
+        scrollbar-color: a.$color-gray-10 transparent;
+
+        &::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background-color: a.$color-gray-10;
+            border-radius: 999px;
+        }
+
+        &::-webkit-scrollbar-thumb:hover {
+            background-color: a.$color-optional;
+        }
+    }
+
+    &__days {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 16px;
+        width: max-content;
+        min-width: 100%;
+    }
+
+    &__day {
+        display: flex;
+        flex-direction: column;
+        flex-shrink: 0;
+        gap: 12px;
+        padding: 24px;
+        background-color: a.$color-background;
+        border: 1px solid a.$color-gray-10;
+        border-radius: 20px;
+        min-width: max-content;
+        width: auto;
+    }
+
+    &__day-title {
+        color: a.$color-optional;
+        font-size: a.$font-size-h5;
+        line-height: a.$line-height-h5;
+        letter-spacing: a.$letter-spacing-h5;
+        font-weight: a.$font-weight-h5;
+        text-align: left;
+        margin-bottom: 8px;
+    }
+
+    &__head {
+        display: grid;
+        grid-template-columns: 180px 80px 240px 260px 220px;
+        grid-template-areas: none;
+        align-items: center;
+        column-gap: 0;
+        padding-bottom: 8px;
+        color: a.$color-gray-60;
+        font-size: a.$font-size-body;
+        line-height: a.$line-height-body;
+        font-weight: a.$font-weight-body-semibold;
+
+        > span {
+            padding-inline: 16px;
+        }
+    }
+
+    &__list {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    &__session-button {
+        background: a.$color-secondary-gradient;
+        color: a.$color-primary;
+        max-height: 40px;
+        text-transform: none;
+    }
+
+    &__no-sessions {
+        color: a.$color-gray-40;
+        font-size: a.$font-size-h5;
+        line-height: a.$line-height-h5;
+        letter-spacing: a.$letter-spacing-h5;
+        font-weight: a.$font-weight-h5;
+        margin-top: 20px;
     }
 }

@@ -1,0 +1,101 @@
+@use '../../../../styles/abstracts' as a;
+
+.session-card {
+    display: grid;
+    grid-template-columns: 180px 80px 240px 260px 220px;
+    grid-template-areas: none;
+    align-items: center;
+    column-gap: 0;
+    border-top: 1px solid a.$color-gray-10;
+    padding-block: 16px;
+
+    &__status {
+        display: flex;
+        gap: 10px;
+        grid-area: auto;
+        grid-column: 1;
+        padding-inline: 16px;
+    }
+
+    &__radio {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: a.$color-secondary-gradient;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+
+        &--completed {
+            background: none;
+            background-color: a.$color-gray-60;
+        }
+
+        &--available {
+            background: none;
+            background-color: transparent;
+            border: 1px solid a.$color-gray-60;
+        }
+    }
+
+    &__radio-icon {
+        flex-shrink: 0;
+    }
+
+    &__status-text {
+        color: a.$color-primary;
+        font-size: a.$font-size-body;
+        line-height: a.$line-height-body;
+        font-weight: a.$font-weight-body-semibold;
+    }
+
+    &__time {
+        grid-area: auto;
+        grid-column: 2;
+        padding-inline: 16px;
+        border-inline: 1px solid a.$color-gray-10;
+        color: a.$color-primary;
+        font-size: a.$font-size-body;
+        line-height: a.$line-height-body;
+        font-weight: a.$font-weight-body-extrabold;
+    }
+
+    &__client {
+        grid-area: auto;
+        grid-column: 3;
+        padding-inline: 16px;
+        display: flex;
+        gap: 8px;
+        align-items: center;
+    }
+
+    &__client-name {
+        color: a.$color-primary;
+        font-size: a.$font-size-body;
+        line-height: a.$line-height-body;
+        font-weight: a.$font-weight-body-semibold;
+    }
+
+    &__topics {
+        grid-area: auto;
+        grid-column: 4;
+        align-self: stretch;
+        align-items: center;
+        padding-inline: 16px;
+        border-inline: 1px solid a.$color-gray-10;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px;
+    }
+
+    &__topic {
+        color: a.$color-optional;
+        border-color: a.$color-optional;
+    }
+
+    &__actions {
+        grid-area: auto;
+        grid-column: 5;
+        padding-inline: 16px;
+    }
+}

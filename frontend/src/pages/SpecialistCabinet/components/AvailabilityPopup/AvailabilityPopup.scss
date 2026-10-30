@@ -1,0 +1,82 @@
+@use '../../../../styles/abstracts' as a;
+
+.availability-popup {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    background: a.$color-background;
+    border-radius: 18px;
+    padding: 24px;
+    box-shadow: 9px 45px 32px #00000034;
+    max-width: 315px;
+
+    &__header {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        min-width: 0;
+        width: 100%;
+    }
+
+    &__title {
+        color: a.$color-primary;
+        font-size: a.$font-size-h5;
+        line-height: a.$line-height-h5;
+        letter-spacing: a.$letter-spacing-h5;
+        font-weight: a.$font-weight-h5;
+        text-align: left;
+    }
+
+    &__field {
+        display: flex;
+        justify-content: flex-start;
+        gap: 16px;
+    }
+
+    &__label {
+        color: a.$color-gray-60;
+        font-size: a.$font-size-body;
+        line-height: a.$line-height-body;
+        font-weight: a.$font-weight-body-semibold;
+    }
+
+    &__input {
+        min-width: 0;
+        max-width: 120px;
+        border: 1px solid a.$color-optional;
+        cursor: pointer;
+        padding: 2px 5px;
+        border-radius: 10px;
+    }
+
+    &__close {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 36px;
+        height: 36px;
+        padding: 0;
+        border: none;
+        border-radius: 0;
+        overflow: visible;
+        color: a.$color-gray-20;
+
+        &:hover {
+            background: transparent;
+            color: a.$color-primary;
+        }
+    }
+
+    &__form {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    &__submit {
+        background: a.$color-secondary-gradient;
+        color: a.$color-primary;
+        max-height: 40px;
+        border: none;
+    }
+}

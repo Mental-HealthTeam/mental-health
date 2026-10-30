@@ -1,0 +1,8 @@
+{
+  "sessionStatus": {
+    "title": "Session status",
+    "scheduled": "Scheduled",
+    "available": "Available",
+    "completed": "Completed"
+  }
+}

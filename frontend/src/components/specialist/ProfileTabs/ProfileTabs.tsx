@@ -13,8 +13,7 @@ import './ProfileTabs.scss'
 type ProfileSection = 'basicInf' | 'reviews'
 
 type Props = {
-    specialist: Pick<SpecialistProfile, 'bio' | 'certificates' | 'tags_symptoms'> &
-        Partial<Pick<SpecialistProfile, 'reviews'>>
+    specialist: SpecialistProfile
     showReviews?: boolean
     className?: string
 }
@@ -38,7 +37,7 @@ export const ProfileTabs = ({ specialist, showReviews = false, className }: Prop
                 />
                 <SpecializationsCard
                     className="profile-tabs__specializations"
-                    tags_symptoms={specialist.tags_symptoms}
+                    tags_symptoms={specialist.topics}
                 />
             </div>
         )
