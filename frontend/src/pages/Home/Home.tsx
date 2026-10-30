@@ -12,17 +12,33 @@ import { FaqSection } from '../../components/FaqSection/FaqSection.tsx'
 
 export const Home = () => {
     return (
-        <div className="home">
+        <div className="home" id="home">
             <Header />
 
             <main className="home__content">
                 <Hero />
-                <WhyChooseUs />
-                <SpecialistsSection />
-                <WhyUs />
+
+                <section id="about">
+                    <WhyChooseUs />
+                </section>
+
+                <section id="psychologists">
+                    <SpecialistsSection />
+                </section>
+
+                <section id="how-it-works">
+                    <WhyUs />
+                </section>
+
                 <FaqSection />
-                <ReviewsSection />
-                <ContactSection />
+
+                <section id="reviews">
+                    <ReviewsSection />
+                </section>
+
+                <section id="contact">
+                    <ContactSection />
+                </section>
             </main>
 
             <Footer />

@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router-dom'
 import classNames from 'classnames'
 
+import { useAppDispatch } from '../../app/hooks'
+import { openAiChat } from '../../app/store/slices/aiChatSlice'
 import { headerNavigationItems } from '../../constants/navigation'
 
 import { Container } from '../Container'
@@ -10,11 +13,11 @@ import { OutlineButton, PrimaryButton } from '../UI/Buttons'
 import { ArrowIcon, CloseIcon, LogoIcon, MenuIcon, SparkIcon } from '../UI/Icons'
 
 import './Header.scss'
-import { useAppDispatch } from '../../app/hooks'
-import { openAiChat } from '../../app/store/slices/aiChatSlice'
 
 export const Header = () => {
     const dispatch = useAppDispatch()
+    const navigate = useNavigate()
+
     const [isMenuOpen, setIsMenuOpen] = useState(false)
     const [activeHref, setActiveHref] = useState('#about')
 
@@ -41,6 +44,11 @@ export const Header = () => {
         })
     }
 
+    const handleRouteNavigation = (path: string) => {
+        closeMenu()
+        navigate(path)
+    }
+
     const handleOpenChat = () => {
         closeMenu()
         dispatch(openAiChat())
@@ -60,6 +68,45 @@ export const Header = () => {
         }
     }, [])
 
+    useEffect(() => {
+        const sections = headerNavigationItems
+            .map(({ href }) => document.querySelector(href))
+            .filter((section): section is Element => Boolean(section))
+
+        if (sections.length === 0) {
+            return
+        }
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                const visibleSection = entries
+                    .filter((entry) => entry.isIntersecting)
+                    .sort((firstEntry, secondEntry) => {
+                        return secondEntry.intersectionRatio - firstEntry.intersectionRatio
+                    })[0]
+
+                if (!visibleSection) {
+                    return
+                }
+
+                setActiveHref(`#${visibleSection.target.id}`)
+            },
+            {
+                root: null,
+                rootMargin: '-30% 0px -60% 0px',
+                threshold: 0,
+            },
+        )
+
+        sections.forEach((section) => {
+            observer.observe(section)
+        })
+
+        return () => {
+            observer.disconnect()
+        }
+    }, [])
+
     return (
         <header className="header">
             <Container
@@ -68,14 +115,14 @@ export const Header = () => {
                 })}
             >
                 <div className="header__top">
-                    <a
+                    <button
                         className="header__logo"
-                        href="#home"
+                        type="button"
                         aria-label={tAccessibility('homeLink')}
-                        onClick={closeMenu}
+                        onClick={() => handleRouteNavigation('/')}
                     >
                         <LogoIcon className="header__logo-icon" />
-                    </a>
+                    </button>
 
                     <div className="header__content">
                         <nav
@@ -93,7 +140,7 @@ export const Header = () => {
                                                     'header__navigation-link--active': isActive,
                                                 })}
                                                 type="button"
-                                                aria-current={isActive ? 'page' : undefined}
+                                                aria-current={isActive ? 'true' : undefined}
                                                 onClick={() => handleNavigation(href)}
                                             >
                                                 {tNavigation(key)}
@@ -127,7 +174,7 @@ export const Header = () => {
                                 <OutlineButton
                                     className="header__login-button"
                                     variant="tertiary"
-                                    onClick={() => handleNavigation('#login')}
+                                    onClick={() => handleRouteNavigation('/sign-in')}
                                 >
                                     {tActions('login')}
                                 </OutlineButton>
@@ -135,7 +182,7 @@ export const Header = () => {
                                 <OutlineButton
                                     className="header__register-button"
                                     variant="secondary"
-                                    onClick={() => handleNavigation('#register')}
+                                    onClick={() => handleRouteNavigation('/sign-up')}
                                 >
                                     {tActions('register')}
                                 </OutlineButton>
@@ -189,7 +236,7 @@ export const Header = () => {
                         <div className="header__mobile-register">
                             <OutlineButton
                                 variant="secondary"
-                                onClick={() => handleNavigation('#register')}
+                                onClick={() => handleRouteNavigation('/sign-up')}
                             >
                                 {tActions('register')}
                             </OutlineButton>
@@ -216,7 +263,7 @@ export const Header = () => {
                                                     },
                                                 )}
                                                 type="button"
-                                                aria-current={isActive ? 'page' : undefined}
+                                                aria-current={isActive ? 'true' : undefined}
                                                 onClick={() => handleNavigation(href)}
                                             >
                                                 {tNavigation(key)}

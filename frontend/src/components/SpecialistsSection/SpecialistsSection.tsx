@@ -280,7 +280,7 @@ export const SpecialistsSection = () => {
                                                 experience={specialist.experience_years}
                                                 price={specialist.price_per_hour}
                                                 methods={specialist.methods}
-                                                topics={specialist.specialization}
+                                                topics={specialist.topics}
                                                 timeSlots={specialist.mock_slots}
                                             />
                                         </div>

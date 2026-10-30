@@ -4,7 +4,7 @@ import { footerNavigationItems } from '../../constants/navigation'
 import { clientLinks, legalLinks, specialistLinks } from '../../constants/footerLinks'
 
 import { Container } from '../Container'
-import { LogoIcon } from '../UI/Icons/LogoIcon'
+import { LogoIcon } from '../UI/Icons'
 
 import './Footer.scss'
 
@@ -46,7 +46,11 @@ export const Footer = () => {
                             href="#home"
                             aria-label={tAccessibility('homeLink')}
                         >
-                            <LogoIcon className="footer__logo-icon" aria-hidden="true" />
+                            <LogoIcon
+                                variant={'footer'}
+                                className="footer__logo-icon"
+                                aria-hidden="true"
+                            />
                         </a>
 
                         <p className="footer__description">{tFooter('description')}</p>

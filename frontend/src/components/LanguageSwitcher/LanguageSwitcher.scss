@@ -3,67 +3,55 @@
 .language-switcher {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
+    gap: 4px;
 
-    font-family: a.$font-family-primary;
-    font-size: a.$font-size-button-large;
-    font-weight: a.$font-weight-button-large;
-    line-height: a.$line-height-button-large;
-
-    &__label {
+    &__button {
         display: inline-flex;
         align-items: center;
+        justify-content: center;
 
-        color: a.$color-primary;
+        min-width: 41px;
+        height: 28px;
 
-        transition: color a.$transition-default;
-
-        &--active {
-            color: a.$color-optional;
-        }
-    }
-
-    &__toggle {
-        position: relative;
-
-        flex: 0 0 auto;
-
-        width: 44px;
-        height: 24px;
-
-        padding: 1px;
+        padding: 0 8px;
 
         border: 1px solid a.$color-optional;
-        border-radius: 6px;
+        border-radius: 8px;
 
         background-color: transparent;
+        color: a.$color-optional;
+
+        font-family: a.$font-family-primary;
+        font-size: 14px;
+        font-weight: 600;
+        line-height: 1;
 
         cursor: pointer;
 
-        transition: border-color a.$transition-default;
+        transition:
+                background-color a.$transition-default,
+                color a.$transition-default,
+                border-color a.$transition-default;
+
+        &:hover {
+            background-color: rgba(58, 91, 74, 0.08);
+        }
 
         &:focus-visible {
             outline: 2px solid a.$color-process;
             outline-offset: 2px;
         }
-    }
 
-    &__thumb {
-        display: block;
+        &--active {
+            border-color: a.$color-optional;
+            background-color: a.$color-optional;
+            color: a.$color-gray-0;
 
-        width: 20px;
-        height: 20px;
+            cursor: default;
 
-        border-radius: 4px;
-
-        background-color: a.$color-optional;
-
-        transform: translateX(0);
-
-        transition: transform a.$transition-default;
-
-        &[data-active='true'] {
-            transform: translateX(20px);
+            &:hover {
+                background-color: a.$color-optional;
+            }
         }
     }
 }
