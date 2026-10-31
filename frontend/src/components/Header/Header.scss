@@ -28,11 +28,10 @@
     &__top {
         display: flex;
         align-items: center;
+        flex-shrink: 0;
 
         width: 100%;
         height: c.$header-height;
-
-        flex-shrink: 0;
     }
 
     &__logo {
@@ -40,6 +39,13 @@
         flex-shrink: 0;
 
         width: c.$header-logo-width-desktop;
+
+        padding: 0;
+        border: 0;
+
+        background-color: transparent;
+
+        cursor: pointer;
     }
 
     &__logo-icon {
@@ -100,12 +106,7 @@
 
         transition: background-color a.$transition-default;
 
-        &:hover {
-            background-color: c.$header-navigation-hover-background;
-        }
-
-        &--active,
-        &[aria-current='page'] {
+        &--active {
             background-color: c.$header-navigation-active-background;
         }
 
@@ -123,25 +124,14 @@
         gap: c.$header-actions-gap;
     }
 
-    &__auth {
-        display: flex;
-        align-items: center;
-
-        gap: c.$header-auth-gap;
-    }
-
     &__ai-button,
     &__login-button,
-    &__register-button {
+    &__language-switcher {
         flex-shrink: 0;
     }
 
     &__login-button {
         min-width: c.$header-login-button-min-width;
-    }
-
-    &__register-button {
-        min-width: c.$header-register-button-min-width;
     }
 
     &__divider {
@@ -151,6 +141,11 @@
         height: c.$header-divider-height;
 
         background-color: a.$color-divider;
+    }
+
+    &__language-switcher {
+        display: inline-flex;
+        align-items: center;
     }
 
     &__menu-button {
@@ -181,13 +176,11 @@
 
         &:hover {
             border-color: a.$color-optional;
-
             color: a.$color-optional;
         }
 
         &--open {
             border-color: a.$color-optional;
-
             color: a.$color-optional;
         }
 
@@ -268,14 +261,6 @@
     &__mobile-menu {
         display: none;
     }
-
-    &__language-switcher {
-        position: absolute;
-        z-index: 30;
-
-        right: c.$header-language-switcher-right;
-        bottom: c.$header-language-switcher-bottom;
-    }
 }
 
 @media (max-width: 1199px) {
@@ -318,20 +303,12 @@
             gap: c.$header-actions-gap-mobile;
         }
 
-        &__divider {
-            display: none;
-        }
-
-        &__auth {
-            gap: c.$header-auth-gap-mobile;
-        }
-
-        &__register-button {
-            display: none;
-        }
-
         &__menu-button {
             display: inline-flex;
+        }
+
+        &__language-switcher {
+            display: none;
         }
 
         &__mobile-menu {
@@ -342,7 +319,6 @@
             grid-template-rows: 0fr;
 
             opacity: 0;
-
             pointer-events: none;
 
             transition:
@@ -353,7 +329,6 @@
                 grid-template-rows: 1fr;
 
                 opacity: 1;
-
                 pointer-events: auto;
             }
         }
@@ -374,15 +349,6 @@
             flex-shrink: 0;
 
             background-color: a.$color-gray-20;
-        }
-
-        &__mobile-register {
-            display: flex;
-            justify-content: flex-end;
-
-            width: 100%;
-
-            padding-block: 14px;
         }
 
         &__mobile-navigation {
@@ -439,12 +405,7 @@
 
             transition: background-color a.$transition-default;
 
-            &:hover {
-                background-color: c.$header-navigation-hover-background;
-            }
-
-            &--active,
-            &[aria-current='page'] {
+            &--active {
                 background-color: c.$header-navigation-active-background;
             }
 
@@ -464,10 +425,6 @@
             font-weight: a.$font-weight-caption-third;
 
             text-align: center;
-        }
-
-        &__language-switcher {
-            z-index: 30;
         }
     }
 }
@@ -495,6 +452,7 @@
         &__ai-label,
         &__ai-arrow {
             display: none;
+            font-weight: 16;
         }
 
         &__ai-button .primary-button__icon--start {
@@ -527,7 +485,7 @@
         }
 
         &__container--menu-open {
-            min-height: 388px;
+            min-height: 340px;
         }
 
         &__top {
@@ -549,13 +507,13 @@
             padding-inline: c.$header-login-button-padding-mobile;
         }
 
+        &__divider {
+            height: 24px;
+        }
+
         &__menu-button {
             width: c.$header-mobile-control-height;
             height: c.$header-mobile-control-height;
-        }
-
-        &__mobile-register {
-            padding-block: 14px;
         }
 
         &__mobile-navigation {
@@ -566,10 +524,13 @@
             margin-top: auto;
             margin-bottom: 14px;
         }
+    }
+}
 
-        &__language-switcher {
-            right: 0;
-            bottom: c.$header-language-switcher-bottom;
+@media (max-width: 575px) {
+    .header {
+        &__divider {
+            display: none;
         }
     }
 }

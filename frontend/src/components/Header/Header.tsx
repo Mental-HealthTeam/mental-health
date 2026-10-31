@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router-dom'
 import classNames from 'classnames'
 
+import { useAppDispatch } from '../../app/hooks'
+import { openAiChat } from '../../app/store/slices/aiChatSlice'
 import { headerNavigationItems } from '../../constants/navigation'
 
 import { Container } from '../Container'
@@ -10,11 +13,11 @@ import { OutlineButton, PrimaryButton } from '../UI/Buttons'
 import { ArrowIcon, CloseIcon, LogoIcon, MenuIcon, SparkIcon } from '../UI/Icons'
 
 import './Header.scss'
-import { useAppDispatch } from '../../app/hooks'
-import { openAiChat } from '../../app/store/slices/aiChatSlice'
 
 export const Header = () => {
     const dispatch = useAppDispatch()
+    const navigate = useNavigate()
+
     const [isMenuOpen, setIsMenuOpen] = useState(false)
     const [activeHref, setActiveHref] = useState('#about')
 
@@ -33,12 +36,16 @@ export const Header = () => {
     }
 
     const handleNavigation = (href: string) => {
-        setActiveHref(href)
         closeMenu()
 
         document.querySelector(href)?.scrollIntoView({
             behavior: 'smooth',
         })
+    }
+
+    const handleRouteNavigation = (path: string) => {
+        closeMenu()
+        navigate(path)
     }
 
     const handleOpenChat = () => {
@@ -60,6 +67,46 @@ export const Header = () => {
         }
     }, [])
 
+    useEffect(() => {
+        const sections = headerNavigationItems
+            .map(({ href }) => document.querySelector(href))
+            .filter((section): section is Element => Boolean(section))
+
+        if (sections.length === 0) {
+            return
+        }
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                const visibleSection = entries
+                    .filter((entry) => entry.isIntersecting)
+                    .sort(
+                        (firstEntry, secondEntry) =>
+                            secondEntry.intersectionRatio - firstEntry.intersectionRatio,
+                    )[0]
+
+                if (!visibleSection) {
+                    return
+                }
+
+                setActiveHref(`#${visibleSection.target.id}`)
+            },
+            {
+                root: null,
+                rootMargin: '-30% 0px -60% 0px',
+                threshold: 0,
+            },
+        )
+
+        sections.forEach((section) => {
+            observer.observe(section)
+        })
+
+        return () => {
+            observer.disconnect()
+        }
+    }, [])
+
     return (
         <header className="header">
             <Container
@@ -68,14 +115,14 @@ export const Header = () => {
                 })}
             >
                 <div className="header__top">
-                    <a
+                    <button
                         className="header__logo"
-                        href="#home"
+                        type="button"
                         aria-label={tAccessibility('homeLink')}
-                        onClick={closeMenu}
+                        onClick={() => handleRouteNavigation('/')}
                     >
-                        <LogoIcon className="header__logo-icon" />
-                    </a>
+                        <LogoIcon variant="header" className="header__logo-icon" />
+                    </button>
 
                     <div className="header__content">
                         <nav
@@ -110,7 +157,7 @@ export const Header = () => {
                                 startIcon={<SparkIcon />}
                                 endIcon={
                                     <span className="header__ai-arrow">
-                                        <ArrowIcon />
+                                        <ArrowIcon width={14} height={14} />
                                     </span>
                                 }
                                 aria-label={tActions('findPsychologist')}
@@ -123,23 +170,17 @@ export const Header = () => {
 
                             <span className="header__divider" aria-hidden="true" />
 
-                            <div className="header__auth">
-                                <OutlineButton
-                                    className="header__login-button"
-                                    variant="tertiary"
-                                    onClick={() => handleNavigation('#login')}
-                                >
-                                    {tActions('login')}
-                                </OutlineButton>
+                            <OutlineButton
+                                className="header__login-button"
+                                variant="tertiary"
+                                onClick={() => handleRouteNavigation('/sign-in')}
+                            >
+                                {tActions('login')}
+                            </OutlineButton>
 
-                                <OutlineButton
-                                    className="header__register-button"
-                                    variant="secondary"
-                                    onClick={() => handleNavigation('#register')}
-                                >
-                                    {tActions('register')}
-                                </OutlineButton>
-                            </div>
+                            <span className="header__divider" aria-hidden="true" />
+
+                            <LanguageSwitcher className="header__language-switcher" />
 
                             <button
                                 className={classNames('header__menu-button', {
@@ -186,17 +227,6 @@ export const Header = () => {
                     <div className="header__mobile-menu-inner">
                         <div className="header__mobile-divider" />
 
-                        <div className="header__mobile-register">
-                            <OutlineButton
-                                variant="secondary"
-                                onClick={() => handleNavigation('#register')}
-                            >
-                                {tActions('register')}
-                            </OutlineButton>
-                        </div>
-
-                        <div className="header__mobile-divider" />
-
                         <nav
                             className="header__mobile-navigation"
                             aria-label={tAccessibility('mainNavigation')}
@@ -232,8 +262,6 @@ export const Header = () => {
                         </p>
                     </div>
                 </div>
-
-                <LanguageSwitcher className="header__language-switcher" />
             </Container>
         </header>
     )
