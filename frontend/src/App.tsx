@@ -7,7 +7,7 @@ function App() {
         <BrowserRouter>
             <Routes>
                 <Route path="/" element={<Home />} />
-                <Route path="/psychologist-profile" element={<PsychologistProfile />} />
+                <Route path="/psychologist-profile/:id" element={<PsychologistProfile />} />
             </Routes>
         </BrowserRouter>
     )

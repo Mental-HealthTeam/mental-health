@@ -12,6 +12,7 @@ import './SpecialistCard.scss'
 import { Button } from '../UI/Button/Button.tsx'
 import { AvatarFallbackIcon } from '../UI/Icons/AvatarFallbackIcon.tsx'
 import { AwardIcon } from '../UI/Icons/AwardIcon.tsx'
+import { useNavigate } from 'react-router-dom'
 
 type Props = Omit<Psychologist, 'methods'>
 
@@ -73,6 +74,7 @@ export const SpecialistCard = ({
     mock_slots: timeSlots,
 }: Props) => {
     const { t, i18n } = useTranslation(['psychologists', 'symptoms', 'accessibility'])
+    const navigate = useNavigate()
 
     const cardRef = useRef<HTMLElement>(null)
     const radioGroupId = useId()
@@ -260,6 +262,7 @@ export const SpecialistCard = ({
                     className="specialist-card__profile-button"
                     variant="secondary"
                     fullWidth
+                    onClick={() => navigate(`/psychologist-profile/${id}`)}
                 >
                     {t('psychologists:card.viewProfile')}
                 </OutlineButton>

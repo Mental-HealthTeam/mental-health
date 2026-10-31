@@ -7,24 +7,41 @@ import { SpecialistProfileCard } from './components/SpecialistProfileCard'
 
 import './PsychologistProfile.scss'
 import { ProfileTabs } from './components/ProfileTabs'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../../app/hooks'
 import { setSpecialistProfile } from '../../app/store/slices/specialistProfileSlice'
-import { SPECIALIST_MOCK } from '../../mocks/specialistMock'
 import { useTranslation } from 'react-i18next'
 import { AiChat } from '../../components/AiChat'
 import { BookingBlock } from '../../components/BookingBlock'
+import { useGetPsychologistByIdQuery } from '../../services/psychologistsApi'
+import { skipToken } from '@reduxjs/toolkit/query'
 
 export const PsychologistProfile = () => {
-    const { t } = useTranslation('specialistProfile')
+    const { t, i18n } = useTranslation('specialistProfile')
     const { profile } = useAppSelector((state) => state.specialistProfile)
+    const { id } = useParams()
     const dispatch = useAppDispatch()
     const navigate = useNavigate()
+    const {
+        data: psychologist,
+        isLoading,
+        isError,
+    } = useGetPsychologistByIdQuery(id ? { id, lang: i18n.language } : skipToken)
 
     useEffect(() => {
         window.scrollTo({ top: 0, behavior: 'instant' })
-        dispatch(setSpecialistProfile(SPECIALIST_MOCK))
-    }, [dispatch])
+        if (psychologist) {
+            dispatch(setSpecialistProfile(psychologist))
+        }
+    }, [dispatch, psychologist])
+
+    if (isLoading) {
+        return <p>Завантаження...</p>
+    }
+
+    if (isError || !psychologist) {
+        return <p>Не вдалося завантажити профіль</p>
+    }
 
     return (
         <div className="psychologist-profile">
