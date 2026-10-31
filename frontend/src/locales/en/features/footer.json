@@ -25,7 +25,9 @@
     },
     "warning": {
         "title": "Warning:",
-        "text": "Mental Health Platform provides psychological counselling services and is not an emergency medical or psychiatric service. If your life is at risk, call 103 or contact an emergency hotline."
+        "text": "Mental Health Platform provides psychological counselling services and is not an emergency medical or psychiatric service. If your life is at risk, call",
+        "phone": "103",
+        "afterPhone": "or contact a mental health hotline."
     },
     "copyright": "Mental Health Platform. All rights reserved."
 }

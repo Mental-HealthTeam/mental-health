@@ -36,7 +36,6 @@ export const Header = () => {
     }
 
     const handleNavigation = (href: string) => {
-        setActiveHref(href)
         closeMenu()
 
         document.querySelector(href)?.scrollIntoView({
@@ -81,9 +80,10 @@ export const Header = () => {
             (entries) => {
                 const visibleSection = entries
                     .filter((entry) => entry.isIntersecting)
-                    .sort((firstEntry, secondEntry) => {
-                        return secondEntry.intersectionRatio - firstEntry.intersectionRatio
-                    })[0]
+                    .sort(
+                        (firstEntry, secondEntry) =>
+                            secondEntry.intersectionRatio - firstEntry.intersectionRatio,
+                    )[0]
 
                 if (!visibleSection) {
                     return
@@ -121,7 +121,7 @@ export const Header = () => {
                         aria-label={tAccessibility('homeLink')}
                         onClick={() => handleRouteNavigation('/')}
                     >
-                        <LogoIcon className="header__logo-icon" />
+                        <LogoIcon variant="header" className="header__logo-icon" />
                     </button>
 
                     <div className="header__content">
@@ -140,7 +140,7 @@ export const Header = () => {
                                                     'header__navigation-link--active': isActive,
                                                 })}
                                                 type="button"
-                                                aria-current={isActive ? 'true' : undefined}
+                                                aria-current={isActive ? 'page' : undefined}
                                                 onClick={() => handleNavigation(href)}
                                             >
                                                 {tNavigation(key)}
@@ -157,7 +157,7 @@ export const Header = () => {
                                 startIcon={<SparkIcon />}
                                 endIcon={
                                     <span className="header__ai-arrow">
-                                        <ArrowIcon />
+                                        <ArrowIcon width={14} height={14} />
                                     </span>
                                 }
                                 aria-label={tActions('findPsychologist')}
@@ -170,23 +170,17 @@ export const Header = () => {
 
                             <span className="header__divider" aria-hidden="true" />
 
-                            <div className="header__auth">
-                                <OutlineButton
-                                    className="header__login-button"
-                                    variant="tertiary"
-                                    onClick={() => handleRouteNavigation('/sign-in')}
-                                >
-                                    {tActions('login')}
-                                </OutlineButton>
+                            <OutlineButton
+                                className="header__login-button"
+                                variant="tertiary"
+                                onClick={() => handleRouteNavigation('/sign-in')}
+                            >
+                                {tActions('login')}
+                            </OutlineButton>
 
-                                <OutlineButton
-                                    className="header__register-button"
-                                    variant="secondary"
-                                    onClick={() => handleRouteNavigation('/sign-up')}
-                                >
-                                    {tActions('register')}
-                                </OutlineButton>
-                            </div>
+                            <span className="header__divider" aria-hidden="true" />
+
+                            <LanguageSwitcher className="header__language-switcher" />
 
                             <button
                                 className={classNames('header__menu-button', {
@@ -233,17 +227,6 @@ export const Header = () => {
                     <div className="header__mobile-menu-inner">
                         <div className="header__mobile-divider" />
 
-                        <div className="header__mobile-register">
-                            <OutlineButton
-                                variant="secondary"
-                                onClick={() => handleRouteNavigation('/sign-up')}
-                            >
-                                {tActions('register')}
-                            </OutlineButton>
-                        </div>
-
-                        <div className="header__mobile-divider" />
-
                         <nav
                             className="header__mobile-navigation"
                             aria-label={tAccessibility('mainNavigation')}
@@ -263,7 +246,7 @@ export const Header = () => {
                                                     },
                                                 )}
                                                 type="button"
-                                                aria-current={isActive ? 'true' : undefined}
+                                                aria-current={isActive ? 'page' : undefined}
                                                 onClick={() => handleNavigation(href)}
                                             >
                                                 {tNavigation(key)}
@@ -279,8 +262,6 @@ export const Header = () => {
                         </p>
                     </div>
                 </div>
-
-                <LanguageSwitcher className="header__language-switcher" />
             </Container>
         </header>
     )

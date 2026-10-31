@@ -4,11 +4,11 @@ import { Hero } from '../../components/Hero'
 import { WhyChooseUs } from '../../components/WhyChooseUs'
 import './Home.scss'
 import { SpecialistsSection } from '../../components/SpecialistsSection'
-import { AiChat } from '../../components/AiChat/AiChat.tsx'
+import { AiChat } from '../../components/AiChat'
 import { WhyUs } from '../../components/WhyUs'
 import { ReviewsSection } from '../../components/ReviewsSection'
 import { ContactSection } from '../../components/ContactSection'
-import { FaqSection } from '../../components/FaqSection/FaqSection.tsx'
+import { FaqSection } from '../../components/FaqSection'
 
 export const Home = () => {
     return (
