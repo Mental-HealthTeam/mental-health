@@ -1,0 +1,15 @@
+@use '../../../styles/abstracts' as a;
+
+.specialist-photo {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+
+    &--fallback {
+        display: grid;
+        place-items: center;
+        background: a.$color-gray-10;
+        color: a.$color-gray-40;
+    }
+}

@@ -1,11 +1,10 @@
 import classNames from 'classnames'
 import { Avatar } from '../UI/Avatar'
-import { ReviewIcon, StarIcon } from '../UI/Icons'
+import { AvatarFallbackIcon, ReviewIcon, StarIcon } from '../UI/Icons'
 
 import './ReviewCard.scss'
 import { useTranslation } from 'react-i18next'
 
-import avatarDefault from '../../assets/avatars/avatar-2.png'
 import type { Rating } from '../../types/specialist'
 
 type Props = {
@@ -20,7 +19,7 @@ type Props = {
 
 const MAX_RATING = 5
 
-export const ReviewCard = ({ age = 20, avatar, date, name, rating, text, className }: Props) => {
+export const ReviewCard = ({ age, avatar, date, name, rating, text, className }: Props) => {
     const { t, i18n } = useTranslation('reviews')
 
     const dateValue = new Date(date.length === 10 ? `${date}T00:00:00` : date)
@@ -36,9 +35,16 @@ export const ReviewCard = ({ age = 20, avatar, date, name, rating, text, classNa
             <ReviewIcon className="review-card__icon" />
 
             <div className="review-card__header">
-                <Avatar className="review-card__avatar" src={avatar || avatarDefault} alt="" />
+                <Avatar
+                    src={avatar ?? undefined}
+                    fallback={<AvatarFallbackIcon />}
+                    className="review-card__avatar"
+                    alt=""
+                />
                 <div className="review-card__author">
-                    <h3 className="review-card__name">{`${name}, ${age} ${t('ageSuffix')}`}</h3>
+                    {age && (
+                        <h3 className="review-card__name">{`${name}, ${age} ${t('ageSuffix')}`}</h3>
+                    )}
                     <time className="review-card__date" dateTime={date}>
                         {formattedDate}
                     </time>

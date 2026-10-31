@@ -2,12 +2,12 @@ import classNames from 'classnames'
 
 import './SpecialistProfileCard.scss'
 import { InfoTile } from '../../../../components/InfoTile'
-import { LearnIcon } from '../../../../components/UI/Icons/WhyChoosePlatform'
-import { ClockCardIcon, MoneyIcon } from '../../../../components/UI/Icons'
+import { AvatarFallbackIcon, AwardIcon, MoneyIcon } from '../../../../components/UI/Icons'
 import { type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { SpecialistProfile } from '../../../../types/specialist'
-import defaultPhoto from '../../../../assets/images/specialist-photo.png'
+import { ClockCardIcon } from '../../../../components/UI/Icons/ClockCardIcon'
+import { SpecialistPhoto } from '../../../../components/UI/SpecialistPhoto'
 
 type Props = {
     specialist: SpecialistProfile
@@ -25,11 +25,14 @@ export const SpecialistProfileCard = ({ className, specialist, actions }: Props)
 
     return (
         <section className={classNames('profile-card', className)}>
-            <img
-                className="profile-card__photo"
-                src={specialist.avatar_url ? specialist.avatar_url : defaultPhoto}
-                alt=""
-            />
+            <div className="profile-card__region-photo">
+                <SpecialistPhoto
+                    src={specialist.avatar_url}
+                    className="profile-card__photo"
+                    alt=""
+                    fallback={<AvatarFallbackIcon className="profile-card__fallback-icon" />}
+                />
+            </div>
 
             <div className="profile-card__heading">
                 {specialist?.is_verified && (
@@ -48,7 +51,7 @@ export const SpecialistProfileCard = ({ className, specialist, actions }: Props)
             <ul className="profile-card__stats">
                 <InfoTile
                     className="profile-card__info-tile"
-                    icon={<LearnIcon />}
+                    icon={<AwardIcon />}
                     label={t('specialistProfile:card.stats.experience')}
                     value={`${t('specialistProfile:card.stats.experienceValue', { count: specialist?.experience_years })}`}
                 />

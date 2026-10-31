@@ -1,16 +1,17 @@
-type Props = {
-    className?: string
-}
+import type { SVGProps } from 'react'
 
-export const AvatarFallbackIcon = ({ className }: Props) => (
+type Props = SVGProps<SVGSVGElement>
+
+export const AvatarFallbackIcon = ({ className, width = 73, height = 73, ...props }: Props) => (
     <svg
         className={className}
-        width="73"
-        height="73"
+        width={width}
+        height={height}
         viewBox="0 0 73 73"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
         aria-hidden="true"
+        {...props}
     >
         <circle cx="36.5" cy="36.5" r="36.5" fill="#F3F7EB" />
 

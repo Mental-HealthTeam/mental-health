@@ -28,11 +28,24 @@
         flex-direction: column;
         gap: c.$pp-specializations-card-list-gap;
         padding-left: c.$pp-specializations-card-list-padding-left;
-        list-style: disc;
     }
 
     &__item {
+        position: relative;
         color: a.$color-gray-60;
+
+        &::before {
+            content: '';
+            position: absolute;
+            top: 0.6em;
+            left: -14px;
+
+            width: 4px;
+            height: 4px;
+
+            border-radius: 50%;
+            background: currentColor;
+        }
     }
 
     &__text-no-specializations {

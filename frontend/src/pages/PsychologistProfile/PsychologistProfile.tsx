@@ -7,7 +7,7 @@ import { SpecialistProfileCard } from './components/SpecialistProfileCard'
 
 import './PsychologistProfile.scss'
 import { ProfileTabs } from './components/ProfileTabs'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../../app/hooks'
 import { setSpecialistProfile } from '../../app/store/slices/specialistProfileSlice'
 import { useTranslation } from 'react-i18next'
@@ -22,11 +22,21 @@ export const PsychologistProfile = () => {
     const { id } = useParams()
     const dispatch = useAppDispatch()
     const navigate = useNavigate()
+    const location = useLocation()
+
     const {
         data: psychologist,
         isLoading,
         isError,
     } = useGetPsychologistByIdQuery(id ? { id, lang: i18n.language } : skipToken)
+
+    const handleBack = () => {
+        if (location.key === 'default') {
+            navigate('/')
+        } else {
+            navigate(-1)
+        }
+    }
 
     useEffect(() => {
         window.scrollTo({ top: 0, behavior: 'instant' })
@@ -49,9 +59,13 @@ export const PsychologistProfile = () => {
 
             <main className="psychologist-profile__content">
                 <Container className="psychologist-profile__container">
-                    <a className="psychologist-profile__back" onClick={() => navigate(-1)}>
+                    <button
+                        className="psychologist-profile__back"
+                        type="button"
+                        onClick={handleBack}
+                    >
                         {t('page.back')}
-                    </a>
+                    </button>
                     {profile && <h1 className="psychologist-profile__title">{t('page.title')}</h1>}
 
                     {profile && (

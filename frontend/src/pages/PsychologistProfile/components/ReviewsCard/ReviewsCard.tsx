@@ -13,14 +13,19 @@ type Props = {
 }
 
 export const ReviewsCard = ({ className, reviews }: Props) => {
-    const [category, setCategory] = useState<SymptomCode | null>(
-        reviews ? reviews[0].topic_id : null,
-    )
     const [index, setIndex] = useState(0)
+    const [selectedCategory, setSelectedCategory] = useState<SymptomCode | null>(null)
 
     const trackRef = useRef<HTMLDivElement>(null)
 
     const { t } = useTranslation(['symptoms', 'specialistProfile'])
+
+    const reviewCategories = useMemo(
+        () => [...new Set((reviews ?? []).map(({ topic_id }) => topic_id))],
+        [reviews],
+    )
+
+    const category = selectedCategory ?? reviewCategories[0] ?? null
 
     const scrollToIndex = (i: number) => {
         const element = trackRef.current
@@ -50,10 +55,6 @@ export const ReviewsCard = ({ className, reviews }: Props) => {
         setIndex(Math.round(element.scrollLeft / element.clientWidth))
     }
 
-    const reviewCategories = useMemo(() => {
-        return [...new Set((reviews ?? []).map(({ topic_id }) => topic_id))]
-    }, [reviews])
-
     const filteredReviews = useMemo(() => {
         return reviews?.filter((review) => review.topic_id === category)
     }, [category, reviews])
@@ -62,78 +63,70 @@ export const ReviewsCard = ({ className, reviews }: Props) => {
         trackRef.current?.scrollTo({ left: 0 })
     }, [category])
 
-    if (!reviews) {
+    if (!filteredReviews || !reviews || reviews.length === 0) {
         return (
-            <div className="reviews-card">
+            <section className="reviews-card">
                 <p className="reviews-card__text-no-reviews">
                     {t('specialistProfile:reviews.empty')}
                 </p>
-            </div>
+            </section>
         )
     }
 
     return (
         <section className={classNames('reviews-card', className)}>
-            {filteredReviews && (
-                <div
-                    className="reviews-card__tabs"
-                    role="tablist"
-                    aria-label={t('specialistProfile:reviews.categoriesAriaLabel')}
-                >
-                    {reviewCategories.map((symptom) => (
-                        <button
-                            className={classNames('reviews-card__tab', {
-                                'reviews-card__tab--is-active': category === symptom,
-                            })}
-                            onClick={() => setCategory(symptom)}
-                            key={symptom}
-                        >
-                            {t(`symptoms:${symptom}.title`)}
-                        </button>
-                    ))}
-                </div>
-            )}
+            <div
+                className="reviews-card__tabs"
+                role="tablist"
+                aria-label={t('specialistProfile:reviews.categoriesAriaLabel')}
+            >
+                {reviewCategories.map((symptom) => (
+                    <button
+                        className={classNames('reviews-card__tab', {
+                            'reviews-card__tab--is-active': category === symptom,
+                        })}
+                        onClick={() => setSelectedCategory(symptom)}
+                        key={symptom}
+                    >
+                        {t(`symptoms:${symptom}.title`)}
+                    </button>
+                ))}
+            </div>
 
-            {filteredReviews && (
-                <div className="reviews-card__panel" role="tabpanel">
-                    <div className="reviews-card__slider-wrapper">
-                        <div
-                            className="reviews-card__slider"
-                            ref={trackRef}
-                            onScroll={handleScroll}
-                        >
-                            {filteredReviews.map((review) => (
-                                <div className="reviews-card__slide" key={review.id} role="group">
-                                    <SpecialistReviewCard
-                                        age={review.age}
-                                        avatar={review.avatar_url}
-                                        date={review.created_at}
-                                        name={review.author}
-                                        rating={review.rating}
-                                        text={review.text}
-                                    />
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-
-                    <div className="reviews-card__controls">
-                        <ArrowButton
-                            direction="left"
-                            ariaLabel={t('specialistProfile:reviews.previousAriaLabel')}
-                            disabled={index === 0}
-                            onClick={() => scrollToIndex(index - 1)}
-                        />
-
-                        <ArrowButton
-                            direction="right"
-                            ariaLabel={t('specialistProfile:reviews.nextAriaLabel')}
-                            disabled={index === filteredReviews.length - 1}
-                            onClick={() => scrollToIndex(index + 1)}
-                        />
+            <div className="reviews-card__panel" role="tabpanel">
+                <div className="reviews-card__slider-wrapper">
+                    <div className="reviews-card__slider" ref={trackRef} onScroll={handleScroll}>
+                        {filteredReviews.map((review) => (
+                            <div className="reviews-card__slide" key={review.id} role="group">
+                                <SpecialistReviewCard
+                                    age={review.age}
+                                    avatar={review.avatar_url}
+                                    date={review.created_at}
+                                    name={review.author}
+                                    rating={review.rating}
+                                    text={review.text}
+                                />
+                            </div>
+                        ))}
                     </div>
                 </div>
-            )}
+
+                <div className="reviews-card__controls">
+                    <ArrowButton
+                        direction="left"
+                        ariaLabel={t('specialistProfile:reviews.previousAriaLabel')}
+                        disabled={index === 0}
+                        onClick={() => scrollToIndex(index - 1)}
+                    />
+
+                    <ArrowButton
+                        direction="right"
+                        ariaLabel={t('specialistProfile:reviews.nextAriaLabel')}
+                        disabled={index === filteredReviews.length - 1}
+                        onClick={() => scrollToIndex(index + 1)}
+                    />
+                </div>
+            </div>
         </section>
     )
 }

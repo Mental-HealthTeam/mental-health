@@ -4,6 +4,12 @@
 .booking-block {
     grid-area: button;
     margin-top: c.$pp-profile-card-button-margin-top;
+    max-height: c.$pp-profile-card-booking-block-max-height-tablet;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+
+    scrollbar-width: thin;
+    scrollbar-color: a.$color-gray-40 transparent;
 
     &__booking-button {
         background: a.$color-secondary-gradient;
@@ -30,5 +36,13 @@
         display: flex;
         gap: c.$pp-profile-card-slots-gap;
         flex-wrap: wrap;
+    }
+}
+
+@media (min-width: c.$pp-breakpoint-tablet) {
+    .booking-block {
+        &__booking-button {
+            max-width: c.$pp-profile-card-button-max-width-tablet;
+        }
     }
 }
