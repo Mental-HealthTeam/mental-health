@@ -23,17 +23,6 @@
         padding-inline: c.$pp-page-container-padding-inline;
     }
 
-    &__back {
-        color: a.$color-optional;
-        font-size: a.$font-size-button-large;
-        line-height: a.$line-height-button-large;
-        letter-spacing: a.$letter-spacing-button-large;
-        font-weight: a.$font-weight-button-large;
-        text-align: left;
-        border-bottom: c.$pp-page-back-border-width solid a.$color-optional;
-        cursor: pointer;
-    }
-
     &__title {
         color: a.$color-primary;
         font-size: a.$font-size-h4;

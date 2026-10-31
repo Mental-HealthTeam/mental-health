@@ -7,7 +7,7 @@ import { SpecialistProfileCard } from './components/SpecialistProfileCard'
 
 import './PsychologistProfile.scss'
 import { ProfileTabs } from './components/ProfileTabs'
-import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../../app/hooks'
 import { setSpecialistProfile } from '../../app/store/slices/specialistProfileSlice'
 import { useTranslation } from 'react-i18next'
@@ -15,28 +15,19 @@ import { AiChat } from '../../components/AiChat'
 import { BookingBlock } from '../../components/BookingBlock'
 import { useGetPsychologistByIdQuery } from '../../services/psychologistsApi'
 import { skipToken } from '@reduxjs/toolkit/query'
+import { BackButton } from '../../components/UI/Buttons/BackButton'
 
 export const PsychologistProfile = () => {
     const { t, i18n } = useTranslation(['specialistProfile', 'common', 'errors'])
     const { profile } = useAppSelector((state) => state.specialistProfile)
     const { id } = useParams()
     const dispatch = useAppDispatch()
-    const navigate = useNavigate()
-    const location = useLocation()
 
     const {
         data: psychologist,
         isLoading,
         isError,
     } = useGetPsychologistByIdQuery(id ? { id, lang: i18n.language } : skipToken)
-
-    const handleBack = () => {
-        if (location.key === 'default') {
-            navigate('/')
-        } else {
-            navigate(-1)
-        }
-    }
 
     useEffect(() => {
         window.scrollTo({ top: 0, behavior: 'instant' })
@@ -75,14 +66,7 @@ export const PsychologistProfile = () => {
 
             <main className="psychologist-profile__content">
                 <Container className="psychologist-profile__container">
-                    <button
-                        className="psychologist-profile__back"
-                        type="button"
-                        onClick={handleBack}
-                    >
-                        {t('page.back')}
-                    </button>
-
+                    <BackButton />
                     {renderContent()}
                 </Container>
             </main>
