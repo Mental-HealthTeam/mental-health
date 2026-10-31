@@ -17,7 +17,7 @@ import { useGetPsychologistByIdQuery } from '../../services/psychologistsApi'
 import { skipToken } from '@reduxjs/toolkit/query'
 
 export const PsychologistProfile = () => {
-    const { t, i18n } = useTranslation('specialistProfile')
+    const { t, i18n } = useTranslation(['specialistProfile', 'common', 'errors'])
     const { profile } = useAppSelector((state) => state.specialistProfile)
     const { id } = useParams()
     const dispatch = useAppDispatch()
@@ -45,12 +45,28 @@ export const PsychologistProfile = () => {
         }
     }, [dispatch, psychologist])
 
-    if (isLoading) {
-        return <p>Завантаження...</p>
-    }
+    const renderContent = () => {
+        if (isLoading) {
+            return <p role="status">{t('common:loading')}</p>
+        }
 
-    if (isError || !psychologist) {
-        return <p>Не вдалося завантажити профіль</p>
+        if (isError || !profile) {
+            return <p role="alert">{t(`errors:notFound`)}</p>
+        }
+
+        return (
+            <>
+                <h1 className="psychologist-profile__title">{t('page.title')}</h1>
+
+                <SpecialistProfileCard
+                    className="psychologist-profile__specialist-card"
+                    actions={<BookingBlock name={profile.full_name} slots={profile.mock_slots} />}
+                    specialist={profile}
+                />
+
+                <ProfileTabs className="psychologist-profile__profile-tabs" />
+            </>
+        )
     }
 
     return (
@@ -66,25 +82,8 @@ export const PsychologistProfile = () => {
                     >
                         {t('page.back')}
                     </button>
-                    {profile && <h1 className="psychologist-profile__title">{t('page.title')}</h1>}
 
-                    {profile && (
-                        <SpecialistProfileCard
-                            className="psychologist-profile__specialist-card"
-                            actions={
-                                <BookingBlock name={profile.full_name} slots={profile.mock_slots} />
-                            }
-                            specialist={profile}
-                        />
-                    )}
-
-                    {profile && <ProfileTabs className="psychologist-profile__profile-tabs" />}
-
-                    {!profile && (
-                        <div className="psychologist-profile__text-no-profile">
-                            {t('page.noProfile')}
-                        </div>
-                    )}
+                    {renderContent()}
                 </Container>
             </main>
 

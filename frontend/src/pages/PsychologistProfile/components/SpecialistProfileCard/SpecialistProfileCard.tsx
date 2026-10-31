@@ -23,8 +23,15 @@ export const SpecialistProfileCard = ({ className, specialist, actions }: Props)
         'specialistProfile',
     ])
 
+    const formattedPrice = new Intl.NumberFormat('uk-UA', {
+        maximumFractionDigits: 0,
+    }).format(Number(specialist.price_per_hour))
+
     return (
-        <section className={classNames('profile-card', className)}>
+        <section
+            className={classNames('profile-card', className)}
+            aria-labelledby="profile-card-name"
+        >
             <div className="profile-card__region-photo">
                 <SpecialistPhoto
                     src={specialist.avatar_url}
@@ -35,14 +42,14 @@ export const SpecialistProfileCard = ({ className, specialist, actions }: Props)
             </div>
 
             <div className="profile-card__heading">
-                {specialist?.is_verified && (
+                {specialist.is_verified && (
                     <span className="profile-card__badge">
                         {t('specialistProfile:card.verified')}
                     </span>
                 )}
 
                 <h2 className="profile-card__name" id="profile-card-name">
-                    {specialist?.full_name}
+                    {specialist.full_name}
                 </h2>
 
                 <p className="profile-card__role">{t('specialistProfile:card.role')}</p>
@@ -53,19 +60,21 @@ export const SpecialistProfileCard = ({ className, specialist, actions }: Props)
                     className="profile-card__info-tile"
                     icon={<AwardIcon />}
                     label={t('specialistProfile:card.stats.experience')}
-                    value={`${t('specialistProfile:card.stats.experienceValue', { count: specialist?.experience_years })}`}
-                />
-                <InfoTile
-                    className="profile-card__info-tile"
-                    icon={<MoneyIcon />}
-                    label={t('specialistProfile:card.stats.price')}
-                    value={`${specialist?.price_per_hour} ₴`}
+                    value={`${t('specialistProfile:card.stats.experienceValue', { count: specialist.experience_years })}`}
                 />
                 <InfoTile
                     className="profile-card__info-tile profile-card__info-tile--hide"
                     icon={<ClockCardIcon />}
                     label={t('specialistProfile:card.stats.sessionDuration')}
-                    value={`${t('specialistProfile:card.stats.sessionDurationValue', { count: specialist?.session_minutes })}`}
+                    value={`${t('specialistProfile:card.stats.sessionDurationValue', { count: specialist.session_minutes })}`}
+                />
+                <InfoTile
+                    className="profile-card__info-tile"
+                    icon={<MoneyIcon />}
+                    label={t('specialistProfile:card.stats.price')}
+                    value={t('psychologists:card.price', {
+                        price: formattedPrice,
+                    })}
                 />
             </ul>
 
@@ -73,7 +82,7 @@ export const SpecialistProfileCard = ({ className, specialist, actions }: Props)
                 <p className="profile-card__approach-label">
                     {t('specialistProfile:card.approach')}
                 </p>
-                <p className="profile-card__approach-value">{specialist?.methods.join(', ')}</p>
+                <p className="profile-card__approach-value">{specialist.methods?.join(', ')}</p>
             </div>
 
             <div className="profile-card__actions">{actions}</div>

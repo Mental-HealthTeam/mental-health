@@ -44,5 +44,10 @@
         &__booking-button {
             max-width: c.$pp-profile-card-button-max-width-tablet;
         }
+
+        &__availability {
+            flex-direction: row;
+            align-items: flex-start;
+        }
     }
 }

@@ -21,6 +21,7 @@ export const NAMESPACES = [
     'reviews',
     'aiChat',
     'specialistProfile',
+    'errors',
 ] as const
 
 export type Namespace = (typeof NAMESPACES)[number]

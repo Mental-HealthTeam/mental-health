@@ -22,7 +22,7 @@
             "sessionDurationValue_other": "{{count}} хвилин"
         },
         "approach": "Терапевтичний підхід:",
-        "availability": "Вільний час"
+        "availability": "Вільний час:"
     },
     "tabs": {
         "basicInfo": "Основна інформація",
