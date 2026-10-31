@@ -1,0 +1,20 @@
+@use '../../../../styles/abstracts' as a;
+@use '../../../../styles/components' as c;
+
+.about-card {
+    display: flex;
+    flex-direction: column;
+    gap: c.$pp-about-card-gap;
+    background-color: a.$color-background;
+    padding: c.$pp-about-card-padding-block c.$pp-about-card-padding-inline;
+    border: 1px solid a.$color-secondary-end;
+    border-radius: c.$pp-about-card-radius;
+
+    &__text {
+        color: a.$color-primary;
+        font-size: a.$font-size-body;
+        line-height: a.$line-height-body;
+        letter-spacing: a.$letter-spacing-body;
+        font-weight: a.$font-weight-body-extrabold;
+    }
+}

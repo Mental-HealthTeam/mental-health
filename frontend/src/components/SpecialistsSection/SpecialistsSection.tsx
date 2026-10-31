@@ -231,7 +231,7 @@ export const SpecialistsSection = () => {
                                     aria-pressed={isActive}
                                     onClick={() => handleFilterChange(code)}
                                 >
-                                    {t(`symptoms:${code}`)}
+                                    {t(`symptoms:${code}.title`)}
                                 </button>
                             )
                         })}

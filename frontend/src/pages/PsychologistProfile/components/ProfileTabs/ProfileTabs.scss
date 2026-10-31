@@ -1,0 +1,52 @@
+@use '../../../../styles/abstracts' as a;
+@use '../../../../styles/components' as c;
+
+.profile-tabs {
+    display: grid;
+    gap: c.$pp-profile-tabs-gap;
+    padding: c.$pp-profile-tabs-padding-block c.$pp-profile-tabs-padding-inline;
+    background-color: a.$color-background;
+    border-radius: c.$pp-profile-tabs-radius;
+    min-width: 0;
+    max-width: 100%;
+    width: 100%;
+    border: 1px solid a.$color-gray-10;
+    grid-template-columns: minmax(0, 1fr);
+
+    &__switch {
+        display: flex;
+        gap: c.$pp-profile-tabs-switch-gap;
+    }
+
+    &__basic-information {
+        display: flex;
+        flex-direction: column;
+        gap: c.$pp-profile-tabs-basic-information-gap;
+    }
+}
+
+@media (min-width: c.$pp-breakpoint-tablet) {
+    .profile-tabs {
+        &__basic-information {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+            grid-template-areas:
+                'about-card education-card'
+                'specializations specializations';
+            row-gap: c.$pp-profile-tabs-basic-information-row-gap-tablet;
+            column-gap: c.$pp-profile-tabs-basic-information-column-gap-tablet;
+        }
+
+        &__about-card {
+            grid-area: about-card;
+        }
+
+        &__education-card {
+            grid-area: education-card;
+        }
+
+        &__specializations {
+            grid-area: specializations;
+        }
+    }
+}

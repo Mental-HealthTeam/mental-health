@@ -1,0 +1,78 @@
+@use '../../../../styles/abstracts' as a;
+@use '../../../../styles/components' as c;
+
+.specialist-review-card {
+    display: flex;
+    flex-direction: column;
+    gap: c.$pp-review-card-gap;
+    min-width: 0;
+    width: 100%;
+    padding: c.$pp-review-card-padding-block c.$pp-review-card-padding-inline;
+    background-color: a.$color-background;
+    border: 1px solid a.$color-gray-20;
+    border-radius: c.$pp-review-card-radius;
+
+    &__header {
+        display: flex;
+        align-items: center;
+        gap: c.$pp-review-card-header-gap;
+    }
+
+    &__avatar {
+        flex-shrink: 0;
+        width: c.$pp-review-card-avatar-size;
+        height: c.$pp-review-card-avatar-size;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+    &__author {
+        display: flex;
+        flex-direction: column;
+        gap: c.$pp-review-card-author-gap;
+        min-width: 0;
+    }
+
+    &__name {
+        color: a.$color-text-primary;
+        font-size: a.$font-size-body;
+        line-height: a.$line-height-body;
+        letter-spacing: a.$letter-spacing-body;
+        font-weight: a.$font-weight-body-extrabold;
+        text-align: left;
+    }
+
+    &__rating {
+        display: flex;
+        gap: c.$pp-review-card-rating-gap;
+        line-height: 1;
+    }
+
+    &__star {
+        color: a.$color-warning;
+        font-size: c.$pp-review-card-star-size;
+    }
+
+    &__star--empty {
+        color: a.$color-gray-20;
+    }
+
+    &__text {
+        color: a.$color-gray-80;
+        font-size: a.$font-size-body;
+        line-height: a.$line-height-body;
+        letter-spacing: a.$letter-spacing-body;
+        font-weight: a.$font-weight-body-semibold;
+        text-align: left;
+        overflow-wrap: anywhere;
+    }
+
+    &__date {
+        color: a.$color-gray-40;
+        font-size: a.$font-size-caption-secondary;
+        line-height: a.$line-height-caption-secondary;
+        letter-spacing: a.$letter-spacing-caption-secondary;
+        font-weight: a.$font-weight-caption-secondary;
+        text-align: left;
+    }
+}

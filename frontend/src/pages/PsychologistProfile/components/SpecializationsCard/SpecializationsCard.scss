@@ -1,0 +1,45 @@
+@use '../../../../styles/abstracts' as a;
+@use '../../../../styles/components' as c;
+
+.specializations-card {
+    display: flex;
+    flex-direction: column;
+    gap: c.$pp-specializations-card-gap;
+    background-color: a.$color-background;
+    padding: c.$pp-specializations-card-padding-block c.$pp-specializations-card-padding-inline;
+    border: 1px solid a.$color-secondary-end;
+    border-radius: c.$pp-specializations-card-radius;
+
+    &__tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: c.$pp-specializations-card-tags-gap;
+    }
+
+    &__divider {
+        height: c.$pp-specializations-card-divider-height;
+        margin: 0;
+        border: none;
+        background-color: a.$color-gray-20;
+    }
+
+    &__list {
+        display: flex;
+        flex-direction: column;
+        gap: c.$pp-specializations-card-list-gap;
+        padding-left: c.$pp-specializations-card-list-padding-left;
+        list-style: disc;
+    }
+
+    &__item {
+        color: a.$color-gray-60;
+    }
+
+    &__text-no-specializations {
+        color: a.$color-primary;
+        font-size: a.$font-size-body;
+        line-height: a.$line-height-body;
+        letter-spacing: a.$letter-spacing-body;
+        font-weight: a.$font-weight-body-extrabold;
+    }
+}

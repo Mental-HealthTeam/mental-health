@@ -1,0 +1,191 @@
+@use '../../../../styles/abstracts' as a;
+@use '../../../../styles/components' as c;
+
+.profile-card {
+    display: grid;
+    grid-template-columns:
+        minmax(c.$pp-profile-card-photo-size, c.$pp-profile-card-photo-size)
+        minmax(c.$pp-profile-card-text-min-width, 1fr);
+    column-gap: c.$pp-profile-card-column-gap;
+    grid-template-areas:
+        'photo heading'
+        'stats stats'
+        'approach approach'
+        'button button';
+
+    padding: c.$pp-profile-card-padding-block c.$pp-profile-card-padding-inline;
+    background-color: a.$color-background;
+    border-radius: c.$pp-profile-card-radius;
+    min-width: 0;
+    max-width: 100%;
+    width: 100%;
+    border: 1px solid a.$color-gray-10;
+
+    &__photo {
+        grid-area: photo;
+        height: c.$pp-profile-card-photo-size;
+        width: c.$pp-profile-card-photo-size;
+        border-radius: 50%;
+    }
+
+    &__heading {
+        grid-area: heading;
+        display: flex;
+        flex-direction: column-reverse;
+        gap: c.$pp-profile-card-heading-gap;
+        justify-content: space-between;
+        align-items: flex-start;
+        align-self: center;
+    }
+
+    &__name {
+        color: a.$color-primary;
+        font-size: a.$font-size-h5;
+        line-height: a.$line-height-h5;
+        letter-spacing: a.$letter-spacing-h5;
+        font-weight: a.$font-weight-h5;
+        text-align: left;
+    }
+
+    &__badge {
+        color: a.$color-gray-0;
+        font-size: a.$font-size-button-small;
+        line-height: a.$line-height-button-small;
+        letter-spacing: a.$letter-spacing-button-small;
+        font-weight: a.$font-weight-button-small;
+        text-align: left;
+        text-transform: uppercase;
+        background-color: a.$color-optional;
+        border-radius: c.$pp-profile-card-badge-radius;
+        padding: c.$pp-profile-card-badge-padding-block c.$pp-profile-card-badge-padding-inline;
+        max-width: max-content;
+    }
+
+    &__role {
+        display: none;
+        color: a.$color-primary;
+        font-size: a.$font-size-body;
+        line-height: a.$line-height-body;
+        letter-spacing: a.$letter-spacing-body;
+        font-weight: a.$font-weight-body-semibold;
+    }
+
+    &__stats {
+        grid-area: stats;
+        display: flex;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+        gap: c.$pp-profile-card-stats-gap;
+        margin-bottom: c.$pp-profile-card-stats-margin-bottom;
+        margin-top: c.$pp-profile-card-stats-margin-top;
+    }
+
+    &__info-tile {
+        max-height: c.$pp-profile-card-info-tile-max-height;
+    }
+
+    .profile-card__info-tile--hide {
+        display: none;
+    }
+
+    &__approach {
+        grid-area: approach;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: c.$pp-profile-card-approach-gap;
+        padding-bottom: c.$pp-profile-card-approach-padding-bottom;
+        border-bottom: 1px solid a.$color-gray-10;
+    }
+
+    &__approach-label {
+        color: a.$color-gray-60;
+        font-size: a.$font-size-body;
+        line-height: a.$line-height-body;
+        letter-spacing: a.$letter-spacing-body;
+        font-weight: a.$font-weight-body-semibold;
+    }
+
+    &__approach-value {
+        color: a.$color-optional;
+        font-size: a.$font-size-body;
+        line-height: a.$line-height-body;
+        letter-spacing: a.$letter-spacing-body;
+        font-weight: a.$font-weight-body-extrabold;
+    }
+
+    &__actions {
+      grid-area: button;
+    }
+}
+
+@media (min-width: a.$breakpoint-mobile) {
+    .profile-card {
+        .profile-card__info-tile--hide {
+            display: flex;
+        }
+    }
+}
+
+@media (min-width: c.$pp-breakpoint-tablet) {
+    .profile-card {
+        grid-template-columns:
+            minmax(c.$pp-profile-card-photo-size, c.$pp-profile-card-photo-max-width-tablet)
+            minmax(c.$pp-profile-card-text-min-width, 1fr);
+        column-gap: c.$pp-profile-card-column-gap-tablet;
+        grid-template-areas:
+            'photo heading'
+            'photo stats'
+            'photo approach'
+            'photo button';
+
+        &__heading {
+            flex-direction: column;
+            padding-bottom: c.$pp-profile-card-heading-padding-bottom-tablet;
+            border-bottom: 1px solid a.$color-gray-10;
+        }
+
+        &__role {
+            display: inline-block;
+        }
+
+        &__name {
+            font-size: a.$font-size-h3;
+            line-height: a.$line-height-h3;
+            letter-spacing: a.$letter-spacing-h3;
+            font-weight: a.$font-weight-h3;
+        }
+
+        &__photo {
+            min-width: 0;
+            width: 100%;
+            min-height: 100%;
+            border-radius: c.$pp-profile-card-photo-radius-tablet;
+            object-fit: cover;
+        }
+
+        &__stats {
+            margin-block: c.$pp-profile-card-stats-margin-block-tablet;
+        }
+
+        &__booking-button {
+            max-width: c.$pp-profile-card-button-max-width-tablet;
+        }
+
+        &__info-tile {
+            max-height: c.$pp-profile-card-info-tile-max-height-tablet;
+        }
+
+        &__approach {
+            flex-direction: row;
+            align-items: center;
+            gap: c.$pp-profile-card-approach-gap;
+            padding-block: c.$pp-profile-card-approach-padding-block-tablet;
+            border-top: 1px solid a.$color-gray-10;
+        }
+
+        &__availability {
+            flex-direction: row;
+        }
+    }
+}

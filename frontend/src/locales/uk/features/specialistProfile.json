@@ -1,0 +1,49 @@
+{
+    "page": {
+        "back": "НАЗАД",
+        "title": "Профіль фахівця",
+        "noProfile": "Фахівець ще не має профілю"
+    },
+    "card": {
+        "verified": "Перевірено",
+        "role": "Практикуючий психолог",
+        "photoAlt": "",
+        "stats": {
+            "experience": "Досвід",
+            "experienceValue_one": "{{count}} рік",
+            "experienceValue_few": "{{count}} роки",
+            "experienceValue_many": "{{count}} років",
+            "experienceValue_other": "{{count}} років",
+            "price": "Вартість",
+            "sessionDuration": "Тривалість сесії",
+            "sessionDurationValue_one": "{{count}} хвилина",
+            "sessionDurationValue_few": "{{count}} хвилини",
+            "sessionDurationValue_many": "{{count}} хвилин",
+            "sessionDurationValue_other": "{{count}} хвилин"
+        },
+        "approach": "Терапевтичний підхід:",
+        "availability": "Вільний час"
+    },
+    "tabs": {
+        "basicInfo": "Основна інформація",
+        "reviews": "Відгуки"
+    },
+    "about": {
+        "title": "Про спеціаліста",
+        "empty": "Фахівець ще не надав інформації"
+    },
+    "education": {
+        "title": "Освіта",
+        "empty": "Фахівець ще не надав інформації"
+    },
+    "specializations": {
+        "title": "Напрямки роботи"
+    },
+    "reviews": {
+        "empty": "Немає ще відгуків",
+        "categoriesAriaLabel": "Категорії відгуків",
+        "previousAriaLabel": "Попередній відгук",
+        "nextAriaLabel": "Наступний відгук",
+        "ratingAriaLabel": "Оцінка {{rating}} з {{max}}"
+    }
+}

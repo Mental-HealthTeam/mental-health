@@ -1,0 +1,46 @@
+@use '../../styles/abstracts' as a;
+
+.info-tile {
+    display: flex;
+    gap: 12px;
+    padding: 12px 20px;
+    background: transparent;
+    width: max-content;
+    justify-content: flex-start;
+    align-items: center;
+    border: 1px solid a.$color-gray-10;
+    border-radius: 12px;
+
+    &__content {
+        display: flex;
+        flex-direction: column;
+    }
+
+    &__icon {
+        display: grid;
+        place-items: center;
+        width: 36px;
+        height: 36px;
+        border: 1px solid a.$color-secondary-end;
+        border-radius: 50%;
+        flex-shrink: 0;
+    }
+
+    &__label {
+        color: a.$color-gray-60;
+        font-size: a.$font-size-caption-secondary;
+        line-height: a.$line-height-caption-secondary;
+        letter-spacing: a.$letter-spacing-caption-secondary;
+        font-weight: a.$font-weight-caption-secondary;
+        text-align: center;
+    }
+
+    &__value {
+        color: a.$color-primary;
+        font-size: a.$font-size-body;
+        line-height: a.$line-height-body;
+        letter-spacing: a.$letter-spacing-body;
+        font-weight: a.$font-weight-body-extrabold;
+        text-align: left;
+    }
+}

@@ -1,0 +1,1 @@
+export { SpecialistProfileCard } from './SpecialistProfileCard'
