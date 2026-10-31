@@ -17,6 +17,10 @@ export type SymptomCode =
     | 'work_career'
     | 'motivation'
 
+export type PsychologistTimeSlot = {
+    time: string
+}
+
 export type Psychologist = {
     psychologist_id: string
     full_name: string
@@ -24,14 +28,13 @@ export type Psychologist = {
     experience_years: number
     price_per_hour: string
     methods: string[]
-    specialization: SymptomCode[]
-    mock_slots: {
-        time: string
-    }[]
+    topics: SymptomCode[]
+    mock_slots: PsychologistTimeSlot[]
 }
 
 export type GetPsychologistsParams = {
     limit?: number
     offset?: number
     symptomCodes?: SymptomCode[]
+    lang?: 'uk' | 'en'
 }

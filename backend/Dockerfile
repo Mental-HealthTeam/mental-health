@@ -28,6 +28,9 @@ COPY --chown=appuser:appuser ./app .
 COPY --chown=appuser:appuser --chmod=755 ./entrypoint.sh .
 COPY  ./alembic.ini .
 
+RUN mkdir -p /app/media/avatars && \
+    chown -R appuser:appuser /app/media
+
 USER appuser
 
 EXPOSE 8000
