@@ -10,18 +10,18 @@
         "empty": "No specialists found for this filter"
     },
     "card": {
-        "verified": "VERIFIED",
+        "verified": "Verified",
         "experience": "Experience",
         "experienceYears_one": "{{count}} year",
         "experienceYears_other": "{{count}} years",
-        "sessionDuration": "1.5 hour session",
+        "sessionDuration": "Price 50 min",
         "price": "₴{{price}}",
         "therapeuticApproach": "Therapeutic approach",
         "worksWith": "Works with:",
-        "bookSession": "BOOK A SESSION",
+        "bookSession": "Book a session",
         "availableTime": "Available time",
-        "viewProfile": "VIEW PROFILE",
-        "today": "TODAY",
-        "tomorrow": "TOMORROW"
+        "viewProfile": "Go to profile",
+        "today": "Today",
+        "tomorrow": "Tomorrow"
     }
 }

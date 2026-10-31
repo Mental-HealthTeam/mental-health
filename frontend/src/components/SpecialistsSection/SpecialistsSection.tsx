@@ -27,7 +27,9 @@ const EMERGENCY_FILTER = 'emergency'
 export const SpecialistsSection = () => {
     const sliderRef = useRef<HTMLDivElement>(null)
 
-    const { t } = useTranslation(['psychologists', 'symptoms', 'accessibility'])
+    const { t, i18n } = useTranslation(['psychologists', 'symptoms', 'accessibility'])
+
+    const lang = i18n.language === 'en' ? 'en' : 'uk'
 
     const { visibleCards } = useScreenLayout()
 
@@ -72,12 +74,29 @@ export const SpecialistsSection = () => {
 
     const hasMobileNavigation = specialists.length > 1 || hasMore
 
+    const getSlideStep = () => {
+        const slider = sliderRef.current
+
+        if (!slider) {
+            return 0
+        }
+
+        const firstSlide = slider.querySelector<HTMLElement>('.specialists-section__slide')
+
+        if (!firstSlide) {
+            return 0
+        }
+
+        return firstSlide.offsetWidth + SLIDER_GAP
+    }
+
     const loadSpecialists = async (nextOffset: number, replace = false) => {
         try {
             const result = await getPsychologists({
                 limit: DEFAULT_LIMIT,
                 offset: nextOffset,
                 symptomCodes: selectedSymptomCodes,
+                lang,
             }).unwrap()
 
             setSpecialists((current) => (replace ? result : [...current, ...result]))
@@ -105,6 +124,7 @@ export const SpecialistsSection = () => {
             limit: DEFAULT_LIMIT,
             offset: 0,
             symptomCodes: selectedSymptomCodes,
+            lang,
         })
             .unwrap()
             .then((result) => {
@@ -118,7 +138,7 @@ export const SpecialistsSection = () => {
             .finally(() => {
                 setIsInitialLoading(false)
             })
-    }, [activeFilter])
+    }, [activeFilter, lang])
 
     const handleFilterChange = (filter: string) => {
         if (filter === activeFilter) {
@@ -134,21 +154,23 @@ export const SpecialistsSection = () => {
 
     const handlePrevious = () => {
         const slider = sliderRef.current
+        const slideStep = getSlideStep()
 
-        if (!slider) {
+        if (!slider || !slideStep) {
             return
         }
 
         slider.scrollBy({
-            left: -(slider.clientWidth + SLIDER_GAP),
+            left: -slideStep,
             behavior: 'smooth',
         })
     }
 
     const handleNext = async () => {
         const slider = sliderRef.current
+        const slideStep = getSlideStep()
 
-        if (!slider) {
+        if (!slider || !slideStep) {
             return
         }
 
@@ -159,7 +181,7 @@ export const SpecialistsSection = () => {
 
             requestAnimationFrame(() => {
                 slider.scrollBy({
-                    left: slider.clientWidth + SLIDER_GAP,
+                    left: slideStep,
                     behavior: 'smooth',
                 })
             })
@@ -168,10 +190,11 @@ export const SpecialistsSection = () => {
         }
 
         slider.scrollBy({
-            left: slider.clientWidth + SLIDER_GAP,
+            left: slideStep,
             behavior: 'smooth',
         })
     }
+
     return (
         <section className="specialists-section">
             <Container className="specialists-section__container">
@@ -226,12 +249,16 @@ export const SpecialistsSection = () => {
                     </div>
                 )}
 
+                {/* TODO: Extract loading, error and empty states into a reusable Status/ErrorState component. */}
                 {isSymptomsError && (
                     <p className="specialists-section__status">
                         {t('psychologists:section.filtersError')}
                     </p>
                 )}
 
+                {/* TODO: Add reusable StatusState for loading/error/empty states,
+                    ErrorBoundary for runtime/render errors,
+                    and Zod runtime validation for psychologists API responses. */}
                 {isInitialLoading && (
                     <p className="specialists-section__status">
                         {t('psychologists:section.loading')}
@@ -273,16 +300,7 @@ export const SpecialistsSection = () => {
                                             className="specialists-section__slide"
                                             key={specialist.psychologist_id}
                                         >
-                                            <SpecialistCard
-                                                id={specialist.psychologist_id}
-                                                name={specialist.full_name}
-                                                avatar={specialist.avatar_url}
-                                                experience={specialist.experience_years}
-                                                price={specialist.price_per_hour}
-                                                methods={specialist.methods}
-                                                topics={specialist.topics}
-                                                timeSlots={specialist.mock_slots}
-                                            />
+                                            <SpecialistCard {...specialist} />
                                         </div>
                                     ))}
                                 </div>

@@ -3,10 +3,28 @@
 
 .avatar {
     flex-shrink: 0;
+
     border-radius: c.$avatar-border-radius;
+
     object-fit: cover;
     object-position: center;
+
     background-color: a.$color-background;
+
+    &--fallback {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+
+        overflow: hidden;
+
+        svg {
+            display: block;
+
+            width: 100%;
+            height: 100%;
+        }
+    }
 
     &--small {
         width: c.$avatar-size-small;
