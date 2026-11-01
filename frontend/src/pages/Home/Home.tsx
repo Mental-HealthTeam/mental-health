@@ -20,8 +20,8 @@ export const Home = () => {
                 <WhyChooseUs />
                 <SpecialistsSection />
                 <WhyUs />
-                <FaqSection />
                 <ReviewsSection />
+                <FaqSection />
                 <ContactSection />
             </main>
 
