@@ -12,7 +12,7 @@ export default defineConfig({
             },
             '/ai': {
                 target: 'http://localhost:8001',
-                changeOrigin: true,
+                rewrite: (path) => path.replace(/^\/ai/, ''),
             },
         },
     },

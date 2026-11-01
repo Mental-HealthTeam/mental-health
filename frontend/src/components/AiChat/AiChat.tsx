@@ -51,11 +51,11 @@ export const AiChat = () => {
                 >
                     <div className="ai-chat__content">
                         <ChatHeader onClose={handleClose} />
-                        <MessageList isTyping={status === 'streaming'} />
+                        <MessageList />
 
                         <ChatInput
                             onSend={handleSend}
-                            disabled={status === 'streaming'}
+                            disabled={status === 'streaming' || status === 'waiting'}
                             initialValue={initialText}
                         />
                     </div>

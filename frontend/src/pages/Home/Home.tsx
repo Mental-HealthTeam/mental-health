@@ -30,11 +30,11 @@ export const Home = () => {
                     <WhyUs />
                 </section>
 
-                <FaqSection />
-
                 <section id="reviews">
                     <ReviewsSection />
                 </section>
+        
+                <FaqSection />
 
                 <section id="contact">
                     <ContactSection />
