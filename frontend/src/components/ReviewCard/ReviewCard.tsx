@@ -42,9 +42,10 @@ export const ReviewCard = ({ age, avatar, date, name, rating, text, className }:
                     alt=""
                 />
                 <div className="review-card__author">
-                    {age && (
-                        <h3 className="review-card__name">{`${name}, ${age} ${t('ageSuffix')}`}</h3>
-                    )}
+                    <h3 className="review-card__name">
+                        {name}
+                        {age && `, ${t('age', { count: age })}`}
+                    </h3>
                     <time className="review-card__date" dateTime={date}>
                         {formattedDate}
                     </time>

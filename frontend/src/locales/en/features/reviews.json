@@ -1,7 +1,8 @@
 {
     "title": "What People Say About Us",
     "subtitle": "Stories of people who took a step toward better mental health and changed their lives.",
-    "ageSuffix": "years",
+    "age_one": "{{count}} year old",
+    "age_other": "{{count}} years old",
     "ratingLabel": "Rating {{rating}} out of 5",
     "contentLabel": "Client reviews",
     "previousReview": "Previous review",
