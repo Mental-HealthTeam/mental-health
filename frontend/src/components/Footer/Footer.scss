@@ -3,13 +3,10 @@
 .footer {
     width: 100%;
 
-    padding: 0 30px 0 30px;
-
     &__container {
         width: 100%;
         max-width: none;
-
-        padding: 28px 92px 14px;
+        padding: 32px 120px 16px;
 
         color: a.$color-gray-0;
         background-color: a.$color-optional;
@@ -17,29 +14,33 @@
 
     &__top {
         display: grid;
-
         grid-template-columns:
-            minmax(280px, 1.7fr)
+            minmax(500px, 1.7fr)
             minmax(120px, 0.8fr)
             minmax(140px, 0.9fr)
             minmax(140px, 0.9fr);
-
-        justify-content: space-between;
+        grid-template-areas:
+            'information navigation clients specialists'
+            'legal legal legal legal';
+        align-items: start;
         column-gap: 24px;
+        row-gap: 26px;
 
         width: 100%;
     }
 
     &__information {
+        grid-area: information;
+
         min-width: 0;
-        max-width: 430px;
+        max-width: 500px;
     }
 
     &__logo {
         display: block;
 
         width: 107px;
-min-height: 41px;
+        min-height: 41px;
         margin-bottom: 20px;
     }
 
@@ -51,8 +52,7 @@ min-height: 41px;
     }
 
     &__description {
-        max-width: 420px;
-
+        max-width: 500px;
         margin: 0 0 20px;
 
         color: a.$color-gray-0;
@@ -62,10 +62,13 @@ min-height: 41px;
         font-weight: a.$font-weight-caption-secondary;
     }
 
+    &__description-second {
+        display: block;
+    }
+
     &__contacts {
         display: flex;
         flex-direction: column;
-
         gap: 12px;
 
         margin: 0;
@@ -77,7 +80,7 @@ min-height: 41px;
     &__contact-item {
         display: flex;
         align-items: center;
-        min-height: 18px;
+
         margin: 0;
         padding: 0;
     }
@@ -87,6 +90,8 @@ min-height: 41px;
         align-items: center;
         gap: 10px;
 
+        min-width: 0;
+
         color: a.$color-gray-0;
 
         font-size: a.$font-size-caption-secondary;
@@ -94,6 +99,7 @@ min-height: 41px;
         font-weight: a.$font-weight-caption-secondary;
 
         text-decoration: none;
+        overflow-wrap: anywhere;
 
         transition: opacity a.$transition-default;
 
@@ -117,18 +123,34 @@ min-height: 41px;
         height: 16px;
 
         color: a.$color-gray-0;
-
-        font-size: 14px;
         line-height: 1;
+
+        svg {
+            display: block;
+
+            width: 100%;
+            height: 100%;
+        }
     }
 
     &__column {
         min-width: 0;
+
+        &--navigation {
+            grid-area: navigation;
+        }
+
+        &--clients {
+            grid-area: clients;
+        }
+
+        &--specialists {
+            grid-area: specialists;
+        }
     }
 
     &__title {
         width: fit-content;
-
         margin: 0 0 24px;
 
         background: a.$color-secondary-gradient;
@@ -149,7 +171,8 @@ min-height: 41px;
         display: flex;
         flex-direction: column;
         gap: 12px;
-max-width: 185px;
+
+        max-width: 185px;
         margin: 0;
         padding: 0;
 
@@ -157,7 +180,6 @@ max-width: 185px;
 
         > li {
             min-height: 0;
-
             margin: 0;
             padding: 0;
 
@@ -188,28 +210,36 @@ max-width: 185px;
         }
     }
 
-    &__mobile-legal {
-        display: none;
-    }
-
     &__legal {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
+        grid-area: legal;
 
-        gap: 10px 22px;
-
-        margin-top: 26px;
+        min-width: 0;
         padding-block: 13px;
 
         border-top: 1px solid rgba(a.$color-gray-0, 0.16);
         border-bottom: 1px solid rgba(a.$color-gray-0, 0.16);
     }
 
+    &__legal-links {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 10px 22px;
+
+        margin: 0;
+        padding: 0;
+
+        list-style: none;
+    }
+
     &__legal-item {
-        display: inline-flex;
+        display: flex;
         align-items: center;
         gap: 22px;
+
+        min-width: 0;
+        margin: 0;
+        padding: 0;
 
         color: rgba(a.$color-gray-0, 0.7);
 
@@ -217,9 +247,19 @@ max-width: 185px;
         line-height: a.$line-height-caption-third;
         font-weight: a.$font-weight-caption-third;
 
+        &:not(:last-child)::after {
+            content: '';
+            flex-shrink: 0;
+
+            width: 3px;
+            height: 3px;
+
+            border-radius: 50%;
+            background-color: rgba(a.$color-gray-0, 0.55);
+        }
+
         a {
             color: inherit;
-
             text-decoration: none;
 
             transition: color a.$transition-default;
@@ -235,10 +275,6 @@ max-width: 185px;
         }
     }
 
-    &__legal-separator {
-        color: rgba(a.$color-gray-0, 0.55);
-    }
-
     &__bottom {
         display: flex;
         flex-direction: column;
@@ -249,19 +285,23 @@ max-width: 185px;
 
     &__warning {
         max-width: 100%;
-
         margin: 0;
+        padding: 4px 6px;
 
-        color: rgba(a.$color-gray-0, 0.85);
+        border-radius: 4px;
+
+        color: a.$color-gray-0;
+        background-color: #d9463e;
 
         font-size: a.$font-size-caption-third;
         line-height: a.$line-height-caption-third;
         font-weight: a.$font-weight-caption-third;
+    }
 
-        strong {
-            color: inherit;
-            font-weight: a.$font-weight-caption-third;
-        }
+    &__warning-title,
+    &__warning-phone {
+        color: inherit;
+        font-weight: inherit;
     }
 
     &__copyright {
@@ -288,7 +328,7 @@ max-width: 185px;
                 minmax(250px, 1.5fr)
                 repeat(3, minmax(120px, 1fr));
 
-            column-gap: 36px;
+            column-gap: 24px;
         }
     }
 }
@@ -301,33 +341,40 @@ max-width: 185px;
 
         &__top {
             grid-template-columns: repeat(2, minmax(0, 1fr));
+            grid-template-areas:
+                'information information'
+                'navigation clients'
+                'specialists legal';
 
             column-gap: 48px;
             row-gap: 32px;
         }
 
         &__information {
-            grid-column: 1 / -1;
-
             max-width: 520px;
         }
 
-        &__column--specialists {
-            grid-column: 1;
+        &__legal {
+            padding: 0;
+            border: 0;
         }
 
-        &__mobile-legal {
+        &__legal-links {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        &__legal-item {
             display: block;
 
-            grid-column: 2;
-        }
+            &:not(:last-child)::after {
+                content: none;
+            }
 
-        &__legal {
-            display: none;
-        }
-
-        &__contacts {
-            display: none;
+            a {
+                display: block;
+            }
         }
 
         &__bottom {
@@ -348,29 +395,34 @@ max-width: 185px;
         }
 
         &__top {
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-
             column-gap: 28px;
             row-gap: 28px;
         }
 
         &__information {
-            grid-column: 1 / -1;
+            max-width: none;
         }
 
         &__logo {
             width: 76px;
-
             margin-bottom: 24px;
         }
 
         &__description {
             max-width: none;
-
-            margin-bottom: 0;
+            margin-bottom: 20px;
 
             font-size: 13px;
             line-height: 1.25;
+        }
+
+        &__description-second {
+            display: inline;
+        }
+
+        &__contact-link {
+            font-size: 14px;
+            line-height: 17px;
         }
 
         &__title {
@@ -389,24 +441,13 @@ max-width: 185px;
             }
         }
 
-        &__column--navigation {
-            grid-column: 1;
+        &__legal-links {
+            gap: 12px;
         }
 
-        &__column--clients {
-            grid-column: 2;
-        }
-
-        &__column--specialists {
-            grid-column: 1;
-        }
-
-        &__mobile-legal {
-            display: block;
-
-            grid-column: 2;
-
-            align-self: start;
+        &__legal-item {
+            font-size: 12px;
+            line-height: 1.2;
         }
 
         &__bottom {
@@ -416,11 +457,7 @@ max-width: 185px;
             padding-top: 24px;
         }
 
-        &__warning {
-            font-size: 11px;
-            line-height: 1.2;
-        }
-
+        &__warning,
         &__copyright {
             font-size: 11px;
             line-height: 1.2;

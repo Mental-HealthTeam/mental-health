@@ -1,5 +1,8 @@
 {
-    "description": "Professional psychological support online. Find your specialist and take a step toward better mental health.",
+    "description": {
+        "first": "Professional psychological support online.",
+        "second": "Find your specialist and take a step towards better mental health."
+    },
     "sections": {
         "navigation": "Navigation",
         "clients": "For clients",
@@ -21,7 +24,8 @@
         "publicOffer": "Public offer",
         "userAgreement": "User agreement",
         "cookiePolicy": "Cookie Policy",
-        "platformRegulations": "Platform regulations"
+        "platformRegulations": "Platform regulations",
+        "platformRules": "Platform Rules"
     },
     "warning": {
         "title": "Warning:",
