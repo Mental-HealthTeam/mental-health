@@ -136,6 +136,6 @@ async def delete_user_avatar(
     await db.commit()
     await db.refresh(current_user)
 
-    delete_avatar_file(old_avatar_url)
+    delete_avatar_file(old_avatar_url, current_user.id)
 
     return await build_profile_response(db, current_user)

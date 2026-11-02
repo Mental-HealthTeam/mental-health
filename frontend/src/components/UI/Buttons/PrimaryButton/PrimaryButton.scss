@@ -7,17 +7,17 @@
   gap: 8px;
 
   min-height: 40px;
-  padding: 10px 16px;
+  padding: 0 12px;
 
   border: none;
   border-radius: 10px;
 
   background: a.$color-secondary-gradient;
   color: a.$color-text-primary;
-
-  font: inherit;
-  font-weight: 600;
-  text-transform: uppercase;
+  font-family: a.$font-family-primary;
+  font-size: 16px;
+  font-weight: a.$font-weight-extrabold;
+  line-height: 1.35;
 
   cursor: pointer;
 

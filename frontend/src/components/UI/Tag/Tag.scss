@@ -1,0 +1,12 @@
+@use '../../../styles/abstracts' as a;
+
+.tag {
+    font-size: a.$font-size-button-medium;
+    line-height: a.$line-height-button-medium;
+    font-weight: a.$font-weight-button-medium;
+    color: a.$color-primary;
+    padding: 7.5px 12px;
+    border: 1px solid a.$color-primary;
+    border-radius: 10px;
+    max-width: max-content;
+}
