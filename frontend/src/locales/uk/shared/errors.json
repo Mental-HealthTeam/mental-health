@@ -9,5 +9,13 @@
         "specialistsLink": "Переглянути всіх фахівців",
         "homeLink": "На головну",
         "copyright": "© {{year}} Mental Health Platform. Усі права захищені."
+    },
+    "slotUnavailablePage": {
+        "title": "Цей час щойно забронювали",
+        "description": "Схоже, хтось випередив тебе й вже обрав цей слот.",
+        "suggestion": "Будь ласка, обери інший зручний час у календарі фахівця або скористайся AI-підбором.",
+        "nearestSlot": "Найближчий вільний слот у цього фахівця:",
+        "chooseAnotherTime": "Обрати інший час",
+        "copyright": "© {{year}} Mental Health Platform. Усі права захищені."
     }
 }
