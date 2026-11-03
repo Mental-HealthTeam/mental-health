@@ -50,3 +50,11 @@ def free_slots(
         if is_free:
             available_mock_slots.append(mock_slot)
     return available_mock_slots
+
+
+def slots_in_window(slots, min_time, max_time):
+    return [
+        slot for slot in slots
+        if (min_time is None or datetime.fromisoformat(slot) >= min_time)
+        and (max_time is None or datetime.fromisoformat(slot) <= max_time)
+    ]
