@@ -1,0 +1,6 @@
+{
+    "notFound": "We couldn't find what you're looking for.",
+    "network": "Can't reach the server. Check your connection and try again.",
+    "server": "Something went wrong on our side. Try again later.",
+    "unknown": "Something went wrong. Try again."
+}

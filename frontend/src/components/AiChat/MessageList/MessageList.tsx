@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import {
     GREETING_ID,
     searchPsychologists,
@@ -15,23 +15,26 @@ import { useAppDispatch, useAppSelector } from '../../../app/hooks'
 import { useTranslation } from 'react-i18next'
 
 type Props = {
-    isTyping: boolean
     className?: string
 }
 
-export const MessageList = ({ isTyping, className }: Props) => {
+export const MessageList = ({ className }: Props) => {
     const { t } = useTranslation('aiChat')
     const { i18n } = useTranslation()
 
     const dispatch = useAppDispatch()
-    const { messages, error, lastUserText, matchData } = useAppSelector((state) => state.aiChat)
+    const { messages, error, lastUserText, matchData, status } = useAppSelector(
+        (state) => state.aiChat,
+    )
     const endRef = useRef<HTMLDivElement>(null)
 
     const firstCreatedAt = messages[0].createdAt
 
+    const isAnswering = useMemo(() => status === 'waiting' || status === 'streaming', [status])
+
     useEffect(() => {
         endRef.current?.scrollIntoView({ behavior: 'smooth' })
-    }, [messages.length, isTyping, error])
+    }, [messages.length, isAnswering, error])
 
     return (
         <div className={classNames('message-list', className)}>
@@ -49,7 +52,7 @@ export const MessageList = ({ isTyping, className }: Props) => {
                 ))}
             </div>
 
-            {isTyping && <TypingIndicator />}
+            {isAnswering && <TypingIndicator />}
 
             {error && lastUserText && (
                 <div className="message-list__error" role="alert">
