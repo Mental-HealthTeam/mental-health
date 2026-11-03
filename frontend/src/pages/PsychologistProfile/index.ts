@@ -1,0 +1,1 @@
+export { PsychologistProfile } from './PsychologistProfile'

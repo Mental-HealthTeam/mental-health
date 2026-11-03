@@ -2,6 +2,7 @@ import common from '../../locales/en/shared/common.json'
 import navigation from '../../locales/en/shared/navigation.json'
 import actions from '../../locales/en/shared/actions.json'
 import accessibility from '../../locales/en/shared/accessibility.json'
+import errors from '../../locales/en/shared/errors.json'
 
 import hero from '../../locales/en/features/hero.json'
 import psychologists from '../../locales/en/features/psychologists.json'
@@ -14,9 +15,11 @@ import contact from '../../locales/en/features/contact.json'
 import faq from '../../locales/en/features/faq.json'
 import reviews from '../../locales/en/features/reviews.json'
 import symptoms from '../../locales/en/features/symptoms.json'
+import specialistProfile from '../../locales/en/features/specialistProfile.json'
 
 export const enResources = {
     common,
+    errors,
     navigation,
     actions,
     accessibility,
@@ -31,4 +34,5 @@ export const enResources = {
     faq,
     reviews,
     symptoms,
+    specialistProfile,
 } as const

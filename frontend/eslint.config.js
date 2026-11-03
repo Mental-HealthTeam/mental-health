@@ -19,6 +19,9 @@ export default defineConfig([
         languageOptions: {
             globals: globals.browser,
         },
+        rules: {
+            'no-console': ['warn', { allow: ['warn', 'error'] }],
+        },
     },
     eslintConfigPrettier,
 ])

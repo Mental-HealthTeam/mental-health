@@ -1,0 +1,12 @@
+@use '../../../../styles/abstracts' as a;
+
+.back-button {
+    color: a.$color-optional;
+    font-size: a.$font-size-body;
+    line-height: a.$line-height-body;
+    letter-spacing: a.$letter-spacing-body;
+    font-weight: a.$font-weight-body-extrabold;
+    text-align: left;
+    border-bottom: 2px solid a.$color-optional;
+    cursor: pointer;
+}

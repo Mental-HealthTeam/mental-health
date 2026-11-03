@@ -12,39 +12,43 @@ type Props = {
 export const LanguageSwitcher = ({ className }: Props) => {
     const { i18n, t } = useTranslation('accessibility')
 
-    const isEnglish = i18n.resolvedLanguage === 'en'
+    const currentLanguage = i18n.resolvedLanguage
 
-    const handleToggle = () => {
-        void changeLanguage(isEnglish ? 'uk' : 'en')
+    const handleLanguageChange = (language: 'uk' | 'en') => {
+        if (currentLanguage === language) {
+            return
+        }
+
+        void changeLanguage(language)
     }
 
     return (
-        <div className={classNames('language-switcher', className)}>
-            <span
-                className={classNames('language-switcher__label', {
-                    'language-switcher__label--active': !isEnglish,
+        <div
+            className={classNames('language-switcher', className)}
+            role="group"
+            aria-label={t('changeLanguage')}
+        >
+            <button
+                type="button"
+                className={classNames('language-switcher__button', {
+                    'language-switcher__button--active': currentLanguage === 'uk',
                 })}
+                aria-pressed={currentLanguage === 'uk'}
+                onClick={() => handleLanguageChange('uk')}
             >
-                UA
-            </span>
+                УКР
+            </button>
 
             <button
                 type="button"
-                className="language-switcher__toggle"
-                aria-label={t('changeLanguage')}
-                aria-pressed={isEnglish}
-                onClick={handleToggle}
-            >
-                <span className="language-switcher__thumb" data-active={isEnglish} />
-            </button>
-
-            <span
-                className={classNames('language-switcher__label', {
-                    'language-switcher__label--active': isEnglish,
+                className={classNames('language-switcher__button', {
+                    'language-switcher__button--active': currentLanguage === 'en',
                 })}
+                aria-pressed={currentLanguage === 'en'}
+                onClick={() => handleLanguageChange('en')}
             >
-                EN
-            </span>
+                ENG
+            </button>
         </div>
     )
 }

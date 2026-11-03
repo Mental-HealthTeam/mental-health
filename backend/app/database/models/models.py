@@ -173,9 +173,6 @@ class Psychologist(Base):
     title_eng: Mapped[str | None] = mapped_column(
         String(255)
     )
-    avatar_url: Mapped[str | None] = mapped_column(
-        String(255),
-    )
     mock_slots: Mapped[list[dict] | None] = mapped_column(
         JSON
     )
@@ -230,7 +227,8 @@ class Psychologist(Base):
 
     user: Mapped["User"] = relationship(
         "User",
-        back_populates="psychologist"
+        back_populates="psychologist",
+        lazy="selectin"
     )
 
     psychologist_specializations: Mapped[List["PsychologistSpecialization"]] = relationship(
@@ -250,6 +248,10 @@ class Psychologist(Base):
     @property
     def display_title(self) -> str | None:
         return self.title or self.title_eng
+
+    @property
+    def avatar_url(self) -> str | None:
+        return self.user.avatar_url
 
     __table_args__ = (
         CheckConstraint(
