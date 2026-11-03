@@ -1,0 +1,14 @@
+{
+    "title": "Your session has been successfully booked!",
+    "description": "We’ve saved your booking and sent all the details by email and Telegram.",
+    "cabinetLink": "Go to your account",
+    "bookedTime": "Booked time",
+    "joinMeeting": "Join the video session",
+    "states": {
+        "missingBookingId": "No booking ID provided.",
+        "loading": "Loading your booking details…",
+        "loadError": "Could not load your booking details.",
+        "pending": "Your booking is awaiting confirmation.",
+        "notConfirmed": "This booking is not confirmed."
+    }
+}
