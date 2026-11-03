@@ -1,0 +1,25 @@
+@use '../../../styles/abstracts' as a;
+
+.section-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 12px;
+    border: 1px solid a.$color-secondary-start;
+    border-radius: 7px;
+
+    color: a.$color-tertiary-start;
+
+    font-size: a.$font-size-button-large;
+    line-height: a.$line-height-button-large;
+    font-weight: a.$font-weight-button-large;
+
+    text-transform: uppercase;
+    max-width: max-content;
+
+    &__icon {
+        display: inline-flex;
+        flex-shrink: 0;
+    }
+}
