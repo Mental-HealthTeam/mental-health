@@ -146,6 +146,8 @@ def populate_psychologists() -> None:
                     user.email = email
 
             if user is not None:
+                if not user.avatar_url:
+                    user.avatar_url = entry["avatar_url"]
                 existing = session.get(Psychologist, user.id)
                 if existing is not None:
                     existing.mock_slots = mock_slots
@@ -161,6 +163,7 @@ def populate_psychologists() -> None:
                     existing.iban = entry["iban"]
                     existing.tax_id = entry["tax_id"]
                     existing.account_name = entry["account_name"]
+                    existing.price_per_hour = entry["price_uah"]
                     refreshed += 1
                     continue
                 new_id = user.id
@@ -170,6 +173,7 @@ def populate_psychologists() -> None:
                     User(
                         id=new_id,
                         email=mock_email(entry["id"]),
+                        avatar_url=entry["avatar_url"],
                         role=UserRole.PSYCHOLOGIST,
                     )
                 )
@@ -181,7 +185,6 @@ def populate_psychologists() -> None:
                     full_name_eng=entry["name_eng"],
                     title=entry["title"],
                     title_eng=entry["title_eng"],
-                    avatar_url=entry["avatar_url"],
                     mock_slots=mock_slots,
                     certificates=entry["certificates"],
                     bio=entry["bio"],

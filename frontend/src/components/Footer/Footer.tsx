@@ -4,30 +4,10 @@ import { footerNavigationItems } from '../../constants/navigation'
 import { clientLinks, legalLinks, specialistLinks } from '../../constants/footerLinks'
 
 import { Container } from '../Container'
-import { LogoIcon } from '../UI/Icons/LogoIcon'
+import { LogoIcon } from '../UI/Icons'
 
 import './Footer.scss'
-
-const FOOTER_CONTACTS = [
-    {
-        id: 'email',
-        label: 'support@platform.com',
-        href: 'mailto:support@platform.com',
-        icon: '✉',
-    },
-    {
-        id: 'telegram',
-        label: '@support_bot',
-        href: 'https://t.me/support_bot',
-        icon: '@',
-    },
-    {
-        id: 'phone',
-        label: '+380 (44) 123-45-67',
-        href: 'tel:+380441234567',
-        icon: '⌕',
-    },
-] as const
+import { FOOTER_CONTACTS } from '../../constants/footerContacts.tsx'
 
 export const Footer = () => {
     const currentYear = new Date().getFullYear()
@@ -46,10 +26,19 @@ export const Footer = () => {
                             href="#home"
                             aria-label={tAccessibility('homeLink')}
                         >
-                            <LogoIcon className="footer__logo-icon" aria-hidden="true" />
+                            <LogoIcon
+                                variant="footer"
+                                className="footer__logo-icon"
+                                aria-hidden="true"
+                            />
                         </a>
 
-                        <p className="footer__description">{tFooter('description')}</p>
+                        <p className="footer__description">
+                            <span>{tFooter('description.first')}</span>{' '}
+                            <span className="footer__description-second">
+                                {tFooter('description.second')}
+                            </span>
+                        </p>
 
                         <ul className="footer__contacts">
                             {FOOTER_CONTACTS.map(({ id, label, href, icon }) => (
@@ -118,12 +107,12 @@ export const Footer = () => {
                     </nav>
 
                     <nav
-                        className="footer__mobile-legal"
+                        className="footer__legal"
                         aria-label={tAccessibility('footerLegalNavigation')}
                     >
-                        <ul className="footer__links">
+                        <ul className="footer__legal-links">
                             {legalLinks.map(({ key, href }) => (
-                                <li key={href}>
+                                <li className="footer__legal-item" key={href}>
                                     <a href={href}>{tFooter(`legal.${key}`)}</a>
                                 </li>
                             ))}
@@ -131,27 +120,15 @@ export const Footer = () => {
                     </nav>
                 </div>
 
-                <nav className="footer__legal" aria-label={tAccessibility('footerLegalNavigation')}>
-                    {legalLinks.map(({ key, href }, index) => (
-                        <span className="footer__legal-item" key={href}>
-                            <a href={href}>{tFooter(`legal.${key}`)}</a>
-
-                            {index < legalLinks.length - 1 && (
-                                <span className="footer__legal-separator" aria-hidden="true">
-                                    •
-                                </span>
-                            )}
-                        </span>
-                    ))}
-                </nav>
-
                 <div className="footer__bottom">
                     <p className="footer__warning">
-                        <strong>
-                            <span aria-hidden="true">⚠ </span>
+                        <strong className="footer__warning-title">
+                            <span aria-hidden="true">⚕ </span>
                             {tFooter('warning.title')}
                         </strong>{' '}
-                        {tFooter('warning.text')}
+                        {tFooter('warning.text')}{' '}
+                        <span className="footer__warning-phone">{tFooter('warning.phone')}</span>{' '}
+                        {tFooter('warning.afterPhone')}
                     </p>
 
                     <p className="footer__copyright">

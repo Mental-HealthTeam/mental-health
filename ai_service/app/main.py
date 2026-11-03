@@ -1,5 +1,5 @@
 import logging
-from datetime import datetime
+from datetime import datetime, timedelta
 import json
 from typing import Annotated
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
@@ -50,6 +50,16 @@ def health():
 
 KYIV_TZ = ZoneInfo("Europe/Kyiv")
 
+WEEKDAYS_UK = [
+    "понеділок", "вівторок", "середа", "четвер",
+    "п'ятниця", "субота", "неділя",
+]
+
+WEEKDAYS_EN = [
+    "monday", "tuesday", "wednesday", "thursday",
+    "friday", "saturday", "sunday",
+]
+
 
 def resolve_timezone_info(tz_name: str | None) -> ZoneInfo:
     if tz_name is None:
@@ -61,8 +71,29 @@ def resolve_timezone_info(tz_name: str | None) -> ZoneInfo:
         return KYIV_TZ
 
 
-async def today_datetime(tz_name: str | None = None) -> str:
+def today_datetime(tz_name: str | None = None) -> str:
     return datetime.now(resolve_timezone_info(tz_name=tz_name)).isoformat(timespec="seconds")
+
+
+def upcoming_calendar(tz_name: str | None = None) -> str:
+    today = datetime.now(resolve_timezone_info(tz_name=tz_name)).date()
+    days = [today + timedelta(days=offset) for offset in range(15)]
+    return ", ".join(
+        f"{day} - {WEEKDAYS_UK[day.weekday()]}/{WEEKDAYS_EN[day.weekday()]}"
+        for day in days
+    )
+
+
+def strip_old_match_data(history: list[dict]) -> list[dict]:
+    assistant_indexes = [
+        index for index, message in enumerate(history)
+        if message["role"] == "assistant"
+    ]
+    for assistant_index in assistant_indexes[:-1]:
+        history[assistant_index]["content"] = (
+            history[assistant_index]["content"].split("{", 1)[0]
+        )
+    return history
 
 
 async def event_generator(
@@ -213,14 +244,21 @@ async def send_message(
     Raises 503 if the AI provider or Redis fails before the stream starts.
     """
     try:
+        calendar = upcoming_calendar(
+            tz_name=request.tz_name
+        )
         history = await redis_storage.get_history(session_id=request.session_id)
+        history = strip_old_match_data(history=history)
         history.append({"role": "user", "content": request.message})
         messages_for_api = [
             {
                 "role": "system",
                 "content": SYSTEM_PROMPT.replace(
                     "{today}",
-                    await today_datetime(tz_name=request.tz_name)
+                    today_datetime(tz_name=request.tz_name)
+                ).replace(
+                    "{calendar}",
+                    calendar
                 )
             },
         ] + history

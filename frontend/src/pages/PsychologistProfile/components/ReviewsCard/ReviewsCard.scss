@@ -1,0 +1,79 @@
+@use '../../../../styles/abstracts' as a;
+@use '../../../../styles/components' as c;
+
+.reviews-card {
+    display: flex;
+    flex-direction: column;
+    gap: c.$pp-reviews-card-gap;
+    background-color: a.$color-background;
+    border-radius: c.$pp-reviews-card-radius;
+    min-width: 0;
+    max-width: 100%;
+
+    &__tabs {
+        display: flex;
+        flex-wrap: wrap;
+        gap: c.$pp-reviews-card-tabs-gap;
+    }
+
+    &__tab {
+        padding: c.$pp-reviews-card-tab-padding-block c.$pp-reviews-card-tab-padding-inline;
+        color: a.$color-optional;
+        background-color: transparent;
+        border: 1px solid a.$color-optional;
+        border-radius: c.$pp-reviews-card-tab-radius;
+        font-size: a.$font-size-button-small;
+        line-height: a.$line-height-button-small;
+        letter-spacing: a.$letter-spacing-button-small;
+        font-weight: a.$font-weight-button-small;
+        transition:
+            color a.$transition-default,
+            background-color a.$transition-default;
+
+        &--is-active {
+            color: a.$color-gray-0;
+            background-color: a.$color-optional;
+        }
+    }
+
+    &__panel {
+        display: flex;
+        flex-direction: column;
+        gap: c.$pp-reviews-card-panel-gap;
+        min-width: 0;
+    }
+
+    &__slider-wrapper {
+        min-width: 0;
+        width: 100%;
+        overflow: hidden;
+    }
+
+    &__slider {
+        display: flex;
+        align-items: flex-start;
+        gap: c.$pp-reviews-card-slider-gap;
+        min-width: 0;
+        width: 100%;
+        overflow-x: auto;
+        overflow-y: hidden;
+        scroll-snap-type: x mandatory;
+        scrollbar-width: none;
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
+    }
+
+    &__slide {
+        flex: 0 0 100%;
+        min-width: 0;
+        scroll-snap-align: start;
+    }
+
+    &__controls {
+        display: flex;
+        justify-content: flex-start;
+        gap: c.$pp-reviews-card-controls-gap;
+    }
+}

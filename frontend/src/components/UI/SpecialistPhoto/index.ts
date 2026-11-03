@@ -1,0 +1,1 @@
+export { SpecialistPhoto } from './SpecialistPhoto'
