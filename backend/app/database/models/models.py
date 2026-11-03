@@ -251,6 +251,10 @@ class Psychologist(Base):
     def display_title(self) -> str | None:
         return self.title or self.title_eng
 
+    @property
+    def is_verified(self) -> bool:
+        return self.profile_status == PsychologistStatus.ACTIVE
+
     __table_args__ = (
         CheckConstraint(
             "NULLIF(TRIM(full_name), '') IS NOT NULL "
