@@ -1,0 +1,28 @@
+@use '../../../../styles/abstracts' as a;
+@use '../../../../styles/components' as c;
+
+.education-card {
+    display: flex;
+    flex-direction: column;
+    gap: c.$pp-education-card-gap;
+    background-color: a.$color-optional;
+    padding: c.$pp-education-card-padding-block c.$pp-education-card-padding-inline;
+    border-radius: c.$pp-education-card-radius;
+
+    &__list {
+        display: flex;
+        flex-direction: column;
+        gap: c.$pp-education-card-list-gap;
+        padding-left: c.$pp-education-card-list-padding-left;
+        list-style: disc;
+    }
+
+    &__item,
+    &__text-no-education {
+        color: a.$color-gray-0;
+        font-size: a.$font-size-body;
+        line-height: a.$line-height-body;
+        letter-spacing: a.$letter-spacing-body;
+        font-weight: a.$font-weight-body-extrabold;
+    }
+}
