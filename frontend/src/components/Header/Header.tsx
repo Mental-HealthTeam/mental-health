@@ -14,7 +14,12 @@ import { ArrowIcon, CloseIcon, LogoIcon, MenuIcon, SparkIcon } from '../UI/Icons
 
 import './Header.scss'
 
-export const Header = () => {
+type Props = {
+    variant?: 'landing' | 'page'
+    className?: string
+}
+
+export const Header = ({ variant = 'landing', className }: Props) => {
     const dispatch = useAppDispatch()
     const navigate = useNavigate()
 
@@ -108,7 +113,7 @@ export const Header = () => {
     }, [])
 
     return (
-        <header className="header">
+        <header className={classNames('header', `header--${variant}`, className)}>
             <Container
                 className={classNames('header__container', {
                     'header__container--menu-open': isMenuOpen,
