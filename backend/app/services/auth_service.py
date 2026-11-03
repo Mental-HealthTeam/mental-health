@@ -34,6 +34,8 @@ def _apply_profile(user, identity):
             include={"name", "avatar_url"},
             exclude_none=True
     ).items():
+        if field == "avatar_url" and user.avatar_url:
+            continue
         setattr(user, field, value)
     user.last_login_at = datetime.now(timezone.utc)
 

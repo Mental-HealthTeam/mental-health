@@ -1,0 +1,21 @@
+@use '../../../styles/abstracts' as a;
+
+.tab {
+    font-size: a.$font-size-button-medium;
+    line-height: a.$line-height-button-medium;
+    font-weight: a.$font-weight-button-medium;
+    background-color: transparent;
+    color: a.$color-primary;
+    padding: 7.5px 12px;
+    border: 1px solid a.$color-primary;
+    border-radius: 10px;
+    max-width: max-content;
+    transition:
+        background-color a.$transition-default,
+        color a.$transition-default;
+
+    &--active {
+        background-color: a.$color-primary;
+        color: a.$color-gray-0;
+    }
+}

@@ -1,4 +1,7 @@
+from typing import Annotated
+
 from fastapi import APIRouter, Depends, File, HTTPException, UploadFile, status
+from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from auth.dependencies import get_current_user
@@ -6,7 +9,8 @@ from database import get_db
 from database.models.models import Psychologist, User, UserRole
 from schemas.auth import UserProfileResponse, UserProfileUpdate
 from services.avatar_storage import delete_avatar_file, save_avatar
-
+from config.dependencies import get_settings
+from config.settings import BaseAppSettings
 
 router = APIRouter()
 
@@ -88,30 +92,28 @@ async def update_user_profile(
     status_code=status.HTTP_200_OK,
 )
 async def upload_user_avatar(
+    db: Annotated[AsyncSession, Depends(get_db)],
+    current_user: Annotated[User, Depends(get_current_user)],
+    settings: Annotated[BaseAppSettings, Depends(get_settings)],
     file: UploadFile = File(...),
-    db: AsyncSession = Depends(get_db),
-    current_user: User = Depends(get_current_user),
 ):
     old_avatar_url = current_user.avatar_url
-    new_avatar_url = await save_avatar(file, current_user.id)
+    new_avatar_url = await save_avatar(file, current_user.id, settings)
 
     current_user.avatar_url = new_avatar_url
 
-    if current_user.role == UserRole.PSYCHOLOGIST:
-        psychologist = await db.get(Psychologist, current_user.id)
-        if psychologist is not None:
-            psychologist.avatar_url = new_avatar_url
-
     try:
         await db.commit()
-        await db.refresh(current_user)
-    except Exception:
+    except SQLAlchemyError as e:
+        delete_avatar_file(new_avatar_url, current_user.id, settings)
         await db.rollback()
-        delete_avatar_file(new_avatar_url)
-        raise
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Could not upload your avatar try later"
+        ) from e
     else:
         if old_avatar_url != new_avatar_url:
-            delete_avatar_file(old_avatar_url)
+            delete_avatar_file(old_avatar_url, current_user.id, settings)
 
     return await build_profile_response(db, current_user)
 
@@ -122,20 +124,15 @@ async def upload_user_avatar(
     status_code=status.HTTP_200_OK,
 )
 async def delete_user_avatar(
-    db: AsyncSession = Depends(get_db),
-    current_user: User = Depends(get_current_user),
+    db: Annotated[AsyncSession, Depends(get_db)],
+    current_user: Annotated[User, Depends(get_current_user)],
+    settings: Annotated[BaseAppSettings, Depends(get_settings)]
 ):
     old_avatar_url = current_user.avatar_url
     current_user.avatar_url = None
 
-    if current_user.role == UserRole.PSYCHOLOGIST:
-        psychologist = await db.get(Psychologist, current_user.id)
-        if psychologist is not None:
-            psychologist.avatar_url = None
-
     await db.commit()
-    await db.refresh(current_user)
 
-    delete_avatar_file(old_avatar_url, current_user.id)
+    delete_avatar_file(old_avatar_url, current_user.id, settings)
 
     return await build_profile_response(db, current_user)

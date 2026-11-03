@@ -2,7 +2,8 @@ export type ClientLinkKey = 'consultation' | 'faq' | 'blog' | 'loyalty'
 
 export type SpecialistLinkKey = 'becomeSpecialist' | 'requirements' | 'account'
 
-export type LegalLinkKey = 'privacy' | 'publicOffer' | 'userAgreement' | 'cookiePolicy'
+export type LegalLinkKey =
+    'privacy' | 'publicOffer' | 'userAgreement' | 'cookiePolicy' | 'platformRules'
 
 export type FooterLink<T extends string> = {
     key: T
@@ -59,5 +60,9 @@ export const legalLinks: FooterLink<LegalLinkKey>[] = [
     {
         key: 'cookiePolicy',
         href: '#cookie-policy',
+    },
+    {
+        key: 'platformRules',
+        href: '#platform-rules',
     },
 ]
