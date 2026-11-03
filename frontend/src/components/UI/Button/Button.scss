@@ -47,6 +47,7 @@
     &--primary {
         color: a.$color-white;
         background-color: a.$color-primary;
+        border: none;
 
         &:hover {
             opacity: 0.92;

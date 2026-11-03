@@ -2,13 +2,17 @@ import { useEffect, useId, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Avatar } from '../UI/Avatar'
-import { OutlineButton, PrimaryButton } from '../UI/Buttons'
-import { AvatarFallbackIcon, AwardIcon, MoneyIcon } from '../UI/Icons'
+import { OutlineButton } from '../UI/Buttons'
+import { MoneyIcon } from '../UI/Icons'
 import { TimeSlot } from '../UI/TimeSlot'
 
 import type { Psychologist } from '../../types/psychologist.ts'
 
 import './SpecialistCard.scss'
+import { Button } from '../UI/Button/Button.tsx'
+import { AvatarFallbackIcon } from '../UI/Icons/AvatarFallbackIcon.tsx'
+import { AwardIcon } from '../UI/Icons/AwardIcon.tsx'
+import { useNavigate } from 'react-router-dom'
 
 type Props = Omit<Psychologist, 'methods'>
 
@@ -70,6 +74,7 @@ export const SpecialistCard = ({
     mock_slots: timeSlots,
 }: Props) => {
     const { t, i18n } = useTranslation(['psychologists', 'symptoms', 'accessibility'])
+    const navigate = useNavigate()
 
     const cardRef = useRef<HTMLElement>(null)
     const radioGroupId = useId()
@@ -209,7 +214,7 @@ export const SpecialistCard = ({
                 <div className="specialist-card__topic-list">
                     {safeTopics.map((topic) => (
                         <span className="specialist-card__topic" key={topic}>
-                            {t(`symptoms:${topic}`)}
+                            {t(`symptoms:${topic}.title`)}
                         </span>
                     ))}
                 </div>
@@ -217,13 +222,15 @@ export const SpecialistCard = ({
 
             <div className="specialist-card__actions">
                 {!isBooking && (
-                    <PrimaryButton
+                    <Button
                         className="specialist-card__booking-button"
+                        variant="primary"
+                        size="medium"
                         fullWidth
                         onClick={() => setIsBooking(true)}
                     >
                         {t('psychologists:card.bookSession')}
-                    </PrimaryButton>
+                    </Button>
                 )}
 
                 {isBooking && (
@@ -255,6 +262,7 @@ export const SpecialistCard = ({
                     className="specialist-card__profile-button"
                     variant="secondary"
                     fullWidth
+                    onClick={() => navigate(`/psychologist-profile/${id}`)}
                 >
                     {t('psychologists:card.viewProfile')}
                 </OutlineButton>

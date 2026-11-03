@@ -1,7 +1,10 @@
 {
     "title": "Що про нас кажуть",
     "subtitle": "Історії людей, які зробили крок назустріч своєму ментальному здоров’ю та змінили життя.",
-    "ageSuffix": "років",
+    "age_one": "{{count}} рік",
+    "age_few": "{{count}} роки",
+    "age_many": "{{count}} років",
+    "age_other": "{{count}} року",
     "ratingLabel": "Оцінка {{rating}} з 5",
     "contentLabel": "Відгуки клієнтів",
     "previousReview": "Попередній відгук",
