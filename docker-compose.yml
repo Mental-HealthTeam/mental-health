@@ -131,3 +131,8 @@ services:
       - /opt/mental-health/media:/usr/share/nginx/html/media:ro
     depends_on:
       - backend
+
+volumes:
+  postgres_data:
+  redis_data:
+
