@@ -9,4 +9,7 @@ __pycache__/
 .env.*
 !.env.example
 
+/backups/
+
 media/
+
