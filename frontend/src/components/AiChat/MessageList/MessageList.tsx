@@ -13,17 +13,18 @@ import { TypingIndicator } from '../TypingIndicator/TypingIndicator'
 import { Button } from '../../UI/Button'
 import { useAppDispatch, useAppSelector } from '../../../app/hooks'
 import { useTranslation } from 'react-i18next'
+import { SpecialistCard } from '../../SpecialistCard'
 
 type Props = {
     className?: string
 }
 
 export const MessageList = ({ className }: Props) => {
-    const { t } = useTranslation('aiChat')
+    const { t } = useTranslation(['aiChat', 'errors'])
     const { i18n } = useTranslation()
 
     const dispatch = useAppDispatch()
-    const { messages, error, lastUserText, matchData, status } = useAppSelector(
+    const { messages, error, lastUserText, matchData, status, psychologists } = useAppSelector(
         (state) => state.aiChat,
     )
     const endRef = useRef<HTMLDivElement>(null)
@@ -66,7 +67,7 @@ export const MessageList = ({ className }: Props) => {
                             dispatch(sendUserMessage({ text: lastUserText, retry: true }))
                         }
                     >
-                        {t('messageList.retry')}
+                        {t('errors.unknown')}
                     </Button>
                 </div>
             )}
@@ -81,9 +82,14 @@ export const MessageList = ({ className }: Props) => {
                     {t('messageList.searchPsychologist')}
                 </Button>
             )}
-            {/* TODO: Integrate AI-matched psychologists with SpecialistCard once the backend response shape and mapping are finalized. */}
 
-            {/*{psychologists.length > 0 && <SpecialistCard />}*/}
+            {psychologists.length > 0 && (
+                <div className="message-list__specialists">
+                    {psychologists.map((specialist) => (
+                        <SpecialistCard {...specialist} />
+                    ))}
+                </div>
+            )}
 
             <div ref={endRef} />
         </div>

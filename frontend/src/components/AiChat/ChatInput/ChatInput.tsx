@@ -8,9 +8,11 @@ import { useTranslation } from 'react-i18next'
 type Props = {
     className?: string
     disabled: boolean
-    initialValue: string
+    initialValue?: string
     onSend: (text: string) => void
 }
+
+const MAX_LENGTH = 500
 
 export const ChatInput = ({ className, onSend, disabled, initialValue = '' }: Props) => {
     const { t } = useTranslation('aiChat')
@@ -20,13 +22,24 @@ export const ChatInput = ({ className, onSend, disabled, initialValue = '' }: Pr
 
     const handleSubmit = (event: SubmitEvent<HTMLFormElement>) => {
         event.preventDefault()
+        const trimmed = value.trim()
 
-        if (value) {
-            const trimmed = value.trim()
-            onSend(trimmed)
-            setValue('')
-            inputRef.current?.focus()
+        if (disabled || !trimmed) {
+            return
         }
+
+        onSend(trimmed)
+        setValue('')
+        inputRef.current?.focus()
+    }
+
+    const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+        if (event.key !== 'Enter' || event.shiftKey || event.nativeEvent.isComposing) {
+            return
+        }
+
+        event.preventDefault()
+        event.currentTarget.form?.requestSubmit()
     }
 
     useEffect(() => {
@@ -37,12 +50,12 @@ export const ChatInput = ({ className, onSend, disabled, initialValue = '' }: Pr
         <form className={classNames('chat-input', className)} onSubmit={handleSubmit}>
             <textarea
                 name={t('input.label')}
-                id="chat-input__field"
                 rows={2}
                 className="chat-input__field"
-                maxLength={500}
+                maxLength={MAX_LENGTH}
                 value={value}
                 onChange={(event) => setValue(event.target.value)}
+                onKeyDown={handleKeyDown}
                 placeholder={t('input.placeholder')}
                 ref={inputRef}
             ></textarea>
@@ -53,7 +66,7 @@ export const ChatInput = ({ className, onSend, disabled, initialValue = '' }: Pr
                 variant="primary"
                 size="small"
                 ariaLabel={t('input.sendAriaLabel')}
-                disabled={disabled}
+                disabled={disabled || !value.trim()}
                 endIcon={<ArrowTopIcon />}
             />
         </form>
