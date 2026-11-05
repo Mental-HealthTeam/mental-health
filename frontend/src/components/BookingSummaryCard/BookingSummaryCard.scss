@@ -1,0 +1,246 @@
+@use '../../styles/abstracts' as a;
+
+.booking-summary-card {
+  display: flex;
+  flex-direction: column;
+
+  box-sizing: border-box;
+
+  width: 100%;
+  max-width: 353px;
+  min-width: 0;
+  padding: 24px 16px;
+
+  border: 1px solid a.$color-gray-20;
+  border-radius: 18px;
+
+  background-color: a.$color-background;
+  color: a.$color-text-primary;
+
+  font-family: a.$font-family-primary;
+  text-align: left;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    min-width: 0;
+    min-height: 76px;
+  }
+
+  &__avatar {
+    flex-shrink: 0;
+  }
+
+  &__identity {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+
+    min-width: 0;
+  }
+
+  &__name {
+    max-width: 100%;
+    margin: 0;
+
+    font-size: a.$font-size-h5;
+    line-height: a.$line-height-h5;
+    letter-spacing: a.$letter-spacing-h5;
+    font-weight: a.$font-weight-h5;
+
+    overflow-wrap: anywhere;
+  }
+
+  &__verified {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    box-sizing: border-box;
+
+    max-width: 100%;
+    min-height: 24px;
+    padding: 4px 8px;
+
+    border-radius: 8px;
+
+    background-color: a.$color-optional;
+    color: a.$color-background;
+
+    font-size: a.$font-size-caption-third;
+    line-height: a.$line-height-caption-third;
+    letter-spacing: a.$letter-spacing-caption-third;
+    font-weight: a.$font-weight-bold;
+
+    text-transform: uppercase;
+    overflow-wrap: anywhere;
+  }
+
+  &__stats {
+    display: grid;
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+    gap: 8px;
+
+    margin-top: 12px;
+  }
+
+  &__stat {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    box-sizing: border-box;
+
+    min-width: 0;
+    min-height: 56px;
+    padding: 8px;
+
+    border: 1px solid a.$color-gray-20;
+    border-radius: 12px;
+  }
+
+  &__stat-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 36px;
+
+    width: 36px;
+    height: 36px;
+
+    svg {
+      display: block;
+
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  &__stat-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    min-width: 0;
+  }
+
+  &__stat-label {
+    color: a.$color-text-secondary;
+
+    font-size: a.$font-size-caption-third;
+    line-height: a.$line-height-caption-third;
+    letter-spacing: a.$letter-spacing-caption-third;
+    font-weight: a.$font-weight-caption-third;
+
+    overflow-wrap: anywhere;
+  }
+
+  &__stat-value {
+    color: a.$color-text-primary;
+
+    font-size: a.$font-size-body;
+    line-height: a.$line-height-body;
+    letter-spacing: a.$letter-spacing-body;
+    font-weight: a.$font-weight-bold;
+
+    overflow-wrap: anywhere;
+  }
+
+  &__session {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+
+    margin-top: 8px;
+    padding-top: 12px;
+
+    border-top: 1px solid a.$color-gray-20;
+
+    text-align: center;
+  }
+
+  &__session-title {
+    margin: 0;
+
+    font-size: a.$font-size-body;
+    line-height: a.$line-height-body;
+    letter-spacing: a.$letter-spacing-body;
+    font-weight: a.$font-weight-body;
+  }
+
+  &__time {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+
+    box-sizing: border-box;
+
+    max-width: 100%;
+    min-height: 36px;
+    padding: 6px 10px;
+
+    border: 1px solid a.$color-secondary-start;
+    border-radius: 10px;
+
+    font-size: a.$font-size-button-small;
+    line-height: a.$line-height-button-small;
+    letter-spacing: a.$letter-spacing-button-small;
+    font-weight: a.$font-weight-button-small;
+
+    text-transform: uppercase;
+    overflow-wrap: anywhere;
+  }
+
+  &__check {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    color: a.$color-secondary-start;
+
+    svg {
+      display: block;
+    }
+  }
+
+  &__profile-button {
+    width: 100%;
+    min-width: 0;
+    min-height: 40px;
+    margin-top: 8px;
+
+    font-size: a.$font-size-button-large;
+    line-height: a.$line-height-button-large;
+    letter-spacing: a.$letter-spacing-button-large;
+    font-weight: a.$font-weight-button-large;
+
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+}
+
+@media (max-width: 359px) {
+  .booking-summary-card {
+    padding: 20px 12px;
+
+    &__header {
+      gap: 8px;
+    }
+
+    &__stats {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 6px;
+    }
+
+    &__stat {
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+  }
+}

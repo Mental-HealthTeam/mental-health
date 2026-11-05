@@ -47,10 +47,11 @@ export const psychologistsApi = createApi({
             }),
         }),
 
-        getBookingById: builder.query<Booking, string>({
-            query: (bookingId) => ({
-                url: `/bookings/${bookingId}`,
+        getBookingById: builder.query<Booking, { id: string; lang: 'uk' | 'en' }>({
+            query: ({ id, lang }) => ({
+                url: `/bookings/${id}`,
                 method: 'GET',
+                params: { lang },
             }),
         }),
     }),

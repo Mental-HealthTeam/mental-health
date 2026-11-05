@@ -10,5 +10,8 @@
         "loadError": "Could not load your booking details.",
         "pending": "Your booking is awaiting confirmation.",
         "notConfirmed": "This booking is not confirmed."
+    },
+    "card": {
+        "bookedTime": "Booked time"
     }
 }
