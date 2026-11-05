@@ -3,7 +3,7 @@
 .my-sessions {
     display: flex;
     flex-direction: column;
-    padding: 24px 16px;
+    padding: 24px;
     background-color: a.$color-background;
     border-radius: 20px;
     min-width: 0;
@@ -93,13 +93,17 @@
     }
 
     &__day-title {
-        color: a.$color-optional;
+        color: a.$color-gray-60;
         font-size: a.$font-size-h5;
         line-height: a.$line-height-h5;
         letter-spacing: a.$letter-spacing-h5;
         font-weight: a.$font-weight-h5;
         text-align: left;
         margin-bottom: 8px;
+
+        &--today {
+          color: a.$color-optional;
+        }
     }
 
     &__head {
@@ -139,5 +143,9 @@
         letter-spacing: a.$letter-spacing-h5;
         font-weight: a.$font-weight-h5;
         margin-top: 20px;
+    }
+
+    &__item {
+      text-transform: uppercase;
     }
 }

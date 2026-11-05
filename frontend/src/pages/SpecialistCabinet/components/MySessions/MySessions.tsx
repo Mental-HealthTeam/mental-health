@@ -6,9 +6,6 @@ import { Tab } from '../../../../components/UI/Tab'
 import './MySessions.scss'
 import { useTranslation } from 'react-i18next'
 import { SessionCard } from '../SessionCard/SessionCard'
-import { Button } from '../../../../components/UI/Button'
-import { AvailabilityPopup } from '../AvailabilityPopup'
-import { AnimatePresence, motion } from 'motion/react'
 import { PrimaryButton } from '../../../../components/UI/Buttons'
 
 type Props = {
@@ -63,11 +60,6 @@ const formatTime = (iso: string, locale: string): string =>
 export const MySessions = ({ className, sessions }: Props) => {
     const { i18n } = useTranslation()
     const [showSessions, setShowSessions] = useState<ShowSessions>('all')
-    const [showAvailabilityPopup, setShowAvailabilityPopup] = useState(false)
-
-    const onCloseAvailabilityPopup = () => {
-        setShowAvailabilityPopup(false)
-    }
 
     const filteredSessions = useMemo(() => {
         if (showSessions === 'all') {
@@ -83,31 +75,6 @@ export const MySessions = ({ className, sessions }: Props) => {
         <div className={classNames('my-sessions', className)}>
             <div className="my-sessions__heading">
                 <h2 className="my-sessions__title">Мої сесії</h2>
-                <Button
-                    className="my-sessions__button"
-                    variant="secondary"
-                    fullWidth
-                    onClick={() => setShowAvailabilityPopup(true)}
-                >
-                    Запланувати нові сесії
-                </Button>
-                <AnimatePresence>
-                    {showAvailabilityPopup && (
-                        <motion.div
-                            className="my-sessions__availability-popup"
-                            role="region"
-                            tabIndex={-1}
-                            initial={{ opacity: 0, x: 50, y: -30, scale: 0.86 }}
-                            animate={{ opacity: 1, x: 0, y: 0, scale: 1 }}
-                            exit={{ opacity: 0, x: 50, y: -30, scale: 0.86 }}
-                            transition={{ duration: 0.2, ease: 'easeOut' }}
-                        >
-                            <AvailabilityPopup
-                                onCloseAvailabilityPopup={onCloseAvailabilityPopup}
-                            />
-                        </motion.div>
-                    )}
-                </AnimatePresence>
             </div>
 
             <div className="my-sessions__filter-tabs">
@@ -132,6 +99,13 @@ export const MySessions = ({ className, sessions }: Props) => {
                 >
                     Завершені сесії
                 </Tab>
+                <Tab
+                    isActive={showSessions === 'scheduled'}
+                    className="my-sessions__item"
+                    onClick={() => setShowSessions('scheduled')}
+                >
+                    Заплановані сесії
+                </Tab>
             </div>
 
             {groupedSessions.length !== 0 && (
@@ -143,7 +117,11 @@ export const MySessions = ({ className, sessions }: Props) => {
 
                             return (
                                 <div className="my-sessions__day" key={item.dayKey}>
-                                    <h3 className="my-sessions__day-title">
+                                    <h3
+                                        className={classNames('my-sessions__day-title', {
+                                            'my-sessions__day-title--today': isToday,
+                                        })}
+                                    >
                                         {isToday ? `Сьогодні ${item.dayKey}` : item.dayKey}
                                     </h3>
 
