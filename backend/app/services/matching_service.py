@@ -29,7 +29,8 @@ from schemas.psychologist import MockSlot
 from auth.dependencies import get_current_user_optional
 from services.slot_service import (
     get_unavailable_slots,
-    free_slots
+    free_slots,
+    slots_in_window
 )
 from services.localization import pick
 
@@ -184,7 +185,14 @@ async def _log_ai_session(db, redis_storage, info, rows, current_user):
             )
 
 
-def _to_match_result(rows, symptom_codes, free_slots: dict, lang: Language):
+def _to_match_result(
+        rows,
+        symptom_codes,
+        free_slots: dict,
+        lang: Language,
+        min_time: datetime,
+        max_time: datetime
+):
     result = [
         PsychologistMatchResult(
             psychologist_id=psychologist.psychologist_id,
@@ -194,7 +202,13 @@ def _to_match_result(rows, symptom_codes, free_slots: dict, lang: Language):
             price_per_hour=psychologist.price_per_hour,
             languages=psychologist.languages,
             mock_slots=[
-                MockSlot(time=slot) for slot in (free_slots[psychologist.psychologist_id] or [])
+                MockSlot(time=slot) for slot in (
+                    slots_in_window(
+                        free_slots[psychologist.psychologist_id],
+                        min_time=min_time,
+                        max_time=max_time
+                    ) or []
+                )
             ],
             matched_symptom_codes=list(
                 set(symptom_codes) & {
@@ -262,7 +276,9 @@ async def find_matching_psychologists(
         rows=rows,
         symptom_codes=info.symptom_codes,
         free_slots=free_slots_by_id,
-        lang=lang
+        lang=lang,
+        min_time=info.min_range_suitable_time,
+        max_time=info.max_range_suitable_time,
     )
     await _log_ai_session(
         db=db,

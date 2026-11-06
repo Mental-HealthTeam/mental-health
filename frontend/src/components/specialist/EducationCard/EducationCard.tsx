@@ -20,7 +20,9 @@ export const EducationCard = ({ className, certificates }: Props) => {
             <SectionLabel className="education-card__section-label" startIcon={<LearnIcon />}>
                 {t('education.title')}
             </SectionLabel>
-            {certificates && (
+            {!certificates || certificates.length === 0 ? (
+                <p className="education-card__text-no-education">{t('education.empty')}</p>
+            ) : (
                 <ul className="education-card__list">
                     {certificates.map((item) => (
                         <li className="education-card__item" key={item.title}>
@@ -28,10 +30,6 @@ export const EducationCard = ({ className, certificates }: Props) => {
                         </li>
                     ))}
                 </ul>
-            )}
-
-            {!certificates && (
-                <p className="education-card__text-no-education">{t('education.empty')}</p>
             )}
         </section>
     )

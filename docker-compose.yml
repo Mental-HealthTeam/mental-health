@@ -132,42 +132,7 @@ services:
     depends_on:
       - backend
 
-  celery_worker:
-    image: vanyas627/mental-health-backend:${IMAGE_TAG}
-    container_name: ${PROJECT_NAME}_celery_worker
-    command: [ "celery", "-A", "tasks.celery_app", "worker", "--loglevel=info", "--concurrency=2" ]
-    env_file:
-      - ./backend/.env
-    environment:
-      CELERY_BROKER_URL: redis://${REDIS_HOST}:${REDIS_PORT}/1
-    depends_on:
-      db:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-      backend:
-        condition: service_healthy
-    entrypoint: [ ]
-    restart: always
-
-  celery_beat:
-    image: vanyas627/mental-health-backend:${IMAGE_TAG}
-    container_name: ${PROJECT_NAME}_celery_beat
-    command: [ "celery", "-A", "tasks.celery_app", "beat", "--loglevel=info", "--schedule=/tmp/celerybeat-schedule" ]
-    env_file:
-      - ./backend/.env
-    environment:
-      CELERY_BROKER_URL: redis://${REDIS_HOST}:${REDIS_PORT}/1
-    depends_on:
-      db:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-      backend:
-        condition: service_healthy
-    entrypoint: [ ]
-    restart: always
-
 volumes:
   postgres_data:
   redis_data:
+

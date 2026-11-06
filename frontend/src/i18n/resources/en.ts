@@ -2,6 +2,7 @@ import common from '../../locales/en/shared/common.json'
 import navigation from '../../locales/en/shared/navigation.json'
 import actions from '../../locales/en/shared/actions.json'
 import accessibility from '../../locales/en/shared/accessibility.json'
+import errors from '../../locales/en/shared/errors.json'
 
 import hero from '../../locales/en/features/hero.json'
 import psychologists from '../../locales/en/features/psychologists.json'
@@ -19,6 +20,7 @@ import session from '../../locales/en/features/session.json'
 
 export const enResources = {
     common,
+    errors,
     navigation,
     actions,
     accessibility,

@@ -2,12 +2,11 @@ import classNames from 'classnames'
 
 import './SpecialistProfileCard.scss'
 import { InfoTile } from '../../InfoTile'
-import { ClockCardIcon, MoneyIcon } from '../../UI/Icons'
+import { AvatarFallbackIcon, AwardIcon, ClockCardIcon, MoneyIcon } from '../../UI/Icons'
 import { type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
-import { LearnIcon } from '../../UI/Icons/WhyChoosePlatform'
 import type { SpecialistProfile } from '../../../types/specialist'
-import defaultPhoto from '../../../assets/images/specialist-photo.png'
+import { SpecialistPhoto } from '../../UI/SpecialistPhoto'
 
 type Props = {
     specialist: SpecialistProfile
@@ -23,23 +22,33 @@ export const SpecialistProfileCard = ({ className, specialist, actions }: Props)
         'specialistProfile',
     ])
 
+    const formattedPrice = new Intl.NumberFormat('uk-UA', {
+        maximumFractionDigits: 0,
+    }).format(Number(specialist.price_per_hour))
+
     return (
-        <section className={classNames('profile-card', className)}>
-            <img
-                className="profile-card__photo"
-                src={specialist.avatar_url ? specialist.avatar_url : defaultPhoto}
-                alt=""
-            />
+        <section
+            className={classNames('profile-card', className)}
+            aria-labelledby="profile-card-name"
+        >
+            <div className="profile-card__region-photo">
+                <SpecialistPhoto
+                    src={specialist.avatar_url}
+                    className="profile-card__photo"
+                    alt=""
+                    fallback={<AvatarFallbackIcon className="profile-card__fallback-icon" />}
+                />
+            </div>
 
             <div className="profile-card__heading">
-                {specialist?.is_verified && (
+                {specialist.is_verified && (
                     <span className="profile-card__badge">
                         {t('specialistProfile:card.verified')}
                     </span>
                 )}
 
                 <h2 className="profile-card__name" id="profile-card-name">
-                    {specialist?.full_name}
+                    {specialist.full_name}
                 </h2>
 
                 <p className="profile-card__role">{t('specialistProfile:card.role')}</p>
@@ -48,21 +57,23 @@ export const SpecialistProfileCard = ({ className, specialist, actions }: Props)
             <ul className="profile-card__stats">
                 <InfoTile
                     className="profile-card__info-tile"
-                    icon={<LearnIcon />}
+                    icon={<AwardIcon />}
                     label={t('specialistProfile:card.stats.experience')}
-                    value={`${t('specialistProfile:card.stats.experienceValue', { count: specialist?.experience_years })}`}
-                />
-                <InfoTile
-                    className="profile-card__info-tile"
-                    icon={<MoneyIcon />}
-                    label={t('specialistProfile:card.stats.price')}
-                    value={`${specialist?.price_per_hour} ₴`}
+                    value={`${t('specialistProfile:card.stats.experienceValue', { count: specialist.experience_years })}`}
                 />
                 <InfoTile
                     className="profile-card__info-tile profile-card__info-tile--hide"
                     icon={<ClockCardIcon />}
                     label={t('specialistProfile:card.stats.sessionDuration')}
-                    value={`${t('specialistProfile:card.stats.sessionDurationValue', { count: specialist?.session_minutes })}`}
+                    value={`${t('specialistProfile:card.stats.sessionDurationValue', { count: specialist.session_minutes })}`}
+                />
+                <InfoTile
+                    className="profile-card__info-tile"
+                    icon={<MoneyIcon />}
+                    label={t('specialistProfile:card.stats.price')}
+                    value={t('psychologists:card.price', {
+                        price: formattedPrice,
+                    })}
                 />
             </ul>
 
@@ -70,7 +81,7 @@ export const SpecialistProfileCard = ({ className, specialist, actions }: Props)
                 <p className="profile-card__approach-label">
                     {t('specialistProfile:card.approach')}
                 </p>
-                <p className="profile-card__approach-value">{specialist?.methods.join(', ')}</p>
+                <p className="profile-card__approach-value">{specialist.methods?.join(', ')}</p>
             </div>
 
             <div className="profile-card__actions">{actions}</div>

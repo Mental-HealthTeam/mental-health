@@ -2,6 +2,7 @@ import common from '../../locales/uk/shared/common.json'
 import navigation from '../../locales/uk/shared/navigation.json'
 import actions from '../../locales/uk/shared/actions.json'
 import accessibility from '../../locales/uk/shared/accessibility.json'
+import errors from '../../locales/uk/shared/errors.json'
 
 import hero from '../../locales/uk/features/hero.json'
 import whyChooseUs from '../../locales/uk/features/whyChooseUs.json'
@@ -19,6 +20,7 @@ import session from '../../locales/uk/features/session.json'
 
 export const ukResources = {
     common,
+    errors,
     navigation,
     actions,
     accessibility,

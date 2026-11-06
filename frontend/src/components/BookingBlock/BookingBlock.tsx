@@ -78,19 +78,16 @@ export const BookingBlock = ({ name, slots }: Props) => {
                                 name,
                             })}
                         >
-                            {slots.map((slot) => {
-                                console.log('slot:', slot)
-                                return (
-                                    <TimeSlot
-                                        key={slot.time}
-                                        label={formatTimeSlot(slot.time)}
-                                        value={slot.time}
-                                        name={`specialist-time-${radioGroupId}`}
-                                        checked={selectedSlot === slot.time}
-                                        onChange={setSelectedSlot}
-                                    />
-                                )
-                            })}
+                            {slots.map((slot) => (
+                                <TimeSlot
+                                    key={slot.time}
+                                    label={formatTimeSlot(slot.time)}
+                                    value={slot.time}
+                                    name={`specialist-time-${radioGroupId}`}
+                                    checked={selectedSlot === slot.time}
+                                    onChange={setSelectedSlot}
+                                />
+                            ))}
                         </div>
                     )}
                 </div>

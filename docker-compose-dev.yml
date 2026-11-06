@@ -29,6 +29,12 @@ services:
       timeout: 5s
       retries: 5
 
+  mailpit:
+    image: axllent/mailpit:latest
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8025:8025"
+
   pgadmin:
     image: dpage/pgadmin4
     ports:
@@ -76,7 +82,7 @@ services:
     ports:
       - "${BACKEND_PORT:-8000}:8000"
     volumes:
-      - avatars_data:/app/media/avatars
+      - ./media:/app/media
     command: uvicorn main:app --host 0.0.0.0 --port 8000
     healthcheck:
       test: [
@@ -151,6 +157,4 @@ volumes:
   postgres_data:
     driver: local
   pgadmin_data:
-    driver: local
-  avatars_data:
     driver: local

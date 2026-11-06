@@ -21,11 +21,21 @@
     width: 100%;
     border: 1px solid a.$color-gray-10;
 
-    &__photo {
+    &__region-photo {
         grid-area: photo;
         height: c.$pp-profile-card-photo-size;
         width: c.$pp-profile-card-photo-size;
+    }
+
+    &__photo {
+        width: 100%;
+        height: 100%;
         border-radius: 50%;
+    }
+
+    &__fallback-icon {
+        width: 100%;
+        height: 100%;
     }
 
     &__heading {
@@ -116,7 +126,6 @@
 
     &__actions {
         grid-area: button;
-        max-width: 100%;
     }
 }
 
@@ -157,12 +166,20 @@
             font-weight: a.$font-weight-h3;
         }
 
-        &__photo {
+        &__region-photo {
             min-width: 0;
             width: 100%;
             min-height: 100%;
+        }
+
+        &__photo {
             border-radius: c.$pp-profile-card-photo-radius-tablet;
             object-fit: cover;
+        }
+
+        &__fallback-icon {
+            width: 50%;
+            height: 50%;
         }
 
         &__stats {
@@ -179,10 +196,6 @@
             gap: c.$pp-profile-card-approach-gap;
             padding-block: c.$pp-profile-card-approach-padding-block-tablet;
             border-top: 1px solid a.$color-gray-10;
-        }
-
-        &__availability {
-            flex-direction: row;
         }
     }
 }

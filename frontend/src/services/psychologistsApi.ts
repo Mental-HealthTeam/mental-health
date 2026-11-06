@@ -1,6 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
 import type { GetPsychologistsParams, Psychologist, SymptomCode } from '../types/psychologist'
+import type { SpecialistProfile } from '../types/specialist'
 
 export const psychologistsApi = createApi({
     reducerPath: 'psychologistsApi',
@@ -37,8 +38,19 @@ export const psychologistsApi = createApi({
                 method: 'GET',
             }),
         }),
+
+        getPsychologistById: builder.query<SpecialistProfile, { id: string; lang?: string }>({
+            query: ({ id, lang = 'uk' }) => ({
+                url: `/psychologists/${id}`,
+                params: { lang },
+            }),
+        }),
     }),
 })
 
-export const { useGetPsychologistsQuery, useLazyGetPsychologistsQuery, useGetSymptomCodesQuery } =
-    psychologistsApi
+export const {
+    useGetPsychologistsQuery,
+    useLazyGetPsychologistsQuery,
+    useGetSymptomCodesQuery,
+    useGetPsychologistByIdQuery,
+} = psychologistsApi

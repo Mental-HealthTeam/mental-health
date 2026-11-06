@@ -1,5 +1,8 @@
 {
-    "description": "Professional psychological support online. Find your specialist and take a step toward better mental health.",
+    "description": {
+        "first": "Professional psychological support online.",
+        "second": "Find your specialist and take a step towards better mental health."
+    },
     "sections": {
         "navigation": "Navigation",
         "clients": "For clients",
@@ -21,11 +24,14 @@
         "publicOffer": "Public offer",
         "userAgreement": "User agreement",
         "cookiePolicy": "Cookie Policy",
-        "platformRegulations": "Platform regulations"
+        "platformRegulations": "Platform regulations",
+        "platformRules": "Platform Rules"
     },
     "warning": {
         "title": "Warning:",
-        "text": "Mental Health Platform provides psychological counselling services and is not an emergency medical or psychiatric service. If your life is at risk, call 103 or contact an emergency hotline."
+        "text": "Mental Health Platform provides psychological counselling services and is not an emergency medical or psychiatric service. If your life is at risk, call",
+        "phone": "103",
+        "afterPhone": "or contact a mental health hotline."
     },
     "copyright": "Mental Health Platform. All rights reserved."
 }

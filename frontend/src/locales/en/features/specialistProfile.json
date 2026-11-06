@@ -18,7 +18,7 @@
             "sessionDurationValue_other": "{{count}} minutes"
         },
         "approach": "Therapeutic approach:",
-        "availability": "Available time"
+        "availability": "Available time:"
     },
     "tabs": {
         "basicInfo": "Basic information",
