@@ -1,5 +1,7 @@
 import type { AvailableSlot, SessionBooking, SessionItem, SessionStatus } from '../types/session'
 
+const SESSION_DURATION_MS = 60 * 60 * 1000
+
 export const isBooking = (item: SessionItem): item is SessionBooking => {
     if ('booking_id' in item) {
         return true
@@ -17,15 +19,12 @@ export const isSlot = (item: SessionItem): item is AvailableSlot => {
 }
 
 export const getSessionStatus = (item: SessionItem): SessionStatus => {
-    if (isSlot(item)) {
-        return 'available'
-    }
+    if (isSlot(item)) return 'available'
+    if (item.status === 'completed') return 'completed'
 
-    if (item.status === 'completed') {
-        return 'completed'
-    }
+    const endsAt = new Date(item.selected_time).getTime() + SESSION_DURATION_MS
 
-    return 'scheduled'
+    return endsAt < Date.now() ? 'completed' : 'scheduled'
 }
 
 export const isVisibleSession = (item: SessionItem): boolean =>

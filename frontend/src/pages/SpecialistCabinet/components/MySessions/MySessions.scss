@@ -59,7 +59,7 @@
             border-radius: c.$sc-sessions-scrollbar-thumb-radius;
         }
 
-        &::-webkit-scrollbar-thumb:hoc.r {
+        &::-webkit-scrollbar-thumb:hover {
             background-color: a.$color-optional;
         }
     }

@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { AboutCard } from '../AboutCard'
 import { EducationCard } from '../EducationCard'
 import { SpecializationsCard } from '../SpecializationsCard'
-import { ReviewsCard } from '../../../pages/PsychologistProfile/components/ReviewsCard'
+import { ReviewsCard } from '../ReviewsCard'
 import { Tab } from '../../UI/Tab'
 import type { SpecialistProfile } from '../../../types/specialist'
 
