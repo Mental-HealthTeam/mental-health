@@ -26,11 +26,11 @@ export const Header = ({ variant = 'landing', className }: Props) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false)
     const [activeHref, setActiveHref] = useState('#about')
 
-    const currentYear = new Date().getFullYear()
-
     const { t: tActions } = useTranslation('actions')
     const { t: tAccessibility } = useTranslation('accessibility')
     const { t: tNavigation } = useTranslation('navigation')
+
+    const currentYear = new Date().getFullYear()
 
     const closeMenu = () => {
         setIsMenuOpen(false)
@@ -61,7 +61,7 @@ export const Header = ({ variant = 'landing', className }: Props) => {
     useEffect(() => {
         const handleEscape = (event: KeyboardEvent) => {
             if (event.key === 'Escape') {
-                closeMenu()
+                setIsMenuOpen(false)
             }
         }
 
@@ -90,11 +90,9 @@ export const Header = ({ variant = 'landing', className }: Props) => {
                             secondEntry.intersectionRatio - firstEntry.intersectionRatio,
                     )[0]
 
-                if (!visibleSection) {
-                    return
+                if (visibleSection) {
+                    setActiveHref(`#${visibleSection.target.id}`)
                 }
-
-                setActiveHref(`#${visibleSection.target.id}`)
             },
             {
                 root: null,
@@ -145,7 +143,7 @@ export const Header = ({ variant = 'landing', className }: Props) => {
                                                     'header__navigation-link--active': isActive,
                                                 })}
                                                 type="button"
-                                                aria-current={isActive ? 'page' : undefined}
+                                                aria-current={isActive ? 'location' : undefined}
                                                 onClick={() => handleNavigation(href)}
                                             >
                                                 {tNavigation(key)}
@@ -228,10 +226,9 @@ export const Header = ({ variant = 'landing', className }: Props) => {
                         'header__mobile-menu--open': isMenuOpen,
                     })}
                     id="header-mobile-menu"
+                    inert={!isMenuOpen}
                 >
                     <div className="header__mobile-menu-inner">
-                        <div className="header__mobile-divider" />
-
                         <nav
                             className="header__mobile-navigation"
                             aria-label={tAccessibility('mainNavigation')}
@@ -251,7 +248,7 @@ export const Header = ({ variant = 'landing', className }: Props) => {
                                                     },
                                                 )}
                                                 type="button"
-                                                aria-current={isActive ? 'page' : undefined}
+                                                aria-current={isActive ? 'location' : undefined}
                                                 onClick={() => handleNavigation(href)}
                                             >
                                                 {tNavigation(key)}
@@ -261,6 +258,14 @@ export const Header = ({ variant = 'landing', className }: Props) => {
                                 })}
                             </ul>
                         </nav>
+
+                        <div className="header__mobile-language">
+                            <span className="header__mobile-language-label">
+                                {tNavigation('languageLabel')}
+                            </span>
+
+                            <LanguageSwitcher className="header__mobile-language-switcher" />
+                        </div>
 
                         <p className="header__mobile-copyright">
                             Mental Health Platform © {currentYear}
