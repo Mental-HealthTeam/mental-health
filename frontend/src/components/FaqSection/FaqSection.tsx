@@ -7,8 +7,8 @@ import { useState } from 'react'
 
 import './FaqSection.scss'
 import { ArrowIcon } from '../UI/Icons'
-import { PrimaryButton } from '../UI/Buttons'
 import { useTranslation } from 'react-i18next'
+import { Button } from '../UI/Button'
 
 export const FaqSection = () => {
     const { t } = useTranslation('faq')
@@ -48,9 +48,9 @@ export const FaqSection = () => {
                 <div className="faq-section__contact">
                     <p className="faq-section__contact-text">{t('contact.text')}</p>
 
-                    <PrimaryButton className="faq-section__button" endIcon={<ArrowIcon />}>
+                    <Button className="faq-section__button" endIcon={<ArrowIcon />} href="#contact">
                         {t('contact.button')}
-                    </PrimaryButton>
+                    </Button>
                 </div>
             </Container>
         </section>
