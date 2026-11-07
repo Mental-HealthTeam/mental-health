@@ -112,7 +112,11 @@ export const Header = ({ variant = 'landing', className }: Props) => {
 
     return (
         <header className={classNames('header', `header--${variant}`, className)}>
-            <Container className="header__container">
+            <Container
+                className={classNames('header__container', {
+                    'header__container--menu-open': isMenuOpen,
+                })}
+            >
                 <div className="header__top">
                     <button
                         className="header__logo"
