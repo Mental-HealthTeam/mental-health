@@ -57,6 +57,12 @@ class BaseAppSettings(BaseSettings):
 
     BOOKING_FREE_CANCEL_HOURS: int = 24
 
+    MAX_AVATAR_UPLOAD_SIZE: int = 20 * 1024 * 1024
+    AVATAR_STORAGE_DIR: str = "media/avatars"
+    MAX_AVATAR_SIZE: int = 5 * 1024 * 1024
+    MAX_AVATAR_PIXELS: int = 4096 * 4096
+    AVATAR_STORAGE_URL: str = "/media/avatars/"
+
 
 class Settings(BaseAppSettings):
     GOOGLE_CLIENT_ID: str = "GOOGLE_CLIENT_ID"

@@ -30,7 +30,14 @@ export const ChatInput = ({ className, onSend, disabled, initialValue = '' }: Pr
     }
 
     useEffect(() => {
-        inputRef.current?.focus()
+        const input = inputRef.current
+
+        if (!input) {
+            return
+        }
+
+        input.focus()
+        input.setSelectionRange(input.value.length, input.value.length)
     }, [])
 
     return (
