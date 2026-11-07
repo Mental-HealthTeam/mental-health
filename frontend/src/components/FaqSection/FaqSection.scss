@@ -63,7 +63,15 @@
     }
 
     &__button {
+        border: none;
+        background: a.$color-secondary-gradient;
+        color: a.$color-primary;
         max-width: c.$faq-section-button-max-width;
+        transition: transform a.$transition-default;
+
+        &:active {
+            transform: translate(2px, 2px);
+        }
     }
 
     &__list {
