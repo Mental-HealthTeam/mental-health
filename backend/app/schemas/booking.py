@@ -51,6 +51,8 @@ class BookingPsychologist(BaseModel):
     psychologist_id: UUID
     full_name: str = Field(validation_alias="display_full_name")
     title: str = Field(validation_alias="display_title")
+    experience_years: int
+    is_verified: bool
     avatar_url: str | None
 
 
