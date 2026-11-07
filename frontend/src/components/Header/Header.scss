@@ -11,6 +11,12 @@
         padding-block: c.$header-padding-top c.$header-padding-bottom;
     }
 
+    padding-inline: c.$header-padding-inline;
+
+    &--landing {
+        padding-block: c.$header-padding-top c.$header-padding-bottom;
+    }
+
     &--page {
         padding-block: 0;
     }
