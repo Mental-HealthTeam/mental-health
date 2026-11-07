@@ -1,0 +1,192 @@
+@use '../../styles/abstracts' as a;
+
+.catalog-filters {
+  min-width: 0;
+  padding: 16px;
+
+  border: 1px solid a.$color-gray-20;
+  border-radius: 24px;
+
+  background-color: a.$color-background;
+
+  &__group {
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+
+    border: 0;
+
+    & + & {
+      margin-top: 12px;
+    }
+  }
+
+  &__label {
+    float: left;
+
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 0;
+
+    color: a.$color-gray-60;
+
+    font-size: 16px;
+    line-height: 1.4;
+  }
+
+  &__options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+
+    clear: both;
+    min-width: 0;
+
+    .tab {
+      max-width: 100%;
+
+      text-transform: uppercase;
+      overflow-wrap: anywhere;
+      cursor: pointer;
+
+      &:focus-visible {
+        outline: 2px solid a.$color-optional;
+        outline-offset: 3px;
+      }
+    }
+  }
+
+  &__group:not(:last-of-type) {
+    padding-bottom: 12px;
+
+    border-bottom: 1px solid a.$color-gray-20;
+  }
+
+  &__prices {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+
+    clear: both;
+    width: 100%;
+    max-width: 624px;
+  }
+
+  &__input {
+    box-sizing: border-box;
+
+    width: 100%;
+    min-width: 0;
+    min-height: 42px;
+    padding: 9px 12px;
+
+    border: 1px solid a.$color-gray-40;
+    border-radius: 12px;
+
+    color: a.$color-primary;
+    background-color: a.$color-background;
+
+    font: inherit;
+    font-size: 16px;
+    line-height: 1.4;
+
+    &::placeholder {
+      color: a.$color-gray-60;
+      opacity: 1;
+    }
+
+    &:focus-visible {
+      outline: 2px solid a.$color-optional;
+      outline-offset: 2px;
+    }
+
+    &[aria-invalid='true'] {
+      border-color: a.$color-error;
+    }
+  }
+
+  &__day {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+
+    min-height: 38px;
+    padding: 6px 10px;
+
+    border: 1px solid a.$color-primary;
+    border-radius: 10px;
+
+    color: a.$color-primary;
+
+    font-size: 14px;
+    line-height: 1.3;
+    text-transform: uppercase;
+
+    cursor: pointer;
+
+    &:has(input:checked) {
+      background-color: a.$color-gray-10;
+    }
+
+    &:has(input:focus-visible) {
+      outline: 2px solid a.$color-optional;
+      outline-offset: 3px;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+
+    margin-top: 12px;
+    padding-top: 12px;
+
+    border-top: 1px solid a.$color-gray-20;
+  }
+
+  &__message,
+  &__error {
+    margin: 10px 0 0;
+
+    font-size: 14px;
+    line-height: 1.4;
+  }
+
+  &__message {
+    color: a.$color-gray-60;
+  }
+
+  &__error {
+    color: a.$color-error;
+  }
+
+  &__feedback {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+
+    margin-top: 12px;
+
+    .catalog-filters__error {
+      margin: 0;
+    }
+  }
+
+  @media (min-width: 768px) {
+    &__prices {
+      gap: 16px;
+    }
+  }
+
+  @media (max-width: 479px) {
+    &__actions {
+      flex-direction: column;
+
+      > button {
+        width: 100%;
+      }
+    }
+  }
+}

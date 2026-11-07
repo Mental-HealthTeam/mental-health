@@ -1,0 +1,155 @@
+@use '../../styles/abstracts' as a;
+
+.catalog-page {
+  min-height: 100dvh;
+
+  color: a.$color-primary;
+  background-color: a.$color-background;
+
+  &__main {
+    padding: 24px 16px 48px;
+  }
+
+  &__container {
+    max-width: 1244px;
+  }
+
+  &__back {
+    margin-bottom: 20px;
+  }
+
+  &__search {
+    margin-bottom: 24px;
+  }
+
+  &__hint {
+    margin: 0 0 10px;
+
+    color: a.$color-gray-60;
+
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  &__heading {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 16px;
+
+    margin-bottom: 12px;
+  }
+
+  &__title {
+    margin: 0;
+
+    font-size: 24px;
+    line-height: 1.3;
+    font-weight: 700;
+  }
+
+  &__toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    min-height: 40px;
+    padding: 8px 14px;
+
+    border: 0;
+    border-radius: 10px;
+
+    color: a.$color-background;
+    background-color: a.$color-optional;
+
+    font: inherit;
+    font-size: 16px;
+    line-height: 1.4;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    > svg {
+      flex-shrink: 0;
+    }
+
+    &:focus-visible {
+      outline: 2px solid a.$color-optional;
+      outline-offset: 3px;
+    }
+  }
+
+  &__results {
+    margin-top: 20px;
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+    gap: 20px;
+
+    > .specialist-card {
+      box-sizing: border-box;
+
+      width: 100%;
+      min-width: 0;
+      max-width: none;
+    }
+  }
+
+  &__status,
+  &__error {
+    margin: 0;
+    padding: 24px 0;
+
+    font-size: 16px;
+    line-height: 1.5;
+    text-align: center;
+  }
+
+  &__status {
+    color: a.$color-gray-60;
+  }
+
+  &__error {
+    color: a.$color-error;
+  }
+
+  &__feedback {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+
+    padding-bottom: 24px;
+  }
+
+  &__more {
+    display: flex;
+    justify-content: center;
+
+    margin-top: 24px;
+  }
+
+  @media (min-width: 768px) {
+    &__main {
+      padding: 24px 32px 64px;
+    }
+
+    &__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 1200px) {
+    &__main {
+      padding-inline: 40px;
+    }
+
+    &__grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+}
