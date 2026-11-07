@@ -1,0 +1,15 @@
+{
+    "title": "My Account",
+    "profile": {
+        "defaultName": "Client",
+        "requests": "My concerns:",
+        "noRequests": "No concerns added yet",
+        "edit": "Edit profile"
+    },
+    "sessions": {
+        "title": "My sessions",
+        "empty": "No upcoming sessions",
+        "aiSearch": "Find a specialist with AI",
+        "catalog": "Browse specialists"
+    }
+}
