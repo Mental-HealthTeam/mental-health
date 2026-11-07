@@ -1,7 +1,10 @@
 import asyncio
 import logging
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
+from zoneinfo import ZoneInfo
 
+from sqlalchemy import select
+from sqlalchemy.exc import SQLAlchemyError
 from tasks.celery_app import app
 from database import get_postgresql_db_contextmanager_celery_task
 from services.booking_service import (
@@ -12,7 +15,7 @@ from config.settings import Settings
 from services.payment_service import payout_service
 from exceptions.payments import PaymentProviderError
 from payment_provider.factory import build_payment_provider
-
+from database.models.models import Psychologist
 
 logger = logging.getLogger(__name__)
 
@@ -79,3 +82,80 @@ async def _complete_session_with_psychologist_task():
             count_bookings_completed,
         )
         return count_bookings_completed
+
+@app.task
+def refresh_psychologist_slots():
+    return asyncio.run(
+        _refresh_psychologist_slots()
+    )
+
+async def _refresh_psychologist_slots():
+    settings = Settings()
+    errors_count = 0
+    now = datetime.now(tz=ZoneInfo(settings.CELERY_TIMEZONE))
+    async with get_postgresql_db_contextmanager_celery_task() as db:
+        stmt = select(Psychologist)
+        psychologists = (await db.execute(stmt)).scalars().all()
+
+        if not psychologists:
+            return
+        for psychologist in psychologists:
+            psychologist_id = psychologist.psychologist_id
+            try:
+                mock_slot_copy = (psychologist.mock_slots or []).copy()
+                result_mock_slots = []
+                for mock_slot in mock_slot_copy:
+                    old_time = datetime.fromisoformat(mock_slot).astimezone(ZoneInfo(settings.CELERY_TIMEZONE))
+                    if old_time < now:
+                        new_time = old_time + timedelta(days=21)
+                        limit_time = (now + timedelta(days=21))
+                        while (
+                            new_time < now or
+                            (new_time < limit_time and
+                            new_time.isoformat() in result_mock_slots)
+                        ):
+                            new_time = new_time + timedelta(days=7)
+                        if (
+                            new_time.isoformat() not in result_mock_slots and
+                            new_time < limit_time
+                        ):
+                            result_mock_slots.append(new_time.isoformat())
+                    else:
+                        if mock_slot not in result_mock_slots:
+                            result_mock_slots.append(mock_slot)
+                result_mock_slots.sort(key=datetime.fromisoformat)
+                psychologist.mock_slots = result_mock_slots
+                await db.commit()
+            except SQLAlchemyError:
+                await db.rollback()
+                errors_count += 1
+                logger.exception(
+                    "Slot refresh: database error for psychologist %s",
+                    psychologist_id,
+                )
+                if errors_count > 3:
+                    logger.error("Slot refresh aborted: too many errors")
+                    break
+            except ValueError:
+                errors_count += 1
+                logger.exception(
+                    "Slot refresh: invalid slot value for psychologist %s",
+                    psychologist_id,
+                )
+                if errors_count > 3:
+                    logger.error("Slot refresh aborted: too many errors")
+                    break
+
+        logger.info(
+            "Slot refresh finished: psychologists=%s errors=%s",
+            len(psychologists),
+            errors_count,
+        )
+
+
+
+
+
+
+
+
