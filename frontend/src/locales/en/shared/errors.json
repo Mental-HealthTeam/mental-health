@@ -2,5 +2,20 @@
     "notFound": "We couldn't find what you're looking for.",
     "network": "Can't reach the server. Check your connection and try again.",
     "server": "Something went wrong on our side. Try again later.",
-    "unknown": "Something went wrong. Try again."
+    "unknown": "Something went wrong. Try again.",
+    "notFoundPage": {
+        "title": "Page not found",
+        "description": "Don’t worry, we’ll help you get back to the right section.",
+        "specialistsLink": "View all specialists",
+        "homeLink": "Back to home",
+        "copyright": "© {{year}} Mental Health Platform. All rights reserved."
+    },
+    "slotUnavailablePage": {
+        "title": "This time slot was just booked",
+        "description": "Looks like someone booked this time slot before you.",
+        "suggestion": "Please choose another convenient time in the specialist’s calendar or try AI matching.",
+        "nearestSlot": "This specialist’s next available time slot:",
+        "chooseAnotherTime": "Choose another time",
+        "copyright": "© {{year}} Mental Health Platform. All rights reserved."
+    }
 }

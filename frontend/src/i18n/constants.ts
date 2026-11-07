@@ -22,6 +22,7 @@ export const NAMESPACES = [
     'aiChat',
     'specialistProfile',
     'errors',
+    'success',
     'catalog',
 ] as const
 
