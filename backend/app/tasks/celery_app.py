@@ -29,6 +29,10 @@ app.conf.update(
         "payout-monthly-salary-task": {
             "task": "tasks.celery_tasks.payout_monthly_salary_task",
             "schedule": crontab(minute=0, hour=5, day_of_month=2),
+        },
+        "refresh-psychologist-slots": {
+            "task": "tasks.celery_tasks.refresh_psychologist_slots",
+            "schedule": crontab(hour="5,18", minute="0")
         }
     },
 )
