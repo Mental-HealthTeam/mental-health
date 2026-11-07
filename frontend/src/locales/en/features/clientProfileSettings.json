@@ -1,0 +1,32 @@
+{
+    "back": "Back",
+    "title": "Personal information settings",
+    "personalData": "Your details",
+    "addPhoto": "Add profile photo",
+    "name": "Your name",
+    "email": "Email",
+    "telegram": "Telegram",
+    "topicsTitle": "Your concerns",
+    "topicsHint": "Add concerns:",
+    "notifications": "I agree to receive Telegram / Email notifications about upcoming sessions",
+    "save": "Save account details",
+    "saving": "Saving…",
+    "unsavedChanges": "You have unsaved changes. Leave without saving?",
+    "previewNotice": "The form has been validated. This is a preview — your details have not been saved to the server.",
+    "topicsLoading": "Loading concerns…",
+    "topicsLoadError": "Could not load concerns.",
+    "retry": "Try again",
+    "changePhoto": "Change",
+    "deletePhoto": "Delete",
+    "myTopics": "My concerns:",
+    "removeTopic": "Remove concern: {{topic}}",
+    "errors": {
+        "name": "Enter your name using up to 255 characters.",
+        "email": "Enter a valid email address.",
+        "telegram": "Enter a username of 5–32 characters using Latin letters, numbers or underscores, starting with a letter.",
+        "imageType": "Choose a JPEG, PNG or WebP image.",
+        "imageSize": "Choose a non-empty file up to 5 MB.",
+        "imageInvalid": "The image could not be opened. Choose another file.",
+        "save": "Your changes could not be saved. Please try again."
+    }
+}
