@@ -52,4 +52,10 @@
         padding: c.$message-list-search-button-padding;
         background: a.$color-optional;
     }
+
+    &__specialists {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
 }

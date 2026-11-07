@@ -193,7 +193,7 @@ export const sendUserMessage = createAsyncThunk<
     }
 })
 
-const API_URL = import.meta.env.VITE_API_URL ?? ''
+const API_URL = '/api'
 
 export const searchPsychologists = createAsyncThunk<void, void, { state: RootState }>(
     'aiChat/searchPsychologists',
