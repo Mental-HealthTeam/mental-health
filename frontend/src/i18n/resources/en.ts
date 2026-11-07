@@ -18,6 +18,7 @@ import symptoms from '../../locales/en/features/symptoms.json'
 import specialistProfile from '../../locales/en/features/specialistProfile.json'
 import session from '../../locales/en/features/session.json'
 import success from '../../locales/en/features/success.json'
+import specialistCabinet from '../../locales/en/features/specialistCabinet.json'
 
 export const enResources = {
     common,
@@ -39,4 +40,5 @@ export const enResources = {
     specialistProfile,
     session,
     success,
+    specialistCabinet
 } as const

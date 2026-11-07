@@ -1,24 +1,27 @@
 import classNames from 'classnames'
-import type { Session, SessionStatus } from '../../../../types/session'
 import { useMemo, useState } from 'react'
-import { Tab } from '../../../../components/UI/Tab'
+import { useTranslation } from 'react-i18next'
 
 import './MySessions.scss'
-import { useTranslation } from 'react-i18next'
+import type { SessionItem } from '../../../../types/session'
+import { Tab } from '../../../../components/UI/Tab'
 import { SessionCard } from '../SessionCard/SessionCard'
-import { PrimaryButton } from '../../../../components/UI/Buttons'
+import { getSessionKey, getSessionStatus, isVisibleSession } from '../../../../utils/session'
+import { formatDate } from '../../../../utils/date'
 
 type Props = {
     className?: string
-    sessions: Session[]
+    sessions: SessionItem[]
 }
 
 type GroupSessions = {
     dayKey: string
-    sessions: Session[]
+    sessions: SessionItem[]
 }
 
-type ShowSessions = 'all' | SessionStatus
+type ShowSessions = 'all' | 'available' | 'completed'
+
+const FILTERS: ShowSessions[] = ['all', 'available', 'completed']
 
 const getDayKey = (iso: string): string => {
     const date = new Date(iso)
@@ -29,11 +32,13 @@ const getDayKey = (iso: string): string => {
     return `${year}.${month}.${day}`
 }
 
-const groupSessionsByDate = (sessions: Session[]): GroupSessions[] => {
+const getTime = (item: SessionItem): number => new Date(item.selected_time).getTime()
+
+const groupSessionsByDate = (sessions: SessionItem[]): GroupSessions[] => {
     const groupedSessions: GroupSessions[] = []
 
     sessions.forEach((session) => {
-        const dayKey = getDayKey(session.date)
+        const dayKey = getDayKey(session.selected_time)
         const group = groupedSessions.find((item) => item.dayKey === dayKey)
 
         if (group) {
@@ -44,119 +49,85 @@ const groupSessionsByDate = (sessions: Session[]): GroupSessions[] => {
     })
 
     groupedSessions.forEach((group) => {
-        group.sessions.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+        group.sessions.sort((a, b) => getTime(a) - getTime(b))
     })
 
     return groupedSessions.sort((a, b) => b.dayKey.localeCompare(a.dayKey))
 }
 
-const formatTime = (iso: string, locale: string): string =>
-    new Intl.DateTimeFormat(locale, {
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: false,
-    }).format(new Date(iso))
-
 export const MySessions = ({ className, sessions }: Props) => {
-    const { i18n } = useTranslation()
+    const { t, i18n } = useTranslation('session')
     const [showSessions, setShowSessions] = useState<ShowSessions>('all')
 
     const filteredSessions = useMemo(() => {
+        const visible = sessions.filter(isVisibleSession)
+
         if (showSessions === 'all') {
-            return sessions
+            return visible
         }
 
-        return sessions.filter((session) => session.status === showSessions)
+        return visible.filter((session) => getSessionStatus(session) === showSessions)
     }, [showSessions, sessions])
 
     const groupedSessions = useMemo(() => groupSessionsByDate(filteredSessions), [filteredSessions])
 
+    const todayKey = getDayKey(new Date().toISOString())
+
     return (
         <div className={classNames('my-sessions', className)}>
             <div className="my-sessions__heading">
-                <h2 className="my-sessions__title">Мої сесії</h2>
+                <h2 className="my-sessions__title">{t('title')}</h2>
             </div>
 
             <div className="my-sessions__filter-tabs">
-                <Tab
-                    isActive={showSessions === 'all'}
-                    className="my-sessions__item"
-                    onClick={() => setShowSessions('all')}
-                >
-                    Всі сесії
-                </Tab>
-                <Tab
-                    isActive={showSessions === 'available'}
-                    className="my-sessions__item"
-                    onClick={() => setShowSessions('available')}
-                >
-                    Вільні сесії
-                </Tab>
-                <Tab
-                    isActive={showSessions === 'completed'}
-                    className="my-sessions__item"
-                    onClick={() => setShowSessions('completed')}
-                >
-                    Завершені сесії
-                </Tab>
-                <Tab
-                    isActive={showSessions === 'scheduled'}
-                    className="my-sessions__item"
-                    onClick={() => setShowSessions('scheduled')}
-                >
-                    Заплановані сесії
-                </Tab>
+                {FILTERS.map((filter) => (
+                    <Tab
+                        key={filter}
+                        isActive={showSessions === filter}
+                        className="my-sessions__item"
+                        onClick={() => setShowSessions(filter)}
+                    >
+                        {t(`filters.${filter}`)}
+                    </Tab>
+                ))}
             </div>
 
             {groupedSessions.length !== 0 && (
                 <div className="my-sessions__scroll">
                     <div className="my-sessions__days">
-                        {groupedSessions.map((item) => {
-                            const todayKey = getDayKey(new Date().toISOString())
-                            const isToday = todayKey === item.dayKey
+                        {groupedSessions.map((group) => {
+                            const isToday = group.dayKey === todayKey
+                            const dateLabel = formatDate(
+                                group.sessions[0].selected_time,
+                                i18n.language,
+                            )
 
                             return (
-                                <div className="my-sessions__day" key={item.dayKey}>
+                                <div className="my-sessions__day" key={group.dayKey}>
                                     <h3
                                         className={classNames('my-sessions__day-title', {
                                             'my-sessions__day-title--today': isToday,
                                         })}
                                     >
-                                        {isToday ? `Сьогодні ${item.dayKey}` : item.dayKey}
+                                        {isToday ? t('today', { date: dateLabel }) : dateLabel}
                                     </h3>
 
                                     <div className="my-sessions__head" aria-hidden="true">
-                                        <span>Статус сесії</span>
-                                        <span>Час</span>
-                                        <span>Інформація фахівця</span>
-                                        <span>Запит</span>
-                                        <span>Основні дії</span>
+                                        <span>{t('tableHead.status')}</span>
+                                        <span>{t('tableHead.time')}</span>
+                                        <span>{t('tableHead.specialist')}</span>
+                                        <span>{t('tableHead.request')}</span>
+                                        <span>{t('tableHead.actions')}</span>
                                     </div>
 
                                     <div className="my-sessions__list">
-                                        {item.sessions.map((session) => {
-                                            const time = formatTime(session.date, i18n.language)
-
-                                            return (
-                                                <SessionCard
-                                                    className="my-sessions__session-card"
-                                                    actions={
-                                                        <PrimaryButton
-                                                            className="my-sessions__session-button"
-                                                            onClick={() => {}}
-                                                        >
-                                                            Перейти до зустрічі
-                                                        </PrimaryButton>
-                                                    }
-                                                    clientAvatarUrl={session.client_avatar_url}
-                                                    clientName={session.client_name}
-                                                    status={session.status}
-                                                    time={time}
-                                                    topics={session.topics}
-                                                    key={session.id}
-                                                />
-                                            )
-                                        })}
+                                        {group.sessions.map((session) => (
+                                            <SessionCard
+                                                key={getSessionKey(session)}
+                                                className="my-sessions__session-card"
+                                                session={session}
+                                            />
+                                        ))}
                                     </div>
                                 </div>
                             )
@@ -164,8 +135,9 @@ export const MySessions = ({ className, sessions }: Props) => {
                     </div>
                 </div>
             )}
+
             {groupedSessions.length === 0 && (
-                <span className="my-sessions__no-sessions">Немає сесій</span>
+                <span className="my-sessions__no-sessions">{t('noSessions')}</span>
             )}
         </div>
     )

@@ -1,30 +1,25 @@
 @use '../../../../styles/abstracts' as a;
+@use '../../../../styles/components' as c;
 
 .my-sessions {
     display: flex;
     flex-direction: column;
-    padding: 24px;
+    padding: c.$sc-sessions-padding;
     background-color: a.$color-background;
-    border-radius: 20px;
+    border-radius: c.$sc-sessions-radius;
     min-width: 0;
     max-width: 100%;
     width: 100%;
-    border: 1px solid a.$color-gray-10;
-    gap: 16px;
+    border: c.$sc-sessions-border-width solid a.$color-gray-10;
+    gap: c.$sc-sessions-gap;
 
     &__heading {
         display: flex;
         justify-content: space-between;
         max-width: 100%;
-        gap: 20px;
+        gap: c.$sc-sessions-heading-gap;
         max-height: max-content;
         position: relative;
-    }
-
-    &__availability-popup {
-        position: absolute;
-        top: 60px;
-        right: 5px;
     }
 
     &__title {
@@ -37,25 +32,23 @@
         white-space: nowrap;
     }
 
-    &__button {
-        color: a.$color-gray-60;
-        text-transform: uppercase;
-        border: 1px solid a.$color-gray-60;
-        width: max-content;
-    }
-
     &__filter-tabs {
         display: flex;
-        gap: 8px;
+        gap: c.$sc-sessions-tabs-gap;
+        flex-wrap: wrap;
     }
 
     &__scroll {
         min-width: 0;
         overflow-x: auto;
-        padding-bottom: 16px;
+        padding-bottom: c.$sc-sessions-scroll-padding-bottom;
 
-        scrollbar-width: 9px;
+        scrollbar-width: thin;
         scrollbar-color: a.$color-gray-10 transparent;
+
+        &::-webkit-scrollbar {
+            height: c.$sc-sessions-scrollbar-size;
+        }
 
         &::-webkit-scrollbar-track {
             background: transparent;
@@ -63,10 +56,10 @@
 
         &::-webkit-scrollbar-thumb {
             background-color: a.$color-gray-10;
-            border-radius: 999px;
+            border-radius: c.$sc-sessions-scrollbar-thumb-radius;
         }
 
-        &::-webkit-scrollbar-thumb:hover {
+        &::-webkit-scrollbar-thumb:hoc.r {
             background-color: a.$color-optional;
         }
     }
@@ -74,7 +67,7 @@
     &__days {
         display: grid;
         grid-template-columns: 1fr;
-        gap: 16px;
+        gap: c.$sc-sessions-days-gap;
         width: max-content;
         min-width: 100%;
     }
@@ -83,11 +76,11 @@
         display: flex;
         flex-direction: column;
         flex-shrink: 0;
-        gap: 12px;
-        padding: 24px;
+        gap: c.$sc-sessions-day-gap;
+        padding: c.$sc-sessions-day-padding;
         background-color: a.$color-background;
-        border: 1px solid a.$color-gray-10;
-        border-radius: 20px;
+        border: c.$sc-sessions-day-border-width solid a.$color-gray-10;
+        border-radius: c.$sc-sessions-day-radius;
         min-width: max-content;
         width: auto;
     }
@@ -99,41 +92,34 @@
         letter-spacing: a.$letter-spacing-h5;
         font-weight: a.$font-weight-h5;
         text-align: left;
-        margin-bottom: 8px;
+        margin-bottom: c.$sc-sessions-day-title-margin-bottom;
 
         &--today {
-          color: a.$color-optional;
+            color: a.$color-optional;
         }
     }
 
     &__head {
         display: grid;
-        grid-template-columns: 180px 80px 240px 260px 220px;
+        grid-template-columns: c.$sc-table-columns;
         grid-template-areas: none;
         align-items: center;
         column-gap: 0;
-        padding-bottom: 8px;
+        padding-bottom: c.$sc-sessions-head-padding-bottom;
         color: a.$color-gray-60;
         font-size: a.$font-size-body;
         line-height: a.$line-height-body;
         font-weight: a.$font-weight-body-semibold;
 
         > span {
-            padding-inline: 16px;
+            padding-inline: c.$sc-table-cell-padding-inline;
         }
     }
 
     &__list {
         display: flex;
         flex-direction: column;
-        gap: 16px;
-    }
-
-    &__session-button {
-        background: a.$color-secondary-gradient;
-        color: a.$color-primary;
-        max-height: 40px;
-        text-transform: none;
+        gap: c.$sc-sessions-list-gap;
     }
 
     &__no-sessions {
@@ -142,10 +128,10 @@
         line-height: a.$line-height-h5;
         letter-spacing: a.$letter-spacing-h5;
         font-weight: a.$font-weight-h5;
-        margin-top: 20px;
+        margin-top: c.$sc-sessions-empty-margin-top;
     }
 
     &__item {
-      text-transform: uppercase;
+        text-transform: uppercase;
     }
 }

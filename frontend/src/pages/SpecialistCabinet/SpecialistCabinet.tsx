@@ -1,22 +1,26 @@
 import { useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
+
 import { Footer } from '../../components/Footer'
 import { Header } from '../../components/Header'
 import { Container } from '../../components/Container'
-import { useNavigate } from 'react-router-dom'
-import { SPECIALIST_MOCK } from '../../mocks/specialistMock'
 import { AiChat } from '../../components/AiChat'
+import { SPECIALIST_MOCK } from '../../mocks/specialistMock'
 import { SESSIONS_MOCK } from '../../mocks/sessions'
 import { SpecialistProfileCard } from '../../components/specialist/SpecialistProfileCard'
 import { ProfileTabs } from '../../components/specialist/ProfileTabs'
 import { MySessions } from './components/MySessions'
+import { OutlineButton } from '../../components/UI/Buttons'
+import { BackButton } from '../../components/UI/Buttons/BackButton'
 
 import './SpecialistCabinet.scss'
-import { OutlineButton } from '../../components/UI/Buttons'
 
 export const SpecialistCabinet = () => {
     const navigate = useNavigate()
+    const { t } = useTranslation('specialistCabinet')
 
-    //тимчасові SPECIALIST_MOCK та SESSIONS_MOCK
+    // тимчасові моки, потім я їх після підключення заберу
     const specialist = SPECIALIST_MOCK
     const sessions = SESSIONS_MOCK
 
@@ -30,44 +34,41 @@ export const SpecialistCabinet = () => {
 
             <main className="specialist-cabinet__content">
                 <Container className="specialist-cabinet__container">
-                    <a className="specialist-cabinet__back" onClick={() => navigate(-1)}>
-                        НАЗАД
-                    </a>
-                    {specialist && <h1 className="specialist-cabinet__title">Мій Кабінет</h1>}
+                    <BackButton />
 
-                    {specialist && (
-                        <SpecialistProfileCard
-                            className="specialist-cabinet__specialist-card"
-                            actions={
-                                <OutlineButton
-                                    className="specialist-cabinet__button"
-                                    variant="secondary"
-                                    fullWidth
-                                    onClick={() => navigate('/')}
-                                >
-                                    Налаштувати профіль
-                                </OutlineButton>
-                            }
-                            specialist={specialist}
-                        />
-                    )}
+                    {specialist ? (
+                        <>
+                            <h1 className="specialist-cabinet__title">{t('title')}</h1>
 
-                    {specialist && (
-                        <ProfileTabs
-                            className="specialist-cabinet__profile-tabs"
-                            specialist={specialist}
-                        />
-                    )}
+                            <SpecialistProfileCard
+                                className="specialist-cabinet__specialist-card"
+                                specialist={specialist}
+                                actions={
+                                    <OutlineButton
+                                        className="specialist-cabinet__button"
+                                        variant="secondary"
+                                        fullWidth
+                                        onClick={() => navigate('/specialist/settings/profile')}
+                                    >
+                                        {t('settingsProfile')}
+                                    </OutlineButton>
+                                }
+                            />
 
-                    {specialist && (
-                        <MySessions
-                            className="specialist-cabinet__my-sessions"
-                            sessions={sessions}
-                        />
-                    )}
+                            <ProfileTabs
+                                className="specialist-cabinet__profile-tabs"
+                                specialist={specialist}
+                            />
 
-                    {!specialist && (
-                        <div className="specialist-cabinet__text-no-profile">Кабінет відсутній</div>
+                            <MySessions
+                                className="specialist-cabinet__my-sessions"
+                                sessions={sessions}
+                            />
+                        </>
+                    ) : (
+                        <div className="specialist-cabinet__text-no-profile">
+                            {t('noProfile')}
+                        </div>
                     )}
                 </Container>
             </main>

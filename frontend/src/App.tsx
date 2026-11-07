@@ -8,13 +8,15 @@ import { SignUp } from './pages/SignUp'
 import { NotFoundPage } from './pages/NotFoundPage'
 import { SlotUnavailablePage } from './pages/SlotUnavailablePage'
 import { SuccessPage } from './pages/SuccessPage'
+import { SpecialistProfileSettingsPage } from './pages/SpecialistProfileSettingsPage'
 
 function App() {
     return (
         <BrowserRouter>
             <Routes>
                 <Route path="/" element={<Home />} />
-                <Route path="/specialist-cabinet" element={<SpecialistCabinet />} />
+                <Route path="/specialist/cabinet" element={<SpecialistCabinet />} />
+                <Route path="/specialist/settings/profile" element={<SpecialistProfileSettingsPage />} />
                 <Route path="/psychologist-profile/:id" element={<PsychologistProfile />} />
                 <Route path="*" element={<NotFoundPage />} />
                 <Route path="/slot-unavailable" element={<SlotUnavailablePage />} />

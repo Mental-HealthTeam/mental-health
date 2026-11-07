@@ -1,20 +1,21 @@
 @use '../../../../styles/abstracts' as a;
+@use '../../../../styles/components' as c;
 
 .session-card {
     display: grid;
-    grid-template-columns: 180px 80px 240px 260px 220px;
+    grid-template-columns: c.$sc-table-columns;
     grid-template-areas: none;
     align-items: center;
     column-gap: 0;
-    border-top: 1px solid a.$color-gray-10;
-    padding-block: 16px;
+    border-top: c.$sc-table-border-width solid a.$color-gray-10;
+    padding-block: c.$sc-card-padding-block;
 
     &__status {
         display: flex;
-        gap: 10px;
+        gap: c.$sc-card-status-gap;
         grid-area: auto;
         grid-column: 1;
-        padding-inline: 16px;
+        padding-inline: c.$sc-table-cell-padding-inline;
     }
 
     &__radio {
@@ -22,9 +23,9 @@
         justify-content: center;
         align-items: center;
         background: a.$color-secondary-gradient;
-        width: 24px;
-        height: 24px;
-        border-radius: 50%;
+        width: c.$sc-card-radio-size;
+        height: c.$sc-card-radio-size;
+        border-radius: c.$sc-card-radio-radius;
 
         &--completed {
             background: none;
@@ -34,12 +35,19 @@
         &--available {
             background: none;
             background-color: transparent;
-            border: 1px solid a.$color-gray-60;
+            border: c.$sc-card-radio-border-width solid a.$color-gray-60;
         }
     }
 
     &__radio-icon {
         flex-shrink: 0;
+    }
+
+    &__session-button {
+        background: a.$color-secondary-gradient;
+        color: a.$color-primary;
+        max-height: c.$sc-sessions-button-max-height;
+        text-transform: none;
     }
 
     &__status-text {
@@ -52,8 +60,8 @@
     &__time {
         grid-area: auto;
         grid-column: 2;
-        padding-inline: 16px;
-        border-inline: 1px solid a.$color-gray-10;
+        padding-inline: c.$sc-table-cell-padding-inline;
+        border-inline: c.$sc-table-border-width solid a.$color-gray-10;
         color: a.$color-primary;
         font-size: a.$font-size-body;
         line-height: a.$line-height-body;
@@ -63,9 +71,9 @@
     &__client {
         grid-area: auto;
         grid-column: 3;
-        padding-inline: 16px;
+        padding-inline: c.$sc-table-cell-padding-inline;
         display: flex;
-        gap: 8px;
+        gap: c.$sc-card-client-gap;
         align-items: center;
     }
 
@@ -81,11 +89,11 @@
         grid-column: 4;
         align-self: stretch;
         align-items: center;
-        padding-inline: 16px;
-        border-inline: 1px solid a.$color-gray-10;
+        padding-inline: c.$sc-table-cell-padding-inline;
+        border-inline: c.$sc-table-border-width solid a.$color-gray-10;
         display: flex;
         flex-wrap: wrap;
-        gap: 4px;
+        gap: c.$sc-card-topics-gap;
     }
 
     &__topic {
@@ -96,6 +104,6 @@
     &__actions {
         grid-area: auto;
         grid-column: 5;
-        padding-inline: 16px;
+        padding-inline: c.$sc-table-cell-padding-inline;
     }
 }

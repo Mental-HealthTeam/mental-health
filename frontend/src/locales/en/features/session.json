@@ -1,8 +1,23 @@
 {
-  "sessionStatus": {
-    "title": "Session status",
-    "scheduled": "Scheduled",
-    "available": "Available",
-    "completed": "Completed"
-  }
+    "title": "My sessions",
+    "filters": {
+        "all": "All sessions",
+        "available": "Available sessions",
+        "completed": "Completed sessions"
+    },
+    "tableHead": {
+        "status": "Session status",
+        "time": "Time",
+        "specialist": "Specialist info",
+        "request": "Request",
+        "actions": "Main actions"
+    },
+    "sessionStatus": {
+        "scheduled": "Scheduled",
+        "completed": "Completed",
+        "available": "Available"
+    },
+    "today": "Today {{date}}",
+    "noSessions": "No sessions",
+    "join": "Join"
 }
