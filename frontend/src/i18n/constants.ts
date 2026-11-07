@@ -23,6 +23,7 @@ export const NAMESPACES = [
     'specialistProfile',
     'session',
     'errors',
+    'success',
 ] as const
 
 export type Namespace = (typeof NAMESPACES)[number]

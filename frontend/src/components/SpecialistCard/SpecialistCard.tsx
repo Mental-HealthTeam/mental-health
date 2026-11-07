@@ -9,9 +9,9 @@ import { TimeSlot } from '../UI/TimeSlot'
 import type { Psychologist } from '../../types/psychologist.ts'
 
 import './SpecialistCard.scss'
-import { Button } from '../UI/Button/Button.tsx'
-import { AvatarFallbackIcon } from '../UI/Icons/AvatarFallbackIcon.tsx'
-import { AwardIcon } from '../UI/Icons/AwardIcon.tsx'
+import { Button } from '../UI/Button'
+import { AvatarFallbackIcon } from '../UI/Icons'
+import { AwardIcon } from '../UI/Icons'
 import { useNavigate } from 'react-router-dom'
 
 type Props = Omit<Psychologist, 'methods'>
