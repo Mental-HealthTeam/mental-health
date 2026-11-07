@@ -1,0 +1,23 @@
+{
+    "title": "Мої сесії",
+    "filters": {
+        "all": "Всі сесії",
+        "available": "Вільні сесії",
+        "completed": "Завершені сесії"
+    },
+    "tableHead": {
+        "status": "Статус сесії",
+        "time": "Час",
+        "specialist": "Інформація фахівця",
+        "request": "Запит",
+        "actions": "Основні дії"
+    },
+    "sessionStatus": {
+        "scheduled": "Заплановано",
+        "completed": "Завершена",
+        "available": "Вільно"
+    },
+    "today": "Сьогодні {{date}}",
+    "noSessions": "Немає сесій",
+    "join": "Приєднатися"
+}

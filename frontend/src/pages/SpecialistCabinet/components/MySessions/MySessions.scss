@@ -1,0 +1,137 @@
+@use '../../../../styles/abstracts' as a;
+@use '../../../../styles/components' as c;
+
+.my-sessions {
+    display: flex;
+    flex-direction: column;
+    padding: c.$sc-sessions-padding;
+    background-color: a.$color-background;
+    border-radius: c.$sc-sessions-radius;
+    min-width: 0;
+    max-width: 100%;
+    width: 100%;
+    border: c.$sc-sessions-border-width solid a.$color-gray-10;
+    gap: c.$sc-sessions-gap;
+
+    &__heading {
+        display: flex;
+        justify-content: space-between;
+        max-width: 100%;
+        gap: c.$sc-sessions-heading-gap;
+        max-height: max-content;
+        position: relative;
+    }
+
+    &__title {
+        color: a.$color-primary;
+        font-size: a.$font-size-h4;
+        line-height: a.$line-height-h4;
+        letter-spacing: a.$letter-spacing-h4;
+        font-weight: a.$font-weight-h4;
+        text-align: left;
+        white-space: nowrap;
+    }
+
+    &__filter-tabs {
+        display: flex;
+        gap: c.$sc-sessions-tabs-gap;
+        flex-wrap: wrap;
+    }
+
+    &__scroll {
+        min-width: 0;
+        overflow-x: auto;
+        padding-bottom: c.$sc-sessions-scroll-padding-bottom;
+
+        scrollbar-width: thin;
+        scrollbar-color: a.$color-gray-10 transparent;
+
+        &::-webkit-scrollbar {
+            height: c.$sc-sessions-scrollbar-size;
+        }
+
+        &::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background-color: a.$color-gray-10;
+            border-radius: c.$sc-sessions-scrollbar-thumb-radius;
+        }
+
+        &::-webkit-scrollbar-thumb:hover {
+            background-color: a.$color-optional;
+        }
+    }
+
+    &__days {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: c.$sc-sessions-days-gap;
+        width: max-content;
+        min-width: 100%;
+    }
+
+    &__day {
+        display: flex;
+        flex-direction: column;
+        flex-shrink: 0;
+        gap: c.$sc-sessions-day-gap;
+        padding: c.$sc-sessions-day-padding;
+        background-color: a.$color-background;
+        border: c.$sc-sessions-day-border-width solid a.$color-gray-10;
+        border-radius: c.$sc-sessions-day-radius;
+        min-width: max-content;
+        width: auto;
+    }
+
+    &__day-title {
+        color: a.$color-gray-60;
+        font-size: a.$font-size-h5;
+        line-height: a.$line-height-h5;
+        letter-spacing: a.$letter-spacing-h5;
+        font-weight: a.$font-weight-h5;
+        text-align: left;
+        margin-bottom: c.$sc-sessions-day-title-margin-bottom;
+
+        &--today {
+            color: a.$color-optional;
+        }
+    }
+
+    &__head {
+        display: grid;
+        grid-template-columns: c.$sc-table-columns;
+        grid-template-areas: none;
+        align-items: center;
+        column-gap: 0;
+        padding-bottom: c.$sc-sessions-head-padding-bottom;
+        color: a.$color-gray-60;
+        font-size: a.$font-size-body;
+        line-height: a.$line-height-body;
+        font-weight: a.$font-weight-body-semibold;
+
+        > span {
+            padding-inline: c.$sc-table-cell-padding-inline;
+        }
+    }
+
+    &__list {
+        display: flex;
+        flex-direction: column;
+        gap: c.$sc-sessions-list-gap;
+    }
+
+    &__no-sessions {
+        color: a.$color-gray-40;
+        font-size: a.$font-size-h5;
+        line-height: a.$line-height-h5;
+        letter-spacing: a.$letter-spacing-h5;
+        font-weight: a.$font-weight-h5;
+        margin-top: c.$sc-sessions-empty-margin-top;
+    }
+
+    &__item {
+        text-transform: uppercase;
+    }
+}

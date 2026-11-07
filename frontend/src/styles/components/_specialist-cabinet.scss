@@ -1,0 +1,65 @@
+// ======================================================
+// Page
+// ======================================================
+
+$sc-page-container-gap: 16px;
+$sc-page-container-max-width: 1000px;
+$sc-page-container-margin-bottom: 24px;
+$sc-page-container-padding-inline: 20px;
+
+$sc-page-button-margin-top: 16px;
+$sc-page-button-border-width: 1px;
+
+// ======================================================
+// Table layout (shared by head and session card)
+// ======================================================
+
+$sc-table-columns: 180px 80px 240px 260px 220px;
+$sc-table-cell-padding-inline: 16px;
+$sc-table-border-width: 1px;
+
+// ======================================================
+// My sessions
+// ======================================================
+
+$sc-sessions-padding: 24px;
+$sc-sessions-radius: 20px;
+$sc-sessions-border-width: 1px;
+$sc-sessions-gap: 16px;
+
+$sc-sessions-heading-gap: 20px;
+
+$sc-sessions-tabs-gap: 8px;
+
+$sc-sessions-scroll-padding-bottom: 16px;
+$sc-sessions-scrollbar-size: 9px;
+$sc-sessions-scrollbar-thumb-radius: 999px;
+
+$sc-sessions-days-gap: 16px;
+
+$sc-sessions-day-gap: 12px;
+$sc-sessions-day-padding: 24px;
+$sc-sessions-day-radius: 20px;
+$sc-sessions-day-border-width: 1px;
+$sc-sessions-day-title-margin-bottom: 8px;
+
+$sc-sessions-head-padding-bottom: 8px;
+$sc-sessions-list-gap: 16px;
+
+$sc-sessions-button-max-height: 40px;
+$sc-sessions-empty-margin-top: 20px;
+
+// ======================================================
+// Session card
+// ======================================================
+
+$sc-card-padding-block: 16px;
+
+$sc-card-status-gap: 10px;
+
+$sc-card-radio-size: 24px;
+$sc-card-radio-radius: 50%;
+$sc-card-radio-border-width: 1px;
+
+$sc-card-client-gap: 8px;
+$sc-card-topics-gap: 4px;

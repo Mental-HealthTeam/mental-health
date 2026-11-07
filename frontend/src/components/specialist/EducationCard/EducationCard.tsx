@@ -1,6 +1,6 @@
 import classNames from 'classnames'
-import { LearnIcon } from '../../../../components/UI/Icons/WhyChoosePlatform'
-import { SectionLabel } from '../../../../components/UI/SectionLabel'
+import { LearnIcon } from '../../UI/Icons/WhyChoosePlatform'
+import { SectionLabel } from '../../UI/SectionLabel'
 import './EducationCard.scss'
 import { useTranslation } from 'react-i18next'
 
