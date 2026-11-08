@@ -1,15 +1,15 @@
 import { useId, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { useGetSymptomCodesQuery } from '../../services/psychologistsApi'
-import type { SymptomCode } from '../../types/psychologist'
+import { useGetSymptomCodesQuery } from '../../../services/psychologistsApi.ts'
+import type { SymptomCode } from '../../../types/psychologist.ts'
 
-import { OutlineButton, PrimaryButton } from '../UI/Buttons'
-import { ArrowIcon } from '../UI/Icons'
-import { RadioButton } from '../UI/RadioButton'
-import { Tab } from '../UI/Tab'
+import { OutlineButton, PrimaryButton, TagButton } from '../../UI/Buttons'
+import { ArrowIcon } from '../../UI/Icons'
+import { Tab } from '../../UI/Tab'
 
 import './CatalogFilters.scss'
+import { TimeSlot } from '../../UI/TimeSlot'
 
 export type CatalogFilterValues = {
     topics: SymptomCode[]
@@ -73,13 +73,12 @@ export const CatalogFilters = ({ onApply }: Props) => {
                     </Tab>
 
                     {topics.map((code) => (
-                        <Tab
-                            key={code}
-                            isActive={values.topics.includes(code)}
+                        <TagButton
+                            isSelected={values.topics.includes(code)}
                             onClick={() => toggleTopic(code)}
                         >
                             {tSymptoms(`${code}.title` as const)}
-                        </Tab>
+                        </TagButton>
                     ))}
                 </div>
 
@@ -157,16 +156,14 @@ export const CatalogFilters = ({ onApply }: Props) => {
 
                 <div className="catalog-filters__options">
                     {(['today', 'tomorrow'] as const).map((day) => (
-                        <label className="catalog-filters__day" key={day}>
-                            <RadioButton
-                                name={`${id}-day`}
-                                value={day}
-                                checked={values.day === day}
-                                onChange={() => setValues((previous) => ({ ...previous, day }))}
-                            />
-
-                            <span>{t(day)}</span>
-                        </label>
+                        <TimeSlot
+                            key={day}
+                            label={t(day)}
+                            name={`${id}-day`}
+                            value={day}
+                            checked={values.day === day}
+                            onChange={() => setValues((previous) => ({ ...previous, day }))}
+                        />
                     ))}
                 </div>
             </fieldset>

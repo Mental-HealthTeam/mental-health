@@ -23,5 +23,6 @@
     "loading": "Loading specialists…",
     "loadError": "Unable to load specialists.",
     "empty": "No specialists match your filters. Try changing your search criteria.",
-    "showMore": "Show more"
+    "showMore": "Show more",
+    "closeFilters": "Close filters"
 }
