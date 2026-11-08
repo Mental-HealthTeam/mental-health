@@ -3,7 +3,7 @@ from datetime import datetime, timedelta, timezone
 from decimal import Decimal
 from uuid import UUID
 
-from fastapi import HTTPException, status
+from fastapi import status
 from sqlalchemy import func, select
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -25,8 +25,8 @@ from schemas.booking import BookingCreateRequest
 from services.session_service import set_meet_link
 from payment_provider.payment_interface import PaymentProviderInterface
 from exceptions.payments import PaymentProviderError
-from exceptions.base import AppError
 from services.slot_service import get_nearest_available_slot
+from exceptions.base import AppError
 
 logger = logging.getLogger(__name__)
 
@@ -47,17 +47,19 @@ async def create_booking(
     selected_time = data.selected_time.astimezone(timezone.utc)
 
     if selected_time <= now:
-        raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-            detail="Selected time must be in the future.",
+        raise AppError(
+            status.HTTP_422_UNPROCESSABLE_ENTITY,
+            "BOOKING_TIME_IN_PAST",
+            "Selected time must be in the future.",
         )
 
     if selected_time > now + timedelta(
         days=settings.BOOKING_HORIZON_DAYS
     ):
-        raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-            detail="Selected time exceeds the booking horizon.",
+        raise AppError(
+            status.HTTP_422_UNPROCESSABLE_ENTITY,
+            "BOOKING_TIME_TOO_FAR",
+            "Selected time exceeds the booking horizon.",
         )
 
     result = await db.execute(
@@ -69,9 +71,10 @@ async def create_booking(
     psychologist = result.scalar_one_or_none()
 
     if psychologist is None:
-        raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-            detail="Psychologist not found or not active.",
+        raise AppError(
+            status.HTTP_422_UNPROCESSABLE_ENTITY,
+            "PSYCHOLOGIST_NOT_AVAILABLE",
+            "Psychologist not found or not active.",
         )
 
     selected_slot = None
@@ -90,9 +93,10 @@ async def create_booking(
             break
 
     if selected_slot is None:
-        raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-            detail="Selected time is not an available slot.",
+        raise AppError(
+            status.HTTP_422_UNPROCESSABLE_ENTITY,
+            "SLOT_NOT_AVAILABLE",
+            "Selected time is not an available slot.",
         )
 
     if data.ai_session_id is not None:
@@ -103,9 +107,10 @@ async def create_booking(
             )
         )
         if result.scalar_one_or_none() is None:
-            raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-                detail="AI session not found for this user.",
+            raise AppError(
+                status.HTTP_422_UNPROCESSABLE_ENTITY,
+                "AI_SESSION_NOT_FOUND",
+                "AI session not found for this user.",
             )
 
     booking = Booking(
@@ -162,9 +167,10 @@ async def get_booking_for_user(
     booking = result.scalar_one_or_none()
 
     if booking is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Booking not found.",
+        raise AppError(
+            status.HTTP_404_NOT_FOUND,
+            "BOOKING_NOT_FOUND",
+            "Booking not found.",
         )
 
     is_admin = user.role == UserRole.ADMIN
@@ -172,9 +178,10 @@ async def get_booking_for_user(
     is_psychologist = booking.psychologist_id == user.id
 
     if not (is_admin or is_client or is_psychologist):
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Booking not found.",
+        raise AppError(
+            status.HTTP_404_NOT_FOUND,
+            "BOOKING_NOT_FOUND",
+            "Booking not found.",
         )
 
     set_meet_link(booking)
@@ -197,9 +204,10 @@ async def list_bookings_for_user(
     elif user.role == UserRole.PSYCHOLOGIST:
         filters.append(Booking.psychologist_id == user.id)
     elif user.role != UserRole.ADMIN:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="You do not have permission to view bookings.",
+        raise AppError(
+            status.HTTP_403_FORBIDDEN,
+            "BOOKINGS_VIEW_FORBIDDEN",
+            "You do not have permission to view bookings.",
         )
 
     if booking_status is not None:
@@ -286,9 +294,10 @@ async def mark_paid(
     booking = result.scalar_one_or_none()
 
     if booking is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Booking not found.",
+        raise AppError(
+            status.HTTP_404_NOT_FOUND,
+            "BOOKING_NOT_FOUND",
+            "Booking not found.",
         )
 
     # Idempotency: repeated successful payment event.
@@ -309,9 +318,10 @@ async def mark_paid(
         booking.status != BookingStatus.PENDING
         or booking.payment_status != PaymentStatus.UNPAID
     ):
-        raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT,
-            detail="Booking cannot be marked as paid in its current state.",
+        raise AppError(
+            status.HTTP_409_CONFLICT,
+            "BOOKING_WRONG_STATE",
+            "Booking cannot be marked as paid in its current state.",
         )
 
     # Reject payment confirmation after the hold has expired.
@@ -324,9 +334,10 @@ async def mark_paid(
         booking.payment_status = PaymentStatus.UNPAID
         await db.commit()
 
-        raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT,
-            detail="Booking hold has expired.",
+        raise AppError(
+            status.HTTP_409_CONFLICT,
+            "BOOKING_HOLD_EXPIRED",
+            "Booking hold has expired.",
         )
 
     booking.status = BookingStatus.CONFIRMED
@@ -364,9 +375,10 @@ async def mark_payment_failed(
     booking = result.scalar_one_or_none()
 
     if booking is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Booking not found.",
+        raise AppError(
+            status.HTTP_404_NOT_FOUND,
+            "BOOKING_NOT_FOUND",
+            "Booking not found.",
         )
 
     # Repeated failure event: already cancelled and unpaid.
@@ -380,9 +392,10 @@ async def mark_payment_failed(
         booking.status != BookingStatus.PENDING
         or booking.payment_status != PaymentStatus.UNPAID
     ):
-        raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT,
-            detail="Booking cannot be cancelled due to payment failure in its current state.",
+        raise AppError(
+            status.HTTP_409_CONFLICT,
+            "BOOKING_WRONG_STATE",
+            "Booking cannot be cancelled due to payment failure in its current state.",
         )
 
     booking.status = BookingStatus.CANCELLED
@@ -419,9 +432,10 @@ async def mark_cancelled(
     booking = result.scalar_one_or_none()
 
     if booking is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Booking not found.",
+        raise AppError(
+            status.HTTP_404_NOT_FOUND,
+            "BOOKING_NOT_FOUND",
+            "Booking not found.",
         )
 
     # Repeated cancellation is idempotent.
@@ -441,9 +455,10 @@ async def mark_cancelled(
         BookingStatus.PENDING,
         BookingStatus.CONFIRMED,
     }:
-        raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT,
-            detail="Booking cannot be cancelled in its current state.",
+        raise AppError(
+            status.HTTP_409_CONFLICT,
+            "BOOKING_CANNOT_BE_CANCELLED",
+            "Booking cannot be cancelled in its current state.",
         )
 
     booking.status = BookingStatus.CANCELLED
@@ -482,9 +497,10 @@ async def mark_disputed(
     booking = result.scalar_one_or_none()
 
     if booking is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Booking not found.",
+        raise AppError(
+            status.HTTP_404_NOT_FOUND,
+            "BOOKING_NOT_FOUND",
+            "Booking not found.",
         )
 
     if (
@@ -494,9 +510,10 @@ async def mark_disputed(
         }
         or booking.payment_status != PaymentStatus.HELD
     ):
-        raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT,
-            detail="Booking cannot be disputed in its current state.",
+        raise AppError(
+            status.HTTP_409_CONFLICT,
+            "BOOKING_WRONG_STATE",
+            "Booking cannot be disputed in its current state.",
         )
 
     booking.status = BookingStatus.DISPUTED
@@ -537,9 +554,10 @@ async def mark_dispute_refunded(
     booking = result.scalar_one_or_none()
 
     if booking is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Booking not found.",
+        raise AppError(
+            status.HTTP_404_NOT_FOUND,
+            "BOOKING_NOT_FOUND",
+            "Booking not found.",
         )
 
     if (
@@ -549,9 +567,10 @@ async def mark_dispute_refunded(
         return booking
 
     if booking.status != BookingStatus.DISPUTED:
-        raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT,
-            detail="Booking is not in a disputed state.",
+        raise AppError(
+            status.HTTP_409_CONFLICT,
+            "BOOKING_NOT_DISPUTED",
+            "Booking is not in a disputed state.",
         )
 
     booking.status = BookingStatus.CANCELLED
@@ -584,24 +603,27 @@ async def resolve_dispute(
     booking = result.scalar_one_or_none()
 
     if booking is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Booking not found.",
+        raise AppError(
+            status.HTTP_404_NOT_FOUND,
+            "BOOKING_NOT_FOUND",
+            "Booking not found.",
         )
 
     if booking.status != BookingStatus.DISPUTED:
-        raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT,
-            detail="Booking is not in a disputed state.",
+        raise AppError(
+            status.HTTP_409_CONFLICT,
+            "BOOKING_NOT_DISPUTED",
+            "Booking is not in a disputed state.",
         )
 
     if new_status not in {
         BookingStatus.COMPLETED,
         BookingStatus.CANCELLED,
     }:
-        raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-            detail="A dispute can only be resolved as completed or cancelled.",
+        raise AppError(
+            status.HTTP_422_UNPROCESSABLE_ENTITY,
+            "DISPUTE_INVALID_RESOLUTION",
+            "A dispute can only be resolved as completed or cancelled.",
         )
     if new_status == BookingStatus.CANCELLED:
         try:
@@ -610,21 +632,21 @@ async def resolve_dispute(
                     "Booking %s is paid but has no payment reference, refund is not possible",
                     booking_id
                 )
-                raise HTTPException(
-                    status_code=status.HTTP_409_CONFLICT,
-                    detail="The payment for this booking cannot be refunded automatically, contact support."
+                raise AppError(
+                    status.HTTP_409_CONFLICT,
+                    "REFUND_NOT_AUTOMATIC",
+                    "The payment for this booking cannot be refunded automatically, contact support.",
                 )
             if booking.payment_status != PaymentStatus.HELD:
                 logger.error(
                     "Dispute on booking %s cannot be refunded: payment status is %s, expected held",
                     booking_id, booking.payment_status.value
                 )
-                raise HTTPException(
-                    status_code=status.HTTP_409_CONFLICT,
-                    detail=(
-                        "The payment for this booking is no longer held by the platform "
-                        "and cannot be refunded automatically, contact support."
-                    )
+                raise AppError(
+                    status.HTTP_409_CONFLICT,
+                    "REFUND_NOT_AUTOMATIC",
+                    "The payment for this booking is no longer held by the platform "
+                    "and cannot be refunded automatically, contact support.",
                 )
             booking.status = new_status
             await db.commit()
@@ -650,9 +672,10 @@ async def resolve_dispute(
                 booking_id=booking.id,
                 resolve_dispute_error=True
             )
-            raise HTTPException(
-                status_code=status.HTTP_502_BAD_GATEWAY,
-                detail="The refund failed, contact the payment provider."
+            raise AppError(
+                status.HTTP_502_BAD_GATEWAY,
+                "REFUND_FAILED",
+                "The refund failed, contact the payment provider.",
             ) from e
     else:
         booking.status = new_status
@@ -696,9 +719,10 @@ async def mark_paid_out(
     booking = result.scalar_one_or_none()
 
     if booking is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Booking not found.",
+        raise AppError(
+            status.HTTP_404_NOT_FOUND,
+            "BOOKING_NOT_FOUND",
+            "Booking not found.",
         )
 
     # Idempotency: the same payout must not be applied twice.
@@ -712,9 +736,10 @@ async def mark_paid_out(
             booking.status != BookingStatus.COMPLETED
             or booking.payment_status != PaymentStatus.HELD
     ):
-        raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT,
-            detail="Booking is not ready for payout.",
+        raise AppError(
+            status.HTTP_409_CONFLICT,
+            "BOOKING_NOT_READY_FOR_PAYOUT",
+            "Booking is not ready for payout.",
         )
 
     booking.payment_status = PaymentStatus.PAID
@@ -862,9 +887,10 @@ async def mark_completed(
     booking = result.scalar_one_or_none()
 
     if booking is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Booking not found.",
+        raise AppError(
+            status.HTTP_404_NOT_FOUND,
+            "BOOKING_NOT_FOUND",
+            "Booking not found.",
         )
 
     # Idempotency: do not change the original completion timestamp.
@@ -875,9 +901,10 @@ async def mark_completed(
         booking.status != BookingStatus.CONFIRMED
         or booking.payment_status != PaymentStatus.HELD
     ):
-        raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT,
-            detail="Booking cannot be completed in its current state.",
+        raise AppError(
+            status.HTTP_409_CONFLICT,
+            "BOOKING_WRONG_STATE",
+            "Booking cannot be completed in its current state.",
         )
 
     booking.status = BookingStatus.COMPLETED
@@ -912,9 +939,10 @@ async def mark_refund_failed(
         .execution_options(populate_existing=True)
     )).scalar_one_or_none()
     if not booking:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Booking not found."
+        raise AppError(
+            status.HTTP_404_NOT_FOUND,
+            "BOOKING_NOT_FOUND",
+            "Booking not found.",
         )
     # Idempotency: the refund error is already recorded (DISPUTED or CANCELLED).
     if booking.refund_error:
@@ -957,13 +985,15 @@ async def mark_refund_failed(
                 booking_id
             )
             await db.rollback()
-            raise HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail="Could not save the refund error."
+            raise AppError(
+                status.HTTP_500_INTERNAL_SERVER_ERROR,
+                "REFUND_ERROR_SAVE_FAILED",
+                "Could not save the refund error.",
             ) from e
     else:
-        raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT,
-            detail="Booking cannot be marked as refund failed in its current state."
+        raise AppError(
+            status.HTTP_409_CONFLICT,
+            "BOOKING_WRONG_STATE",
+            "Booking cannot be marked as refund failed in its current state.",
         )
     return booking
