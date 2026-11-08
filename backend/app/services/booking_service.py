@@ -25,6 +25,8 @@ from schemas.booking import BookingCreateRequest
 from services.session_service import set_meet_link
 from payment_provider.payment_interface import PaymentProviderInterface
 from exceptions.payments import PaymentProviderError
+from exceptions.base import AppError
+from services.slot_service import get_nearest_available_slot
 
 logger = logging.getLogger(__name__)
 
@@ -126,9 +128,16 @@ async def create_booking(
         await db.commit()
     except IntegrityError as exc:
         await db.rollback()
-        raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT,
-            detail="The time slot is already taken.",
+        nearest_available_slot = await get_nearest_available_slot(
+            db=db,
+            psychologist_id=data.psychologist_id,
+            selected_time=selected_time
+        )
+        raise AppError(
+            status.HTTP_409_CONFLICT,
+            "SLOT_ALREADY_BOOKED",
+            "The time slot is already taken.",
+            nearest_available_slot=nearest_available_slot,
         ) from exc
 
     result = await db.execute(
