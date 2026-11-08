@@ -1,4 +1,4 @@
-import { useRef, type CSSProperties } from 'react'
+import { useCallback, useEffect, useRef, useState, type CSSProperties } from 'react'
 import { ReviewCard } from '../ReviewCard'
 import { ArrowButton } from '../UI/ArrowButton'
 import { SectionIndex } from '../UI/SectionIndex'
@@ -15,6 +15,8 @@ const SLIDER_GAP = 16
 export const ReviewsSection = () => {
     const sliderRef = useRef<HTMLDivElement>(null)
     const { t } = useTranslation('reviews')
+    const [isAtStart, setIsAtStart] = useState(true)
+    const [isAtEnd, setIsAtEnd] = useState(false)
 
     const { visibleCards } = useScreenLayout()
 
@@ -48,6 +50,29 @@ export const ReviewsSection = () => {
         })
     }
 
+    const updateSliderButtons = useCallback(() => {
+        const slider = sliderRef.current
+
+        if (!slider) {
+            return
+        }
+
+        const maxScrollLeft = slider.scrollWidth - slider.clientWidth
+
+        setIsAtStart(slider.scrollLeft <= 1)
+        setIsAtEnd(slider.scrollLeft >= maxScrollLeft - 1)
+    }, [])
+
+    useEffect(() => {
+        updateSliderButtons()
+
+        window.addEventListener('resize', updateSliderButtons)
+
+        return () => {
+            window.removeEventListener('resize', updateSliderButtons)
+        }
+    }, [updateSliderButtons])
+
     return (
         <section className="reviews-section" aria-labelledby="reviews-section-title">
             <Container className="reviews-section__container">
@@ -77,7 +102,11 @@ export const ReviewsSection = () => {
 
                     <div className="reviews-section__region-reviews">
                         <div className="reviews-section__slider-wrapper" style={sliderStyle}>
-                            <div className="reviews-section__slider" ref={sliderRef}>
+                            <div
+                                className="reviews-section__slider"
+                                ref={sliderRef}
+                                onScroll={updateSliderButtons}
+                            >
                                 {REVIEWS_MOCK.map((review) => (
                                     <div
                                         className="reviews-section__slide"
@@ -102,12 +131,14 @@ export const ReviewsSection = () => {
                                 direction="left"
                                 ariaLabel={t('previousReview')}
                                 onClick={handlePrevious}
+                                disabled={isAtStart}
                             />
 
                             <ArrowButton
                                 direction="right"
                                 ariaLabel={t('nextReview')}
                                 onClick={handleNext}
+                                disabled={isAtEnd}
                             />
                         </div>
                     </div>
