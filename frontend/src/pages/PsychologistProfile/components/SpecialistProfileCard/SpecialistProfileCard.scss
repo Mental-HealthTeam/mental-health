@@ -94,7 +94,11 @@
         max-height: c.$pp-profile-card-info-tile-max-height;
     }
 
-    .profile-card__info-tile--hide {
+    &__label--desktop {
+        display: none;
+    }
+
+    &__info-tile--desktop-only {
         display: none;
     }
 
@@ -127,13 +131,9 @@
     &__actions {
         grid-area: button;
     }
-}
 
-@media (min-width: a.$breakpoint-mobile) {
-    .profile-card {
-        .profile-card__info-tile--hide {
-            display: flex;
-        }
+    &__label--mobile {
+        display: inline;
     }
 }
 
@@ -196,6 +196,18 @@
             gap: c.$pp-profile-card-approach-gap;
             padding-block: c.$pp-profile-card-approach-padding-block-tablet;
             border-top: 1px solid a.$color-gray-10;
+        }
+
+        &__info-tile--desktop-only {
+            display: flex;
+        }
+
+        &__label--desktop {
+            display: inline;
+        }
+
+        &__label--mobile {
+            display: none;
         }
     }
 }

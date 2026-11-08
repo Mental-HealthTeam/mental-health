@@ -15,6 +15,7 @@
             "experienceValue_many": "{{count}} років",
             "experienceValue_other": "{{count}} років",
             "price": "Вартість",
+            "priceWithDuration": "Вартість {{count}} хв",
             "sessionDuration": "Тривалість сесії",
             "sessionDurationValue_one": "{{count}} хвилина",
             "sessionDurationValue_few": "{{count}} хвилини",
