@@ -1,0 +1,12 @@
+{
+    "title": "Welcome to Mental Health Platform",
+    "cardTitle": "Sign in to your account",
+    "errorTitle": "Authorization error",
+    "terms": "By continuing to use the platform, you agree to the Terms of Use and the Privacy Policy",
+    "noAccount": "Don't have an account yet?",
+    "register": "Sign up",
+    "errorEmail": "Please check that your email address is correct",
+    "errorGoogle": "Could not get data from Google. Please try again",
+    "errorOrigin": "Sign-in from this address is not allowed. Please contact the developers",
+    "google": "Continue with Google"
+}
