@@ -41,6 +41,8 @@ jobs:
           context: ./${{ matrix.service }}
           push: true
           tags: vanyas627/mental-health-${{ matrix.service }}:${{ github.sha }}
+          build-args: |
+            VITE_GOOGLE_CLIENT_ID=${{ vars.VITE_GOOGLE_CLIENT_ID }}
 
 
   deploy:
