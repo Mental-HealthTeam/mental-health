@@ -6,7 +6,6 @@ import type { SymptomCode } from '../../../types/psychologist.ts'
 
 import { OutlineButton, PrimaryButton, TagButton } from '../../UI/Buttons'
 import { ArrowIcon } from '../../UI/Icons'
-import { Tab } from '../../UI/Tab'
 
 import './CatalogFilters.scss'
 import { TimeSlot } from '../../UI/TimeSlot'
@@ -65,15 +64,16 @@ export const CatalogFilters = ({ onApply }: Props) => {
                 <legend className="catalog-filters__label">{t('topic')}</legend>
 
                 <div className="catalog-filters__options">
-                    <Tab
-                        isActive={values.topics.length === 0}
+                    <TagButton
+                        isSelected={values.topics.length === 0}
                         onClick={() => setValues((previous) => ({ ...previous, topics: [] }))}
                     >
                         {t('all')}
-                    </Tab>
+                    </TagButton>
 
                     {topics.map((code) => (
                         <TagButton
+                            key={code}
                             isSelected={values.topics.includes(code)}
                             onClick={() => toggleTopic(code)}
                         >

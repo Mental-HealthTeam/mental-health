@@ -53,7 +53,6 @@ export const CatalogPage = () => {
             dispatch(openAiChat())
         }
     }
-
     return (
         <div className="catalog-page">
             <Header variant="page" />
