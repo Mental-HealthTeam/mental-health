@@ -47,7 +47,6 @@ export const SessionCard = ({ className, session }: Props) => {
                 {formatTime(session.selected_time, i18n.language)}
             </div>
 
-            {/* Комірки рендеряться завжди, щоб grid не зсувався */}
             <div className="session-card__client">
                 {booking && (
                     <>
@@ -61,8 +60,6 @@ export const SessionCard = ({ className, session }: Props) => {
                     </>
                 )}
             </div>
-
-            <div className="session-card__topics" />
 
             <div className="session-card__actions">
                 {showJoinButton && (

@@ -8,7 +8,7 @@
     "tableHead": {
         "status": "Session status",
         "time": "Time",
-        "specialist": "Specialist info",
+        "specialist": "Customer information",
         "request": "Request",
         "actions": "Main actions"
     },
@@ -17,6 +17,7 @@
         "completed": "Completed",
         "available": "Available"
     },
+    "showMore": "Show more",
     "today": "Today {{date}}",
     "noSessions": "No sessions",
     "join": "Join"

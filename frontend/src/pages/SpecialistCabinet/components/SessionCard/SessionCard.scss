@@ -72,6 +72,7 @@
         grid-area: auto;
         grid-column: 3;
         padding-inline: c.$sc-table-cell-padding-inline;
+        border-right: c.$sc-table-border-width solid a.$color-gray-10;
         display: flex;
         gap: c.$sc-card-client-gap;
         align-items: center;
@@ -84,18 +85,6 @@
         font-weight: a.$font-weight-body-semibold;
     }
 
-    &__topics {
-        grid-area: auto;
-        grid-column: 4;
-        align-self: stretch;
-        align-items: center;
-        padding-inline: c.$sc-table-cell-padding-inline;
-        border-inline: c.$sc-table-border-width solid a.$color-gray-10;
-        display: flex;
-        flex-wrap: wrap;
-        gap: c.$sc-card-topics-gap;
-    }
-
     &__topic {
         color: a.$color-optional;
         border-color: a.$color-optional;
@@ -103,7 +92,7 @@
 
     &__actions {
         grid-area: auto;
-        grid-column: 5;
+        grid-column: 4;
         padding-inline: c.$sc-table-cell-padding-inline;
     }
 }

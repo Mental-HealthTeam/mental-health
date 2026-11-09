@@ -14,7 +14,7 @@ $sc-page-button-border-width: 1px;
 // Table layout (shared by head and session card)
 // ======================================================
 
-$sc-table-columns: 180px 80px 240px 260px 220px;
+$sc-table-columns: 180px 80px minmax(200px, 1fr) 200px;
 $sc-table-cell-padding-inline: 16px;
 $sc-table-border-width: 1px;
 
@@ -31,7 +31,7 @@ $sc-sessions-heading-gap: 20px;
 
 $sc-sessions-tabs-gap: 8px;
 
-$sc-sessions-scroll-padding-bottom: 16px;
+$sc-sessions-scroll-padding-bottom: 8px;
 $sc-sessions-scrollbar-size: 9px;
 $sc-sessions-scrollbar-thumb-radius: 999px;
 

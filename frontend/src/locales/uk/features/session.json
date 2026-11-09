@@ -8,7 +8,7 @@
     "tableHead": {
         "status": "Статус сесії",
         "time": "Час",
-        "specialist": "Інформація фахівця",
+        "specialist": "Інформація клієнта",
         "request": "Запит",
         "actions": "Основні дії"
     },
@@ -17,6 +17,7 @@
         "completed": "Завершена",
         "available": "Вільно"
     },
+    "showMore": "Показати більше",
     "today": "Сьогодні {{date}}",
     "noSessions": "Немає сесій",
     "join": "Приєднатися"
