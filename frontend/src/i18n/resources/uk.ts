@@ -17,6 +17,9 @@ import reviews from '../../locales/uk/features/reviews.json'
 import symptoms from '../../locales/uk/features/symptoms.json'
 import specialistProfile from '../../locales/uk/features/specialistProfile.json'
 import clientProfileSettings from '../../locales/uk/features/clientProfileSettings.json'
+import session from '../../locales/uk/features/session.json'
+import success from '../../locales/uk/features/success.json'
+import specialistCabinet from '../../locales/uk/features/specialistCabinet.json'
 
 export const ukResources = {
     common,
@@ -37,4 +40,7 @@ export const ukResources = {
     symptoms,
     specialistProfile,
     clientProfileSettings,
+    session,
+    success,
+    specialistCabinet
 } as const

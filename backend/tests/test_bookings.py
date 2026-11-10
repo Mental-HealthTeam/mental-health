@@ -67,6 +67,8 @@ def booking_response(client_user):
             "display_full_name": "Test Psychologist",
             "display_title": "Clinical Psychologist",
             "avatar_url": None,
+            "experience_years": 5,
+            "is_verified": True,
         },
         "selected_time": datetime.now(timezone.utc) + timedelta(days=2),
         "status": BookingStatus.PENDING,
@@ -106,6 +108,8 @@ def test_create_booking_returns_201(
     assert body["status"] == BookingStatus.PENDING.value
     assert body["payment_status"] == PaymentStatus.UNPAID.value
     assert body["psychologist"]["psychologist_id"] == str(psychologist_id)
+    assert body["psychologist"]["experience_years"] == 5
+    assert body["psychologist"]["is_verified"] is True
 
     create_mock.assert_awaited_once()
     kwargs = create_mock.await_args.kwargs

@@ -3,10 +3,9 @@ import { Footer } from '../../components/Footer'
 import { Header } from '../../components/Header'
 import { Container } from '../../components/Container'
 
-import { SpecialistProfileCard } from './components/SpecialistProfileCard'
+import { SpecialistProfileCard } from '../../components/specialist/SpecialistProfileCard'
 
 import './PsychologistProfile.scss'
-import { ProfileTabs } from './components/ProfileTabs'
 import { useParams } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../../app/hooks'
 import { setSpecialistProfile } from '../../app/store/slices/specialistProfileSlice'
@@ -16,6 +15,7 @@ import { BookingBlock } from '../../components/BookingBlock'
 import { useGetPsychologistByIdQuery } from '../../services/psychologistsApi'
 import { skipToken } from '@reduxjs/toolkit/query'
 import { BackButton } from '../../components/UI/Buttons/BackButton'
+import { ProfileTabs } from '../../components/specialist/ProfileTabs'
 
 export const PsychologistProfile = () => {
     const { t, i18n } = useTranslation(['specialistProfile', 'common', 'errors'])
@@ -55,7 +55,7 @@ export const PsychologistProfile = () => {
                     specialist={profile}
                 />
 
-                <ProfileTabs className="psychologist-profile__profile-tabs" />
+                <ProfileTabs className="psychologist-profile__profile-tabs" specialist={profile} />
             </>
         )
     }
