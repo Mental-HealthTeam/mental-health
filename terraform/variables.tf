@@ -22,3 +22,21 @@ variable "volume_size" {
   description = "Volume Size"
   type        = string
 }
+
+variable "enable_ses" {
+  description = "Enable Amazon SES for production"
+  type        = bool
+  default     = false
+}
+
+variable "ses_domain" {
+  description = "Domain used for sending emails through Amazon SES"
+  type        = string
+  default     = ""
+}
+
+variable "ses_sender_email" {
+  description = "Verified sender email address for Amazon SES"
+  type        = string
+  default     = ""
+}

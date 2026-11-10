@@ -1,5 +1,6 @@
-from typing import Annotated
+from typing import Annotated, Literal
 from uuid import UUID
+from decimal import Decimal
 
 from fastapi import APIRouter, Depends, Query, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -47,20 +48,34 @@ async def list_psychologists(
     limit: int = Query(default=5, ge=1, le=100),
     offset: int = Query(default=0, ge=0),
     symptom_codes: list[SymptomCode] | None = Query(default=None),
-    lang: Language = Query(default=Language.UKRAINIAN)
+    lang: Language = Query(default=Language.UKRAINIAN),
+    price_from: Decimal | None = Query(default=None, ge=0),
+    price_to: Decimal | None = Query(default=None, ge=0),
+    available_on: Literal["today", "tomorrow"] | None = Query(default=None),
 ):
     """
     Returns the psychologist catalog for the listing/catalog page.
-
     Only active psychologist profiles are returned.
-    Supports pagination and filtering by multiple symptom codes.
+    Supports pagination and optional filtering by symptoms, price and availability.
     """
+    if (
+            price_from is not None
+            and price_to is not None
+            and price_from > price_to
+    ):
+        raise HTTPException(
+            status_code=422,
+            detail="price_from cannot be greater than price_to",
+        )
     return await get_psychologists(
         db=db,
         limit=limit,
         offset=offset,
         symptom_codes=symptom_codes,
-        lang=lang
+        lang=lang,
+        price_from=price_from,
+        price_to=price_to,
+        available_on=available_on,
     )
 
 
