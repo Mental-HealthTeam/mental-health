@@ -6,6 +6,8 @@ import { ClientProfileForm } from '../../components/ClientProfileForm'
 
 import './ClientProfileSettingsPage.scss'
 import { BackButton } from '../../components/UI/Buttons/BackButton'
+import { Header } from '../../components/Header'
+import { Footer } from '../../components/Footer'
 
 const previewValues: ClientProfileValues = {
     name: 'Ангеліна Квіткова',
@@ -40,6 +42,7 @@ export const ClientProfileSettingsPage = () => {
 
     return (
         <div className="client-profile-settings-page">
+            <Header variant={'page'} />
             <main className="client-profile-settings-page__main">
                 <Container className="client-profile-settings-page__container">
                     <BackButton className="client-profile-settings-page__back" />
@@ -61,6 +64,7 @@ export const ClientProfileSettingsPage = () => {
                     )}
                 </Container>
             </main>
+            <Footer />
         </div>
     )
 }
