@@ -1,11 +1,11 @@
 import classNames from 'classnames'
 import './ReviewsCard.scss'
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { ArrowButton } from '../../../../components/UI/ArrowButton'
-import { SpecialistReviewCard } from '../SpecialistReviewCard'
-import type { SymptomCode } from '../../../../types/psychologist'
+import { ArrowButton } from '../../UI/ArrowButton'
+import { SpecialistReviewCard } from '../../../pages/PsychologistProfile/components/SpecialistReviewCard'
+import type { SymptomCode } from '../../../types/psychologist'
 import { useTranslation } from 'react-i18next'
-import type { SpecialistReview } from '../../../../types/specialist'
+import type { SpecialistReview } from '../../../types/specialist'
 
 type Props = {
     className?: string
