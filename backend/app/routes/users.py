@@ -1,6 +1,6 @@
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, File, HTTPException, UploadFile, status
+from fastapi import APIRouter, Depends, File, UploadFile, status
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -11,6 +11,7 @@ from schemas.auth import UserProfileResponse, UserProfileUpdate
 from services.avatar_storage import delete_avatar_file, save_avatar
 from config.dependencies import get_settings
 from config.settings import BaseAppSettings
+from exceptions.base import AppError
 
 router = APIRouter()
 
@@ -62,17 +63,19 @@ async def update_user_profile(
 
     if "meet_link" in changes:
         if current_user.role != UserRole.PSYCHOLOGIST:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail="Only psychologists can update the meeting link.",
+            raise AppError(
+                status.HTTP_403_FORBIDDEN,
+                "MEETING_LINK_PSYCHOLOGIST_ONLY",
+                "Only psychologists can update the meeting link.",
             )
 
         psychologist = await db.get(Psychologist, current_user.id)
 
         if psychologist is None:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="Psychologist profile not found.",
+            raise AppError(
+                status.HTTP_404_NOT_FOUND,
+                "PSYCHOLOGIST_PROFILE_NOT_FOUND",
+                "Psychologist profile not found.",
             )
 
         psychologist.meet_link = changes.pop("meet_link")
@@ -107,9 +110,10 @@ async def upload_user_avatar(
     except SQLAlchemyError as e:
         delete_avatar_file(new_avatar_url, current_user.id, settings)
         await db.rollback()
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Could not upload your avatar try later"
+        raise AppError(
+            status.HTTP_500_INTERNAL_SERVER_ERROR,
+            "AVATAR_UPLOAD_FAILED",
+            "Could not upload your avatar try later",
         ) from e
     else:
         if old_avatar_url != new_avatar_url:

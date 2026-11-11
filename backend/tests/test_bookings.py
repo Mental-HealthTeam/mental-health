@@ -3,7 +3,6 @@ from datetime import datetime, timedelta, timezone
 from decimal import Decimal
 from types import SimpleNamespace
 from unittest.mock import AsyncMock
-from fastapi import HTTPException
 
 import pytest
 from fastapi.testclient import TestClient
@@ -21,7 +20,7 @@ from database.models.models import (
     UserRole,
 )
 from routes import bookings as booking_routes
-
+from exceptions.base import AppError
 
 
 @pytest.fixture
@@ -167,6 +166,7 @@ def test_create_booking_rejects_invalid_payload(
     assert response.status_code == 422
     create_mock.assert_not_awaited()
 
+
 def test_list_bookings_returns_200(
     bookings_client, client_user, booking_response, monkeypatch
 ):
@@ -187,6 +187,7 @@ def test_list_bookings_returns_200(
     assert body["items"][0]["booking_id"] == str(booking_response["id"])
 
     list_mock.assert_awaited_once()
+
 
 def test_get_booking_returns_200(
     bookings_client, client_user, booking_response, monkeypatch
@@ -218,9 +219,10 @@ def test_get_booking_not_found_returns_404(
     app.dependency_overrides[get_current_user] = lambda: client_user
 
     booking_mock = AsyncMock(
-        side_effect=HTTPException(
+        side_effect=AppError(
             status_code=404,
-            detail="Booking not found",
+            code="BOOKING_NOT_FOUND",
+            detail="Booking not found.",
         )
     )
     monkeypatch.setattr(
@@ -233,9 +235,13 @@ def test_get_booking_not_found_returns_404(
     response = bookings_client.get(f"/api/bookings/{booking_id}")
 
     assert response.status_code == 404
-    assert response.json()["detail"] == "Booking not found"
+    assert response.json() == {
+        "code": "BOOKING_NOT_FOUND",
+        "detail": "Booking not found.",
+    }
 
     booking_mock.assert_awaited_once()
+
 
 def test_list_bookings_passes_filters_and_pagination(
     bookings_client, client_user, monkeypatch
