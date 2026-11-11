@@ -96,6 +96,7 @@ Handlers live in `handlers.py` and are registered in `main.py` via `register_exc
 | `BOOKING_TIME_IN_PAST` | 422 | Selected time must be in the future. | - | booking_service.py |
 | `BOOKING_TIME_TOO_FAR` | 422 | Selected time exceeds the booking horizon. | - | booking_service.py |
 | `DISPUTE_INVALID_RESOLUTION` | 422 | A dispute can only be resolved as completed or cancelled. | - | booking_service.py |
+| `INVALID_PRICE_RANGE` | 422 | price_from cannot be greater than price_to | - | psychologists.py |
 | `PSYCHOLOGIST_NOT_AVAILABLE` | 422 | Psychologist not found or not active. | - | booking_service.py |
 | `SLOT_NOT_AVAILABLE` | 422 | Selected time is not an available slot. | - | booking_service.py |
 | `AVATAR_UPLOAD_FAILED` | 500 | Could not upload your avatar try later | - | avatar_storage.py, users.py |

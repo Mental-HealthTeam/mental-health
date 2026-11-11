@@ -65,9 +65,10 @@ async def list_psychologists(
             and price_to is not None
             and price_from > price_to
     ):
-        raise HTTPException(
-            status_code=422,
-            detail="price_from cannot be greater than price_to",
+        raise AppError(
+            status.HTTP_422_UNPROCESSABLE_ENTITY,
+            "INVALID_PRICE_RANGE",
+            "price_from cannot be greater than price_to",
         )
     return await get_psychologists(
         db=db,
