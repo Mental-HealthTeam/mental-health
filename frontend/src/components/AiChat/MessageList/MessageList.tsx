@@ -8,11 +8,11 @@ import classNames from 'classnames'
 import { ChatMessage } from '../ChatMessage/ChatMessage'
 
 import './MessageList.scss'
-import { formatChatDate } from '../../../utils/formatChatDate'
 import { TypingIndicator } from '../TypingIndicator/TypingIndicator'
 import { Button } from '../../UI/Button'
 import { useAppDispatch, useAppSelector } from '../../../app/hooks'
 import { useTranslation } from 'react-i18next'
+import { formatChatDate } from '../../../utils/date'
 
 type Props = {
     className?: string
