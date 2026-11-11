@@ -2,16 +2,13 @@ import { useEffect, useId, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Avatar } from '../UI/Avatar'
-import { OutlineButton } from '../UI/Buttons'
-import { MoneyIcon } from '../UI/Icons'
+import { OutlineButton, PrimaryButton } from '../UI/Buttons'
+import { AvatarFallbackIcon, AwardIcon, MoneyIcon } from '../UI/Icons'
 import { TimeSlot } from '../UI/TimeSlot'
 
 import type { Psychologist } from '../../types/psychologist.ts'
 
 import './SpecialistCard.scss'
-import { Button } from '../UI/Button'
-import { AvatarFallbackIcon } from '../UI/Icons'
-import { AwardIcon } from '../UI/Icons'
 import { useNavigate } from 'react-router-dom'
 import classNames from 'classnames'
 
@@ -228,15 +225,13 @@ export const SpecialistCard = ({
 
             <div className="specialist-card__actions">
                 {!isBooking && (
-                    <Button
+                    <PrimaryButton
                         className="specialist-card__booking-button"
-                        variant="primary"
-                        size="medium"
                         fullWidth
                         onClick={() => setIsBooking(true)}
                     >
                         {t('psychologists:card.bookSession')}
-                    </Button>
+                    </PrimaryButton>
                 )}
 
                 {isBooking && (

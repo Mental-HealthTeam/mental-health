@@ -92,22 +92,23 @@ def resolve_gender(full_name: str) -> Gender:
 
 KYIV_TZ = ZoneInfo("Europe/Kyiv")
 
-SLOT_DAYS_AHEAD = 10
+SLOT_WEEKS_AHEAD = 3
 
 
-def build_mock_slots(times_of_day: list[str]) -> list[str]:
-    # The seed gives times of day ("18:00"); older entries may still carry a word before it.
-    times = sorted({value.split()[-1] for value in times_of_day})
-    today = datetime.now(KYIV_TZ).date()
+def build_mock_slots(base_slots: dict[str, list[str]]) -> list[str]:
+    # base_slots maps ISO weekday ("1" = Monday ... "7" = Sunday) to hours ("18:00").
+    now = datetime.now(KYIV_TZ)
+    today = now.date()
     slots = []
-    for offset in range(1, SLOT_DAYS_AHEAD + 1):
+    for offset in range(SLOT_WEEKS_AHEAD * 7):
         day = today + timedelta(days=offset)
-        for time_str in times:
+        for time_str in sorted(set(base_slots.get(str(day.isoweekday()), []))):
             hour, minute = map(int, time_str.split(":"))
             slot_dt = datetime(
                 day.year, day.month, day.day, hour, minute, tzinfo=KYIV_TZ
             )
-            slots.append(slot_dt.isoformat())
+            if slot_dt > now:
+                slots.append(slot_dt.isoformat())
     return slots
 
 
@@ -130,7 +131,7 @@ def populate_psychologists() -> None:
         refreshed = 0
 
         for entry in dataset:
-            mock_slots = build_mock_slots(entry["mock_slots"])
+            mock_slots = build_mock_slots(entry["base_slots"])
 
             email = mock_email(entry["id"])
 

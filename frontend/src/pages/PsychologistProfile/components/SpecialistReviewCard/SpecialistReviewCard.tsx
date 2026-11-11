@@ -1,8 +1,7 @@
 import classNames from 'classnames'
 import './SpecialistReviewCard.scss'
 import { Avatar } from '../../../../components/UI/Avatar'
-import { StarIcon } from '../../../../components/UI/Icons'
-import avatarDefault from '../../../../assets/avatars/avatar-1.png'
+import { AvatarFallbackIcon, StarIcon } from '../../../../components/UI/Icons'
 import { useTranslation } from 'react-i18next'
 
 type Props = {
@@ -26,27 +25,28 @@ export const SpecialistReviewCard = ({
     text,
     className,
 }: Props) => {
-    const { t } = useTranslation('specialistProfile')
+    const { t } = useTranslation('reviews')
 
     return (
         <article className={classNames('specialist-review-card', className)}>
             <div className="specialist-review-card__header">
                 <Avatar
                     className="review-card__avatar"
-                    src={avatar ? avatar : avatarDefault}
+                    src={avatar ?? undefined}
+                    fallback={<AvatarFallbackIcon />}
                     alt=""
                 />
 
                 <div className="specialist-review-card__author">
                     <h3 className="specialist-review-card__name">
                         {name}
-                        {age ? `, ${age}` : null}
+                        {age && `, ${t('age', { count: age })}`}
                     </h3>
 
                     <div
                         className="specialist-review-card__rating"
                         role="img"
-                        aria-label={t('reviews.ratingAriaLabel', { rating, max: MAX_RATING })}
+                        aria-label={t('ratingLabel', { rating })}
                     >
                         {Array.from({ length: MAX_RATING }, (_, i) => (
                             <span
