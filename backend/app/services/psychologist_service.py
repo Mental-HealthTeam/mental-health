@@ -1,4 +1,7 @@
+from datetime import datetime, timedelta
+from decimal import Decimal
 from uuid import UUID
+from zoneinfo import ZoneInfo
 
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -35,6 +38,9 @@ async def get_psychologists(
     offset: int,
     lang: Language,
     symptom_codes: list[SymptomCode] | None = None,
+    price_from: Decimal | None = None,
+    price_to: Decimal | None = None,
+    available_on: str | None = None,
 ) -> list[PsychologistListItem]:
     stmt = (
         select(Psychologist)
@@ -45,6 +51,12 @@ async def get_psychologists(
             Psychologist.profile_status == PsychologistStatus.ACTIVE
         )
     )
+    if price_from is not None:
+        stmt = stmt.where(Psychologist.price_per_hour >= price_from)
+
+    if price_to is not None:
+        stmt = stmt.where(Psychologist.price_per_hour <= price_to)
+
 
     if symptom_codes:
         matching_count = (
@@ -80,7 +92,8 @@ async def get_psychologists(
             Psychologist.psychologist_id
         )
 
-    stmt = stmt.limit(limit).offset(offset)
+    if available_on is None:
+        stmt = stmt.limit(limit).offset(offset)
 
     response = await db.execute(stmt)
     psychologists = response.scalars().all()
@@ -97,6 +110,26 @@ async def get_psychologists(
         )
         for psychologist in psychologists
     }
+    if available_on is not None:
+        kyiv_tz = ZoneInfo("Europe/Kyiv")
+
+        target_date = datetime.now(kyiv_tz).date()
+
+        if available_on == "tomorrow":
+            target_date += timedelta(days=1)
+
+        psychologists = [
+            psychologist
+            for psychologist in psychologists
+            if any(
+                datetime.fromisoformat(slot)
+                .astimezone(kyiv_tz)
+                .date() == target_date
+                for slot in slots[psychologist.psychologist_id]
+            )
+        ]
+
+        psychologists = psychologists[offset:offset + limit]
 
     return [
         PsychologistListItem(
