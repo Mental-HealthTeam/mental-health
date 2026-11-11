@@ -14,9 +14,7 @@ export type Message = {
     createdAt: number
 }
 
-export type ChatError = {
-    message: string
-}
+export type ChatErrorCode = 'timeout' | 'empty' | 'noResults' | 'unknown'
 
 type InitialState = {
     isOpen: boolean
@@ -26,9 +24,10 @@ type InitialState = {
     lastActivity: number
     matchData: MatchData | null
     psychologists: Psychologist[]
-    error: string | null
     lastUserText: string | null
     initialText: string
+    error: ChatErrorCode | null
+    errorSource: 'message' | 'search' | null
 }
 
 export const GREETING_ID = 'greeting'
@@ -39,6 +38,13 @@ const createGreeting = (): Message => ({
     fromWho: 'bot',
     createdAt: Date.now(),
 })
+
+const toErrorCode = (error: unknown): ChatErrorCode => {
+    if (error instanceof DOMException && error.name === 'AbortError') return 'timeout'
+    if (error instanceof Error && error.message === 'empty') return 'empty'
+
+    return 'unknown'
+}
 
 const initialState: InitialState = {
     isOpen: false,
@@ -51,6 +57,7 @@ const initialState: InitialState = {
     error: null,
     lastUserText: null,
     initialText: '',
+    errorSource: null,
 }
 
 export const aiChatSlice = createSlice({
@@ -72,8 +79,14 @@ export const aiChatSlice = createSlice({
         requestStarted: (state, action: PayloadAction<string>) => {
             state.status = 'waiting'
             state.error = null
+            state.errorSource = null
             state.lastUserText = action.payload
             state.lastActivity = Date.now()
+        },
+        searchStarted: (state) => {
+            state.status = 'waiting'
+            state.error = null
+            state.errorSource = null
         },
         botStartMessage: (state, action: PayloadAction<Message>) => {
             state.status = 'streaming'
@@ -90,9 +103,13 @@ export const aiChatSlice = createSlice({
             state.status = 'idle'
             state.lastActivity = Date.now()
         },
-        requestFailed: (state, action: PayloadAction<string>) => {
+        requestFailed: (
+            state,
+            action: PayloadAction<{ message: ChatErrorCode; source: 'message' | 'search' }>,
+        ) => {
             state.status = 'idle'
-            state.error = action.payload
+            state.error = action.payload.message
+            state.errorSource = action.payload.source
         },
         setMatchData: (state, action: PayloadAction<MatchData>) => {
             state.matchData = action.payload
@@ -109,6 +126,7 @@ export const aiChatSlice = createSlice({
             state.matchData = null
             state.psychologists = []
             state.error = null
+            state.errorSource = null
             state.status = 'idle'
             state.lastActivity = Date.now()
         },
@@ -125,6 +143,7 @@ export const {
     requestFailed,
     requestFinished,
     requestStarted,
+    searchStarted,
     resetAiChat,
     setMatchData,
     setPsychologists,
@@ -150,9 +169,11 @@ export const sendUserMessage = createAsyncThunk<
 
     const { sessionId } = getState().aiChat
     const controller = new AbortController()
-    const timer = setTimeout(() => controller.abort(), 45_000)
+    const timer = setTimeout(() => controller.abort(), 40_000)
 
     let botId: string | null = null
+
+    const isStale = () => getState().aiChat.sessionId !== sessionId
 
     try {
         await streamChatMessage(
@@ -164,8 +185,6 @@ export const sendUserMessage = createAsyncThunk<
             {
                 onContent: (chunk) => {
                     if (botId === null) {
-                        clearTimeout(timer)
-
                         const botMessage = createMessage(chunk, 'bot')
 
                         botId = botMessage.id
@@ -174,20 +193,22 @@ export const sendUserMessage = createAsyncThunk<
                         dispatch(botChunkReceived({ id: botId, chunk }))
                     }
                 },
-                onMatchData: (data) => dispatch(setMatchData(data)),
+                onMatchData: (data) => {
+                    if (!isStale()) dispatch(setMatchData(data))
+                },
             },
             controller.signal,
         )
 
+        if (isStale()) return
+        if (botId === null) throw new Error('empty')
+
         dispatch(requestFinished())
     } catch (error) {
-        if (botId !== null) {
-            dispatch(removeMessage(botId))
-        }
+        if (isStale()) return
+        if (botId !== null) dispatch(removeMessage(botId))
 
-        const message = error instanceof Error ? error.message : 'Упс. Щось пішло не так.'
-
-        dispatch(requestFailed(message))
+        dispatch(requestFailed({ message: toErrorCode(error), source: 'message' }))
     } finally {
         clearTimeout(timer)
     }
@@ -200,21 +221,44 @@ export const searchPsychologists = createAsyncThunk<void, void, { state: RootSta
     async (_, { dispatch, getState }) => {
         const { matchData, sessionId } = getState().aiChat
 
-        const response = await fetch(`${API_URL}/api/matching/search`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            credentials: 'include',
-            body: JSON.stringify({
-                matching_info: { ...matchData, session_id: sessionId },
-            }),
-        })
+        dispatch(searchStarted())
 
-        if (!response.ok) {
-            throw new Error(`Search failed: ${response.status}`)
+        const controller = new AbortController()
+        const timer = setTimeout(() => controller.abort(), 40_000)
+
+        try {
+            const response = await fetch(`${API_URL}/matching/search`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                signal: controller.signal,
+                body: JSON.stringify({
+                    matching_info: { ...matchData, session_id: sessionId },
+                }),
+            })
+
+            if (!response.ok) throw new Error('unknown')
+
+            const data = await response.json()
+
+            if (getState().aiChat.sessionId !== sessionId) return
+
+            if (!data.result?.length) {
+                dispatch(
+                    requestFailed({
+                        message: 'noResults',
+                        source: 'search',
+                    }),
+                )
+                return
+            }
+
+            dispatch(setPsychologists(data.result))
+            dispatch(requestFinished())
+        } catch (error) {
+            dispatch(requestFailed({ message: toErrorCode(error), source: 'search' }))
+        } finally {
+            clearTimeout(timer)
         }
-
-        const data = await response.json()
-
-        dispatch(setPsychologists(data.result))
     },
 )

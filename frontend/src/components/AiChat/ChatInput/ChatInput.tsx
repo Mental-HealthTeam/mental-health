@@ -12,7 +12,7 @@ type Props = {
     onSend: (text: string) => void
 }
 
-const MAX_LENGTH = 500
+const MAX_LENGTH = 800
 
 export const ChatInput = ({ className, onSend, disabled, initialValue = '' }: Props) => {
     const { t } = useTranslation('aiChat')

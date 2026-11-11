@@ -14,6 +14,8 @@ import { Button } from '../../UI/Button'
 import { useAppDispatch, useAppSelector } from '../../../app/hooks'
 import { useTranslation } from 'react-i18next'
 import { SpecialistCard } from '../../SpecialistCard'
+import { PrimaryButton } from '../../UI/Buttons'
+import { ArrowIcon, SparkIcon } from '../../UI/Icons'
 
 type Props = {
     className?: string
@@ -24,14 +26,20 @@ export const MessageList = ({ className }: Props) => {
     const { i18n } = useTranslation()
 
     const dispatch = useAppDispatch()
-    const { messages, error, lastUserText, matchData, status, psychologists } = useAppSelector(
-        (state) => state.aiChat,
-    )
+    const { messages, error, errorSource, lastUserText, matchData, status, psychologists } =
+        useAppSelector((state) => state.aiChat)
     const endRef = useRef<HTMLDivElement>(null)
 
     const firstCreatedAt = messages[0].createdAt
 
     const isAnswering = useMemo(() => status === 'waiting' || status === 'streaming', [status])
+
+    const errorText =
+        error && errorSource
+            ? t(`errors:${errorSource}.${error}`, {
+                  defaultValue: t(`errors:${errorSource}.unknown`),
+              })
+            : null
 
     useEffect(() => {
         endRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -53,41 +61,52 @@ export const MessageList = ({ className }: Props) => {
                 ))}
             </div>
 
-            {isAnswering && <TypingIndicator />}
-
-            {error && lastUserText && (
-                <div className="message-list__error" role="alert">
-                    <p>{error}</p>
-                    <Button
-                        className="message-list__button-try-again"
-                        size="small"
-                        variant="secondary"
-                        ariaLabel={t('messageList.retry')}
-                        onClick={() =>
-                            dispatch(sendUserMessage({ text: lastUserText, retry: true }))
-                        }
-                    >
-                        {t('errors.unknown')}
-                    </Button>
-                </div>
-            )}
-
             {matchData?.ready_for_search && (
-                <Button
+                <PrimaryButton
                     className="message-list__button-search-psy"
-                    ariaLabel={t('messageList.searchPsychologist')}
-                    fullWidth
+                    startIcon={<SparkIcon />}
+                    endIcon={
+                        <span className="message-list__search-arrow">
+                            <ArrowIcon width={14} height={14} />
+                        </span>
+                    }
+                    aria-label={t('messageList.searchPsychologist')}
                     onClick={() => dispatch(searchPsychologists())}
                 >
-                    {t('messageList.searchPsychologist')}
-                </Button>
+                    <span className="message-list__search-label">
+                        {t('messageList.searchPsychologist')}
+                    </span>
+                </PrimaryButton>
             )}
 
             {psychologists.length > 0 && (
                 <div className="message-list__specialists">
                     {psychologists.map((specialist) => (
-                        <SpecialistCard {...specialist} />
+                        <SpecialistCard {...specialist} variant="compact" />
                     ))}
+                </div>
+            )}
+
+            {isAnswering && <TypingIndicator />}
+
+            {errorText && lastUserText && (
+                <div className="message-list__error" role="alert">
+                    <span className="message-list__error-text">{errorText}</span>
+                    <Button
+                        className="message-list__button-try-again"
+                        size="small"
+                        variant="secondary"
+                        ariaLabel={t('messageList.retry')}
+                        onClick={() => {
+                            if (errorSource === 'message') {
+                                dispatch(sendUserMessage({ text: lastUserText, retry: true }))
+                            } else {
+                                dispatch(searchPsychologists())
+                            }
+                        }}
+                    >
+                        {t('messageList.retry')}
+                    </Button>
                 </div>
             )}
 

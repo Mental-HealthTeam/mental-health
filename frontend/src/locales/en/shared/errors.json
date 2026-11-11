@@ -17,5 +17,15 @@
         "nearestSlot": "This specialist’s next available time slot:",
         "chooseAnotherTime": "Choose another time",
         "copyright": "© {{year}} Mental Health Platform. All rights reserved."
+    },
+    "message": {
+        "timeout": "Anna is taking too long to reply. Please try again.",
+        "empty": "Anna didn't send a response. Please try again.",
+        "unknown": "We couldn't generate a response. Please try again."
+    },
+    "search": {
+        "timeout": "The search is taking too long. Please try again.",
+        "noResults": "We couldn't find suitable psychologists for your request. Try changing your answers and try again.",
+        "unknown": "We couldn't search for psychologists right now. Please try again."
     }
 }
