@@ -2,7 +2,7 @@ import logging
 from datetime import datetime, timezone, timedelta
 import uuid
 from typing import Annotated
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends, status
 from sqlalchemy import select, update
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -22,6 +22,7 @@ from schemas.auth import (
     RevokeAllSchema
 )
 from exceptions.auth_provider import TokenExpiredError, InvalidTokenError
+from exceptions.base import AppError
 
 logger = logging.getLogger(__name__)
 
@@ -37,9 +38,10 @@ async def create_session(
         logger.warning(
             "Cannot create session: user not found (user_id=%s)", data.user_id
         )
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid credentials"
+        raise AppError(
+            status.HTTP_401_UNAUTHORIZED,
+            "INVALID_CREDENTIALS",
+            "Invalid credentials",
         )
     jti = uuid.uuid4()
     family_id = data.family_id or uuid.uuid4()
@@ -82,9 +84,10 @@ async def create_session(
             "Failed to create auth session (user_id=%s)",
             data.user_id,
         )
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Database error while signing in"
+        raise AppError(
+            status.HTTP_500_INTERNAL_SERVER_ERROR,
+            "SIGN_IN_DATABASE_ERROR",
+            "Database error while signing in",
         ) from e
 
     return TokenPair(
@@ -103,9 +106,10 @@ async def rotate_session(
         token_info = jwt_manager.decode_refresh_token(token=data.refresh_token)
     except (TokenExpiredError, InvalidTokenError) as e:
         logger.info("Refresh token rejected: %s", e)
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid token."
+        raise AppError(
+            status.HTTP_401_UNAUTHORIZED,
+            "INVALID_TOKEN",
+            "Invalid token.",
         ) from e
     try:
         user_id = uuid.UUID(token_info["sub"])
@@ -114,9 +118,10 @@ async def rotate_session(
         logger.warning(
             "Refresh token has malformed claims"
         )
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid token."
+        raise AppError(
+            status.HTTP_401_UNAUTHORIZED,
+            "INVALID_TOKEN",
+            "Invalid token.",
         ) from e
     stmt = select(AuthSession).where(
         AuthSession.jti == jti
@@ -130,9 +135,10 @@ async def rotate_session(
         logger.warning(
             "Refresh rejected: session not found (jti=%s)", jti
         )
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid token."
+        raise AppError(
+            status.HTTP_401_UNAUTHORIZED,
+            "INVALID_TOKEN",
+            "Invalid token.",
         )
     if auth_session.revoked_at is not None:
         logger.warning(
@@ -141,9 +147,10 @@ async def rotate_session(
             auth_session.family_id
         )
         await revoke_family(db=db, family_id=auth_session.family_id)
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid token."
+        raise AppError(
+            status.HTTP_401_UNAUTHORIZED,
+            "INVALID_TOKEN",
+            "Invalid token.",
         )
 
     if auth_session.expires_at <= datetime.now(timezone.utc):
@@ -151,18 +158,20 @@ async def rotate_session(
             "Refresh rejected: session expired (user_id=%s, family_id=%s)",
             auth_session.user_id, auth_session.family_id
         )
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid token."
+        raise AppError(
+            status.HTTP_401_UNAUTHORIZED,
+            "INVALID_TOKEN",
+            "Invalid token.",
         )
     if auth_session.user_id != user_id:
         logger.warning(
             "Refresh rejected: token user does not match session (token_user_id=%s, session_user_id=%s)",
             user_id, auth_session.user_id
         )
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid token."
+        raise AppError(
+            status.HTTP_401_UNAUTHORIZED,
+            "INVALID_TOKEN",
+            "Invalid token.",
         )
 
     now = datetime.now(timezone.utc)
@@ -207,9 +216,10 @@ async def rotate_session(
             "Failed to rotate auth session (user_id=%s)",
             user_id,
         )
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Database error while signing in"
+        raise AppError(
+            status.HTTP_500_INTERNAL_SERVER_ERROR,
+            "SIGN_IN_DATABASE_ERROR",
+            "Database error while signing in",
         ) from e
     return TokenPair(
         access_token=access_token,
@@ -240,9 +250,10 @@ async def revoke_family(
             "Failed to revoke auth session family (family_id=%s)",
             family_id,
         )
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Database error while revoking session"
+        raise AppError(
+            status.HTTP_500_INTERNAL_SERVER_ERROR,
+            "SESSION_REVOKE_FAILED",
+            "Database error while revoking session",
         ) from e
 
 
@@ -276,17 +287,19 @@ async def revoke_all_sessions(
         token_info = jwt_manager.decode_refresh_token(token=data.refresh_token)
     except (TokenExpiredError, InvalidTokenError) as e:
         logger.warning("Logout-all rejected: %s", e)
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid token."
+        raise AppError(
+            status.HTTP_401_UNAUTHORIZED,
+            "INVALID_TOKEN",
+            "Invalid token.",
         ) from e
     try:
         user_id = uuid.UUID(token_info["sub"])
     except (KeyError, ValueError) as e:
         logger.warning("Logout-all rejected: malformed claims")
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid token."
+        raise AppError(
+            status.HTTP_401_UNAUTHORIZED,
+            "INVALID_TOKEN",
+            "Invalid token.",
         ) from e
     try:
         await db.execute(
@@ -305,7 +318,8 @@ async def revoke_all_sessions(
             "Failed to revoke all sessions (user_id=%s)",
             user_id,
         )
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Database error while revoking all sessions"
+        raise AppError(
+            status.HTTP_500_INTERNAL_SERVER_ERROR,
+            "SESSION_REVOKE_FAILED",
+            "Database error while revoking all sessions",
         ) from e

@@ -5,7 +5,9 @@ from decimal import Decimal, ROUND_HALF_UP
 from uuid import UUID
 from zoneinfo import ZoneInfo
 
-from fastapi import HTTPException, status
+from fastapi import status
+
+from exceptions.base import AppError
 from sqlalchemy import select
 from sqlalchemy.exc import SQLAlchemyError, IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -68,34 +70,39 @@ async def create_checkout_service(
         user=client
     )
     if booking.client_id != client.id:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Booking not found."
+        raise AppError(
+            status.HTTP_404_NOT_FOUND,
+            "BOOKING_NOT_FOUND",
+            "Booking not found.",
         )
     if (
         booking.status != BookingStatus.PENDING or
         booking.payment_status != PaymentStatus.UNPAID
     ):
-        raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT,
-            detail="Booking cannot be paid in its current state."
+        raise AppError(
+            status.HTTP_409_CONFLICT,
+            "BOOKING_CANNOT_BE_PAID",
+            "Booking cannot be paid in its current state.",
         )
     if not booking.hold_expires_at:
-        raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT,
-            detail="Booking hold is missing, create a new booking."
+        raise AppError(
+            status.HTTP_409_CONFLICT,
+            "BOOKING_HOLD_MISSING",
+            "Booking hold is missing, create a new booking.",
         )
     else:
         if booking.hold_expires_at <= datetime.now(timezone.utc):
-            raise HTTPException(
-                status_code=status.HTTP_409_CONFLICT,
-                detail="Booking hold has expired, create a new booking."
+            raise AppError(
+                status.HTTP_409_CONFLICT,
+                "BOOKING_HOLD_EXPIRED",
+                "Booking hold has expired, create a new booking.",
             )
         elif booking.hold_expires_at <= datetime.now(timezone.utc) + timedelta(minutes=2):
-            raise HTTPException(
-                status_code=status.HTTP_409_CONFLICT,
-                detail="The booking hold expires in less than 2 minutes. "
-                       "Create a new booking after it expires."
+            raise AppError(
+                status.HTTP_409_CONFLICT,
+                "BOOKING_HOLD_EXPIRING_SOON",
+                "The booking hold expires in less than 2 minutes. "
+                "Create a new booking after it expires.",
             )
     check_out_params = CheckoutParams(
         booking_id=booking.id,
@@ -113,9 +120,10 @@ async def create_checkout_service(
             "Checkout failed for booking %s (provider=%s): %s",
             booking.id, payment_provider.name.value, e
         )
-        raise HTTPException(
-            status_code=status.HTTP_502_BAD_GATEWAY,
-            detail="Payment provider is unavailable, try again later."
+        raise AppError(
+            status.HTTP_502_BAD_GATEWAY,
+            "PAYMENT_PROVIDER_ERROR",
+            "Payment provider is unavailable, try again later.",
         ) from e
     try:
         booking.payment_provider = payment_provider.name
@@ -127,9 +135,10 @@ async def create_checkout_service(
             check_out_result.session_id, booking.id
         )
         await db.rollback()
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Could not save the payment session."
+        raise AppError(
+            status.HTTP_500_INTERNAL_SERVER_ERROR,
+            "PAYMENT_SESSION_SAVE_FAILED",
+            "Could not save the payment session.",
         ) from e
 
     return CheckoutResponse(
@@ -218,7 +227,7 @@ async def _booking_action(
                     "%s webhook %s: booking %s cancelled and refunded",
                     provider.value, response_webhook.event_id, booking.id
                 )
-    except HTTPException as e:
+    except AppError as e:
         await db.commit()
         if response_webhook.event_type == PaymentEventType.PAID:
             logger.error(
@@ -300,9 +309,10 @@ async def handle_webhook(
             "Rejected %s webhook: invalid signature or payload",
             provider.value
         )
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Invalid webhook."
+        raise AppError(
+            status.HTTP_400_BAD_REQUEST,
+            "INVALID_WEBHOOK",
+            "Invalid webhook.",
         ) from e
 
     stmt = select(PaymentEvent).where(
@@ -364,9 +374,10 @@ async def handle_webhook(
             "%s webhook %s: database error",
             provider.value, response_webhook.event_id
         )
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Could not save the payment event."
+        raise AppError(
+            status.HTTP_500_INTERNAL_SERVER_ERROR,
+            "PAYMENT_EVENT_SAVE_FAILED",
+            "Could not save the payment event.",
         ) from e
 
     acknowledgement = payment_provider.build_webhook_response(
@@ -496,7 +507,7 @@ async def payout_service(
                     "Payout %s for psychologist %s: %s bookings, amount %s, status %s",
                     reference, psychologist_id, len(bookings), amount, payout_result.status.value
                 )
-        except (SQLAlchemyError, HTTPException, PaymentProviderError) as e:
+        except (SQLAlchemyError, AppError, PaymentProviderError) as e:
             errors_payout += 1
             failed_count += 1
             if isinstance(e, SQLAlchemyError):
@@ -506,7 +517,7 @@ async def payout_service(
                     "manual check needed",
                     reference, psychologist_id
                 )
-            if isinstance(e, HTTPException):
+            if isinstance(e, AppError):
                 logger.error(
                     "Payout %s for psychologist %s was paid by the provider but not recorded (%s), "
                     "manual check needed",
@@ -573,9 +584,10 @@ def _refund_allowed(
 ) -> bool:
     refund_allowed = False
     if booking.selected_time < now:
-        raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT,
-            detail="The session has already started, the booking cannot be cancelled."
+        raise AppError(
+            status.HTTP_409_CONFLICT,
+            "CANCEL_SESSION_STARTED",
+            "The session has already started, the booking cannot be cancelled.",
         )
     if user.role in (UserRole.ADMIN, UserRole.PSYCHOLOGIST):
         refund_allowed = True
@@ -583,12 +595,12 @@ def _refund_allowed(
         time_left = booking.selected_time - now
         if time_left < timedelta(hours=settings.BOOKING_FREE_CANCEL_HOURS):
             if not confirm_no_refund:
-                raise HTTPException(
-                    status_code=status.HTTP_409_CONFLICT,
-                    detail=(
-                        f"The session starts in less than {settings.BOOKING_FREE_CANCEL_HOURS} hours, "
-                        "the payment will not be refunded. Confirm to cancel."
-                    )
+                raise AppError(
+                    status.HTTP_409_CONFLICT,
+                    "CANCEL_NO_REFUND_CONFIRM_REQUIRED",
+                    f"The session starts in less than {settings.BOOKING_FREE_CANCEL_HOURS} hours, "
+                    "the payment will not be refunded. Confirm to cancel.",
+                    free_cancel_hours=settings.BOOKING_FREE_CANCEL_HOURS,
                 )
         else:
             refund_allowed = True
@@ -621,12 +633,11 @@ async def cancel_booking_service(
                 "Cancel of booking %s rejected for user %s: payment is in progress, hold expires at %s",
                 booking_id, user.id, booking.hold_expires_at
             )
-            raise HTTPException(
-                status_code=status.HTTP_409_CONFLICT,
-                detail=(
-                    "Payment for this booking is in progress. "
-                    "If you do not pay, it will be cancelled automatically when the hold expires."
-                )
+            raise AppError(
+                status.HTTP_409_CONFLICT,
+                "CANCEL_PAYMENT_IN_PROGRESS",
+                "Payment for this booking is in progress. "
+                "If you do not pay, it will be cancelled automatically when the hold expires.",
             )
         try:
             booking = await mark_cancelled(
@@ -640,16 +651,18 @@ async def cancel_booking_service(
                 booking_id
             )
             await db.rollback()
-            raise HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail="Could not cancel the booking."
+            raise AppError(
+                status.HTTP_500_INTERNAL_SERVER_ERROR,
+                "BOOKING_CANCEL_FAILED",
+                "Could not cancel the booking.",
             ) from e
         logger.info("Unpaid booking %s cancelled by user %s", booking_id, user.id)
         return booking
     if booking.payment_status != PaymentStatus.HELD:
-        raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT,
-            detail="The booking cannot be cancelled automatically, contact support."
+        raise AppError(
+            status.HTTP_409_CONFLICT,
+            "REFUND_NOT_AUTOMATIC",
+            "The booking cannot be cancelled automatically, contact support.",
         )
     refund_allowed = _refund_allowed(
         user=user,
@@ -677,9 +690,10 @@ async def cancel_booking_service(
                 booking_id
             )
             await db.rollback()
-            raise HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail="Could not cancel the booking."
+            raise AppError(
+                status.HTTP_500_INTERNAL_SERVER_ERROR,
+                "BOOKING_CANCEL_FAILED",
+                "Could not cancel the booking.",
             ) from e
     if booking.payment_status == PaymentStatus.HELD and refund_allowed:
         try:
@@ -688,9 +702,10 @@ async def cancel_booking_service(
                     "Booking %s is paid but has no payment reference, refund is not possible",
                     booking_id
                 )
-                raise HTTPException(
-                    status_code=status.HTTP_409_CONFLICT,
-                    detail="The payment for this booking cannot be refunded automatically, contact support."
+                raise AppError(
+                    status.HTTP_409_CONFLICT,
+                    "REFUND_NOT_AUTOMATIC",
+                    "The payment for this booking cannot be refunded automatically, contact support.",
                 )
             locked_booking = (await db.execute(
                 select(Booking)
@@ -728,9 +743,10 @@ async def cancel_booking_service(
                 booking_id
             )
             await db.rollback()
-            raise HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail="Could not cancel the booking, contact support."
+            raise AppError(
+                status.HTTP_500_INTERNAL_SERVER_ERROR,
+                "BOOKING_CANCEL_FAILED",
+                "Could not cancel the booking, contact support.",
             ) from e
         except PaymentProviderError as e:
             logger.error(
@@ -748,7 +764,8 @@ async def cancel_booking_service(
                     "Could not mark the failed refund of booking %s, manual check needed",
                     booking_id
                 )
-            raise HTTPException(
-                status_code=status.HTTP_502_BAD_GATEWAY,
-                detail="The refund failed, contact support."
+            raise AppError(
+                status.HTTP_502_BAD_GATEWAY,
+                "REFUND_FAILED",
+                "The refund failed, contact support.",
             ) from e
