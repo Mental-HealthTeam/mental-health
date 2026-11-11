@@ -1,0 +1,24 @@
+{
+    "title": "My sessions",
+    "filters": {
+        "all": "All sessions",
+        "available": "Available sessions",
+        "completed": "Completed sessions"
+    },
+    "tableHead": {
+        "status": "Session status",
+        "time": "Time",
+        "specialist": "Customer information",
+        "request": "Request",
+        "actions": "Main actions"
+    },
+    "sessionStatus": {
+        "scheduled": "Scheduled",
+        "completed": "Completed",
+        "available": "Available"
+    },
+    "showMore": "Show more",
+    "today": "Today {{date}}",
+    "noSessions": "No sessions",
+    "join": "Join"
+}

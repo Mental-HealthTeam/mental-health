@@ -1,10 +1,10 @@
 import classNames from 'classnames'
-import { BalanceIcon } from '../../../../components/UI/Icons/WhyChoosePlatform'
-import { SectionLabel } from '../../../../components/UI/SectionLabel'
+import { BalanceIcon } from '../../UI/Icons/WhyChoosePlatform'
+import { SectionLabel } from '../../UI/SectionLabel'
 import './SpecializationsCard.scss'
-import { Tag } from '../../../../components/UI/Tag'
+import { Tag } from '../../UI/Tag'
 import { useTranslation } from 'react-i18next'
-import type { SymptomCode } from '../../../../types/psychologist'
+import type { SymptomCode } from '../../../types/psychologist'
 
 type Props = {
     className?: string
