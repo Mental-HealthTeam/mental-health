@@ -285,7 +285,14 @@ async def update_my_psychologist_profile(
     psychologist_id: UUID,
     data: PsychologistProfileUpdate,
 ) -> PsychologistProfileResponse | None:
-    psychologist = await db.get(Psychologist, psychologist_id)
+    stmt = (
+        select(Psychologist)
+        .options(selectinload(Psychologist.psychologist_specializations))
+        .where(Psychologist.psychologist_id == psychologist_id)
+    )
+
+    result = await db.execute(stmt)
+    psychologist = result.scalar_one_or_none()
 
     if psychologist is None:
         return None
