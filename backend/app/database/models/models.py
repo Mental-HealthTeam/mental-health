@@ -250,6 +250,10 @@ class Psychologist(Base):
         return self.title or self.title_eng
 
     @property
+    def is_verified(self) -> bool:
+        return self.profile_status == PsychologistStatus.ACTIVE
+    
+    @property
     def avatar_url(self) -> str | None:
         return self.user.avatar_url
 

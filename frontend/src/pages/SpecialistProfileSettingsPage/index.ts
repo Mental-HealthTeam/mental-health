@@ -1,0 +1,1 @@
+export { SpecialistProfileSettingsPage } from './SpecialistProfileSettingsPage'

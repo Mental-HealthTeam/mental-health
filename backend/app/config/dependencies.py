@@ -1,7 +1,7 @@
 from typing import Annotated
 
 from config.settings import Settings
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends, status
 
 from redis_storage.redis_storage import RedisSessionStorage
 from config.settings import BaseAppSettings
@@ -9,6 +9,7 @@ from auth.token_manager import JWTAuthManager
 from payment_provider.payment_interface import PaymentProviderInterface
 from payment_provider.factory import build_payment_provider
 from exceptions.payments import PaymentProviderError
+from exceptions.base import AppError
 
 
 def get_settings():
@@ -30,9 +31,10 @@ def get_payment_provider(
             settings=settings
         )
     except PaymentProviderError as error:
-        raise HTTPException(
-            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-            detail="Payment provider is not available"
+        raise AppError(
+            status.HTTP_503_SERVICE_UNAVAILABLE,
+            "PAYMENT_PROVIDER_UNAVAILABLE",
+            "Payment provider is not available",
         ) from error
 
 

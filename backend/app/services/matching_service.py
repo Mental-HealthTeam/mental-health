@@ -1,7 +1,9 @@
 import logging
 from datetime import datetime, timezone
 from typing import Annotated
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends, status
+
+from exceptions.base import AppError
 from redis import RedisError
 from sqlalchemy import select, func
 from sqlalchemy.exc import SQLAlchemyError, IntegrityError
@@ -116,7 +118,7 @@ def _filter_by_time(rows, min_time, max_time, free_slots: dict):
 async def _log_ai_session(db, redis_storage, info, rows, current_user):
     try:
         ai_chat_info = await redis_storage.get_recording_info(info.session_id)
-    except HTTPException:
+    except AppError:
         ai_chat_info = None
     except RedisError:
         logger.exception(
@@ -229,9 +231,10 @@ async def find_matching_psychologists(
     lang: Language
 ):
     if request.matching_info is None:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="matching_info is required"
+        raise AppError(
+            status.HTTP_400_BAD_REQUEST,
+            "MATCHING_INFO_REQUIRED",
+            "matching_info is required",
         )
     info = request.matching_info
     stmt = _build_search_query(info=info)
@@ -239,9 +242,10 @@ async def find_matching_psychologists(
         response = await db.execute(stmt)
         rows = response.all()
     except SQLAlchemyError as e:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Database error while searching psychologists"
+        raise AppError(
+            status.HTTP_500_INTERNAL_SERVER_ERROR,
+            "MATCHING_DATABASE_ERROR",
+            "Database error while searching psychologists",
         ) from e
     psychologist_ids = [
         psychologist.psychologist_id for psychologist, _ in rows

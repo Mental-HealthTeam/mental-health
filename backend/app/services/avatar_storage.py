@@ -4,10 +4,11 @@ import logging
 import uuid
 from pathlib import Path
 
-from fastapi import HTTPException, UploadFile, status
+from fastapi import UploadFile, status
 from PIL import Image, UnidentifiedImageError, ImageOps
 
 from config.settings import BaseAppSettings
+from exceptions.base import AppError
 
 logger = logging.getLogger(__name__)
 
@@ -47,9 +48,10 @@ def recode_image(content: bytes, image_format: str):
         SyntaxError,
         Image.DecompressionBombError
     ) as e:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Invalid or unsupported image.",
+        raise AppError(
+            status.HTTP_400_BAD_REQUEST,
+            "AVATAR_INVALID_IMAGE",
+            "Invalid or unsupported image.",
         ) from e
 
     return output.getvalue()
@@ -60,9 +62,10 @@ def validate_image(
         max_avatar_pixels: int
 ) -> str:
     if not content:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Avatar file is empty.",
+        raise AppError(
+            status.HTTP_400_BAD_REQUEST,
+            "AVATAR_EMPTY",
+            "Avatar file is empty.",
         )
 
     try:
@@ -70,9 +73,10 @@ def validate_image(
             image_format = image.format
             width, height = image.width, image.height
             if width * height > max_avatar_pixels:
-                raise HTTPException(
-                    status_code=status.HTTP_400_BAD_REQUEST,
-                    detail="Image dimensions are too large.",
+                raise AppError(
+                    status.HTTP_400_BAD_REQUEST,
+                    "AVATAR_DIMENSIONS_TOO_LARGE",
+                    "Image dimensions are too large.",
                 )
             image.verify()
 
@@ -82,15 +86,17 @@ def validate_image(
             SyntaxError,
             Image.DecompressionBombError
     ):
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Invalid or unsupported image.",
+        raise AppError(
+            status.HTTP_400_BAD_REQUEST,
+            "AVATAR_INVALID_IMAGE",
+            "Invalid or unsupported image.",
         ) from None
 
     if image_format not in ALLOWED_FORMATS:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Only JPEG, PNG, and WebP images are supported.",
+        raise AppError(
+            status.HTTP_400_BAD_REQUEST,
+            "AVATAR_UNSUPPORTED_FORMAT",
+            "Only JPEG, PNG, and WebP images are supported.",
         )
 
     return image_format
@@ -103,9 +109,10 @@ async def save_avatar(
 ) -> str:
     content = await file.read(settings.MAX_AVATAR_UPLOAD_SIZE + 1)
     if len(content) > settings.MAX_AVATAR_UPLOAD_SIZE:
-        raise HTTPException(
-            status_code=status.HTTP_413_CONTENT_TOO_LARGE,
-            detail="Avatar file is too large.",
+        raise AppError(
+            status.HTTP_413_CONTENT_TOO_LARGE,
+            "AVATAR_TOO_LARGE",
+            "Avatar file is too large.",
         )
     image_format = validate_image(content, settings.MAX_AVATAR_PIXELS)
     extension = ALLOWED_FORMATS[image_format]
@@ -116,9 +123,10 @@ async def save_avatar(
     )
 
     if len(content) > settings.MAX_AVATAR_SIZE:
-        raise HTTPException(
-            status_code=status.HTTP_413_CONTENT_TOO_LARGE,
-            detail="Avatar must not exceed 5 MB.",
+        raise AppError(
+            status.HTTP_413_CONTENT_TOO_LARGE,
+            "AVATAR_TOO_LARGE",
+            "Avatar must not exceed 5 MB.",
         )
 
     avatar_storage_dir = Path(settings.AVATAR_STORAGE_DIR)
@@ -131,9 +139,10 @@ async def save_avatar(
         destination.write_bytes(content)
     except OSError:
         logger.exception("Failed to save avatar for user %s", user_id)
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to save avatar.",
+        raise AppError(
+            status.HTTP_500_INTERNAL_SERVER_ERROR,
+            "AVATAR_UPLOAD_FAILED",
+            "Failed to save avatar.",
         ) from None
 
     return f"{settings.AVATAR_STORAGE_URL}{filename}"
