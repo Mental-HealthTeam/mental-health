@@ -1,0 +1,112 @@
+@use '../../../../styles/abstracts' as a;
+
+.tag-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  box-sizing: border-box;
+
+  max-width: 100%;
+
+  border: 1px solid currentColor;
+
+  background-color: a.$color-background;
+
+  font: inherit;
+  font-weight: 600;
+  text-transform: uppercase;
+
+  cursor: pointer;
+
+  transition:
+          color a.$transition-default,
+          border-color a.$transition-default,
+          background-color a.$transition-default;
+
+  &--large {
+    min-height: 40px;
+    padding: 8px 14px;
+
+    border-radius: 12px;
+
+    color: a.$color-primary;
+
+    font-size: 16px;
+    line-height: 1.4;
+  }
+
+  &--medium {
+    min-height: 32px;
+    padding: 5px 10px;
+
+    border-radius: 8px;
+
+    color: a.$color-optional;
+
+    font-size: 14px;
+    line-height: 1.4;
+  }
+
+  &__text {
+    min-width: 0;
+
+    overflow-wrap: anywhere;
+  }
+
+  &__icon {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+
+    > svg {
+      display: block;
+
+      width: 20px;
+      height: 20px;
+    }
+  }
+
+  @media (hover: hover) {
+    &:hover:not(:disabled) {
+      border-color: a.$color-gray-10;
+      background-color: a.$color-gray-10;
+    }
+  }
+
+  &--large.tag-button--selected,
+  &--large:active:not(:disabled) {
+    border-color: a.$color-primary;
+
+    color: a.$color-background;
+    background-color: a.$color-primary;
+  }
+
+  &--medium.tag-button--selected,
+  &--medium:active:not(:disabled) {
+    border-color: a.$color-optional;
+
+    color: a.$color-gray-0;
+    background-color: a.$color-optional;
+  }
+
+  &:focus-visible {
+    outline: 2px solid a.$color-optional;
+    outline-offset: 3px;
+  }
+
+  &:disabled {
+    border-color: a.$color-gray-40;
+
+    color: a.$color-gray-40;
+    background-color: a.$color-background;
+
+    cursor: not-allowed;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+}
