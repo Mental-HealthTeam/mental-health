@@ -1,16 +1,17 @@
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
-import { useAppDispatch } from '../../app/hooks'
-import { openAiChat } from '../../app/store/slices/aiChatSlice'
 import { AiChat } from '../AiChat'
 import { ClientProfileCard } from '../ClientProfileCard'
 import type { ClientRequest } from '../ClientProfileCard'
-import { ClientSessions } from '../ClientSessions'
+
 import { Container } from '../Container'
-import { BackButton } from '../UI/Buttons/BackButton'
+import { BackButton } from '../UI/Buttons'
 
 import './ClientCabinetPage.scss'
+import { ClientSessionsTable } from '../Catalog/ClientSessionsTable'
+import { Header } from '../Header'
+import { Footer } from '../Footer'
 
 const previewClient = {
     names: {
@@ -33,12 +34,12 @@ const previewRequests: ClientRequest[] = [
 export const ClientCabinetPage = () => {
     const { t, i18n } = useTranslation('clientCabinet')
     const navigate = useNavigate()
-    const dispatch = useAppDispatch()
 
     const language = i18n.resolvedLanguage?.startsWith('en') ? 'en' : 'uk'
 
     return (
         <div className="client-cabinet-page">
+            <Header variant={'page'} />
             <main className="client-cabinet-page__main">
                 <Container className="client-cabinet-page__container">
                     <BackButton className="client-cabinet-page__back" />
@@ -54,14 +55,11 @@ export const ClientCabinetPage = () => {
                             onEditProfile={() => navigate('/cabinet/settings')}
                         />
 
-                        <ClientSessions
-                            onStartAiSearch={() => dispatch(openAiChat())}
-                            onOpenCatalog={() => navigate('/#psychologists')}
-                        />
+                        <ClientSessionsTable />
                     </div>
                 </Container>
             </main>
-
+            <Footer variant="page" />
             <AiChat />
         </div>
     )

@@ -1,17 +1,20 @@
 @use '../../../../styles/abstracts' as a;
 
 .tag-button {
+  --tag-color: #{a.$color-primary};
+  --tag-contrast: #{a.$color-background};
+
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
 
   box-sizing: border-box;
-
   max-width: 100%;
 
-  border: 1px solid currentColor;
+  border: 1px solid var(--tag-color);
 
+  color: var(--tag-color);
   background-color: a.$color-background;
 
   font: inherit;
@@ -25,25 +28,27 @@
           border-color a.$transition-default,
           background-color a.$transition-default;
 
-  &--large {
-    min-height: 40px;
-    padding: 8px 14px;
+  &--black {
+    --tag-color: #{a.$color-primary};
+    --tag-contrast: #{a.$color-background};
+
+    height: 36px;
+    padding: 0 14px;
 
     border-radius: 12px;
-
-    color: a.$color-primary;
 
     font-size: 16px;
     line-height: 1.4;
   }
 
-  &--medium {
-    min-height: 32px;
-    padding: 5px 10px;
+  &--green {
+    --tag-color: #{a.$color-optional};
+    --tag-contrast: #{a.$color-gray-0};
+
+    height: 28px;
+    padding: 0 10px;
 
     border-radius: 8px;
-
-    color: a.$color-optional;
 
     font-size: 14px;
     line-height: 1.4;
@@ -51,7 +56,6 @@
 
   &__text {
     min-width: 0;
-
     overflow-wrap: anywhere;
   }
 
@@ -69,27 +73,39 @@
     }
   }
 
+  &--selected,
+  &--reverse {
+    color: var(--tag-contrast);
+    background-color: var(--tag-color);
+  }
+
+  &--reverse.tag-button--selected {
+    color: var(--tag-color);
+    background-color: a.$color-background;
+  }
+
   @media (hover: hover) {
     &:hover:not(:disabled) {
       border-color: a.$color-gray-10;
+
+      color: var(--tag-color);
       background-color: a.$color-gray-10;
     }
   }
 
-  &--large.tag-button--selected,
-  &--large:active:not(:disabled) {
-    border-color: a.$color-primary;
+  &:active:not(:disabled) {
+    border-color: var(--tag-color);
 
-    color: a.$color-background;
-    background-color: a.$color-primary;
+    color: var(--tag-contrast);
+    background-color: var(--tag-color);
   }
 
-  &--medium.tag-button--selected,
-  &--medium:active:not(:disabled) {
-    border-color: a.$color-optional;
+  &--selected:not(.tag-button--reverse):active:not(:disabled),
+  &--reverse:not(.tag-button--selected):active:not(:disabled) {
+    border-color: var(--tag-color);
 
-    color: a.$color-gray-0;
-    background-color: a.$color-optional;
+    color: var(--tag-color);
+    background-color: a.$color-background;
   }
 
   &:focus-visible {

@@ -11,5 +11,36 @@
         "empty": "No upcoming sessions",
         "aiSearch": "Find a specialist with AI",
         "catalog": "Browse specialists"
+    },
+    "sessionsTable": {
+        "title": "My sessions",
+        "filtersLabel": "Session filters",
+        "listLabel": "Session list",
+        "filters": {
+            "all": "All sessions",
+            "scheduled": "Scheduled sessions",
+            "completed": "Completed sessions",
+            "saved": "Saved sessions"
+        },
+        "columns": {
+            "status": "Session status",
+            "specialist": "Specialist details",
+            "date": "Date",
+            "time": "Time",
+            "actions": "Actions",
+            "save": "Save session"
+        },
+        "statuses": {
+            "scheduled": "Scheduled",
+            "completed": "Completed"
+        },
+        "join": "Join session",
+        "joinHint": "*Available 10 minutes before the start",
+        "completed": "Session completed",
+        "save": "Save session: {{name}}, {{date}}",
+        "unsave": "Remove from saved sessions: {{name}}, {{date}}",
+        "empty": "There are no sessions in this category yet",
+        "shown": "Showing {{visible}} of {{total}}",
+        "showMore": "Show more"
     }
 }
