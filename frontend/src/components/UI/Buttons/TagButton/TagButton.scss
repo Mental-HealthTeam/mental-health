@@ -1,0 +1,128 @@
+@use '../../../../styles/abstracts' as a;
+
+.tag-button {
+  --tag-color: #{a.$color-primary};
+  --tag-contrast: #{a.$color-background};
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  box-sizing: border-box;
+  max-width: 100%;
+
+  border: 1px solid var(--tag-color);
+
+  color: var(--tag-color);
+  background-color: a.$color-background;
+
+  font: inherit;
+  font-weight: 600;
+  text-transform: uppercase;
+
+  cursor: pointer;
+
+  transition:
+          color a.$transition-default,
+          border-color a.$transition-default,
+          background-color a.$transition-default;
+
+  &--black {
+    --tag-color: #{a.$color-primary};
+    --tag-contrast: #{a.$color-background};
+
+    height: 36px;
+    padding: 0 14px;
+
+    border-radius: 12px;
+
+    font-size: 16px;
+    line-height: 1.4;
+  }
+
+  &--green {
+    --tag-color: #{a.$color-optional};
+    --tag-contrast: #{a.$color-gray-0};
+
+    height: 28px;
+    padding: 0 10px;
+
+    border-radius: 8px;
+
+    font-size: 14px;
+    line-height: 1.4;
+  }
+
+  &__text {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  &__icon {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+
+    > svg {
+      display: block;
+
+      width: 20px;
+      height: 20px;
+    }
+  }
+
+  &--selected,
+  &--reverse {
+    color: var(--tag-contrast);
+    background-color: var(--tag-color);
+  }
+
+  &--reverse.tag-button--selected {
+    color: var(--tag-color);
+    background-color: a.$color-background;
+  }
+
+  @media (hover: hover) {
+    &:hover:not(:disabled) {
+      border-color: a.$color-gray-10;
+
+      color: var(--tag-color);
+      background-color: a.$color-gray-10;
+    }
+  }
+
+  &:active:not(:disabled) {
+    border-color: var(--tag-color);
+
+    color: var(--tag-contrast);
+    background-color: var(--tag-color);
+  }
+
+  &--selected:not(.tag-button--reverse):active:not(:disabled),
+  &--reverse:not(.tag-button--selected):active:not(:disabled) {
+    border-color: var(--tag-color);
+
+    color: var(--tag-color);
+    background-color: a.$color-background;
+  }
+
+  &:focus-visible {
+    outline: 2px solid a.$color-optional;
+    outline-offset: 3px;
+  }
+
+  &:disabled {
+    border-color: a.$color-gray-40;
+
+    color: a.$color-gray-40;
+    background-color: a.$color-background;
+
+    cursor: not-allowed;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+}

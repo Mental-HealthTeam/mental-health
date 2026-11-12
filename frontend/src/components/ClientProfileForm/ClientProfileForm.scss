@@ -1,0 +1,120 @@
+@use '../../styles/abstracts' as a;
+
+.client-profile-form {
+  &__fieldset {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+
+    border: 0;
+  }
+
+  &__panel {
+    min-width: 0;
+    padding: 20px;
+
+    border: 1px solid a.$color-gray-10;
+    border-radius: 24px;
+
+    background-color: a.$color-background;
+  }
+
+  &__title {
+    margin: 0 0 16px;
+
+    color: a.$color-primary;
+
+    font-size: 18px;
+    line-height: 1.4;
+    font-weight: 700;
+  }
+
+  &__data {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 20px;
+  }
+
+  &__footer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+
+    padding-top: 20px;
+
+    border-top: 1px solid a.$color-gray-20;
+  }
+
+  &__consent {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+
+    width: 100%;
+
+    color: a.$color-primary;
+
+    font-size: 12px;
+    line-height: 1.4;
+
+    cursor: pointer;
+
+    > input {
+      appearance: none;
+      box-sizing: border-box;
+      flex-shrink: 0;
+
+      width: 16px;
+      height: 16px;
+      margin: 0;
+
+      border: 1px solid a.$color-gray-60;
+      border-radius: 50%;
+
+      background-color: a.$color-background;
+
+      cursor: pointer;
+
+      &:checked {
+        border-color: a.$color-secondary-end;
+
+        background-color: a.$color-secondary-end;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='m4 8 2.5 2.5L12 5' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      }
+
+      &:focus-visible {
+        outline: 2px solid a.$color-optional;
+        outline-offset: 3px;
+      }
+    }
+  }
+
+  &__error {
+    margin: 0;
+
+    color: a.$color-error;
+
+    font-size: 12px;
+    line-height: 1.4;
+  }
+
+  &__save {
+    max-width: 100%;
+  }
+
+  @media (min-width: 768px) {
+    &__panel {
+      padding: 24px;
+    }
+
+    &__data {
+      grid-template-columns: minmax(0, 0.65fr) minmax(0, 1fr);
+      gap: 16px;
+    }
+  }
+}
