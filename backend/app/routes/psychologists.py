@@ -2,7 +2,9 @@ from typing import Annotated, Literal
 from uuid import UUID
 from decimal import Decimal
 
-from fastapi import APIRouter, Depends, Query, HTTPException, status
+from fastapi import APIRouter, Depends, Query, status
+
+from exceptions.base import AppError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
@@ -63,9 +65,10 @@ async def list_psychologists(
             and price_to is not None
             and price_from > price_to
     ):
-        raise HTTPException(
-            status_code=422,
-            detail="price_from cannot be greater than price_to",
+        raise AppError(
+            status.HTTP_422_UNPROCESSABLE_ENTITY,
+            "INVALID_PRICE_RANGE",
+            "price_from cannot be greater than price_to",
         )
     return await get_psychologists(
         db=db,
@@ -97,9 +100,10 @@ async def get_my_payout_details(
     psychologist = await db.get(Psychologist, current_user.id)
 
     if psychologist is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Psychologist profile not found",
+        raise AppError(
+            status.HTTP_404_NOT_FOUND,
+            "PSYCHOLOGIST_PROFILE_NOT_FOUND",
+            "Psychologist profile not found",
         )
 
     return PayoutDetailsResponse(
@@ -128,9 +132,10 @@ async def update_my_payout_details(
     psychologist = await db.get(Psychologist, current_user.id)
 
     if psychologist is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Psychologist profile not found",
+        raise AppError(
+            status.HTTP_404_NOT_FOUND,
+            "PSYCHOLOGIST_PROFILE_NOT_FOUND",
+            "Psychologist profile not found",
         )
 
     iban_conflict = await db.scalar(
@@ -140,9 +145,10 @@ async def update_my_payout_details(
         )
     )
     if iban_conflict is not None:
-        raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT,
-            detail={"iban": "This IBAN already belongs to another psychologist"},
+        raise AppError(
+            status.HTTP_409_CONFLICT,
+            "IBAN_ALREADY_EXISTS",
+            "This IBAN already belongs to another psychologist",
         )
 
     tax_id_conflict = await db.scalar(
@@ -152,11 +158,11 @@ async def update_my_payout_details(
         )
     )
     if tax_id_conflict is not None:
-        raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT,
-            detail={"tax_id": "This tax ID already belongs to another psychologist"},
+        raise AppError(
+            status.HTTP_409_CONFLICT,
+            "TAX_ID_ALREADY_EXISTS",
+            "This tax ID already belongs to another psychologist",
         )
-
 
     psychologist.iban = payout_data.iban
     psychologist.tax_id = payout_data.tax_id
@@ -174,20 +180,23 @@ async def update_my_payout_details(
         )
 
         if constraint_name == "psychologists_iban_key":
-            raise HTTPException(
-                status_code=status.HTTP_409_CONFLICT,
-                detail={"iban": "This IBAN already belongs to another psychologist"},
+            raise AppError(
+                status.HTTP_409_CONFLICT,
+                "IBAN_ALREADY_EXISTS",
+                "This IBAN already belongs to another psychologist",
             ) from exc
 
         if constraint_name == "psychologists_tax_id_key":
-            raise HTTPException(
-                status_code=status.HTTP_409_CONFLICT,
-                detail={"tax_id": "This tax ID already belongs to another psychologist"},
+            raise AppError(
+                status.HTTP_409_CONFLICT,
+                "TAX_ID_ALREADY_EXISTS",
+                "This tax ID already belongs to another psychologist",
             ) from exc
 
-        raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT,
-            detail="Payout details conflict with existing data",
+        raise AppError(
+            status.HTTP_409_CONFLICT,
+            "PAYOUT_DETAILS_CONFLICT",
+            "Payout details conflict with existing data",
         ) from exc
 
     await db.refresh(psychologist)
@@ -217,9 +226,10 @@ async def get_my_profile(
     )
 
     if profile is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Psychologist profile not found",
+        raise AppError(
+            status.HTTP_404_NOT_FOUND,
+            "PSYCHOLOGIST_PROFILE_NOT_FOUND",
+            "Psychologist profile not found",
         )
 
     return profile
@@ -245,9 +255,10 @@ async def update_my_profile(
     )
 
     if profile is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Psychologist profile not found",
+        raise AppError(
+            status.HTTP_404_NOT_FOUND,
+            "PSYCHOLOGIST_PROFILE_NOT_FOUND",
+            "Psychologist profile not found",
         )
 
     return profile
@@ -294,9 +305,10 @@ async def get_psychologist_by_id(
     )
 
     if psychologist is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Psychologist not found",
+        raise AppError(
+            status.HTTP_404_NOT_FOUND,
+            "PSYCHOLOGIST_NOT_FOUND",
+            "Psychologist not found",
         )
 
     return psychologist

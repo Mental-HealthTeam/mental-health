@@ -3,7 +3,6 @@ import uuid
 from typing import Annotated, Callable, Coroutine, Any
 from fastapi import (
     Depends,
-    HTTPException,
     status,
     Request
 )
@@ -17,6 +16,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from database.models.models import User, UserRole
 from exceptions.auth_provider import BaseSecurityError
 from schemas.auth import ClientInfo
+from exceptions.base import AppError
 
 
 logger = logging.getLogger(__name__)
@@ -29,9 +29,10 @@ def get_access_token(
     access_token = request.cookies.get(settings.ACCESS_COOKIE)
 
     if not access_token:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Not authenticated"
+        raise AppError(
+            status.HTTP_401_UNAUTHORIZED,
+            "NOT_AUTHENTICATED",
+            "Not authenticated",
         )
     return access_token
 
@@ -43,9 +44,10 @@ def get_refresh_token(
     refresh_token = request.cookies.get(settings.REFRESH_COOKIE)
     if not refresh_token:
         logger.debug("Refresh rejected: no refresh cookie")
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Not authenticated"
+        raise AppError(
+            status.HTTP_401_UNAUTHORIZED,
+            "NOT_AUTHENTICATED",
+            "Not authenticated",
         )
     return refresh_token
 
@@ -77,9 +79,10 @@ async def get_current_user(
         payload = jwt_manager.decode_access_token(access_token)
     except BaseSecurityError as e:
         logger.debug("Access token rejected: %s", e)
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Not authenticated"
+        raise AppError(
+            status.HTTP_401_UNAUTHORIZED,
+            "NOT_AUTHENTICATED",
+            "Not authenticated",
         ) from e
 
     try:
@@ -87,23 +90,26 @@ async def get_current_user(
         token_type = payload["type"]
     except (KeyError, ValueError) as e:
         logger.warning("Access token has malformed claims")
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Not authenticated"
+        raise AppError(
+            status.HTTP_401_UNAUTHORIZED,
+            "NOT_AUTHENTICATED",
+            "Not authenticated",
         ) from e
     if token_type != "access":
         logger.warning("Access token has wrong type (type=%s)", token_type)
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Not authenticated"
+        raise AppError(
+            status.HTTP_401_UNAUTHORIZED,
+            "NOT_AUTHENTICATED",
+            "Not authenticated",
         )
 
     user = await db.get(User, user_id)
     if user is None:
         logger.warning("Access token for unknown user (user_id=%s)", user_id)
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Not authenticated"
+        raise AppError(
+            status.HTTP_401_UNAUTHORIZED,
+            "NOT_AUTHENTICATED",
+            "Not authenticated",
         )
 
     return user
@@ -151,9 +157,10 @@ def require_roles(*allowed_roles: UserRole) -> Callable[..., Coroutine[Any, Any,
                 current_user.id, current_user.role.value,
                 [r.value for r in allowed_roles]
             )
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail="You do not have permission to perform this action."
+            raise AppError(
+                status.HTTP_403_FORBIDDEN,
+                "PERMISSION_DENIED",
+                "You do not have permission to perform this action.",
             )
         return current_user
     return role_checker
@@ -171,7 +178,8 @@ def verify_origin(
         if origin == allowed_origin:
             return
     logger.warning("Origin rejected (origin=%s, path=%s)", origin, request.url.path)
-    raise HTTPException(
-        status_code=status.HTTP_403_FORBIDDEN,
-        detail="Origin not allowed"
+    raise AppError(
+        status.HTTP_403_FORBIDDEN,
+        "ORIGIN_NOT_ALLOWED",
+        "Origin not allowed",
     )
