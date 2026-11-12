@@ -16,6 +16,7 @@ import faq from '../../locales/en/features/faq.json'
 import reviews from '../../locales/en/features/reviews.json'
 import symptoms from '../../locales/en/features/symptoms.json'
 import specialistProfile from '../../locales/en/features/specialistProfile.json'
+import catalog from '../../locales/en/features/catalog.json'
 import session from '../../locales/en/features/session.json'
 import success from '../../locales/en/features/success.json'
 import login from '../../locales/en/features/login.json'
@@ -39,6 +40,7 @@ export const enResources = {
     reviews,
     symptoms,
     specialistProfile,
+    catalog,
     session,
     success,
     login,
