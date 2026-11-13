@@ -57,14 +57,13 @@ export const LoginForm = ({ className, onSuccess, onRegisterClick }: Props) => {
                 </h2>
 
                 <div className="login-form__google">
-                    {/* Те, що бачить користувач */}
                     <OutlineButton
                         variant="secondary"
                         className="login-form__google-fake"
                         tabIndex={-1}
                         aria-hidden="true"
+                        startIcon={<GoogleIcon />}
                     >
-                        <GoogleIcon />
                         {t('google')}
                     </OutlineButton>
 

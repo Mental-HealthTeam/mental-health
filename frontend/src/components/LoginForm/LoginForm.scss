@@ -38,7 +38,7 @@
     }
 
     &__google-fake {
-        display: inline-flex;
+        display: flex;
         align-items: center;
         justify-content: space-between;
         padding: c.$login-form-google-fake-button-padding;
