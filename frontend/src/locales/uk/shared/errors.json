@@ -16,7 +16,10 @@
         "suggestion": "Будь ласка, обери інший зручний час у календарі фахівця або скористайся AI-підбором.",
         "nearestSlot": "Найближчий вільний слот у цього фахівця:",
         "chooseAnotherTime": "Обрати інший час",
-        "copyright": "© {{year}} Mental Health Platform. Усі права захищені."
+        "todayAt": "Сьогодні {{time}}",
+        "tomorrowAt": "Завтра {{time}}",
+        "copyright": "© {{year}} Mental Health Platform. Усі права захищені.",
+        "noAvailableSlots": "Наразі немає доступних слотів"
     },
     "message": {
         "timeout": "Анна відповідає надто довго. Спробуйте ще раз.",
