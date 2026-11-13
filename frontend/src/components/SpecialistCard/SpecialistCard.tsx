@@ -10,8 +10,12 @@ import type { Psychologist } from '../../types/psychologist.ts'
 
 import './SpecialistCard.scss'
 import { useNavigate } from 'react-router-dom'
+import classNames from 'classnames'
 
-type Props = Omit<Psychologist, 'methods'>
+type Props = Omit<Psychologist, 'methods'> & {
+    variant?: 'default' | 'compact'
+    className?: string
+}
 
 const isSameDay = (firstDate: Date, secondDate: Date) =>
     firstDate.getFullYear() === secondDate.getFullYear() &&
@@ -69,6 +73,8 @@ export const SpecialistCard = ({
     price_per_hour: price,
     topics,
     mock_slots: timeSlots,
+    variant = 'default',
+    className
 }: Props) => {
     const { t, i18n } = useTranslation(['psychologists', 'symptoms', 'accessibility'])
     const navigate = useNavigate()
@@ -142,7 +148,7 @@ export const SpecialistCard = ({
     return (
         <article
             ref={cardRef}
-            className="specialist-card"
+             className={classNames('specialist-card', `specialist-card--${variant}`, className)}
             aria-labelledby={`specialist-${id}-name`}
         >
             <header className="specialist-card__header">

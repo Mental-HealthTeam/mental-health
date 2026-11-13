@@ -21,6 +21,7 @@ import success from '../../locales/uk/features/success.json'
 import login from '../../locales/uk/features/login.json'
 import catalog from '../../locales/uk/features/catalog.json'
 import specialistCabinet from '../../locales/uk/features/specialistCabinet.json'
+import clientCabinet from '../../locales/uk/features/clientCabinet.json'
 
 export const ukResources = {
     common,
@@ -44,5 +45,6 @@ export const ukResources = {
     session,
     success,
     login,
-    specialistCabinet
+    specialistCabinet,
+    clientCabinet,
 } as const
