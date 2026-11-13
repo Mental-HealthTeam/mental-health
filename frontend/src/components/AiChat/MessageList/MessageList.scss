@@ -50,6 +50,19 @@
 
     &__button-search-psy {
         padding: c.$message-list-search-button-padding;
-        background: a.$color-optional;
+        background: a.$color-tertiary-gradient;
+    }
+
+    &__specialists {
+      display: flex;
+      flex-direction: column;
+      gap: c.$message-list-messages-gap;
+    }
+
+    &__error {
+      display: flex;
+      flex-direction: column;
+      gap: c.$message-list-messages-gap;
+      max-width: c.$chat-message-max-width;
     }
 }
