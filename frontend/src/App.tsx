@@ -10,6 +10,7 @@ import { NotFoundPage } from './pages/NotFoundPage'
 import { SlotUnavailablePage } from './pages/SlotUnavailablePage'
 import { SuccessPage } from './pages/SuccessPage'
 import { SpecialistProfileSettingsPage } from './pages/SpecialistProfileSettingsPage'
+import { ClientCabinetPage } from './components/ClientCabinetPage'
 
 function App() {
     return (
@@ -23,6 +24,7 @@ function App() {
                 <Route path="*" element={<NotFoundPage />} />
                 <Route path="/slot-unavailable" element={<SlotUnavailablePage />} />
                 <Route path="/payment/success" element={<SuccessPage />} />
+                <Route path="/cabinet" element={<ClientCabinetPage />} />
                 <Route path="/sign-in" element={<SignIn />} />
                 <Route path="/sign-up" element={<SignUp />} />
             </Routes>

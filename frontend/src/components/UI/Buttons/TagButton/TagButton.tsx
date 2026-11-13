@@ -5,15 +5,17 @@ import './TagButton.scss'
 
 type Props = Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'children'> & {
     children: ReactNode
-    size?: 'large' | 'medium'
+    variant?: 'black' | 'green'
+    reverse?: boolean
     isSelected?: boolean
     endIcon?: ReactNode
 }
 
 export const TagButton = ({
     children,
-    size = 'large',
-    isSelected,
+    variant = 'black',
+    reverse = false,
+    isSelected = false,
     endIcon,
     className,
     type = 'button',
@@ -23,8 +25,9 @@ export const TagButton = ({
         {...props}
         className={classNames(
             'tag-button',
-            `tag-button--${size}`,
+            `tag-button--${variant}`,
             {
+                'tag-button--reverse': reverse,
                 'tag-button--selected': isSelected,
             },
             className,
