@@ -179,7 +179,18 @@ export const Header = ({ variant = 'landing', className }: Props) => {
                             {isLoading ? (
                                 <div className="header__auth-placeholder" aria-hidden="true" />
                             ) : user ? (
-                                <UserMenu user={user} />
+                                <>
+                                    <UserMenu
+                                        className="header__user-menu header__user-menu--full"
+                                        variant="full"
+                                        user={user}
+                                    />
+                                    <UserMenu
+                                        className="header__user-menu header__user-menu--compact"
+                                        variant="compact"
+                                        user={user}
+                                    />
+                                </>
                             ) : (
                                 <OutlineButton
                                     className="header__login-button"
@@ -238,6 +249,15 @@ export const Header = ({ variant = 'landing', className }: Props) => {
                     inert={!isMenuOpen}
                 >
                     <div className="header__mobile-menu-inner">
+                        {user && (
+                            <div className="header__region-mobile-user-menu">
+                                <UserMenu
+                                    user={user}
+                                    noBackground
+                                    className="header__mobile-user-menu"
+                                />
+                            </div>
+                        )}
                         <nav
                             className="header__mobile-navigation"
                             aria-label={tAccessibility('mainNavigation')}

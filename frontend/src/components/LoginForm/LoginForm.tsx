@@ -58,7 +58,6 @@ export const LoginForm = ({ className, onSuccess, onRegisterClick }: Props) => {
 
                 <div className="login-form__google">
                     <OutlineButton
-                        variant="secondary"
                         className="login-form__google-fake"
                         tabIndex={-1}
                         aria-hidden="true"
