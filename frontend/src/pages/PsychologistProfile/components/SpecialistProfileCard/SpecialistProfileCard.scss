@@ -98,7 +98,7 @@
         display: none;
     }
 
-    &__info-tile--desktop-only {
+    .profile-card__info-tile--desktop-only {
         display: none;
     }
 
@@ -198,7 +198,7 @@
             border-top: 1px solid a.$color-gray-10;
         }
 
-        &__info-tile--desktop-only {
+        .profile-card__info-tile--desktop-only {
             display: flex;
         }
 
