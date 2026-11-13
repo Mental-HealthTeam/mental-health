@@ -233,7 +233,8 @@ class Psychologist(Base):
 
     psychologist_specializations: Mapped[List["PsychologistSpecialization"]] = relationship(
         "PsychologistSpecialization",
-        back_populates="psychologist"
+        back_populates="psychologist",
+        cascade="all, delete-orphan",
     )
 
     booked_slots: Mapped[List["Booking"]] = relationship(
