@@ -6,10 +6,11 @@ from pydantic import (
     BaseModel,
     ConfigDict,
     model_validator,
-    Field
+    field_validator,
+    Field,
 )
 
-from database.models.models import SymptomCode
+from database.models.models import SymptomCode, Language
 
 
 class MockSlot(BaseModel):
@@ -89,6 +90,36 @@ class PsychologistProfileUpdate(BaseModel):
     languages: list[str] | None = None
     experience_years: int | None = Field(default=None, ge=0)
     price_per_hour: Decimal | None = Field(default=None, gt=0)
+
+    @field_validator("title")
+    @classmethod
+    def validate_title_not_blank(cls, value):
+        if value is not None and not value.strip():
+            raise ValueError("Title cannot be blank")
+        return value
+
+    @field_validator("methods", "certificates")
+    @classmethod
+    def validate_list_items_not_blank(cls, values):
+        if values is not None and any(
+            not value.strip() for value in values
+        ):
+            raise ValueError("List items cannot be blank")
+        return values
+
+    @field_validator("languages")
+    @classmethod
+    def validate_languages(cls, values):
+        if values is not None:
+            allowed_languages = {language.value for language in Language}
+
+            if not values:
+                raise ValueError("At least one language is required")
+
+            if any(language not in allowed_languages for language in values):
+                raise ValueError("Unsupported language code")
+
+        return values
 
     @model_validator(mode="after")
     def validate_not_empty(self):

@@ -30,10 +30,11 @@ class GoogleAuthProvider(AuthProviderInterface):
                 id_token.verify_oauth2_token,
                 token,
                 GOOGLE_TRANSPORT,
-                self.CLIENT_ID
+                self.CLIENT_ID,
+                clock_skew_in_seconds=10
             )
         except ValueError as e:
-            raise InvalidCredentialsError("Invalid Google token (%s)" % type(e).__name__) from e
+            raise InvalidCredentialsError(f"Invalid Google token: {e}") from e
         try:
             if user_info.get("email_verified") is not True:
                 raise InvalidCredentialsError("Email is not verified")

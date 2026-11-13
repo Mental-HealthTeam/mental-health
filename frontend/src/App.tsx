@@ -5,6 +5,7 @@ import { PsychologistProfile } from './pages/PsychologistProfile'
 import { SpecialistCabinet } from './pages/SpecialistCabinet/SpecialistCabinet'
 import { SignIn } from './pages/SignIn'
 import { SignUp } from './pages/SignUp'
+import { CatalogPage } from './pages/CatalogPage'
 import { NotFoundPage } from './pages/NotFoundPage'
 import { SlotUnavailablePage } from './pages/SlotUnavailablePage'
 import { SuccessPage } from './pages/SuccessPage'
@@ -18,6 +19,7 @@ function App() {
                 <Route path="/specialist/cabinet" element={<SpecialistCabinet />} />
                 <Route path="/specialist/settings/profile" element={<SpecialistProfileSettingsPage />} />
                 <Route path="/psychologist-profile/:id" element={<PsychologistProfile />} />
+                <Route path="/catalog" element={<CatalogPage />} />
                 <Route path="*" element={<NotFoundPage />} />
                 <Route path="/slot-unavailable" element={<SlotUnavailablePage />} />
                 <Route path="/payment/success" element={<SuccessPage />} />
