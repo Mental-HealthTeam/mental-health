@@ -5,15 +5,20 @@ import { Link, useLocation } from 'react-router-dom'
 import hourglassImage from '../../assets/images/errors/hourglass.png'
 import { Container } from '../../components/Container'
 import { Header } from '../../components/Header'
-import { BackButton } from '../../components/UI/Buttons/BackButton'
+import { BackButton } from '../../components/UI/Buttons'
 import { TimeSlot } from '../../components/UI/TimeSlot'
 
 import './SlotUnavailablePage.scss'
 
 type SlotUnavailableState = {
-    psychologistId: string
+    psychologistId?: string
     nearestAvailableSlot?: string | null
 }
+
+const isSameDay = (first: Date, second: Date) =>
+    first.getFullYear() === second.getFullYear() &&
+    first.getMonth() === second.getMonth() &&
+    first.getDate() === second.getDate()
 
 export const SlotUnavailablePage = () => {
     const { t, i18n } = useTranslation('errors')
@@ -25,23 +30,53 @@ export const SlotUnavailablePage = () => {
 
     const psychologistId = state?.psychologistId
     const nearestAvailableSlot = state?.nearestAvailableSlot
+    const language = i18n.resolvedLanguage ?? i18n.language ?? 'uk'
+
     const slotDate = nearestAvailableSlot ? new Date(nearestAvailableSlot) : null
     const hasAvailableSlot = slotDate !== null && !Number.isNaN(slotDate.getTime())
 
     const profilePath = psychologistId
-        ? `/psychologists/${encodeURIComponent(psychologistId)}`
-        : '/#psychologists'
+        ? `/psychologist-profile/${encodeURIComponent(psychologistId)}`
+        : '/catalog'
 
-    const slotLabel =
-        hasAvailableSlot && slotDate
-            ? new Intl.DateTimeFormat(i18n.resolvedLanguage ?? 'uk', {
-                  day: '2-digit',
-                  month: '2-digit',
-                  hour: '2-digit',
-                  minute: '2-digit',
-                  hour12: false,
-              }).format(slotDate)
-            : ''
+    const formatSlotLabel = () => {
+        if (!hasAvailableSlot || !slotDate) {
+            return ''
+        }
+
+        const today = new Date()
+        const tomorrow = new Date(today)
+
+        tomorrow.setDate(today.getDate() + 1)
+
+        const time = new Intl.DateTimeFormat(language, {
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false,
+        }).format(slotDate)
+
+        if (isSameDay(slotDate, today)) {
+            return t('slotUnavailablePage.todayAt', { time })
+        }
+
+        if (isSameDay(slotDate, tomorrow)) {
+            return t('slotUnavailablePage.tomorrowAt', { time })
+        }
+
+        return new Intl.DateTimeFormat(language, {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false,
+        }).format(slotDate)
+    }
+
+    const selectedSlotState =
+        psychologistId && hasAvailableSlot && selectedSlot && selectedSlot === nearestAvailableSlot
+            ? { selectedSlot }
+            : undefined
 
     return (
         <div className="slot-unavailable-page">
@@ -55,18 +90,20 @@ export const SlotUnavailablePage = () => {
                         className="slot-unavailable-page__content"
                         aria-labelledby="slot-unavailable-page-title"
                     >
-                        <h1
-                            className="slot-unavailable-page__title"
-                            id="slot-unavailable-page-title"
-                        >
-                            {t('slotUnavailablePage.title')}
-                        </h1>
+                        <div className="slot-unavailable-page__heading">
+                            <h1
+                                className="slot-unavailable-page__title"
+                                id="slot-unavailable-page-title"
+                            >
+                                {t('slotUnavailablePage.title')}
+                            </h1>
 
-                        <p className="slot-unavailable-page__description">
-                            {t('slotUnavailablePage.description')}
-                            <br />
-                            {t('slotUnavailablePage.suggestion')}
-                        </p>
+                            <p className="slot-unavailable-page__description">
+                                <span>{t('slotUnavailablePage.description')}</span>
+
+                                <span>{t('slotUnavailablePage.suggestion')}</span>
+                            </p>
+                        </div>
 
                         <img
                             className="slot-unavailable-page__image"
@@ -77,30 +114,32 @@ export const SlotUnavailablePage = () => {
                         />
 
                         <div className="slot-unavailable-page__actions">
-                            {psychologistId && hasAvailableSlot && nearestAvailableSlot && (
-                                <div className="slot-unavailable-page__slot">
-                                    <p className="slot-unavailable-page__slot-title">
-                                        {t('slotUnavailablePage.nearestSlot')}
-                                    </p>
+                            <div className="slot-unavailable-page__slot">
+                                {hasAvailableSlot && nearestAvailableSlot ? (
+                                    <>
+                                        <p className="slot-unavailable-page__slot-title">
+                                            {t('slotUnavailablePage.nearestSlot')}
+                                        </p>
 
-                                    <TimeSlot
-                                        label={slotLabel}
-                                        value={nearestAvailableSlot}
-                                        name={`available-time-${radioGroupId}`}
-                                        checked={selectedSlot === nearestAvailableSlot}
-                                        onChange={setSelectedSlot}
-                                    />
-                                </div>
-                            )}
+                                        <TimeSlot
+                                            label={formatSlotLabel()}
+                                            value={nearestAvailableSlot}
+                                            name={`available-time-${radioGroupId}`}
+                                            checked={selectedSlot === nearestAvailableSlot}
+                                            onChange={setSelectedSlot}
+                                        />
+                                    </>
+                                ) : (
+                                    <p className="slot-unavailable-page__slot-title">
+                                        {t('slotUnavailablePage.noAvailableSlots')}
+                                    </p>
+                                )}
+                            </div>
 
                             <Link
                                 className="slot-unavailable-page__time-link"
                                 to={profilePath}
-                                state={
-                                    psychologistId && selectedSlot === nearestAvailableSlot
-                                        ? { selectedSlot }
-                                        : undefined
-                                }
+                                state={selectedSlotState}
                             >
                                 {psychologistId
                                     ? t('slotUnavailablePage.chooseAnotherTime')
@@ -113,7 +152,7 @@ export const SlotUnavailablePage = () => {
 
             <footer className="slot-unavailable-page__footer">
                 <Container>
-                    <p>
+                    <p className="slot-unavailable-page__copyright">
                         {t('slotUnavailablePage.copyright', {
                             year: new Date().getFullYear(),
                         })}

@@ -12,11 +12,14 @@
     },
     "slotUnavailablePage": {
         "title": "This time slot was just booked",
-        "description": "Looks like someone booked this time slot before you.",
-        "suggestion": "Please choose another convenient time in the specialist’s calendar or try AI matching.",
-        "nearestSlot": "This specialist’s next available time slot:",
+        "description": "Looks like someone got there first and booked this slot.",
+        "suggestion": "Please choose another convenient time in the specialist’s calendar or use AI matching.",
+        "nearestSlot": "This specialist’s next available slot:",
         "chooseAnotherTime": "Choose another time",
-        "copyright": "© {{year}} Mental Health Platform. All rights reserved."
+        "todayAt": "Today {{time}}",
+        "tomorrowAt": "Tomorrow {{time}}",
+        "copyright": "© {{year}} Mental Health Platform. All rights reserved.",
+        "noAvailableSlots": "No time slots are currently available"
     },
     "message": {
         "timeout": "Anna is taking too long to reply. Please try again.",
