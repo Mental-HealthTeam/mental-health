@@ -19,6 +19,7 @@ import specialistProfile from '../../locales/en/features/specialistProfile.json'
 import catalog from '../../locales/en/features/catalog.json'
 import session from '../../locales/en/features/session.json'
 import success from '../../locales/en/features/success.json'
+import login from '../../locales/en/features/login.json'
 import specialistCabinet from '../../locales/en/features/specialistCabinet.json'
 import clientCabinet from '../../locales/en/features/clientCabinet.json'
 
@@ -43,6 +44,7 @@ export const enResources = {
     catalog,
     session,
     success,
+    login,
     specialistCabinet,
     clientCabinet,
 } as const

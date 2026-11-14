@@ -24,6 +24,7 @@ export const NAMESPACES = [
     'session',
     'errors',
     'success',
+    'login',
     'catalog',
     'specialistCabinet',
 ] as const
