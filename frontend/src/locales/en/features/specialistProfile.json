@@ -13,6 +13,7 @@
             "experienceValue_one": "{{count}} year",
             "experienceValue_other": "{{count}} years",
             "price": "Price",
+            "priceWithDuration": "Price for {{count}} min",
             "sessionDuration": "Session duration",
             "sessionDurationValue_one": "{{count}} minute",
             "sessionDurationValue_other": "{{count}} minutes"
