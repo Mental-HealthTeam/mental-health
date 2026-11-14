@@ -1,5 +1,7 @@
 {
     "findPsychologist": "Знайти психолога з AI",
     "login": "Вхід",
-    "register": "Реєстрація"
+    "logout": "Вийти",
+    "register": "Реєстрація",
+    "cabinet": "Кабінет"
 }

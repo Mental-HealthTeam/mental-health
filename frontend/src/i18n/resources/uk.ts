@@ -16,7 +16,12 @@ import faq from '../../locales/uk/features/faq.json'
 import reviews from '../../locales/uk/features/reviews.json'
 import symptoms from '../../locales/uk/features/symptoms.json'
 import specialistProfile from '../../locales/uk/features/specialistProfile.json'
+import session from '../../locales/uk/features/session.json'
 import success from '../../locales/uk/features/success.json'
+import login from '../../locales/uk/features/login.json'
+import catalog from '../../locales/uk/features/catalog.json'
+import specialistCabinet from '../../locales/uk/features/specialistCabinet.json'
+import clientCabinet from '../../locales/uk/features/clientCabinet.json'
 
 export const ukResources = {
     common,
@@ -36,5 +41,10 @@ export const ukResources = {
     reviews,
     symptoms,
     specialistProfile,
+    catalog,
+    session,
     success,
+    login,
+    specialistCabinet,
+    clientCabinet,
 } as const

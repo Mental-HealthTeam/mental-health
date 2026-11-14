@@ -1,0 +1,52 @@
+@use '../../styles/abstracts' as a;
+
+.client-cabinet-page {
+  min-height: 100dvh;
+
+  color: a.$color-primary;
+  background-color: a.$color-gray-0;
+
+  &__main {
+    padding: 24px 16px 32px;
+  }
+
+  &__container {
+    max-width: 1200px;
+  }
+
+  &__back {
+    display: inline-flex;
+    margin-bottom: 16px;
+  }
+
+  &__title {
+    margin: 0 0 16px;
+
+    font-size: 22px;
+    line-height: 1.3;
+    font-weight: 700;
+  }
+
+  &__sections {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  @media (min-width: 768px) {
+    &__main {
+      padding: 32px 32px 40px;
+    }
+
+    &__title {
+      margin-bottom: 20px;
+      font-size: 24px;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    &__main {
+      padding-inline: 48px;
+    }
+  }
+}

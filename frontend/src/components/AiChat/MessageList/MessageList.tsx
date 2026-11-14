@@ -8,29 +8,38 @@ import classNames from 'classnames'
 import { ChatMessage } from '../ChatMessage/ChatMessage'
 
 import './MessageList.scss'
-import { formatChatDate } from '../../../utils/formatChatDate'
 import { TypingIndicator } from '../TypingIndicator/TypingIndicator'
 import { Button } from '../../UI/Button'
 import { useAppDispatch, useAppSelector } from '../../../app/hooks'
 import { useTranslation } from 'react-i18next'
+import { SpecialistCard } from '../../SpecialistCard'
+import { PrimaryButton } from '../../UI/Buttons'
+import { ArrowIcon, SparkIcon } from '../../UI/Icons'
+import { formatChatDate } from '../../../utils/date'
 
 type Props = {
     className?: string
 }
 
 export const MessageList = ({ className }: Props) => {
-    const { t } = useTranslation('aiChat')
+    const { t } = useTranslation(['aiChat', 'errors'])
     const { i18n } = useTranslation()
 
     const dispatch = useAppDispatch()
-    const { messages, error, lastUserText, matchData, status } = useAppSelector(
-        (state) => state.aiChat,
-    )
+    const { messages, error, errorSource, lastUserText, matchData, status, psychologists } =
+        useAppSelector((state) => state.aiChat)
     const endRef = useRef<HTMLDivElement>(null)
 
     const firstCreatedAt = messages[0].createdAt
 
     const isAnswering = useMemo(() => status === 'waiting' || status === 'streaming', [status])
+
+    const errorText =
+        error && errorSource
+            ? t(`errors:${errorSource}.${error}`, {
+                  defaultValue: t(`errors:${errorSource}.unknown`),
+              })
+            : null
 
     useEffect(() => {
         endRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -52,38 +61,54 @@ export const MessageList = ({ className }: Props) => {
                 ))}
             </div>
 
+            {matchData?.ready_for_search && (
+                <PrimaryButton
+                    className="message-list__button-search-psy"
+                    startIcon={<SparkIcon />}
+                    endIcon={
+                        <span className="message-list__search-arrow">
+                            <ArrowIcon width={14} height={14} />
+                        </span>
+                    }
+                    aria-label={t('messageList.searchPsychologist')}
+                    onClick={() => dispatch(searchPsychologists())}
+                >
+                    <span className="message-list__search-label">
+                        {t('messageList.searchPsychologist')}
+                    </span>
+                </PrimaryButton>
+            )}
+
+            {psychologists.length > 0 && (
+                <div className="message-list__specialists">
+                    {psychologists.map((specialist) => (
+                        <SpecialistCard {...specialist} variant="compact" />
+                    ))}
+                </div>
+            )}
+
             {isAnswering && <TypingIndicator />}
 
-            {error && lastUserText && (
+            {errorText && lastUserText && (
                 <div className="message-list__error" role="alert">
-                    <p>{error}</p>
+                    <span className="message-list__error-text">{errorText}</span>
                     <Button
                         className="message-list__button-try-again"
                         size="small"
                         variant="secondary"
                         ariaLabel={t('messageList.retry')}
-                        onClick={() =>
-                            dispatch(sendUserMessage({ text: lastUserText, retry: true }))
-                        }
+                        onClick={() => {
+                            if (errorSource === 'message') {
+                                dispatch(sendUserMessage({ text: lastUserText, retry: true }))
+                            } else {
+                                dispatch(searchPsychologists())
+                            }
+                        }}
                     >
                         {t('messageList.retry')}
                     </Button>
                 </div>
             )}
-
-            {matchData?.ready_for_search && (
-                <Button
-                    className="message-list__button-search-psy"
-                    ariaLabel={t('messageList.searchPsychologist')}
-                    fullWidth
-                    onClick={() => dispatch(searchPsychologists())}
-                >
-                    {t('messageList.searchPsychologist')}
-                </Button>
-            )}
-            {/* TODO: Integrate AI-matched psychologists with SpecialistCard once the backend response shape and mapping are finalized. */}
-
-            {/*{psychologists.length > 0 && <SpecialistCard />}*/}
 
             <div ref={endRef} />
         </div>

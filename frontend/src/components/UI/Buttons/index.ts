@@ -1,2 +1,6 @@
 export { PrimaryButton } from './PrimaryButton'
 export { OutlineButton } from './OutlineButton'
+export { FilterButton } from './FilterButton'
+export { BackButton } from './BackButton'
+export { TagButton } from './TagButton'
+export { SaveButton } from './SaveButton'

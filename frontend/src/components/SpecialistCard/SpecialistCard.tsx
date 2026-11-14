@@ -2,19 +2,20 @@ import { useEffect, useId, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Avatar } from '../UI/Avatar'
-import { OutlineButton } from '../UI/Buttons'
-import { MoneyIcon } from '../UI/Icons'
+import { OutlineButton, PrimaryButton } from '../UI/Buttons'
+import { AvatarFallbackIcon, AwardIcon, MoneyIcon } from '../UI/Icons'
 import { TimeSlot } from '../UI/TimeSlot'
 
 import type { Psychologist } from '../../types/psychologist.ts'
 
 import './SpecialistCard.scss'
-import { Button } from '../UI/Button'
-import { AvatarFallbackIcon } from '../UI/Icons'
-import { AwardIcon } from '../UI/Icons'
 import { useNavigate } from 'react-router-dom'
+import classNames from 'classnames'
 
-type Props = Omit<Psychologist, 'methods'>
+type Props = Omit<Psychologist, 'methods'> & {
+    variant?: 'default' | 'compact'
+    className?: string
+}
 
 const isSameDay = (firstDate: Date, secondDate: Date) =>
     firstDate.getFullYear() === secondDate.getFullYear() &&
@@ -72,6 +73,8 @@ export const SpecialistCard = ({
     price_per_hour: price,
     topics,
     mock_slots: timeSlots,
+    variant = 'default',
+    className
 }: Props) => {
     const { t, i18n } = useTranslation(['psychologists', 'symptoms', 'accessibility'])
     const navigate = useNavigate()
@@ -145,7 +148,7 @@ export const SpecialistCard = ({
     return (
         <article
             ref={cardRef}
-            className="specialist-card"
+             className={classNames('specialist-card', `specialist-card--${variant}`, className)}
             aria-labelledby={`specialist-${id}-name`}
         >
             <header className="specialist-card__header">
@@ -222,15 +225,13 @@ export const SpecialistCard = ({
 
             <div className="specialist-card__actions">
                 {!isBooking && (
-                    <Button
+                    <PrimaryButton
                         className="specialist-card__booking-button"
-                        variant="primary"
-                        size="medium"
                         fullWidth
                         onClick={() => setIsBooking(true)}
                     >
                         {t('psychologists:card.bookSession')}
-                    </Button>
+                    </PrimaryButton>
                 )}
 
                 {isBooking && (

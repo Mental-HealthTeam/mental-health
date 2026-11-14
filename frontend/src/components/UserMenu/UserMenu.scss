@@ -1,0 +1,105 @@
+@use '../../styles/abstracts' as a;
+
+.user-menu {
+    position: relative;
+    background-color: a.$color-gray-0;
+    padding: 4px 8px 4px 4px;
+    border-radius: 12px;
+    max-width: max-content;
+
+    transition: background-color a.$transition-default;
+
+    &:hover {
+        background-color: a.$color-gray-10;
+    }
+
+    &__trigger {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 0;
+        background: none;
+        border: 0;
+        cursor: pointer;
+    }
+
+    &__name {
+        color: a.$color-primary;
+        font-size: a.$font-size-body;
+        line-height: a.$line-height-body;
+        font-weight: a.$font-weight-body-semibold;
+        max-width: 160px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    &__dropdown {
+        position: absolute;
+        top: calc(100% + 8px);
+        right: 0;
+        z-index: 10000;
+        min-width: 160px;
+        padding: 8px;
+        background-color: a.$color-background;
+        border: 1px solid a.$color-gray-10;
+        border-radius: 12px;
+        box-shadow: 9px 20px 20px #00000034;
+    }
+
+    &__item {
+        width: 100%;
+        padding: 8px 12px;
+        background: none;
+        border: 0;
+        border-radius: 8px;
+        text-align: left;
+        color: a.$color-primary;
+        cursor: pointer;
+
+        &:hover {
+            background-color: a.$color-gray-0;
+        }
+    }
+
+    &__divider {
+        flex-shrink: 0;
+
+        width: 100%;
+        height: 1px;
+
+        background-color: a.$color-gray-10;
+        margin-block: 8px;
+    }
+
+    &--compact {
+        padding: 0;
+        background-color: transparent;
+    }
+
+    &--compact &__trigger {
+        justify-content: center;
+
+        width: 40px;
+        height: 40px;
+
+        border-radius: 12px;
+        background-color: a.$color-gray-20;
+    }
+
+    &--compact &__name {
+        position: absolute;
+
+        width: 1px;
+        height: 1px;
+        margin: -1px;
+        overflow: hidden;
+
+        clip-path: inset(50%);
+        white-space: nowrap;
+    }
+
+    &--no-background {
+        background-color: transparent;
+    }
+}
