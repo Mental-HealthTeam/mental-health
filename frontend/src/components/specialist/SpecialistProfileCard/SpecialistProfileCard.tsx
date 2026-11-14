@@ -88,14 +88,16 @@ export const SpecialistProfileCard = ({ className, specialist, actions }: Props)
                 />
             </ul>
 
-            <div className="profile-card__approach">
+            <div className="profile-card__approach profile-card__approach--desktop-only">
                 <p className="profile-card__approach-label">
                     {t('specialistProfile:card.approach')}
                 </p>
                 <p className="profile-card__approach-value">{specialist.methods?.join(', ')}</p>
             </div>
 
-            <div className="profile-card__actions">{actions}</div>
+            <div className="profile-card__actions">
+                <div className="profile-card__wrapper-button">{actions}</div>
+            </div>
         </section>
     )
 }
