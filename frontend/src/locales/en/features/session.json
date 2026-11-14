@@ -8,8 +8,7 @@
     "tableHead": {
         "status": "Session status",
         "time": "Time",
-        "specialist": "Customer information",
-        "request": "Request",
+        "client": "Client information",
         "actions": "Main actions"
     },
     "sessionStatus": {
@@ -17,8 +16,10 @@
         "completed": "Completed",
         "available": "Available"
     },
-    "showMore": "Show more",
     "today": "Today {{date}}",
     "noSessions": "No sessions",
-    "join": "Join"
+    "join": "Go to session",
+    "showMore": "Show more",
+    "loading": "Loading sessions...",
+    "loadError": "Could not load sessions. Please try refreshing the page"
 }

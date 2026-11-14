@@ -1,15 +1,17 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import { createApi } from '@reduxjs/toolkit/query/react'
 
 import type { Booking } from '../types/booking'
 import type { GetPsychologistsParams, Psychologist, SymptomCode } from '../types/psychologist'
 import type { SpecialistProfile } from '../types/specialist'
+import { baseQueryWithReauth } from './baseQueryWithReauth'
+import type { SessionBooking, SessionsResponse } from '../types/session'
 
 export const psychologistsApi = createApi({
     reducerPath: 'psychologistsApi',
 
-    baseQuery: fetchBaseQuery({
-        baseUrl: '/api',
-    }),
+    baseQuery: baseQueryWithReauth,
+
+    tagTypes: ['Sessions'],
 
     endpoints: (builder) => ({
         getPsychologists: builder.query<Psychologist[], GetPsychologistsParams | void>({
@@ -65,6 +67,24 @@ export const psychologistsApi = createApi({
                 params: { lang },
             }),
         }),
+
+        getPsychologistMe: builder.query<SpecialistProfile, { lang?: string }>({
+            query: ({ lang = 'uk' }) => ({
+                url: `/psychologists/me/profile`,
+                method: 'GET',
+                params: { lang },
+            }),
+        }),
+
+        getPsychologistSessions: builder.query<SessionBooking[], { lang?: string }>({
+            query: ({ lang = 'uk' }) => ({
+                url: '/psychologist/sessions',
+                method: 'GET',
+                params: { lang },
+            }),
+            transformResponse: (response: SessionsResponse) => response.items,
+            providesTags: ['Sessions'],
+        }),
     }),
 })
 
@@ -74,4 +94,6 @@ export const {
     useGetBookingByIdQuery,
     useGetSymptomCodesQuery,
     useGetPsychologistByIdQuery,
+    useGetPsychologistMeQuery,
+    useGetPsychologistSessionsQuery,
 } = psychologistsApi

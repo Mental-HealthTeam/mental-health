@@ -1,4 +1,5 @@
-export type BookingStatus = 'pending' | 'confirmed' | 'completed' | 'cancelled'
+export type BookingStatus = 'pending' | 'confirmed' | 'completed' | 'cancelled' | 'disputed'
+
 export type PaymentStatus = 'pending' | 'held' | 'paid' | 'refunded'
 
 export type SessionStatus = 'scheduled' | 'completed' | 'available'
@@ -26,6 +27,11 @@ export type SessionBooking = {
     meet_link: string | null
     psychologist: SessionPsychologist
     client: SessionClient
+}
+
+export type SessionsResponse = {
+    items: SessionBooking[]
+    total: number
 }
 
 export type AvailableSlot = {
