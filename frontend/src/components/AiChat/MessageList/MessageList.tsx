@@ -26,7 +26,6 @@ export const MessageList = ({ className }: Props) => {
     const { i18n } = useTranslation()
 
     const messages = useAppSelector((s) => s.aiChat.messages)
-    const psychologists = useAppSelector((s) => s.aiChat.psychologists)
     const status = useAppSelector((s) => s.aiChat.status)
     const error = useAppSelector((s) => s.aiChat.error)
     const errorSource = useAppSelector((s) => s.aiChat.errorSource)
@@ -64,15 +63,24 @@ export const MessageList = ({ className }: Props) => {
             <time className="message-list__date" dateTime={new Date(firstCreatedAt).toISOString()}>
                 {formatChatDate(firstCreatedAt, i18n.language)}
             </time>
+
             <div className="message-list__messages">
-                {messages.map((item) => (
-                    <ChatMessage
-                        key={item.id}
-                        message={item.id === GREETING_ID ? t('greeting') : item.message}
-                        fromWho={item.fromWho}
-                        className="message-list__message"
-                    />
-                ))}
+                {messages.map((item) =>
+                    item.kind === 'psychologists' ? (
+                        <div className="message-list__specialists" key={item.id}>
+                            {item.psychologists?.map((s) => (
+                                <SpecialistCard key={s.psychologist_id} {...s} variant="compact" />
+                            ))}
+                        </div>
+                    ) : (
+                        <ChatMessage
+                            key={item.id}
+                            message={item.id === GREETING_ID ? t('greeting') : item.message}
+                            fromWho={item.fromWho}
+                            className="message-list__message"
+                        />
+                    ),
+                )}
             </div>
 
             {readyForSearch && (
@@ -91,18 +99,6 @@ export const MessageList = ({ className }: Props) => {
                         {t('messageList.searchPsychologist')}
                     </span>
                 </PrimaryButton>
-            )}
-
-            {psychologists.length > 0 && (
-                <div className="message-list__specialists">
-                    {psychologists.map((specialist) => (
-                        <SpecialistCard
-                            key={specialist.psychologist_id}
-                            {...specialist}
-                            variant="compact"
-                        />
-                    ))}
-                </div>
             )}
 
             {isAnswering && <TypingIndicator />}
