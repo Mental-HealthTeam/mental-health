@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import {
     GREETING_ID,
     searchPsychologists,
@@ -25,14 +25,20 @@ export const MessageList = ({ className }: Props) => {
     const { t } = useTranslation(['aiChat', 'errors'])
     const { i18n } = useTranslation()
 
+    const messages = useAppSelector((s) => s.aiChat.messages)
+    const psychologists = useAppSelector((s) => s.aiChat.psychologists)
+    const status = useAppSelector((s) => s.aiChat.status)
+    const error = useAppSelector((s) => s.aiChat.error)
+    const errorSource = useAppSelector((s) => s.aiChat.errorSource)
+    const lastUserText = useAppSelector((s) => s.aiChat.lastUserText)
+    const readyForSearch = useAppSelector((s) => s.aiChat.matchData?.ready_for_search)
+
     const dispatch = useAppDispatch()
-    const { messages, error, errorSource, lastUserText, matchData, status, psychologists } =
-        useAppSelector((state) => state.aiChat)
     const endRef = useRef<HTMLDivElement>(null)
 
     const firstCreatedAt = messages[0].createdAt
 
-    const isAnswering = useMemo(() => status === 'waiting' || status === 'streaming', [status])
+    const isAnswering = status === 'waiting' || status === 'streaming'
 
     const errorText =
         error && errorSource
@@ -44,6 +50,14 @@ export const MessageList = ({ className }: Props) => {
     useEffect(() => {
         endRef.current?.scrollIntoView({ behavior: 'smooth' })
     }, [messages.length, isAnswering, error])
+
+    const handleRetry = () => {
+        if (errorSource === 'search') {
+            dispatch(searchPsychologists())
+        } else if (lastUserText) {
+            dispatch(sendUserMessage({ text: lastUserText, retry: true }))
+        }
+    }
 
     return (
         <div className={classNames('message-list', className)}>
@@ -61,7 +75,7 @@ export const MessageList = ({ className }: Props) => {
                 ))}
             </div>
 
-            {matchData?.ready_for_search && (
+            {readyForSearch && (
                 <PrimaryButton
                     className="message-list__button-search-psy"
                     startIcon={<SparkIcon />}
@@ -82,14 +96,18 @@ export const MessageList = ({ className }: Props) => {
             {psychologists.length > 0 && (
                 <div className="message-list__specialists">
                     {psychologists.map((specialist) => (
-                        <SpecialistCard {...specialist} variant="compact" />
+                        <SpecialistCard
+                            key={specialist.psychologist_id}
+                            {...specialist}
+                            variant="compact"
+                        />
                     ))}
                 </div>
             )}
 
             {isAnswering && <TypingIndicator />}
 
-            {errorText && lastUserText && (
+            {errorText && (
                 <div className="message-list__error" role="alert">
                     <span className="message-list__error-text">{errorText}</span>
                     <Button
@@ -97,13 +115,7 @@ export const MessageList = ({ className }: Props) => {
                         size="small"
                         variant="secondary"
                         ariaLabel={t('messageList.retry')}
-                        onClick={() => {
-                            if (errorSource === 'message') {
-                                dispatch(sendUserMessage({ text: lastUserText, retry: true }))
-                            } else {
-                                dispatch(searchPsychologists())
-                            }
-                        }}
+                        onClick={handleRetry}
                     >
                         {t('messageList.retry')}
                     </Button>
