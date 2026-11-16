@@ -40,7 +40,7 @@ export const NotFoundPage = () => {
                         />
 
                         <div className="not-found-page__actions">
-                            <Link className="not-found-page__specialists-link" to="/#psychologists">
+                            <Link className="not-found-page__specialists-link" to="/catalog">
                                 {t('notFoundPage.specialistsLink')}
 
                                 <span aria-hidden="true">→</span>

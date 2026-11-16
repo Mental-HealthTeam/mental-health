@@ -1,6 +1,6 @@
 import { useId } from 'react'
 
-type LogoVariant = 'header' | 'footer'
+type LogoVariant = 'header' | 'footer' | 'login'
 
 type Props = {
     variant?: LogoVariant
@@ -11,6 +11,31 @@ type Props = {
 
 export const LogoIcon = ({ variant = 'header', width, height, className }: Props) => {
     const id = useId().replace(/:/g, '')
+
+    if (variant === 'login') {
+        return (
+            <svg
+                width={width ?? 46}
+                height={height ?? 49}
+                viewBox="0 0 46 49"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                className={className}
+                aria-hidden="true"
+                focusable="false"
+            >
+                <path
+                    d="M18.6622 44C21.2628 31 28.0205 28.5 32.4652 21.5C29.1395 29.5 23.6135 32 21.6214 44C39.377 42.5 46.162 21.5 36.7785 7C25.4199 24.9998 16.6894 26 18.6622 44Z"
+                    fill="#202120"
+                />
+                <ellipse cx="21.1305" cy="12.5" rx="6.41172" ry="6.5" fill="#202120" />
+                <path
+                    d="M7.03073 13.8506C2.58193 23.6323 5.42929 37.8311 15.7032 44C15.0182 36.7042 15.7032 31 19.7378 25.2182C15.4524 21.5636 10.8407 18.1589 7.03073 13.8506Z"
+                    fill="#202120"
+                />
+            </svg>
+        )
+    }
 
     if (variant === 'footer') {
         return (

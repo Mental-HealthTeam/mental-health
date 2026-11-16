@@ -4,7 +4,7 @@ from uuid import UUID
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from database.models.models import Booking, BookingStatus
+from database.models.models import Booking, BookingStatus, Psychologist
 
 
 async def get_unavailable_slots(
@@ -58,3 +58,29 @@ def slots_in_window(slots, min_time, max_time):
         if (min_time is None or datetime.fromisoformat(slot) >= min_time)
         and (max_time is None or datetime.fromisoformat(slot) <= max_time)
     ]
+
+
+async def get_nearest_available_slot(
+    db: AsyncSession,
+    psychologist_id: UUID,
+    selected_time: datetime
+):
+    psychologist = await db.get(Psychologist, psychologist_id)
+    taken_slots = await get_unavailable_slots(
+        db=db,
+        psychologist_ids=[psychologist.psychologist_id],
+
+    )
+    free_slots_array = free_slots(
+        mock_slots=psychologist.mock_slots,
+        taken_slots=taken_slots,
+        psychologist_id=psychologist.psychologist_id,
+    )
+
+    nearest_available_slot = min(
+        free_slots_array,
+        key=lambda s: abs(datetime.fromisoformat(s).astimezone(timezone.utc) - selected_time),
+        default=None
+    )
+
+    return nearest_available_slot

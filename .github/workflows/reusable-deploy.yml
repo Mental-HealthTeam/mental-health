@@ -77,4 +77,15 @@ jobs:
             docker compose pull
 
             docker compose up -d --no-build
-          
+            
+            if [ "${{ inputs.environment }}" = "prod" ]; then
+            
+              cd /opt/mental-health/mental-health/monitoring
+            
+              docker compose -f docker-compose.monitoring.yml pull
+            
+              docker compose -f docker-compose.monitoring.yml up -d
+            
+              echo "Monitoring started."
+            
+            fi

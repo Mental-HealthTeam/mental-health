@@ -2,7 +2,7 @@ from datetime import datetime, timezone
 import logging
 from typing import Annotated
 
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends, status
 from sqlalchemy import select
 
 from database.models.models import UserIdentity, UserRole, User
@@ -11,6 +11,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from database import get_db
 from schemas.auth import ExternalIdentity
 from sqlalchemy.orm import selectinload
+from exceptions.base import AppError
 
 
 logger = logging.getLogger(__name__)
@@ -97,9 +98,10 @@ async def get_or_create_user(
                 "Failed to create user (provider=%s)",
                 identity.provider.value,
             )
-            raise HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail="Database error while signing in"
+            raise AppError(
+                status.HTTP_500_INTERNAL_SERVER_ERROR,
+                "SIGN_IN_DATABASE_ERROR",
+                "Database error while signing in",
             ) from e
         existing_identity = await find_identity(db=db, identity=identity)
         if existing_identity is None:
@@ -107,9 +109,10 @@ async def get_or_create_user(
                 "Failed to create user identity (provider=%s)",
                 identity.provider.value,
             )
-            raise HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail="Database error while signing in"
+            raise AppError(
+                status.HTTP_500_INTERNAL_SERVER_ERROR,
+                "SIGN_IN_DATABASE_ERROR",
+                "Database error while signing in",
             ) from e
         user = existing_identity.user
         logger.warning(
@@ -124,8 +127,9 @@ async def get_or_create_user(
             identity.provider.value
         )
         await db.rollback()
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Database error while signing in"
+        raise AppError(
+            status.HTTP_500_INTERNAL_SERVER_ERROR,
+            "SIGN_IN_DATABASE_ERROR",
+            "Database error while signing in",
         ) from e
     return user

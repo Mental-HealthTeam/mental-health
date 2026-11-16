@@ -1,12 +1,13 @@
 import logging
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, status
 
 from config.dependencies import get_settings
 from config.settings import Settings
 from schemas.contact import ContactRequest
 from services.contact_service import ContactService
+from exceptions.base import AppError
 
 
 logger = logging.getLogger(__name__)
@@ -31,9 +32,10 @@ def submit_contact_request(
         )
     except Exception as error:
         logger.exception("Failed to send contact request")
-        raise HTTPException(
-            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-            detail="Unable to send contact request.",
+        raise AppError(
+            status.HTTP_503_SERVICE_UNAVAILABLE,
+            "CONTACT_REQUEST_FAILED",
+            "Unable to send contact request.",
         ) from error
 
     return {"detail": "Contact request accepted."}

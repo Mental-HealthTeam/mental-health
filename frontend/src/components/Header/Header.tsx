@@ -13,6 +13,8 @@ import { OutlineButton, PrimaryButton } from '../UI/Buttons'
 import { ArrowIcon, CloseIcon, LogoIcon, MenuIcon, SparkIcon } from '../UI/Icons'
 
 import './Header.scss'
+import { useMeQuery } from '../../services/authApi'
+import { UserMenu } from '../UserMenu'
 
 type Props = {
     variant?: 'landing' | 'page'
@@ -21,6 +23,7 @@ type Props = {
 
 export const Header = ({ variant = 'landing', className }: Props) => {
     const dispatch = useAppDispatch()
+    const { data: user, isLoading } = useMeQuery()
     const navigate = useNavigate()
 
     const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -173,13 +176,30 @@ export const Header = ({ variant = 'landing', className }: Props) => {
 
                             <span className="header__divider" aria-hidden="true" />
 
-                            <OutlineButton
-                                className="header__login-button"
-                                variant="tertiary"
-                                onClick={() => handleRouteNavigation('/sign-in')}
-                            >
-                                {tActions('login')}
-                            </OutlineButton>
+                            {isLoading ? (
+                                <div className="header__auth-placeholder" aria-hidden="true" />
+                            ) : user ? (
+                                <>
+                                    <UserMenu
+                                        className="header__user-menu header__user-menu--full"
+                                        variant="full"
+                                        user={user}
+                                    />
+                                    <UserMenu
+                                        className="header__user-menu header__user-menu--compact"
+                                        variant="compact"
+                                        user={user}
+                                    />
+                                </>
+                            ) : (
+                                <OutlineButton
+                                    className="header__login-button"
+                                    variant="tertiary"
+                                    onClick={() => handleRouteNavigation('/sign-in')}
+                                >
+                                    {tActions('login')}
+                                </OutlineButton>
+                            )}
 
                             <span className="header__divider" aria-hidden="true" />
 
@@ -229,6 +249,15 @@ export const Header = ({ variant = 'landing', className }: Props) => {
                     inert={!isMenuOpen}
                 >
                     <div className="header__mobile-menu-inner">
+                        {user && (
+                            <div className="header__region-mobile-user-menu">
+                                <UserMenu
+                                    user={user}
+                                    noBackground
+                                    className="header__mobile-user-menu"
+                                />
+                            </div>
+                        )}
                         <nav
                             className="header__mobile-navigation"
                             aria-label={tAccessibility('mainNavigation')}

@@ -1,4 +1,6 @@
-from fastapi import HTTPException, status
+from fastapi import status
+
+from exceptions.base import AppError
 
 from redis import asyncio as redis
 from redis_storage.redis_interface import SessionStorageInterface
@@ -18,9 +20,10 @@ class RedisSessionStorage(SessionStorageInterface):
         meta_key = f"chat:session:{session_id}:meta"
         meta_info = await r.hgetall(meta_key)
         if not meta_info:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail=f"Session {session_id!r} not found!"
+            raise AppError(
+                status.HTTP_404_NOT_FOUND,
+                "RECORDING_SESSION_NOT_FOUND",
+                f"Session {session_id!r} not found!",
             )
 
         response["created_at"] = meta_info["created_at"]

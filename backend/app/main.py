@@ -5,6 +5,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from exceptions.handlers import register_exception_handlers
 from config.dependencies import get_settings
 from routes import (
     psychologists_router,
@@ -20,6 +21,8 @@ from routes import (
 
 
 app = FastAPI()
+
+register_exception_handlers(app=app)
 
 AVATAR_STORAGE_DIR = Path("media/avatars")
 AVATAR_STORAGE_DIR.mkdir(parents=True, exist_ok=True)
@@ -91,6 +94,7 @@ app.include_router(
     contact_router,
     tags=["Contact"],
 )
+
 
 @app.get("/health")
 def health():

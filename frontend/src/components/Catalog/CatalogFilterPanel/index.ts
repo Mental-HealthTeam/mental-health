@@ -1,0 +1,1 @@
+export { CatalogFilterPanel } from './CatalogFilterPanel'

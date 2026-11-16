@@ -285,7 +285,14 @@ async def update_my_psychologist_profile(
     psychologist_id: UUID,
     data: PsychologistProfileUpdate,
 ) -> PsychologistProfileResponse | None:
-    psychologist = await db.get(Psychologist, psychologist_id)
+    stmt = (
+        select(Psychologist)
+        .options(selectinload(Psychologist.psychologist_specializations))
+        .where(Psychologist.psychologist_id == psychologist_id)
+    )
+
+    result = await db.execute(stmt)
+    psychologist = result.scalar_one_or_none()
 
     if psychologist is None:
         return None
@@ -325,14 +332,20 @@ async def update_my_psychologist_profile(
     if "methods" in updates and updates["methods"] is not None:
         methods = updates.pop("methods")
 
-        psychologist.methods = [
+        ukrainian_methods = [
             method for method in methods
             if _contains_cyrillic(method)
         ]
-        psychologist.methods_eng = [
+        english_methods = [
             method for method in methods
             if not _contains_cyrillic(method)
         ]
+
+        if ukrainian_methods:
+            psychologist.methods = ukrainian_methods
+
+        if english_methods:
+            psychologist.methods_eng = english_methods
 
     topics = updates.pop("topics", None)
     for field, value in updates.items():

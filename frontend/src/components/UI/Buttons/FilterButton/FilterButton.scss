@@ -1,0 +1,81 @@
+@use '../../../../styles/abstracts' as a;
+
+.filter-button {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  box-sizing: border-box;
+
+  min-height: 40px;
+  padding: 7px 13px;
+
+  border: 1px solid a.$color-gray-60;
+  border-radius: 10px;
+
+  color: a.$color-gray-60;
+  background-color: a.$color-background;
+
+  font: inherit;
+  font-size: 16px;
+  line-height: 1.4;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+          color 160ms ease,
+          border-color 160ms ease,
+          background-color 160ms ease;
+
+  &__icon {
+    display: block;
+    flex-shrink: 0;
+
+    width: 24px;
+    height: 24px;
+
+    color: inherit;
+  }
+
+  &__text {
+    white-space: nowrap;
+  }
+
+  @media (hover: hover) {
+    &:hover:not(:disabled) {
+      border-color: a.$color-optional;
+      color: a.$color-optional;
+    }
+  }
+
+  &--active,
+  &:active:not(:disabled) {
+    border-color: a.$color-optional;
+
+    color: a.$color-gray-0;
+    background-color: a.$color-optional;
+  }
+
+  @media (hover: hover) {
+    &--active:hover:not(:disabled) {
+      color: a.$color-gray-0;
+    }
+  }
+
+  &:focus-visible {
+    outline: 2px solid a.$color-optional;
+    outline-offset: 3px;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+}

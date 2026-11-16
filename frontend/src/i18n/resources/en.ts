@@ -16,10 +16,13 @@ import faq from '../../locales/en/features/faq.json'
 import reviews from '../../locales/en/features/reviews.json'
 import symptoms from '../../locales/en/features/symptoms.json'
 import specialistProfile from '../../locales/en/features/specialistProfile.json'
+import catalog from '../../locales/en/features/catalog.json'
 import clientProfileSettings from '../../locales/en/features/clientProfileSettings.json'
 import session from '../../locales/en/features/session.json'
 import success from '../../locales/en/features/success.json'
+import login from '../../locales/en/features/login.json'
 import specialistCabinet from '../../locales/en/features/specialistCabinet.json'
+import clientCabinet from '../../locales/en/features/clientCabinet.json'
 
 export const enResources = {
     common,
@@ -40,7 +43,10 @@ export const enResources = {
     symptoms,
     specialistProfile,
     clientProfileSettings,
+    catalog,
     session,
     success,
-    specialistCabinet
+    login,
+    specialistCabinet,
+    clientCabinet,
 } as const

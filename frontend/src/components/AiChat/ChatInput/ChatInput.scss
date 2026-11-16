@@ -19,7 +19,31 @@
 
         resize: none;
 
-        scrollbar-width: none;
+        scrollbar-width: thin;
+        scrollbar-color: a.$color-gray-40 transparent;
+        padding-right: 8px;
+
+        > :first-child {
+            margin-top: auto;
+        }
+
+        &::-webkit-scrollbar {
+            width: c.$message-list-scrollbar-width;
+        }
+
+        &::-webkit-scrollbar-track {
+            background: transparent;
+            margin: c.$message-list-scrollbar-track-margin 0;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background: a.$color-secondary-gradient;
+            border-radius: c.$message-list-scrollbar-radius;
+        }
+
+        &::-webkit-scrollbar-thumb:hover {
+            background: a.$color-optional;
+        }
     }
 
     &__send {

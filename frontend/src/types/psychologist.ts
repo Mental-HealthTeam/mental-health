@@ -37,4 +37,7 @@ export type GetPsychologistsParams = {
     offset?: number
     symptomCodes?: SymptomCode[]
     lang?: 'uk' | 'en'
+    minPrice?: number
+    maxPrice?: number
+    availableDay?: 'today' | 'tomorrow'
 }

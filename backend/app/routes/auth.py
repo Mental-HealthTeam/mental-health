@@ -4,7 +4,6 @@ from fastapi import (
     APIRouter,
     status,
     Depends,
-    HTTPException,
     Response,
     Request
 )
@@ -44,6 +43,7 @@ from auth.cookies import (
     set_auth_cookies,
     clear_auth_cookies
 )
+from exceptions.base import AppError
 
 
 router = APIRouter()
@@ -70,9 +70,10 @@ async def google_login(
         identity = await provider.authenticate(login_data.model_dump())
     except InvalidCredentialsError as e:
         logger.warning("Google login rejected: %s", e)
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid credentials"
+        raise AppError(
+            status.HTTP_401_UNAUTHORIZED,
+            "INVALID_CREDENTIALS",
+            "Invalid credentials",
         ) from e
     user = await get_or_create_user(db=db, identity=identity)
     session_create_data = SessionCreateData(

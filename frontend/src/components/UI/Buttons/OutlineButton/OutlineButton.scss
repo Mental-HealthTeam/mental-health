@@ -4,6 +4,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: 8px;
 
   min-height: 40px;
 
@@ -24,6 +25,23 @@
           border-color a.$transition-default,
           background-color a.$transition-default,
           opacity a.$transition-default;
+
+  &__icon {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+
+    color: inherit;
+
+    > svg {
+      display: block;
+    }
+  }
+
+  &__text {
+    min-width: 0;
+  }
 
   &--secondary {
     border-color: a.$color-optional;

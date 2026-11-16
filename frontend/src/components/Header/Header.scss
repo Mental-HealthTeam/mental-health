@@ -186,9 +186,9 @@
         cursor: pointer;
 
         transition:
-                border-color 220ms ease,
-                color 220ms ease,
-                background-color 220ms ease;
+            border-color 220ms ease,
+            color 220ms ease,
+            background-color 220ms ease;
 
         &:hover,
         &--open {
@@ -215,8 +215,8 @@
         pointer-events: none;
 
         transition:
-                opacity 180ms ease,
-                transform 220ms ease;
+            opacity 180ms ease,
+            transform 220ms ease;
     }
 
     &__menu-icon {
@@ -254,6 +254,10 @@
     }
 
     &__mobile-menu {
+        display: none;
+    }
+
+    &__user-menu--compact {
         display: none;
     }
 }
@@ -315,9 +319,9 @@
             opacity: 0;
 
             transition:
-                    grid-template-rows 320ms cubic-bezier(0.4, 0, 0.2, 1),
-                    opacity 220ms ease,
-                    visibility 320ms;
+                grid-template-rows 320ms cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 220ms ease,
+                visibility 320ms;
 
             &--open {
                 grid-template-rows: 1fr;
@@ -339,7 +343,7 @@
 
         &__mobile-navigation {
             width: 100%;
-            padding-block: 0 16px;
+            padding-block: 16px;
         }
 
         &__mobile-navigation-list {
@@ -416,6 +420,22 @@
             padding-block: 16px;
 
             border-block: 1px solid a.$color-gray-20;
+        }
+
+        &__region-mobile-user-menu {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-block: 16px;
+            border-block: 1px solid a.$color-gray-20;
+        }
+
+        &__user-menu--full {
+            display: none;
+        }
+
+        &__user-menu--compact {
+            display: block;
         }
 
         &__mobile-language-label {

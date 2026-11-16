@@ -4,7 +4,6 @@ from typing import Annotated
 from fastapi import (
     APIRouter,
     Depends,
-    HTTPException,
     status,
     Request,
     Response
@@ -23,6 +22,7 @@ from services.payment_service import (
     handle_webhook
 )
 from starlette.responses import JSONResponse
+from exceptions.base import AppError
 
 router = APIRouter()
 
@@ -63,9 +63,10 @@ async def webhook(
             "Rejected %s webhook: the active provider is %s",
             provider.value, payment_provider.name.value
         )
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Webhook provider is not active."
+        raise AppError(
+            status.HTTP_404_NOT_FOUND,
+            "WEBHOOK_PROVIDER_NOT_ACTIVE",
+            "Webhook provider is not active.",
         )
     payload = await request.body()
     headers = request.headers

@@ -1,6 +1,9 @@
 import type { SVGProps } from 'react'
 
-type Props = SVGProps<SVGSVGElement>
+type Props = SVGProps<SVGSVGElement> & {
+    width?: number
+    height?: number
+}
 
 export const FireIcon = ({ width = 16, height = 16, ...props }: Props) => {
     return (

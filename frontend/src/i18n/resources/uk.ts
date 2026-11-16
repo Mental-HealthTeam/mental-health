@@ -19,7 +19,10 @@ import specialistProfile from '../../locales/uk/features/specialistProfile.json'
 import clientProfileSettings from '../../locales/uk/features/clientProfileSettings.json'
 import session from '../../locales/uk/features/session.json'
 import success from '../../locales/uk/features/success.json'
+import login from '../../locales/uk/features/login.json'
+import catalog from '../../locales/uk/features/catalog.json'
 import specialistCabinet from '../../locales/uk/features/specialistCabinet.json'
+import clientCabinet from '../../locales/uk/features/clientCabinet.json'
 
 export const ukResources = {
     common,
@@ -40,7 +43,10 @@ export const ukResources = {
     symptoms,
     specialistProfile,
     clientProfileSettings,
+    catalog,
     session,
     success,
-    specialistCabinet
+    login,
+    specialistCabinet,
+    clientCabinet,
 } as const

@@ -1,0 +1,45 @@
+@use '../../styles/abstracts' as a;
+
+.catalog-page {
+  min-height: 100dvh;
+
+  color: a.$color-primary;
+  background-color: a.$color-background;
+
+  &__main {
+    padding: 24px 16px 48px;
+  }
+
+  &__container {
+    max-width: 1244px;
+  }
+
+  &__back {
+    margin-bottom: 20px;
+  }
+
+  &__search {
+    margin-bottom: 24px;
+  }
+
+  &__hint {
+    margin: 0 0 10px;
+
+    color: a.$color-gray-60;
+
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  @media (min-width: 768px) {
+    &__main {
+      padding: 24px 32px 64px;
+    }
+  }
+
+  @media (min-width: 1200px) {
+    &__main {
+      padding-inline: 40px;
+    }
+  }
+}

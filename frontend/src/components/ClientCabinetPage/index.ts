@@ -1,0 +1,1 @@
+export { ClientCabinetPage } from './ClientCabinetPage'

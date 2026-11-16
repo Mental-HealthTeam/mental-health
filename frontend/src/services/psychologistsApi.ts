@@ -1,8 +1,8 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
+import type { Booking } from '../types/booking'
 import type { GetPsychologistsParams, Psychologist, SymptomCode } from '../types/psychologist'
 import type { SpecialistProfile } from '../types/specialist'
-import type { Booking } from '../types/booking.ts'
 
 export const psychologistsApi = createApi({
     reducerPath: 'psychologistsApi',
@@ -17,14 +17,24 @@ export const psychologistsApi = createApi({
                 const searchParams = new URLSearchParams()
 
                 searchParams.set('limit', String(params?.limit ?? 5))
-
                 searchParams.set('offset', String(params?.offset ?? 0))
-
                 searchParams.set('lang', params?.lang ?? 'uk')
 
                 params?.symptomCodes?.forEach((code) => {
                     searchParams.append('symptom_codes', code)
                 })
+
+                if (params?.minPrice !== undefined) {
+                    searchParams.set('price_from', String(params.minPrice))
+                }
+
+                if (params?.maxPrice !== undefined) {
+                    searchParams.set('price_to', String(params.maxPrice))
+                }
+
+                if (params?.availableDay) {
+                    searchParams.set('available_on', params.availableDay)
+                }
 
                 return {
                     url: `/psychologists?${searchParams.toString()}`,
@@ -43,6 +53,7 @@ export const psychologistsApi = createApi({
         getPsychologistById: builder.query<SpecialistProfile, { id: string; lang?: string }>({
             query: ({ id, lang = 'uk' }) => ({
                 url: `/psychologists/${id}`,
+                method: 'GET',
                 params: { lang },
             }),
         }),

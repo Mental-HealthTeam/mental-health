@@ -1,0 +1,51 @@
+@use '../../styles/abstracts' as a;
+
+.avatar-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    &__icon {
+        flex-shrink: 0;
+    }
+
+    &--large {
+        width: 405px;
+        height: 245px;
+        border-radius: 26px;
+        background-color: #e4eddd;
+    }
+
+    &__icon--large {
+        width: 84px;
+        height: 94px;
+        color: #bbc5b4;
+    }
+
+    &--medium {
+        width: 98px;
+        height: 98px;
+        border-radius: 50%;
+        background-color: #f0f5ec;
+    }
+
+    &__icon--medium {
+        width: 40px;
+        height: 44px;
+        color: #bbc5b4;
+    }
+
+    &--small {
+        width: 35px;
+        height: 35px;
+        border-radius: 12px;
+        background-color: #bbc5b4;
+    }
+
+    &__icon--small {
+        width: 22px;
+        height: 24px;
+        color: #f0f5ec;
+    }
+}

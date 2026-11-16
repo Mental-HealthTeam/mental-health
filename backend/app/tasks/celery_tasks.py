@@ -83,11 +83,13 @@ async def _complete_session_with_psychologist_task():
         )
         return count_bookings_completed
 
+
 @app.task
 def refresh_psychologist_slots():
     return asyncio.run(
         _refresh_psychologist_slots()
     )
+
 
 async def _refresh_psychologist_slots():
     settings = Settings()
@@ -112,7 +114,7 @@ async def _refresh_psychologist_slots():
                         while (
                             new_time < now or
                             (new_time < limit_time and
-                            new_time.isoformat() in result_mock_slots)
+                             new_time.isoformat() in result_mock_slots)
                         ):
                             new_time = new_time + timedelta(days=7)
                         if (
@@ -151,11 +153,3 @@ async def _refresh_psychologist_slots():
             len(psychologists),
             errors_count,
         )
-
-
-
-
-
-
-
-
