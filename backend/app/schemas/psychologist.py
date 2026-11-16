@@ -140,6 +140,7 @@ class PsychologistProfileResponse(BaseModel):
     methods: list[str]
     methods_eng: list[str]
     certificates: list[str]
+    certificates_eng: list[str]
     languages: list[str]
     experience_years: int
     price_per_hour: Decimal
