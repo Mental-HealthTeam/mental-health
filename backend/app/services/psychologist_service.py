@@ -375,6 +375,11 @@ async def update_my_psychologist_profile(
             if english_methods:
                 psychologist.methods_eng = english_methods
 
+        if "meet_link" in updates and updates["meet_link"] is not None:
+            meet_link = updates.pop("meet_link")
+
+            psychologist.meet_link = str(meet_link)
+
         topics = updates.pop("topics", None)
         for field, value in updates.items():
             setattr(psychologist, field, value)
