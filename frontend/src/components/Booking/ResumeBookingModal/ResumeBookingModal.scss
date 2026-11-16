@@ -1,0 +1,130 @@
+@use '../../../styles/abstracts/index' as a;
+
+.modal.resume-booking-modal {
+  width: min(480px, calc(100vw - 32px));
+  padding: 0;
+  border: 1px solid a.$color-gray-10;
+  color: a.$color-text-primary;
+  background: a.$color-surface;
+  font-family: a.$font-family-primary;
+
+  &::backdrop {
+    background: rgba(a.$color-primary, 0.45);
+  }
+
+  .modal__header {
+    padding: 28px 28px 0;
+  }
+
+  .modal__title {
+    font-size: a.$font-size-h4;
+    font-weight: a.$font-weight-h4;
+    line-height: a.$line-height-h4;
+    letter-spacing: a.$letter-spacing-h4;
+  }
+
+  .modal__close {
+    color: a.$color-optional;
+  }
+
+  @media (max-width: 479px) {
+    .modal__header {
+      padding: 20px 20px 0;
+    }
+  }
+}
+
+.resume-booking-modal {
+  &__content {
+    padding: 0 28px 28px;
+    font-size: a.$font-size-body;
+    font-weight: a.$font-weight-body;
+    line-height: a.$line-height-body;
+    letter-spacing: a.$letter-spacing-body;
+  }
+
+  &__description {
+    margin: 12px 0 24px;
+    color: a.$color-text-secondary;
+  }
+
+  &__specialist {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+
+    h3 {
+      min-width: 0;
+      margin: 0;
+      font-size: a.$font-size-h5;
+      font-weight: a.$font-weight-h5;
+      line-height: a.$line-height-h5;
+      letter-spacing: a.$letter-spacing-h5;
+      overflow-wrap: anywhere;
+    }
+  }
+
+  &__details {
+    display: grid;
+    gap: 16px;
+    margin: 24px 0 0;
+    padding: 20px;
+    border-radius: 16px;
+    background: a.$color-surface-muted;
+
+    > div {
+      display: grid;
+      gap: 4px;
+    }
+
+    dt {
+      color: a.$color-text-secondary;
+      font-size: a.$font-size-caption-secondary;
+      font-weight: a.$font-weight-caption-secondary;
+      line-height: a.$line-height-caption-secondary;
+      letter-spacing: a.$letter-spacing-caption-secondary;
+    }
+
+    dd {
+      margin: 0;
+      font-size: a.$font-size-body;
+      font-weight: a.$font-weight-body-semibold;
+      line-height: a.$line-height-body;
+      letter-spacing: a.$letter-spacing-body;
+      overflow-wrap: anywhere;
+    }
+  }
+
+  &__timezone {
+    margin: 12px 0 0;
+    color: a.$color-text-secondary;
+    font-size: a.$font-size-caption-third;
+    font-weight: a.$font-weight-caption-third;
+    line-height: a.$line-height-caption-third;
+    letter-spacing: a.$letter-spacing-caption-third;
+    overflow-wrap: anywhere;
+  }
+
+  &__error {
+    margin: 16px 0 0;
+    color: a.$color-error;
+    font-size: a.$font-size-caption-secondary;
+    font-weight: a.$font-weight-caption-secondary;
+    line-height: a.$line-height-caption-secondary;
+    letter-spacing: a.$letter-spacing-caption-secondary;
+    overflow-wrap: anywhere;
+  }
+
+  &__actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 24px;
+  }
+
+  @media (max-width: 479px) {
+    &__content {
+      padding: 0 20px 20px;
+    }
+  }
+}

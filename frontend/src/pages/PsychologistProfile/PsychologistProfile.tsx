@@ -11,11 +11,12 @@ import { useAppDispatch, useAppSelector } from '../../app/hooks'
 import { setSpecialistProfile } from '../../app/store/slices/specialistProfileSlice'
 import { useTranslation } from 'react-i18next'
 import { AiChat } from '../../components/AiChat'
-import { BookingBlock } from '../../components/BookingBlock'
+
 import { useGetPsychologistByIdQuery } from '../../services/psychologistsApi'
 import { skipToken } from '@reduxjs/toolkit/query'
-import { BackButton } from '../../components/UI/Buttons/BackButton'
+import { BackButton } from '../../components/UI/Buttons'
 import { ProfileTabs } from '../../components/specialist/ProfileTabs'
+import { BookingModalButton } from '../../components/Booking/BookingModalButton'
 
 export const PsychologistProfile = () => {
     const { t, i18n } = useTranslation(['specialistProfile', 'common', 'errors'])
@@ -51,7 +52,15 @@ export const PsychologistProfile = () => {
 
                 <SpecialistProfileCard
                     className="psychologist-profile__specialist-card"
-                    actions={<BookingBlock name={profile.full_name} slots={profile.mock_slots} />}
+                    actions={
+                        <BookingModalButton
+                            specialist={profile}
+                            slots={profile.mock_slots}
+                            onContinue={(selection) => {
+                                console.log('Booking selection:', selection)
+                            }}
+                        />
+                    }
                     specialist={profile}
                 />
 

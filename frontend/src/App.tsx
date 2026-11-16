@@ -11,23 +11,29 @@ import { SlotUnavailablePage } from './pages/SlotUnavailablePage'
 import { SuccessPage } from './pages/SuccessPage'
 import { SpecialistProfileSettingsPage } from './pages/SpecialistProfileSettingsPage'
 import { ClientCabinetPage } from './components/ClientCabinetPage'
+import { BookingModalProvider } from './providers/BookingModalProvider'
 
 function App() {
     return (
         <BrowserRouter>
-            <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/specialist/cabinet" element={<SpecialistCabinet />} />
-                <Route path="/specialist/settings/profile" element={<SpecialistProfileSettingsPage />} />
-                <Route path="/psychologist-profile/:id" element={<PsychologistProfile />} />
-                <Route path="/catalog" element={<CatalogPage />} />
-                <Route path="*" element={<NotFoundPage />} />
-                <Route path="/slot-unavailable" element={<SlotUnavailablePage />} />
-                <Route path="/payment/success" element={<SuccessPage />} />
-                <Route path="/cabinet" element={<ClientCabinetPage />} />
-                <Route path="/sign-in" element={<SignIn />} />
-                <Route path="/sign-up" element={<SignUp />} />
-            </Routes>
+            <BookingModalProvider>
+                <Routes>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/specialist/cabinet" element={<SpecialistCabinet />} />
+                    <Route
+                        path="/specialist/settings/profile"
+                        element={<SpecialistProfileSettingsPage />}
+                    />
+                    <Route path="/psychologist-profile/:id" element={<PsychologistProfile />} />
+                    <Route path="/catalog" element={<CatalogPage />} />
+                    <Route path="*" element={<NotFoundPage />} />
+                    <Route path="/slot-unavailable" element={<SlotUnavailablePage />} />
+                    <Route path="/payment/success" element={<SuccessPage />} />
+                    <Route path="/cabinet" element={<ClientCabinetPage />} />
+                    <Route path="/sign-in" element={<SignIn />} />
+                    <Route path="/sign-up" element={<SignUp />} />
+                </Routes>
+            </BookingModalProvider>
         </BrowserRouter>
     )
 }
