@@ -82,7 +82,7 @@ export const MessageList = ({ className }: Props) => {
             {psychologists.length > 0 && (
                 <div className="message-list__specialists">
                     {psychologists.map((specialist) => (
-                        <SpecialistCard {...specialist} variant="compact" />
+                        <SpecialistCard {...specialist} variant="compact" key={specialist.psychologist_id} />
                     ))}
                 </div>
             )}
