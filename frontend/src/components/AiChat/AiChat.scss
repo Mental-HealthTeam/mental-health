@@ -33,6 +33,17 @@
 
 @media (max-width: a.$breakpoint-mobile) {
     .ai-chat {
-        right: c.$ai-chat-right-mobile;
+        position: fixed;
+        inset: 0;
+        width: 100%;
+        max-width: 100%;
+        height: 100dvh;
+        max-height: none;
+        border-radius: 0;
+    }
+
+    .message-list {
+        overflow-y: auto;
+        overscroll-behavior: contain;
     }
 }
