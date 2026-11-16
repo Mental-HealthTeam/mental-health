@@ -11,7 +11,7 @@ import './ClientAvatarField.scss'
 type Props = {
     avatar: ReturnType<typeof useAvatar>
 }
-
+// TODO: Add avatar cropping with react-easy-crop after the shared Modal is merged.
 export const ClientAvatarField = ({ avatar }: Props) => {
     const { t } = useTranslation('clientProfileSettings')
     const errorId = useId()

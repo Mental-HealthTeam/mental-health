@@ -20,6 +20,10 @@
     "deletePhoto": "Delete",
     "myTopics": "My concerns:",
     "removeTopic": "Remove concern: {{topic}}",
+    "loading": "Loading profile...",
+    "loadError": "Could not load your profile. Please refresh the page.",
+    "supportedFieldsNotice": "You can currently save your name and profile photo. Saving other fields is not available yet.",
+    "saveSuccess": "Your name and profile photo have been saved.",
     "errors": {
         "name": "Enter your name using up to 255 characters.",
         "email": "Enter a valid email address.",
