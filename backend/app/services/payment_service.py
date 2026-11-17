@@ -109,7 +109,8 @@ async def create_checkout_service(
         amount=booking.price,
         currency=booking.currency,
         description="Consultation with psychologist",
-        hold_expires_at=booking.hold_expires_at
+        hold_expires_at=booking.hold_expires_at,
+        language=data.language.value
     )
     try:
         check_out_result = await payment_provider.create_checkout_session(
