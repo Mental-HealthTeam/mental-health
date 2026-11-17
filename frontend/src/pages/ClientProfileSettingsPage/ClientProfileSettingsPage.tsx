@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useBlocker, useNavigate } from 'react-router-dom'
 
 import { Container } from '../../components/Container'
 import {
@@ -35,22 +36,45 @@ const getInitialValues = (user: UserPublic): ClientProfileValues => ({
 
 const ProfileEditor = ({ user }: ProfileEditorProps) => {
     const { t } = useTranslation('clientProfileSettings')
+    const navigate = useNavigate()
 
-    const [savedProfile, setSavedProfile] = useState(user)
-    const [formVersion, setFormVersion] = useState(0)
+    const [initialProfile] = useState(user)
     const [isDirty, setIsDirty] = useState(false)
-    const [isSaved, setIsSaved] = useState(false)
+
+    const allowLeaveRef = useRef(false)
+    const confirmationShownRef = useRef(false)
 
     const [updateProfile] = useUpdateProfileMutation()
     const [uploadAvatar] = useUploadAvatarMutation()
     const [deleteAvatar] = useDeleteAvatarMutation()
 
+    const blocker = useBlocker(() => isDirty && !allowLeaveRef.current)
+
     useEffect(() => {
-        if (!isDirty) {
+        if (blocker.state === 'unblocked') {
+            confirmationShownRef.current = false
             return
         }
 
+        if (blocker.state !== 'blocked' || confirmationShownRef.current) {
+            return
+        }
+
+        confirmationShownRef.current = true
+
+        if (window.confirm(t('unsavedChangesConfirm'))) {
+            blocker.proceed()
+        } else {
+            blocker.reset()
+        }
+    }, [blocker, t])
+
+    useEffect(() => {
+        if (!isDirty) return
+
         const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+            if (allowLeaveRef.current) return
+
             event.preventDefault()
             event.returnValue = ''
         }
@@ -62,33 +86,20 @@ const ProfileEditor = ({ user }: ProfileEditorProps) => {
         }
     }, [isDirty])
 
-    const handleDirtyChange = (dirty: boolean) => {
-        setIsDirty(dirty)
-
-        if (dirty) {
-            setIsSaved(false)
-        }
-    }
-
     const handleSubmit = async (values: ClientProfileSubmit) => {
-        setIsSaved(false)
-
-        let updatedProfile = savedProfile
-
-        updatedProfile = await updateProfile({
+        await updateProfile({
             name: values.name,
         }).unwrap()
 
         if (values.avatarFile) {
-            updatedProfile = await uploadAvatar(values.avatarFile).unwrap()
+            await uploadAvatar(values.avatarFile).unwrap()
         } else if (values.removeAvatar) {
-            updatedProfile = await deleteAvatar().unwrap()
+            await deleteAvatar().unwrap()
         }
 
-        setSavedProfile(updatedProfile)
+        allowLeaveRef.current = true
         setIsDirty(false)
-        setIsSaved(true)
-        setFormVersion((current) => current + 1)
+        navigate('/cabinet', { replace: true })
     }
 
     return (
@@ -96,18 +107,11 @@ const ProfileEditor = ({ user }: ProfileEditorProps) => {
             <p className="client-profile-settings-page__notice">{t('supportedFieldsNotice')}</p>
 
             <ClientProfileForm
-                key={formVersion}
-                initialValues={getInitialValues(savedProfile)}
-                avatarUrl={savedProfile.avatar_url}
-                onDirtyChange={handleDirtyChange}
+                initialValues={getInitialValues(initialProfile)}
+                avatarUrl={initialProfile.avatar_url}
+                onDirtyChange={setIsDirty}
                 onSubmit={handleSubmit}
             />
-
-            {isSaved && (
-                <p className="client-profile-settings-page__notice" role="status">
-                    {t('saveSuccess')}
-                </p>
-            )}
         </>
     )
 }
@@ -127,15 +131,15 @@ export const ClientProfileSettingsPage = () => {
 
                     <h1 className="client-profile-settings-page__title">{t('title')}</h1>
 
-                    {isLoading && <p role="status">{t('loading')}</p>}
+                    {isLoading && !user && <p role="status">{t('loading')}</p>}
 
-                    {isError && <p role="alert">{t('loadError')}</p>}
+                    {isError && !user && <p role="alert">{t('loadError')}</p>}
 
-                    {!isLoading && !isError && user && <ProfileEditor key={user.id} user={user} />}
+                    {user && <ProfileEditor key={user.id} user={user} />}
                 </Container>
             </main>
 
-            <Footer />
+            <Footer variant="page" />
         </div>
     )
 }

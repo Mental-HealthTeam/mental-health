@@ -24,7 +24,7 @@ export const authApi = createApi({
                 method: 'PATCH',
                 body,
             }),
-            invalidatesTags: ['Me'],
+            invalidatesTags: (_result, error) => (error ? [] : ['Me']),
         }),
 
         uploadAvatar: builder.mutation<UserPublic, File>({
@@ -39,7 +39,7 @@ export const authApi = createApi({
                     body,
                 }
             },
-            invalidatesTags: ['Me'],
+            invalidatesTags: (_result, error) => (error ? [] : ['Me']),
         }),
 
         deleteAvatar: builder.mutation<UserPublic, void>({
@@ -47,7 +47,7 @@ export const authApi = createApi({
                 url: '/users/me/avatar',
                 method: 'DELETE',
             }),
-            invalidatesTags: ['Me'],
+            invalidatesTags: (_result, error) => (error ? [] : ['Me']),
         }),
 
         googleLogin: builder.mutation<UserPublic, { credential: string }>({
@@ -56,7 +56,7 @@ export const authApi = createApi({
                 method: 'POST',
                 body,
             }),
-            invalidatesTags: ['Me'],
+            invalidatesTags: (_result, error) => (error ? [] : ['Me']),
         }),
 
         logout: builder.mutation<void, void>({
