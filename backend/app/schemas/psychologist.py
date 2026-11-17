@@ -7,7 +7,7 @@ from pydantic import (
     ConfigDict,
     model_validator,
     field_validator,
-    Field,
+    Field, HttpUrl,
 )
 
 from database.models.models import SymptomCode, Language
@@ -90,6 +90,7 @@ class PsychologistProfileUpdate(BaseModel):
     languages: list[str] | None = None
     experience_years: int | None = Field(default=None, ge=0)
     price_per_hour: Decimal | None = Field(default=None, gt=0)
+    meet_link: HttpUrl | None = None
 
     @field_validator("title")
     @classmethod
@@ -121,6 +122,13 @@ class PsychologistProfileUpdate(BaseModel):
 
         return values
 
+    @field_validator("meet_link")
+    @classmethod
+    def validate_meet_link(cls, value: HttpUrl | None):
+        if value and len(value) > 255:
+            raise ValueError("Meet link is too long (max 255 characters)")
+        return value
+
     @model_validator(mode="after")
     def validate_not_empty(self):
         if not self.model_fields_set:
@@ -140,6 +148,7 @@ class PsychologistProfileResponse(BaseModel):
     methods: list[str]
     methods_eng: list[str]
     certificates: list[str]
+    certificates_eng: list[str]
     languages: list[str]
     experience_years: int
     price_per_hour: Decimal

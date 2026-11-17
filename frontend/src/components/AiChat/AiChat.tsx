@@ -51,7 +51,8 @@ export const AiChat = () => {
                 >
                     <div className="ai-chat__content">
                         <ChatHeader onClose={handleClose} />
-                        <MessageList />
+                        
+                        <MessageList className="ai-chat__message-list" />
 
                         <ChatInput
                             onSend={handleSend}
