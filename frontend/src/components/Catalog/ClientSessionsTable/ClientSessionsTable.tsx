@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { AvatarFallbackIcon } from '../../UI/Icons'
@@ -14,19 +14,50 @@ type Props = {
 }
 
 const PAGE_SIZE = 5
+const JOIN_BEFORE_START_MS = 10 * 60 * 1000
+const SESSION_DURATION_MS = 50 * 60 * 1000
 
 const filters: Filter[] = ['all', 'scheduled', 'completed', 'saved']
+
+const getMeetingUrl = (value: string | null): string | null => {
+    if (!value) return null
+
+    try {
+        const url = new URL(value)
+
+        return url.protocol === 'https:' ? url.href : null
+    } catch {
+        return null
+    }
+}
+
+const canJoinSession = (session: ClientSession, now: number): boolean => {
+    if (session.status !== 'scheduled' || !getMeetingUrl(session.meetLink)) {
+        return false
+    }
+
+    const [day, month, year] = session.date.split('.').map(Number)
+    const [hours, minutes] = session.time.split(':').map(Number)
+    const startsAt = new Date(year, month - 1, day, hours, minutes).getTime()
+
+    return (
+        Number.isFinite(startsAt) &&
+        now >= startsAt - JOIN_BEFORE_START_MS &&
+        now < startsAt + SESSION_DURATION_MS
+    )
+}
 
 export const ClientSessionsTable = ({ onJoinSession }: Props) => {
     const { t, i18n } = useTranslation('clientCabinet', {
         keyPrefix: 'sessionsTable',
     })
 
-    const language = i18n.resolvedLanguage?.startsWith('en') ? 'en' : 'uk'
+    const language = (i18n.resolvedLanguage ?? i18n.language).startsWith('en') ? 'en' : 'uk'
 
     const [activeFilter, setActiveFilter] = useState<Filter>('scheduled')
     const [sessions, setSessions] = useState<ClientSession[]>(clientSessionsMock)
     const [visibleCount, setVisibleCount] = useState(PAGE_SIZE)
+    const [now, setNow] = useState(() => Date.now())
 
     const scrollRef = useRef<HTMLDivElement>(null)
     const nextRowIndexRef = useRef<number | null>(null)
@@ -40,6 +71,14 @@ export const ClientSessionsTable = ({ onJoinSession }: Props) => {
 
     const visibleSessions = filteredSessions.slice(0, visibleCount)
     const hasMoreSessions = visibleSessions.length < filteredSessions.length
+
+    useEffect(() => {
+        const timer = window.setInterval(() => {
+            setNow(Date.now())
+        }, 1000)
+
+        return () => window.clearInterval(timer)
+    }, [])
 
     useLayoutEffect(() => {
         const container = scrollRef.current
@@ -96,6 +135,17 @@ export const ClientSessionsTable = ({ onJoinSession }: Props) => {
         )
     }
 
+    const handleJoin = (session: ClientSession) => {
+        if (!canJoinSession(session, now)) return
+
+        const url = getMeetingUrl(session.meetLink)
+
+        if (!url) return
+
+        window.open(url, '_blank', 'noopener,noreferrer')
+        onJoinSession?.(session.id)
+    }
+
     return (
         <section className="client-sessions-table">
             <h2 className="client-sessions-table__title">{t('title')}</h2>
@@ -147,6 +197,7 @@ export const ClientSessionsTable = ({ onJoinSession }: Props) => {
                     <tbody key={activeFilter}>
                         {visibleSessions.map((session) => {
                             const specialistName = session.specialistName[language]
+                            const canJoin = canJoinSession(session, now)
 
                             return (
                                 <tr key={session.id} className="client-sessions-table__row">
@@ -202,15 +253,17 @@ export const ClientSessionsTable = ({ onJoinSession }: Props) => {
                                             <div className="client-sessions-table__actions">
                                                 <PrimaryButton
                                                     className="client-sessions-table__join"
-                                                    disabled={!session.canJoin}
-                                                    onClick={() => onJoinSession?.(session.id)}
+                                                    disabled={!canJoin}
+                                                    onClick={() => handleJoin(session)}
                                                 >
                                                     {t('join')}
                                                 </PrimaryButton>
 
-                                                <span className="client-sessions-table__hint">
-                                                    {t('joinHint')}
-                                                </span>
+                                                {!canJoin && (
+                                                    <span className="client-sessions-table__hint">
+                                                        {t('joinHint')}
+                                                    </span>
+                                                )}
                                             </div>
                                         ) : (
                                             <span className="client-sessions-table__hint">
