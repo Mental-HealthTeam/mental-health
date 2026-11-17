@@ -44,21 +44,32 @@ export type SpecialistProfile = {
     mock_slots: Slot[]
 }
 
+// GET/PUT /api/psychologists/me/payout-details
+export type PayoutDetails = {
+  iban: string
+  tax_id: string
+  account_name: string
+}
+
 // PATCH /api/psychologists/me/profile
-export type SpecialistProfilePatch = {
+export type UpdateProfileBody = {
     title?: string
     bio?: SpecialistBio
     topics?: SymptomCode[]
     methods?: string[]
-    certificates?: string[]
+    certificates?: { title: string }[]
     languages?: Language[]
     experience_years?: number
     price_per_hour?: number
 }
 
-// GET/PUT /api/psychologists/me/payout-details
-export type PayoutDetails = {
-    iban: string
-    tax_id: string
-    account_name: string
+export type ProfileFormValues = {
+  name: string
+  experience_years: number
+  price_per_hour: number
+  approach: string
+  photo: string
+  about: string
+  certificates: { title: string }[]
+  topics: SymptomCode[]
 }

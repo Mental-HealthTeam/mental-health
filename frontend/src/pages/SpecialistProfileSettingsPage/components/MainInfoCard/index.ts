@@ -1,0 +1,1 @@
+export { MainInfoCard } from './MainInfoCard'
