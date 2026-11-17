@@ -42,3 +42,5 @@ export const clientSessionsMock: ClientSession[] = Array.from({ length: 36 }, (_
         isSaved: index % 3 === 0,
     }
 })
+
+export const clientSessionsEmptyMock: ClientSession[] = []

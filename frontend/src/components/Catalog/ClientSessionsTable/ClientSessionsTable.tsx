@@ -20,7 +20,9 @@ const SESSION_DURATION_MS = 50 * 60 * 1000
 const filters: Filter[] = ['all', 'scheduled', 'completed', 'saved']
 
 const getMeetingUrl = (value: string | null): string | null => {
-    if (!value) return null
+    if (!value) {
+        return null
+    }
 
     try {
         const url = new URL(value)
@@ -63,8 +65,13 @@ export const ClientSessionsTable = ({ onJoinSession }: Props) => {
     const nextRowIndexRef = useRef<number | null>(null)
 
     const filteredSessions = sessions.filter((session) => {
-        if (activeFilter === 'all') return true
-        if (activeFilter === 'saved') return session.isSaved
+        if (activeFilter === 'all') {
+            return true
+        }
+
+        if (activeFilter === 'saved') {
+            return session.isSaved
+        }
 
         return session.status === activeFilter
     })
@@ -86,11 +93,15 @@ export const ClientSessionsTable = ({ onJoinSession }: Props) => {
 
         nextRowIndexRef.current = null
 
-        if (!container || rowIndex === null) return
+        if (!container || rowIndex === null) {
+            return
+        }
 
         const row = container.querySelectorAll<HTMLTableRowElement>('tbody tr')[rowIndex]
 
-        if (!row) return
+        if (!row) {
+            return
+        }
 
         const headerHeight = container.querySelector('thead')?.getBoundingClientRect().height ?? 0
 
@@ -109,7 +120,9 @@ export const ClientSessionsTable = ({ onJoinSession }: Props) => {
     }, [visibleCount])
 
     const changeFilter = (filter: Filter) => {
-        if (filter === activeFilter) return
+        if (filter === activeFilter) {
+            return
+        }
 
         nextRowIndexRef.current = null
         setActiveFilter(filter)
@@ -158,6 +171,7 @@ export const ClientSessionsTable = ({ onJoinSession }: Props) => {
                 {filters.map((filter) => (
                     <TagButton
                         key={filter}
+                        type="button"
                         variant="black"
                         isSelected={activeFilter === filter}
                         onClick={() => changeFilter(filter)}
@@ -252,6 +266,7 @@ export const ClientSessionsTable = ({ onJoinSession }: Props) => {
                                         {session.status === 'scheduled' ? (
                                             <div className="client-sessions-table__actions">
                                                 <PrimaryButton
+                                                    type="button"
                                                     className="client-sessions-table__join"
                                                     disabled={!canJoin}
                                                     onClick={() => handleJoin(session)}
@@ -307,7 +322,7 @@ export const ClientSessionsTable = ({ onJoinSession }: Props) => {
                     </p>
 
                     {hasMoreSessions && (
-                        <OutlineButton variant="secondary" onClick={showMore}>
+                        <OutlineButton type="button" variant="secondary" onClick={showMore}>
                             {t('showMore')}
                         </OutlineButton>
                     )}
