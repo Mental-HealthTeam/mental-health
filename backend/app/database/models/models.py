@@ -254,6 +254,13 @@ class Psychologist(Base):
         return self.title or self.title_eng
 
     @property
+    def display_specializations(self) -> list[str]:
+        return [
+            specialization.symptom_code.value
+            for specialization in self.psychologist_specializations
+        ]
+
+    @property
     def is_verified(self) -> bool:
         return self.profile_status == PsychologistStatus.ACTIVE
     
