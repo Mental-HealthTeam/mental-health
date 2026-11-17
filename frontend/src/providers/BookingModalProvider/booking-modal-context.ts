@@ -16,7 +16,6 @@ export type OpenBookingModalOptions = {
     specialist: BookingSpecialist
     slots: Slot[]
     timeZone?: string
-    onContinue: (selection: BookingSelection) => void
 }
 
 type BookingModalContextValue = {

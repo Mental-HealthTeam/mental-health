@@ -78,14 +78,23 @@ export const Modal = ({
     }
 
     useEffect(() => {
-        if (open) {
-            closingRef.current = false
-            userCloseRef.current = false
+        const frame = window.requestAnimationFrame(() => {
+            if (open) {
+                closingRef.current = false
+                userCloseRef.current = false
 
-            setIsClosing(false)
-            setIsPresent(true)
-        } else if (dialogRef.current?.open) {
-            startClose(false)
+                setIsClosing(false)
+                setIsPresent(true)
+            } else if (dialogRef.current?.open && !closingRef.current) {
+                closingRef.current = true
+                userCloseRef.current = false
+
+                setIsClosing(true)
+            }
+        })
+
+        return () => {
+            window.cancelAnimationFrame(frame)
         }
     }, [open])
 

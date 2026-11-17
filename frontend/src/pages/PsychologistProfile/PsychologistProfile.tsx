@@ -52,15 +52,7 @@ export const PsychologistProfile = () => {
 
                 <SpecialistProfileCard
                     className="psychologist-profile__specialist-card"
-                    actions={
-                        <BookingModalButton
-                            specialist={profile}
-                            slots={profile.mock_slots}
-                            onContinue={(selection) => {
-                                console.log('Booking selection:', selection)
-                            }}
-                        />
-                    }
+                    actions={<BookingModalButton specialist={profile} slots={profile.mock_slots} />}
                     specialist={profile}
                 />
 

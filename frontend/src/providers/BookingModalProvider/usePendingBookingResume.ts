@@ -154,30 +154,36 @@ export const usePendingBookingResume = ({ hasActiveModal, onUserChange }: Props)
             return
         }
 
-        const processedKey = `${user.id}:${booking.booking_id}`
+        const frame = window.requestAnimationFrame(() => {
+            const processedKey = `${user.id}:${booking.booking_id}`
 
-        if (processedBookings.current.has(processedKey)) {
-            return
-        }
-
-        processedBookings.current.add(processedKey)
-
-        if (!canContinuePayment(booking)) {
-            discardBooking(booking.booking_id)
-
-            if (resumeAfterLogin) {
-                dispatch(consumeBookingResume())
+            if (processedBookings.current.has(processedKey)) {
+                return
             }
 
-            return
-        }
+            processedBookings.current.add(processedKey)
 
-        dispatch(restoreBooking(booking))
+            if (!canContinuePayment(booking)) {
+                discardBooking(booking.booking_id)
 
-        setOffer({
-            booking,
-            locationKey: location.key,
+                if (resumeAfterLogin) {
+                    dispatch(consumeBookingResume())
+                }
+
+                return
+            }
+
+            dispatch(restoreBooking(booking))
+
+            setOffer({
+                booking,
+                locationKey: location.key,
+            })
         })
+
+        return () => {
+            window.cancelAnimationFrame(frame)
+        }
     }, [
         shouldCheckBooking,
         isCheckingBooking,
@@ -202,12 +208,20 @@ export const usePendingBookingResume = ({ hasActiveModal, onUserChange }: Props)
             return
         }
 
-        if (bookingError.status === 404 || bookingError.status === 422) {
+        if (bookingError.status !== 404 && bookingError.status !== 422) {
+            return
+        }
+
+        const frame = window.requestAnimationFrame(() => {
             discardBooking(pendingBookingId)
 
             if (resumeAfterLogin) {
                 dispatch(consumeBookingResume())
             }
+        })
+
+        return () => {
+            window.cancelAnimationFrame(frame)
         }
     }, [
         shouldCheckBooking,

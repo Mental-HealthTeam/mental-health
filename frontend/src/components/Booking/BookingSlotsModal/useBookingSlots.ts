@@ -18,13 +18,18 @@ export const useBookingSlots = ({ open, slots, language, timeZone }: Props) => {
             return
         }
 
-        setNow(Date.now())
+        const frame = window.requestAnimationFrame(() => {
+            setNow(Date.now())
+        })
 
         const timer = window.setInterval(() => {
             setNow(Date.now())
         }, 1000)
 
-        return () => window.clearInterval(timer)
+        return () => {
+            window.cancelAnimationFrame(frame)
+            window.clearInterval(timer)
+        }
     }, [open])
 
     const formatters = useMemo(
