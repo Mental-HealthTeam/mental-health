@@ -1,1 +1,1 @@
-export {AvatarUploader} from './AvatarUploader'
+export { AvatarUploader } from './AvatarUploader'

@@ -1,0 +1,53 @@
+@use '../../../../styles/abstracts' as a;
+
+.form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    &__label {
+        font-size: 14px;
+        font-weight: 600;
+        color: a.$color-gray-40;
+        transition: color 0.2s ease;
+    }
+
+    &__input {
+        width: 100%;
+        padding: 12px 16px;
+        border: 1px solid a.$color-gray-40;
+        border-radius: 14px;
+        background: a.$color-background;
+        font-family: inherit;
+        font-size: 16px;
+        color: a.$color-primary;
+        text-overflow: ellipsis;
+        outline: none;
+        transition:
+            border-color a.$transition-default,
+            box-shadow a.$transition-default;
+
+        &::placeholder {
+            color: a.$color-gray-60;
+        }
+
+        &:hover {
+            border-color: a.$color-gray-40;
+        }
+
+        &:focus {
+            border-color: a.$color-optional;
+            box-shadow: 0 0 0 1px a.$color-optional;
+        }
+
+        &:disabled {
+            background: a.$color-gray-0;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+    }
+
+    &:focus-within &__label {
+        color: a.$color-optional;
+    }
+}

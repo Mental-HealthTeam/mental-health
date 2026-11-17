@@ -21,6 +21,7 @@
         margin-inline: auto;
         margin-bottom: 24px;
         padding-inline: 20px;
+        padding-block: 16px;
     }
 
     &__title {
@@ -30,5 +31,55 @@
         letter-spacing: a.$letter-spacing-h4;
         font-weight: a.$font-weight-h4;
         text-align: left;
+    }
+
+    &__form {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        width: 100%;
+        flex: 1;
+    }
+
+    &__section {
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+        width: 100%;
+        background-color: a.$color-background;
+        padding: 24px;
+        border: 1px solid a.$color-gray-10;
+        border-radius: 25px;
+        gap: 16px;
+    }
+
+    &__section-title {
+        color: a.$color-primary;
+        font-size: a.$font-size-h5;
+        line-height: a.$line-height-h5;
+        letter-spacing: a.$letter-spacing-h5;
+        font-weight: a.$font-weight-h5;
+        text-align: left;
+    }
+
+    &__section-content {
+        display: grid;
+
+        &--my-data {
+            grid-template-columns: minmax(100px, 320px) 1fr;
+            gap: 20px;
+            align-self: stretch;
+        }
+
+        &--basic-inf {
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+    }
+
+    &__region-about {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
     }
 }

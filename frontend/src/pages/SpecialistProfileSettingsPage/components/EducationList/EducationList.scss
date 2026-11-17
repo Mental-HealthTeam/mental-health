@@ -1,0 +1,18 @@
+@use '../../../../styles/abstracts' as a;
+@use '../../../../styles/components' as c;
+
+.education-list {
+    &__button-add {
+        margin-top: 9px;
+        color: a.$color-optional;
+        border-bottom: 2px solid a.$color-optional;
+        transform-origin:
+            color a.$transition-default,
+            border-bottom-color a.$transition-default;
+
+        &:hover {
+            color: a.$color-gray-80;
+            border-bottom-color: a.$color-gray-80;
+        }
+    }
+}

@@ -63,13 +63,17 @@ export type UpdateProfileBody = {
     price_per_hour?: number
 }
 
-export type ProfileFormValues = {
+export type ProfileFormState = {
   name: string
-  experience_years: number
-  price_per_hour: number
+  experience_years: string
+  price_per_hour: string
   approach: string
-  photo: string
   about: string
   certificates: { title: string }[]
   topics: SymptomCode[]
 }
+
+export type OnFieldChange = <K extends keyof ProfileFormState>(
+    field: K,
+    value: ProfileFormState[K],
+) => void
