@@ -17,12 +17,26 @@ const PAGE_SIZE = 5
 
 const filters: Filter[] = ['all', 'scheduled', 'completed', 'saved']
 
+const getMeetingUrl = (value: string | null): string | null => {
+    if (!value) {
+        return null
+    }
+
+    try {
+        const url = new URL(value)
+
+        return url.protocol === 'https:' ? url.href : null
+    } catch {
+        return null
+    }
+}
+
 export const ClientSessionsTable = ({ onJoinSession }: Props) => {
     const { t, i18n } = useTranslation('clientCabinet', {
         keyPrefix: 'sessionsTable',
     })
 
-    const language = i18n.resolvedLanguage?.startsWith('en') ? 'en' : 'uk'
+    const language = (i18n.resolvedLanguage ?? i18n.language).startsWith('en') ? 'en' : 'uk'
 
     const [activeFilter, setActiveFilter] = useState<Filter>('scheduled')
     const [sessions, setSessions] = useState<ClientSession[]>(clientSessionsMock)
@@ -32,8 +46,13 @@ export const ClientSessionsTable = ({ onJoinSession }: Props) => {
     const nextRowIndexRef = useRef<number | null>(null)
 
     const filteredSessions = sessions.filter((session) => {
-        if (activeFilter === 'all') return true
-        if (activeFilter === 'saved') return session.isSaved
+        if (activeFilter === 'all') {
+            return true
+        }
+
+        if (activeFilter === 'saved') {
+            return session.isSaved
+        }
 
         return session.status === activeFilter
     })
@@ -47,11 +66,15 @@ export const ClientSessionsTable = ({ onJoinSession }: Props) => {
 
         nextRowIndexRef.current = null
 
-        if (!container || rowIndex === null) return
+        if (!container || rowIndex === null) {
+            return
+        }
 
         const row = container.querySelectorAll<HTMLTableRowElement>('tbody tr')[rowIndex]
 
-        if (!row) return
+        if (!row) {
+            return
+        }
 
         const headerHeight = container.querySelector('thead')?.getBoundingClientRect().height ?? 0
 
@@ -70,7 +93,9 @@ export const ClientSessionsTable = ({ onJoinSession }: Props) => {
     }, [visibleCount])
 
     const changeFilter = (filter: Filter) => {
-        if (filter === activeFilter) return
+        if (filter === activeFilter) {
+            return
+        }
 
         nextRowIndexRef.current = null
         setActiveFilter(filter)
@@ -96,6 +121,17 @@ export const ClientSessionsTable = ({ onJoinSession }: Props) => {
         )
     }
 
+    const handleJoin = (session: ClientSession) => {
+        const url = getMeetingUrl(session.meetLink)
+
+        if (session.status !== 'scheduled' || !session.canJoin || !url) {
+            return
+        }
+
+        window.open(url, '_blank', 'noopener,noreferrer')
+        onJoinSession?.(session.id)
+    }
+
     return (
         <section className="client-sessions-table">
             <h2 className="client-sessions-table__title">{t('title')}</h2>
@@ -108,6 +144,7 @@ export const ClientSessionsTable = ({ onJoinSession }: Props) => {
                 {filters.map((filter) => (
                     <TagButton
                         key={filter}
+                        type="button"
                         variant="black"
                         isSelected={activeFilter === filter}
                         onClick={() => changeFilter(filter)}
@@ -147,6 +184,8 @@ export const ClientSessionsTable = ({ onJoinSession }: Props) => {
                     <tbody key={activeFilter}>
                         {visibleSessions.map((session) => {
                             const specialistName = session.specialistName[language]
+                            const meetingUrl = getMeetingUrl(session.meetLink)
+                            const canJoin = session.canJoin && meetingUrl !== null
 
                             return (
                                 <tr key={session.id} className="client-sessions-table__row">
@@ -201,16 +240,19 @@ export const ClientSessionsTable = ({ onJoinSession }: Props) => {
                                         {session.status === 'scheduled' ? (
                                             <div className="client-sessions-table__actions">
                                                 <PrimaryButton
+                                                    type="button"
                                                     className="client-sessions-table__join"
-                                                    disabled={!session.canJoin}
-                                                    onClick={() => onJoinSession?.(session.id)}
+                                                    disabled={!canJoin}
+                                                    onClick={() => handleJoin(session)}
                                                 >
                                                     {t('join')}
                                                 </PrimaryButton>
 
-                                                <span className="client-sessions-table__hint">
-                                                    {t('joinHint')}
-                                                </span>
+                                                {!canJoin && (
+                                                    <span className="client-sessions-table__hint">
+                                                        {t('joinHint')}
+                                                    </span>
+                                                )}
                                             </div>
                                         ) : (
                                             <span className="client-sessions-table__hint">
@@ -254,7 +296,7 @@ export const ClientSessionsTable = ({ onJoinSession }: Props) => {
                     </p>
 
                     {hasMoreSessions && (
-                        <OutlineButton variant="secondary" onClick={showMore}>
+                        <OutlineButton type="button" variant="secondary" onClick={showMore}>
                             {t('showMore')}
                         </OutlineButton>
                     )}

@@ -77,7 +77,7 @@ export const UserMenu = ({ user, className, variant = 'full', noBackground = fal
                 type="button"
                 aria-expanded={isOpen}
                 aria-haspopup="menu"
-                aria-label={variant === 'compact' ? user.name : undefined}
+                aria-label={variant === 'compact' ? (user.name ?? user.email) : undefined}
                 onClick={() => setIsOpen((prev) => !prev)}
             >
                 <AvatarPlaceholder variant="small" className="user-menu__avatar" />

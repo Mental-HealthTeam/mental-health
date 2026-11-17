@@ -51,12 +51,14 @@ export const SessionCard = ({ className, session }: Props) => {
                 {booking && (
                     <>
                         <Avatar
-                            src={booking.client.avatar_url ?? ''}
+                            src={booking.client?.avatar_url ?? ''}
                             alt=""
                             size="small"
                             className="session-card__client-avatar-url"
                         />
-                        <div className="session-card__client-name">{booking.client.name}</div>
+                        <div className="session-card__client-name">
+                            {booking.client?.name ?? ''}
+                        </div>
                     </>
                 )}
             </div>
