@@ -28,7 +28,7 @@ export const clientSessionsMock: ClientSession[] = Array.from({ length: 36 }, (_
     const isCompleted = index >= 18
     const day = String((index % 18) + 1).padStart(2, '0')
     const month = isCompleted ? '10' : '12'
-    const meetLink = index % 4 === 0 ? null : 'https://meet.google.com/'
+    const meetLink = isCompleted ? null : 'https://meet.google.com/'
 
     return {
         id: `session-${index + 1}`,
@@ -38,7 +38,7 @@ export const clientSessionsMock: ClientSession[] = Array.from({ length: 36 }, (_
         time: sessionTimes[index % sessionTimes.length],
         status: isCompleted ? 'completed' : 'scheduled',
         meetLink,
-        canJoin: !isCompleted && meetLink !== null,
+        canJoin: !isCompleted,
         isSaved: index % 3 === 0,
     }
 })

@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { AvatarFallbackIcon } from '../../UI/Icons'
@@ -14,6 +14,8 @@ type Props = {
 }
 
 const PAGE_SIZE = 5
+const JOIN_BEFORE_START_MS = 10 * 60 * 1000
+const SESSION_DURATION_MS = 50 * 60 * 1000
 
 const filters: Filter[] = ['all', 'scheduled', 'completed', 'saved']
 
@@ -31,6 +33,22 @@ const getMeetingUrl = (value: string | null): string | null => {
     }
 }
 
+const canJoinSession = (session: ClientSession, now: number): boolean => {
+    if (session.status !== 'scheduled' || !getMeetingUrl(session.meetLink)) {
+        return false
+    }
+
+    const [day, month, year] = session.date.split('.').map(Number)
+    const [hours, minutes] = session.time.split(':').map(Number)
+    const startsAt = new Date(year, month - 1, day, hours, minutes).getTime()
+
+    return (
+        Number.isFinite(startsAt) &&
+        now >= startsAt - JOIN_BEFORE_START_MS &&
+        now < startsAt + SESSION_DURATION_MS
+    )
+}
+
 export const ClientSessionsTable = ({ onJoinSession }: Props) => {
     const { t, i18n } = useTranslation('clientCabinet', {
         keyPrefix: 'sessionsTable',
@@ -41,6 +59,7 @@ export const ClientSessionsTable = ({ onJoinSession }: Props) => {
     const [activeFilter, setActiveFilter] = useState<Filter>('scheduled')
     const [sessions, setSessions] = useState<ClientSession[]>(clientSessionsMock)
     const [visibleCount, setVisibleCount] = useState(PAGE_SIZE)
+    const [now, setNow] = useState(() => Date.now())
 
     const scrollRef = useRef<HTMLDivElement>(null)
     const nextRowIndexRef = useRef<number | null>(null)
@@ -59,6 +78,14 @@ export const ClientSessionsTable = ({ onJoinSession }: Props) => {
 
     const visibleSessions = filteredSessions.slice(0, visibleCount)
     const hasMoreSessions = visibleSessions.length < filteredSessions.length
+
+    useEffect(() => {
+        const timer = window.setInterval(() => {
+            setNow(Date.now())
+        }, 1000)
+
+        return () => window.clearInterval(timer)
+    }, [])
 
     useLayoutEffect(() => {
         const container = scrollRef.current
@@ -122,11 +149,11 @@ export const ClientSessionsTable = ({ onJoinSession }: Props) => {
     }
 
     const handleJoin = (session: ClientSession) => {
+        if (!canJoinSession(session, now)) return
+
         const url = getMeetingUrl(session.meetLink)
 
-        if (session.status !== 'scheduled' || !session.canJoin || !url) {
-            return
-        }
+        if (!url) return
 
         window.open(url, '_blank', 'noopener,noreferrer')
         onJoinSession?.(session.id)
@@ -184,8 +211,7 @@ export const ClientSessionsTable = ({ onJoinSession }: Props) => {
                     <tbody key={activeFilter}>
                         {visibleSessions.map((session) => {
                             const specialistName = session.specialistName[language]
-                            const meetingUrl = getMeetingUrl(session.meetLink)
-                            const canJoin = session.canJoin && meetingUrl !== null
+                            const canJoin = canJoinSession(session, now)
 
                             return (
                                 <tr key={session.id} className="client-sessions-table__row">

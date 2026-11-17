@@ -81,7 +81,7 @@ export const UserMenu = ({ user, className, variant = 'full', noBackground = fal
                 onClick={() => setIsOpen((prev) => !prev)}
             >
                 <AvatarPlaceholder variant="small" className="user-menu__avatar" />
-                <span className="user-menu__name">{user.name}</span>
+                <span className="user-menu__name">{user.name ?? user.email}</span>
             </button>
 
             <AnimatePresence>
