@@ -113,6 +113,10 @@ class User(Base):
         String(255),
         unique=True,
     )
+    telegram: Mapped[str | None] = mapped_column(
+        String(255),
+        unique=True
+    )
     role: Mapped[UserRole] = mapped_column(
         SAEnum(UserRole, name="user_role"),
         default=UserRole.CLIENT,
@@ -126,13 +130,16 @@ class User(Base):
         "Psychologist",
         back_populates="user"
     )
-
+    user_symptom_codes: Mapped[List["UserSymptomCode"]] = relationship(
+        "UserSymptomCode",
+        back_populates="user",
+        cascade="all, delete-orphan"
+    )
     bookings: Mapped[List["Booking"]] = relationship(
         "Booking",
         back_populates="client",
         foreign_keys="Booking.client_id"
     )
-
     user_identities: Mapped[List["UserIdentity"]] = relationship(
         "UserIdentity",
         back_populates="user"
@@ -151,6 +158,24 @@ class User(Base):
         "Booking",
         back_populates="dispute_resolved_by",
         foreign_keys="Booking.dispute_resolved_by_id"
+    )
+
+
+class UserSymptomCode(Base):
+    __tablename__ = "user_symptom_codes"
+
+    user_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("users.id"),
+        primary_key=True,
+    )
+    symptom_code: Mapped[SymptomCode] = mapped_column(
+        SAEnum(SymptomCode, name="symptom_code"),
+        primary_key=True,
+    )
+
+    user: Mapped["User"] = relationship(
+        "User",
+        back_populates="user_symptom_codes"
     )
 
 
@@ -256,7 +281,7 @@ class Psychologist(Base):
     @property
     def is_verified(self) -> bool:
         return self.profile_status == PsychologistStatus.ACTIVE
-    
+
     @property
     def avatar_url(self) -> str | None:
         return self.user.avatar_url
