@@ -62,12 +62,20 @@ data "aws_ami" "ubuntu" {
   owners = ["099720109477"]
 }
 
+resource "aws_iam_instance_profile" "app_server" {
+  name = "${var.project_name}-${var.environment}-profile"
+  role = "MentalHealthProdRole"
+}
+
+
 resource "aws_instance" "app_server" {
   ami           = data.aws_ami.ubuntu.id
   instance_type = var.instance_type
   key_name      = aws_key_pair.deployer.key_name
 
   vpc_security_group_ids = [aws_security_group.server_sg.id]
+
+  iam_instance_profile = aws_iam_instance_profile.app_server.name
 
   associate_public_ip_address = true
 
