@@ -1,17 +1,16 @@
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
-import { AiChat } from '../AiChat'
-import { ClientProfileCard } from '../ClientProfileCard'
-import type { ClientRequest } from '../ClientProfileCard'
-import { Container } from '../Container'
-import { BackButton } from '../UI/Buttons'
-import { ClientSessionsTable } from '../Catalog/ClientSessionsTable'
-import { Header } from '../Header'
-import { Footer } from '../Footer'
 import { useClientProfileQuery } from '../../services/clientCabinetApi'
 
 import './ClientCabinetPage.scss'
+import { AiChat } from '../../components/AiChat'
+import { ClientProfileCard, type ClientRequest } from '../../components/ClientProfileCard'
+import { Header } from '../../components/Header'
+import { Container } from '../../components/Container'
+import { BackButton } from '../../components/UI/Buttons'
+import { ClientSessionsTable } from '../../components/Catalog/ClientSessionsTable'
+import { Footer } from '../../components/Footer'
 
 const previewClient = {
     names: {
@@ -41,6 +40,7 @@ export const ClientCabinetPage = () => {
 
     const name = profile ? profile.name : previewClient.names[language]
     const avatarUrl = profile ? profile.avatar_url : previewClient.avatarUrl
+    const email = profile ? profile.email : previewClient.email
 
     return (
         <div className="client-cabinet-page">
@@ -55,7 +55,7 @@ export const ClientCabinetPage = () => {
                     <div className="client-cabinet-page__sections">
                         <ClientProfileCard
                             name={name}
-                            email={previewClient.email}
+                            email={email}
                             avatarUrl={avatarUrl}
                             requests={previewRequests}
                             onEditProfile={() => navigate('/cabinet/settings')}

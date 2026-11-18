@@ -1,4 +1,4 @@
-import { type CSSProperties, useEffect, useRef, useState } from 'react'
+import { type CSSProperties, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { useScreenLayout } from '../../hooks'
@@ -53,12 +53,17 @@ export const SpecialistsSection = () => {
 
     const availableFilters = SPECIALISTS_FILTER_CODES.filter((code) => symptomCodes.includes(code))
 
-    const selectedSymptomCodes: SymptomCode[] | undefined =
+    const selectedSymptomCode =
         activeFilter !== ALL_FILTER &&
         activeFilter !== EMERGENCY_FILTER &&
         symptomCodes.includes(activeFilter as SymptomCode)
-            ? [activeFilter as SymptomCode]
+            ? (activeFilter as SymptomCode)
             : undefined
+
+    const selectedSymptomCodes = useMemo<SymptomCode[] | undefined>(
+        () => (selectedSymptomCode ? [selectedSymptomCode] : undefined),
+        [selectedSymptomCode],
+    )
 
     const sliderStyle = {
         '--visible-cards': visibleCards,
@@ -138,7 +143,7 @@ export const SpecialistsSection = () => {
             .finally(() => {
                 setIsInitialLoading(false)
             })
-    }, [activeFilter, lang])
+    }, [activeFilter, lang, getPsychologists, selectedSymptomCodes])
 
     const handleFilterChange = (filter: string) => {
         if (filter === activeFilter) {
