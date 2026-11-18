@@ -12,12 +12,13 @@ from config.settings import BaseAppSettings
 from auth.google_provider import GoogleAuthProvider
 from config.dependencies import get_settings, get_jwt_manager
 from auth.token_interface import JWTAuthManagerInterface
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from database.models.models import User, UserRole
 from exceptions.auth_provider import BaseSecurityError
 from schemas.auth import ClientInfo
 from exceptions.base import AppError
-
+from sqlalchemy.orm import selectinload
 
 logger = logging.getLogger(__name__)
 
@@ -103,7 +104,14 @@ async def get_current_user(
             "Not authenticated",
         )
 
-    user = await db.get(User, user_id)
+    stmt = select(User).where(
+        User.id == user_id
+    ).options(
+        selectinload(User.user_symptom_codes)
+    )
+    response = await db.execute(stmt)
+    user = response.scalars().first()
+
     if user is None:
         logger.warning("Access token for unknown user (user_id=%s)", user_id)
         raise AppError(
