@@ -40,6 +40,7 @@ export const ClientCabinetPage = () => {
 
     const name = profile ? profile.name : previewClient.names[language]
     const avatarUrl = profile ? profile.avatar_url : previewClient.avatarUrl
+    const email = profile ? profile.email : previewClient.email
 
     return (
         <div className="client-cabinet-page">
@@ -54,7 +55,7 @@ export const ClientCabinetPage = () => {
                     <div className="client-cabinet-page__sections">
                         <ClientProfileCard
                             name={name}
-                            email={previewClient.email}
+                            email={email}
                             avatarUrl={avatarUrl}
                             requests={previewRequests}
                             onEditProfile={() => navigate('/cabinet/settings')}
