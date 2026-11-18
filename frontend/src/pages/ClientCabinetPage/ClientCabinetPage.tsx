@@ -1,17 +1,16 @@
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
-import { AiChat } from '../AiChat'
-import { ClientProfileCard } from '../ClientProfileCard'
-import type { ClientRequest } from '../ClientProfileCard'
-import { Container } from '../Container'
-import { BackButton } from '../UI/Buttons'
-import { ClientSessionsTable } from '../Catalog/ClientSessionsTable'
-import { Header } from '../Header'
-import { Footer } from '../Footer'
 import { useClientProfileQuery } from '../../services/clientCabinetApi'
 
 import './ClientCabinetPage.scss'
+import { AiChat } from '../../components/AiChat'
+import { ClientProfileCard, type ClientRequest } from '../../components/ClientProfileCard'
+import { Header } from '../../components/Header'
+import { Container } from '../../components/Container'
+import { BackButton } from '../../components/UI/Buttons'
+import { ClientSessionsTable } from '../../components/Catalog/ClientSessionsTable'
+import { Footer } from '../../components/Footer'
 
 const previewClient = {
     names: {
