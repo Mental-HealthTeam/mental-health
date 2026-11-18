@@ -6,7 +6,7 @@ import './InfoTile.scss'
 type Props = {
     className?: string
     icon: ReactNode
-    label: string
+    label: string | ReactNode
     value: string
 }
 
