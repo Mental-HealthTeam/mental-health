@@ -94,7 +94,11 @@
         max-height: c.$pp-profile-card-info-tile-max-height;
     }
 
-    .profile-card__info-tile--hide {
+    .profile-card__info-tile--desktop-only {
+        display: none;
+    }
+
+    &__label--desktop {
         display: none;
     }
 
@@ -105,7 +109,10 @@
         align-items: center;
         gap: c.$pp-profile-card-approach-gap;
         padding-bottom: c.$pp-profile-card-approach-padding-bottom;
-        border-bottom: 1px solid a.$color-gray-10;
+    }
+
+    .profile-card__approach--desktop-only {
+        display: none;
     }
 
     &__approach-label {
@@ -126,14 +133,11 @@
 
     &__actions {
         grid-area: button;
+        border-top: 1px solid a.$color-gray-10;
     }
-}
 
-@media (min-width: a.$breakpoint-mobile) {
-    .profile-card {
-        .profile-card__info-tile--hide {
-            display: flex;
-        }
+    &__label--mobile {
+        display: inline;
     }
 }
 
@@ -196,6 +200,26 @@
             gap: c.$pp-profile-card-approach-gap;
             padding-block: c.$pp-profile-card-approach-padding-block-tablet;
             border-top: 1px solid a.$color-gray-10;
+        }
+
+        .profile-card__info-tile--desktop-only {
+            display: flex;
+        }
+
+        .profile-card__approach--desktop-only {
+            display: flex;
+        }
+
+        &__label--desktop {
+            display: inline;
+        }
+
+        &__label--mobile {
+            display: none;
+        }
+
+        &__wrapper-button {
+          max-width: max-content;
         }
     }
 }
