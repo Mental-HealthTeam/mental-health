@@ -7,8 +7,9 @@ import { requestBookingResume } from '../../app/store/slices/bookingSlice'
 import { useCreateCheckoutMutation } from '../../services/bookingsApi'
 import type { Booking } from '../../types/booking'
 
-import { canContinuePayment } from './bookingResume.utils'
 import { ModalLoadingFallback } from '../../components/UI/ModalLoadingFallback'
+
+import { canContinuePayment } from './bookingResume.utils'
 
 const ResumeBookingModal = lazy(() =>
     import('../../components/Booking/ResumeBookingModal').then((module) => ({
@@ -20,15 +21,17 @@ type Props = {
     booking: Booking
     onClose: () => void
     onExpired: () => void
+    onCheckoutReady: (checkoutUrl: string) => void
 }
 
-export const ResumeBookingFlow = ({ booking, onClose, onExpired }: Props) => {
+export const ResumeBookingFlow = ({ booking, onClose, onExpired, onCheckoutReady }: Props) => {
     const dispatch = useAppDispatch()
     const navigate = useNavigate()
     const location = useLocation()
     const { t } = useTranslation('specialistProfile')
 
     const submittingRef = useRef(false)
+
     const [createCheckout, { isLoading, error }] = useCreateCheckoutMutation()
 
     useEffect(() => {
@@ -78,7 +81,7 @@ export const ResumeBookingFlow = ({ booking, onClose, onExpired }: Props) => {
             }
 
             if (result.data) {
-                window.location.assign(result.data.checkout_url)
+                onCheckoutReady(result.data.checkout_url)
             }
         } finally {
             submittingRef.current = false

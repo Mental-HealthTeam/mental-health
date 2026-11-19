@@ -6,10 +6,11 @@ import { useBookingSlots } from './useBookingSlots'
 import { useBookingSubmit } from './useBookingSubmit'
 import type { BookingSlotsModalProps } from './bookingSlots.types'
 
+import { BookingSpecialist } from './BookingSpecialist/BookingSpecialist'
+import { BookingSlotsList } from './BookingSlotsList/BookingSlotsList'
+import { BookingSlotsFooter } from './BookingSlotsFooter/BookingSlotsFooter'
+
 import './BookingSlotsModal.scss'
-import { BookingSpecialist } from './BookingSpecialist/BookingSpecialist.tsx'
-import { BookingSlotsList } from './BookingSlotsList/BookingSlotsList.tsx'
-import { BookingSlotsFooter } from './BookingSlotsFooter/BookingSlotsFooter.tsx'
 
 export const BookingSlotsModal = ({
     open,
@@ -17,6 +18,7 @@ export const BookingSlotsModal = ({
     slots,
     initialSelectedTime = '',
     onClose,
+    onCheckoutReady,
     timeZone,
     aiSessionId,
 }: BookingSlotsModalProps) => {
@@ -46,6 +48,7 @@ export const BookingSlotsModal = ({
         initialSelectedTime,
         aiSessionId,
         onClose,
+        onCheckoutReady,
     })
 
     const selected = availableSlots.find(({ date }) => date.getTime() === Date.parse(selectedSlot))

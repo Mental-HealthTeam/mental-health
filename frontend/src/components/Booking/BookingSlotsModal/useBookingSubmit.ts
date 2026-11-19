@@ -16,7 +16,7 @@ const savePendingBookingId = (bookingId: string) => {
     try {
         sessionStorage.setItem(STORAGE_KEY, bookingId)
     } catch {
-        // Continue with Redux if storage is unavailable.
+        return
     }
 }
 
@@ -32,6 +32,7 @@ type Props = {
     initialSelectedTime: string
     aiSessionId?: string
     onClose: () => void
+    onCheckoutReady: (checkoutUrl: string) => void
 }
 
 export const useBookingSubmit = ({
@@ -39,6 +40,7 @@ export const useBookingSubmit = ({
     initialSelectedTime,
     aiSessionId,
     onClose,
+    onCheckoutReady,
 }: Props) => {
     const dispatch = useAppDispatch()
     const navigate = useNavigate()
@@ -135,6 +137,32 @@ export const useBookingSubmit = ({
                 if (result.error) {
                     if ('status' in result.error && result.error.status === 401) {
                         redirectToLogin()
+                        return
+                    }
+
+                    if (
+                        'status' in result.error &&
+                        result.error.status === 409 &&
+                        'data' in result.error &&
+                        result.error.data &&
+                        typeof result.error.data === 'object' &&
+                        'code' in result.error.data &&
+                        result.error.data.code === 'SLOT_ALREADY_BOOKED'
+                    ) {
+                        const errorData = result.error.data as {
+                            nearest_available_slot?: string | null
+                        }
+
+                        onClose()
+
+                        navigate('/slot-unavailable', {
+                            state: {
+                                psychologistId,
+                                nearestAvailableSlot: errorData.nearest_available_slot ?? null,
+                            },
+                        })
+
+                        return
                     }
 
                     return
@@ -165,7 +193,7 @@ export const useBookingSubmit = ({
             }
 
             if (result.data) {
-                window.location.assign(result.data.checkout_url)
+                onCheckoutReady(result.data.checkout_url)
             }
         } finally {
             submittingRef.current = false

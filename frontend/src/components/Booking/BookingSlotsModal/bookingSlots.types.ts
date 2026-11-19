@@ -11,6 +11,7 @@ export type BookingSlotsModalProps = {
     slots: Slot[]
     initialSelectedTime?: string
     onClose: () => void
+    onCheckoutReady: (checkoutUrl: string) => void
     onContinue?: (selectedTime: string) => void
     timeZone?: string
     aiSessionId?: string
