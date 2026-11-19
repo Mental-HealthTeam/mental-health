@@ -7,6 +7,7 @@ class BaseAppSettings(BaseSettings):
     REDIS_URL: str = "redis://redis:6379/0"
     XAI_API_KEY: str = "your-xai-api-key-here"
     GROQ_API_KEY: str = "your-groq-api-key-here"
+    CLAUDE_API_KEY: str = "your-claude-api-key-here"
     SESSION_TTL: int = 1800
     MAX_MESSAGES: int = 10
     CORS_ORIGINS: str = "http://localhost"
