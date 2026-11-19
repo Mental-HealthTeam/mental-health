@@ -4,17 +4,9 @@ import type { SymptomCode } from '../../types/psychologist'
 export const specialistProfileSchema = z.object({
     name: z.string().trim().min(1).max(255),
 
-    experience_years: z
-        .string()
-        .trim()
-        .min(1)
-        .pipe(z.coerce.number<string>().int().min(0).max(80)),
+    experience_years: z.string().trim().min(1).pipe(z.coerce.number<string>().int().min(0).max(80)),
 
-    price_per_hour: z
-        .string()
-        .trim()
-        .min(1)
-        .pipe(z.coerce.number<string>().min(0).max(1_000_000)),
+    price_per_hour: z.string().trim().min(1).pipe(z.coerce.number<string>().min(0).max(1_000_000)),
 
     approach: z.string().trim().max(1000),
 
@@ -22,7 +14,7 @@ export const specialistProfileSchema = z.object({
 
     certificates: z
         .array(z.object({ title: z.string().trim().max(255) }))
-        .transform((list) => list.filter((item) => item.title !== '')),
+        .transform((list) => list.map((item) => item.title).filter((title) => title !== '')),
 
     topics: z.array(z.custom<SymptomCode>((value) => typeof value === 'string')),
 })

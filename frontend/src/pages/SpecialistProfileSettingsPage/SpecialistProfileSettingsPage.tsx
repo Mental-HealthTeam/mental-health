@@ -9,17 +9,16 @@ import type {
     SpecialistProfileSubmit,
     SpecialistProfileValues,
 } from '../../components/SpecialistProfileForm/specialistProfile.types'
-import {
-    useDeleteAvatarMutation,
-    useUpdateProfileMutation,
-    useUploadAvatarMutation,
-} from '../../services/authApi'
+import { useDeleteAvatarMutation, useUploadAvatarMutation } from '../../services/authApi'
 import { useTranslation } from 'react-i18next'
 
 import type { SpecialistMe } from '../../types/specialist'
 import { useBlocker, useNavigate } from 'react-router-dom'
 import { useEffect, useRef, useState } from 'react'
-import { useGetSpecialistMeQuery } from '../../services/specialistProfileApi'
+import {
+    useGetSpecialistMeQuery,
+    useUpdateSpecialistProfileMutation,
+} from '../../services/specialistProfileApi'
 
 type ProfileEditorProps = {
     specialist: SpecialistMe
@@ -45,7 +44,7 @@ const ProfileEditor = ({ specialist }: ProfileEditorProps) => {
     const allowLeaveRef = useRef(false)
     const confirmationShownRef = useRef(false)
 
-    const [updateProfile] = useUpdateProfileMutation()
+    const [updateSpecialistProfile] = useUpdateSpecialistProfileMutation()
     const [uploadAvatar] = useUploadAvatarMutation()
     const [deleteAvatar] = useDeleteAvatarMutation()
 
@@ -88,8 +87,14 @@ const ProfileEditor = ({ specialist }: ProfileEditorProps) => {
     }, [isDirty])
 
     const handleSubmit = async (values: SpecialistProfileSubmit) => {
-        await updateProfile({
+        await updateSpecialistProfile({
             name: values.name,
+            experience_years: values.experience_years,
+            price_per_hour: values.price_per_hour,
+            approach: values.approach,
+            about: values.about,
+            certificates: values.certificates,
+            topics: values.topics,
         }).unwrap()
 
         if (values.avatarFile) {
