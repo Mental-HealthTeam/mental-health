@@ -1,4 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit'
+import { setupListeners } from '@reduxjs/toolkit/query'
 
 import { psychologistsApi } from '../../services/psychologistsApi'
 import aiChatReducer from './slices/aiChatSlice'
@@ -26,6 +27,8 @@ export const store = configureStore({
             authApi.middleware,
         ),
 })
+
+setupListeners(store.dispatch)
 
 export type RootState = ReturnType<typeof store.getState>
 export type AppDispatch = typeof store.dispatch

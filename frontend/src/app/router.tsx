@@ -1,6 +1,4 @@
-import { createBrowserRouter, Outlet } from 'react-router-dom'
-
-import { BookingModalProvider } from '../providers/BookingModalProvider'
+import { createBrowserRouter } from 'react-router-dom'
 import { Home } from '../pages/Home'
 import { PsychologistProfile } from '../pages/PsychologistProfile'
 import { SpecialistCabinet } from '../pages/SpecialistCabinet/SpecialistCabinet'
@@ -13,12 +11,8 @@ import { SlotUnavailablePage } from '../pages/SlotUnavailablePage'
 import { SuccessPage } from '../pages/SuccessPage'
 import { SpecialistProfileSettingsPage } from '../pages/SpecialistProfileSettingsPage'
 import { ClientCabinetPage } from '../pages/ClientCabinetPage'
-
-const RootLayout = () => (
-    <BookingModalProvider>
-        <Outlet />
-    </BookingModalProvider>
-)
+import { PaymentCancelPage } from '../pages/PaymentCancelPage'
+import { RootLayout } from './RootLayout.tsx'
 
 export const router = createBrowserRouter([
     {
@@ -39,6 +33,10 @@ export const router = createBrowserRouter([
             { path: '/sign-in', element: <SignIn /> },
             { path: '/sign-up', element: <SignUp /> },
             { path: '*', element: <NotFoundPage /> },
+            {
+                path: '/payment/cancel',
+                element: <PaymentCancelPage />,
+            },
         ],
     },
 ])

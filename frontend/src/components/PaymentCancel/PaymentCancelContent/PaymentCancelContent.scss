@@ -1,0 +1,68 @@
+@use '../../../styles/abstracts' as a;
+
+.payment-cancel-page {
+  &__content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    width: 100%;
+    max-width: 900px;
+
+    margin-inline: auto;
+
+    text-align: center;
+  }
+
+  &__title {
+    margin: 0;
+
+    font-size: a.$font-size-h3;
+    line-height: a.$line-height-h3;
+    font-weight: a.$font-weight-h3;
+    letter-spacing: a.$letter-spacing-h3;
+  }
+
+  &__description {
+    max-width: 680px;
+    margin: 16px 0 0;
+
+    color: a.$color-text-secondary;
+
+    font-size: a.$font-size-body;
+    line-height: a.$line-height-body;
+  }
+
+  &__state {
+    margin: auto;
+
+    color: a.$color-text-secondary;
+
+    font-size: a.$font-size-body;
+    text-align: center;
+  }
+
+  &__checkout-error {
+    margin: 16px 0 0;
+
+    color: a.$color-error;
+
+    font-size: a.$font-size-caption-primary;
+    line-height: a.$line-height-caption-primary;
+
+    text-align: center;
+  }
+}
+
+@media (max-width: 767px) {
+  .payment-cancel-page {
+    &__title {
+      font-size: 36px;
+      line-height: 1.15;
+    }
+
+    &__description {
+      font-size: a.$font-size-caption-secondary;
+    }
+  }
+}

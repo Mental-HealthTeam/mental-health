@@ -1,0 +1,25 @@
+@use '../../../styles/abstracts' as a;
+
+.payment-cancel-page {
+  &__illustration {
+    width: 240px;
+    max-width: 100%;
+
+    margin-top: 36px;
+
+    svg {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+  }
+}
+
+@media (max-width: 767px) {
+  .payment-cancel-page {
+    &__illustration {
+      width: 200px;
+      margin-top: 28px;
+    }
+  }
+}
