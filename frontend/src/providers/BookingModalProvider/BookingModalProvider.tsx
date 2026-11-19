@@ -6,6 +6,7 @@ import { useLocation } from 'react-router-dom'
 
 import { PageLoadingOverlay } from '../../components/UI/PageLoadingOverlay'
 import { useGetPendingBookingsQuery } from '../../services/bookingsApi'
+import { useGetPsychologistByIdQuery } from '../../services/psychologistsApi'
 import type { Booking } from '../../types/booking'
 
 import { BookingModalContext } from './booking-modal-context'
@@ -19,6 +20,7 @@ import type { BookingModalRequest } from './useDraftBookingResume'
 
 const BOOKING_CHECK_INTERVAL = 5000
 const BOOKING_POLLING_INTERVAL = 20000
+const SLOTS_POLLING_INTERVAL = 20000
 
 type Request = BookingModalRequest & {
     instanceId: number
@@ -31,7 +33,7 @@ type Props = {
 
 export const BookingModalProvider = ({ children }: Props) => {
     const location = useLocation()
-    const { t } = useTranslation('paymentCancel')
+    const { t, i18n } = useTranslation('paymentCancel')
 
     const nextId = useRef(0)
     const redirectingRef = useRef(false)
@@ -75,6 +77,39 @@ export const BookingModalProvider = ({ children }: Props) => {
     }, [pendingBookingsResponse, now])
 
     const hasPendingBookings = pendingBookings.length > 0
+
+    const profileMatch = location.pathname.match(/^\/psychologist-profile\/([^/]+)\/?$/)
+
+    const profilePsychologistId = profileMatch?.[1] ?? null
+
+    const activePsychologistId = activeRequest?.specialist.psychologist_id ?? profilePsychologistId
+
+    const { currentData: updatedSpecialist } = useGetPsychologistByIdQuery(
+        activePsychologistId
+            ? {
+                  id: activePsychologistId,
+                  lang: i18n.language,
+              }
+            : skipToken,
+        {
+            refetchOnMountOrArgChange: true,
+            refetchOnFocus: true,
+            refetchOnReconnect: true,
+            pollingInterval: activePsychologistId ? SLOTS_POLLING_INTERVAL : 0,
+            skipPollingIfUnfocused: true,
+        },
+    )
+
+    const currentSpecialist =
+        updatedSpecialist?.psychologist_id === activeRequest?.specialist.psychologist_id
+            ? updatedSpecialist
+            : activeRequest?.specialist
+
+    const currentSlots =
+        updatedSpecialist &&
+        updatedSpecialist.psychologist_id === activeRequest?.specialist.psychologist_id
+            ? updatedSpecialist.mock_slots
+            : (activeRequest?.slots ?? [])
 
     useEffect(() => {
         if (!hasPendingBookings) {
@@ -157,13 +192,7 @@ export const BookingModalProvider = ({ children }: Props) => {
             return
         }
 
-        const timeout = window.setTimeout(() => {
-            window.location.assign(paymentRedirectUrl)
-        }, 250)
-
-        return () => {
-            window.clearTimeout(timeout)
-        }
+        window.location.assign(paymentRedirectUrl)
     }, [paymentRedirectUrl])
 
     useEffect(() => {
@@ -238,8 +267,8 @@ export const BookingModalProvider = ({ children }: Props) => {
                 <BookingSlotsFlow
                     key={activeRequest.instanceId}
                     open
-                    specialist={activeRequest.specialist}
-                    slots={activeRequest.slots}
+                    specialist={currentSpecialist ?? activeRequest.specialist}
+                    slots={currentSlots}
                     timeZone={activeRequest.timeZone}
                     initialSelectedTime={activeRequest.initialSelectedTime}
                     aiSessionId={activeRequest.aiSessionId}

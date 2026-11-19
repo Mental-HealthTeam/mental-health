@@ -1,23 +1,15 @@
 import { useTranslation } from 'react-i18next'
 
-import { PaymentCancelIllustration } from '../PaymentCancelIllustration'
-import { PaymentCancelBookingInfo } from '../PaymentCancelBookingInfo'
+import type { BookingRetryInfo } from '../../../types/bookingsApi'
+
 import { PaymentCancelActions } from '../PaymentCancelActions'
+import { PaymentCancelBookingCard } from '../PaymentCancelBookingCard'
 
 import './PaymentCancelContent.scss'
 
-type BookingInfo = {
-    psychologist: {
-        full_name: string
-    }
-    selected_time: string
-    price: string
-    currency: string
-}
-
 type Props = {
     bookingId: string | null
-    booking?: BookingInfo
+    booking?: BookingRetryInfo
     language: string
     isLoading: boolean
     isError: boolean
@@ -32,7 +24,6 @@ type Props = {
 export const PaymentCancelContent = ({
     bookingId,
     booking,
-    language,
     isLoading,
     isError,
     isPaymentLoading,
@@ -68,17 +59,7 @@ export const PaymentCancelContent = ({
                         {canRetry ? t('retry.description') : t('expired.description')}
                     </p>
 
-                    <PaymentCancelIllustration />
-
-                    {canRetry && (
-                        <PaymentCancelBookingInfo
-                            psychologistName={booking.psychologist.full_name}
-                            selectedTime={booking.selected_time}
-                            price={booking.price}
-                            currency={booking.currency}
-                            language={language}
-                        />
-                    )}
+                    <PaymentCancelBookingCard booking={booking} expired={!canRetry} />
 
                     <PaymentCancelActions
                         canRetry={canRetry}

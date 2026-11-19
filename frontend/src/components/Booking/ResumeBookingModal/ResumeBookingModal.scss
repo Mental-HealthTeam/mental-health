@@ -116,11 +116,6 @@
       background: a.$color-surface-muted;
     }
 
-    &:focus-within {
-      outline: 2px solid a.$color-process;
-      outline-offset: 2px;
-    }
-
     &:has(input:disabled) {
       cursor: not-allowed;
     }

@@ -1,38 +1,47 @@
+import { skipToken } from '@reduxjs/toolkit/query'
 import { useEffect } from 'react'
-import { Footer } from '../../components/Footer'
-import { Header } from '../../components/Header'
-import { Container } from '../../components/Container'
-
-import { SpecialistProfileCard } from '../../components/specialist/SpecialistProfileCard'
-
-import './PsychologistProfile.scss'
+import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
+
 import { useAppDispatch, useAppSelector } from '../../app/hooks'
 import { setSpecialistProfile } from '../../app/store/slices/specialistProfileSlice'
-import { useTranslation } from 'react-i18next'
-import { AiChat } from '../../components/AiChat'
 
-import { useGetPsychologistByIdQuery } from '../../services/psychologistsApi'
-import { skipToken } from '@reduxjs/toolkit/query'
-import { BackButton } from '../../components/UI/Buttons'
-import { ProfileTabs } from '../../components/specialist/ProfileTabs'
+import { AiChat } from '../../components/AiChat'
 import { BookingModalButton } from '../../components/Booking/BookingModalButton'
 import { PendingBookingButton } from '../../components/Booking/PendingBookingButton'
+import { Container } from '../../components/Container'
+import { Footer } from '../../components/Footer'
+import { Header } from '../../components/Header'
+import { ProfileTabs } from '../../components/specialist/ProfileTabs'
+import { SpecialistProfileCard } from '../../components/specialist/SpecialistProfileCard'
+import { BackButton } from '../../components/UI/Buttons'
+
+import { useGetPsychologistByIdQuery } from '../../services/psychologistsApi'
+
+import './PsychologistProfile.scss'
 
 export const PsychologistProfile = () => {
     const { t, i18n } = useTranslation(['specialistProfile', 'common', 'errors'])
-    const { profile } = useAppSelector((state) => state.specialistProfile)
     const { id } = useParams()
+
     const dispatch = useAppDispatch()
+    const { profile } = useAppSelector((state) => state.specialistProfile)
 
     const {
-        data: psychologist,
+        currentData: psychologist,
         isLoading,
         isError,
-    } = useGetPsychologistByIdQuery(id ? { id, lang: i18n.language } : skipToken)
+    } = useGetPsychologistByIdQuery(id ? { id, lang: i18n.language } : skipToken, {
+        refetchOnMountOrArgChange: true,
+        refetchOnFocus: true,
+        refetchOnReconnect: true,
+    })
 
     useEffect(() => {
         window.scrollTo({ top: 0, behavior: 'instant' })
+    }, [id])
+
+    useEffect(() => {
         if (psychologist) {
             dispatch(setSpecialistProfile(psychologist))
         }
@@ -43,8 +52,8 @@ export const PsychologistProfile = () => {
             return <p role="status">{t('common:loading')}</p>
         }
 
-        if (isError || !profile) {
-            return <p role="alert">{t(`errors:notFound`)}</p>
+        if (isError || !profile || profile.psychologist_id !== id) {
+            return <p role="alert">{t('errors:notFound')}</p>
         }
 
         return (
@@ -75,6 +84,7 @@ export const PsychologistProfile = () => {
             <main className="psychologist-profile__content">
                 <Container className="psychologist-profile__container">
                     <BackButton />
+
                     {renderContent()}
                 </Container>
             </main>
