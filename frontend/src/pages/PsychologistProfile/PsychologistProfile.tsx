@@ -17,6 +17,7 @@ import { skipToken } from '@reduxjs/toolkit/query'
 import { BackButton } from '../../components/UI/Buttons'
 import { ProfileTabs } from '../../components/specialist/ProfileTabs'
 import { BookingModalButton } from '../../components/Booking/BookingModalButton'
+import { PendingBookingButton } from '../../components/Booking/PendingBookingButton'
 
 export const PsychologistProfile = () => {
     const { t, i18n } = useTranslation(['specialistProfile', 'common', 'errors'])
@@ -52,7 +53,13 @@ export const PsychologistProfile = () => {
 
                 <SpecialistProfileCard
                     className="psychologist-profile__specialist-card"
-                    actions={<BookingModalButton specialist={profile} slots={profile.mock_slots} />}
+                    actions={
+                        <>
+                            <BookingModalButton specialist={profile} slots={profile.mock_slots} />
+
+                            <PendingBookingButton psychologistId={profile.psychologist_id} />
+                        </>
+                    }
                     specialist={profile}
                 />
 

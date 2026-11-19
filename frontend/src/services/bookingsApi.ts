@@ -13,10 +13,19 @@ type CreateCheckoutResponse = {
     checkout_url: string
 }
 
+type BookingsResponse = {
+    items: Booking[]
+    total: number
+    limit: number
+    offset: number
+}
+
 export const bookingsApi = createApi({
     reducerPath: 'bookingsApi',
 
     baseQuery: baseQueryWithReauth,
+
+    tagTypes: ['PendingBookings'],
 
     endpoints: (builder) => ({
         createBooking: builder.mutation<Booking, CreateBookingRequest>({
@@ -25,6 +34,7 @@ export const bookingsApi = createApi({
                 method: 'POST',
                 body,
             }),
+            invalidatesTags: ['PendingBookings'],
         }),
 
         createCheckout: builder.mutation<CreateCheckoutResponse, CreateCheckoutRequest>({
@@ -34,6 +44,20 @@ export const bookingsApi = createApi({
                 body,
             }),
         }),
+
+        getPendingBookings: builder.query<BookingsResponse, void>({
+            query: () => ({
+                url: '/bookings',
+                method: 'GET',
+                params: {
+                    status: 'pending',
+                    limit: 100,
+                    offset: 0,
+                },
+            }),
+            providesTags: ['PendingBookings'],
+        }),
+
         getBookingRetryInfo: builder.query<
             BookingRetryInfo,
             { bookingId: string; lang: 'uk' | 'en' }
@@ -47,5 +71,9 @@ export const bookingsApi = createApi({
     }),
 })
 
-export const { useCreateBookingMutation, useGetBookingRetryInfoQuery, useCreateCheckoutMutation } =
-    bookingsApi
+export const {
+    useCreateBookingMutation,
+    useCreateCheckoutMutation,
+    useGetPendingBookingsQuery,
+    useGetBookingRetryInfoQuery,
+} = bookingsApi

@@ -1,6 +1,8 @@
+import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Modal } from '../../UI/Modal'
+import { useBookingModal } from '../../../providers/BookingModalProvider'
 
 import { useBookingSlots } from './useBookingSlots'
 import { useBookingSubmit } from './useBookingSubmit'
@@ -23,37 +25,44 @@ export const BookingSlotsModal = ({
     aiSessionId,
 }: BookingSlotsModalProps) => {
     const { t, i18n } = useTranslation('specialistProfile')
+    const { pendingBookings } = useBookingModal()
 
     const language = i18n.resolvedLanguage ?? i18n.language ?? 'uk'
     const displayedTimeZone = timeZone ?? Intl.DateTimeFormat().resolvedOptions().timeZone
 
+    const filteredSlots = useMemo(() => {
+        const bookedTimes = new Set(
+            pendingBookings
+                .filter(
+                    (booking) =>
+                        booking.psychologist.psychologist_id === specialist.psychologist_id,
+                )
+                .map((booking) => Date.parse(booking.selected_time)),
+        )
+
+        return slots.filter((slot) => !bookedTimes.has(Date.parse(slot.time)))
+    }, [slots, pendingBookings, specialist.psychologist_id])
+
     const { availableSlots, groups, dateFormatter, timeFormatter, selectedDateFormatter } =
         useBookingSlots({
             open,
-            slots,
+            slots: filteredSlots,
             language,
             timeZone: displayedTimeZone,
         })
 
-    const {
-        selectedSlot,
-        matchingBookingId,
-        isSubmitting,
-        hasRequestError,
-        handleSelectSlot,
-        handleClose,
-        submit,
-    } = useBookingSubmit({
-        psychologistId: specialist.psychologist_id,
-        initialSelectedTime,
-        aiSessionId,
-        onClose,
-        onCheckoutReady,
-    })
+    const { selectedSlot, isSubmitting, hasRequestError, handleSelectSlot, handleClose, submit } =
+        useBookingSubmit({
+            psychologistId: specialist.psychologist_id,
+            initialSelectedTime,
+            aiSessionId,
+            onClose,
+            onCheckoutReady,
+        })
 
     const selected = availableSlots.find(({ date }) => date.getTime() === Date.parse(selectedSlot))
 
-    const selectedDate = selected?.date ?? (matchingBookingId ? new Date(selectedSlot) : null)
+    const selectedDate = selected?.date ?? null
 
     return (
         <Modal
@@ -87,7 +96,7 @@ export const BookingSlotsModal = ({
                     selectedDate={selectedDate}
                     selectedDateFormatter={selectedDateFormatter}
                     hasRequestError={hasRequestError}
-                    disabled={(!selected && !matchingBookingId) || isSubmitting}
+                    disabled={!selected || isSubmitting}
                     onContinue={() => {
                         void submit(selected?.time)
                     }}

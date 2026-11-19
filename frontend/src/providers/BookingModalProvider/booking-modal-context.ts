@@ -1,5 +1,6 @@
 import { createContext } from 'react'
 
+import type { Booking } from '../../types/booking'
 import type { Slot, SpecialistProfile } from '../../types/specialist'
 
 export type BookingSpecialist = Pick<
@@ -21,6 +22,8 @@ export type OpenBookingModalOptions = {
 type BookingModalContextValue = {
     openBookingModal: (options: OpenBookingModalOptions) => void
     closeBookingModal: () => void
+    pendingBookings: Booking[]
+    openPendingBookingModal: (bookings: Booking[]) => void
 }
 
 export const BookingModalContext = createContext<BookingModalContextValue | null>(null)

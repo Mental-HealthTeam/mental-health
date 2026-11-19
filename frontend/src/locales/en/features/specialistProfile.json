@@ -66,5 +66,8 @@
         "continue": "Continue to payment",
         "later": "Later",
         "close": "Close"
+    },
+    "pendingBooking": {
+        "button": "Incomplete booking"
     }
 }

@@ -7,11 +7,14 @@ import { Avatar } from '../../UI/Avatar'
 import { OutlineButton, PrimaryButton } from '../../UI/Buttons'
 import { ArrowIcon, AvatarFallbackIcon } from '../../UI/Icons'
 import { Modal } from '../../UI/Modal'
+import { RadioButton } from '../../UI/RadioButton'
 
 import './ResumeBookingModal.scss'
 
 type Props = {
-    booking: Booking
+    bookings: Booking[]
+    selectedBookingId: string | null
+    onSelectBooking: (bookingId: string) => void
     onClose: () => void
     onContinue: () => void
     isLoading?: boolean
@@ -19,7 +22,9 @@ type Props = {
 }
 
 export const ResumeBookingModal = ({
-    booking,
+    bookings,
+    selectedBookingId,
+    onSelectBooking,
     onClose,
     onContinue,
     isLoading = false,
@@ -30,18 +35,24 @@ export const ResumeBookingModal = ({
 
     const language = i18n.resolvedLanguage ?? i18n.language ?? 'uk'
     const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
+
     const actionsDisabled = isLoading || !isOpen
 
-    const formattedDate = new Intl.DateTimeFormat(language, {
-        dateStyle: 'long',
-        timeStyle: 'short',
-        timeZone,
-    }).format(new Date(booking.selected_time))
+    const selectedBooking =
+        bookings.find((booking) => booking.booking_id === selectedBookingId) ?? null
 
-    const formattedPrice = new Intl.NumberFormat(language, {
-        style: 'currency',
-        currency: booking.currency,
-    }).format(Number(booking.price))
+    const formatDate = (date: string) =>
+        new Intl.DateTimeFormat(language, {
+            dateStyle: 'long',
+            timeStyle: 'short',
+            timeZone,
+        }).format(new Date(date))
+
+    const formatPrice = (booking: Booking) =>
+        new Intl.NumberFormat(language, {
+            style: 'currency',
+            currency: booking.currency,
+        }).format(Number(booking.price))
 
     const handleClose = () => {
         if (!isLoading) {
@@ -64,55 +75,89 @@ export const ResumeBookingModal = ({
                     {t('resumeBooking.description')}
                 </p>
 
-                <div className="resume-booking-modal__specialist">
-                    <Avatar
-                        src={booking.psychologist.avatar_url ?? undefined}
-                        alt=""
-                        size="medium"
-                        fallback={<AvatarFallbackIcon />}
-                    />
+                <div
+                    className="resume-booking-modal__bookings"
+                    role="radiogroup"
+                    aria-label={t('resumeBooking.title')}
+                >
+                    {bookings.map((booking) => {
+                        const isSelected = selectedBookingId === booking.booking_id
 
-                    <h3>{booking.psychologist.full_name}</h3>
+                        return (
+                            <label
+                                key={booking.booking_id}
+                                className={`resume-booking-modal__booking ${
+                                    isSelected ? 'resume-booking-modal__booking--selected' : ''
+                                }`}
+                            >
+                                <div className="resume-booking-modal__specialist">
+                                    <Avatar
+                                        src={booking.psychologist.avatar_url ?? undefined}
+                                        alt=""
+                                        size="medium"
+                                        fallback={<AvatarFallbackIcon />}
+                                    />
+
+                                    <h3 className="resume-booking-modal__specialist-name">
+                                        {booking.psychologist.full_name}
+                                    </h3>
+
+                                    <RadioButton
+                                        name="pending-booking"
+                                        value={booking.booking_id}
+                                        checked={isSelected}
+                                        disabled={actionsDisabled}
+                                        ariaLabel={`${booking.psychologist.full_name}, ${formatDate(booking.selected_time)}`}
+                                        onChange={onSelectBooking}
+                                    />
+                                </div>
+
+                                <dl className="resume-booking-modal__details">
+                                    <div>
+                                        <dt>{t('resumeBooking.date')}</dt>
+
+                                        <dd>
+                                            <time dateTime={booking.selected_time}>
+                                                {formatDate(booking.selected_time)}
+                                            </time>
+                                        </dd>
+                                    </div>
+
+                                    <div>
+                                        <dt>{t('resumeBooking.price')}</dt>
+                                        <dd>{formatPrice(booking)}</dd>
+                                    </div>
+                                </dl>
+                            </label>
+                        )
+                    })}
                 </div>
 
-                <dl className="resume-booking-modal__details">
-                    <div>
-                        <dt>{t('resumeBooking.date')}</dt>
-
-                        <dd>
-                            <time dateTime={booking.selected_time}>{formattedDate}</time>
-                        </dd>
-                    </div>
-
-                    <div>
-                        <dt>{t('resumeBooking.price')}</dt>
-                        <dd>{formattedPrice}</dd>
-                    </div>
-                </dl>
-
-                <p className="resume-booking-modal__timezone">
-                    {t('resumeBooking.timeZone', { timeZone })}
-                </p>
-
-                {error && (
-                    <p className="resume-booking-modal__error" role="alert">
-                        {error}
+                <div className="resume-booking-modal__footer">
+                    <p className="resume-booking-modal__timezone">
+                        {t('resumeBooking.timeZone', { timeZone })}
                     </p>
-                )}
 
-                <div className="resume-booking-modal__actions">
-                    <PrimaryButton
-                        fullWidth
-                        disabled={actionsDisabled}
-                        endIcon={<ArrowIcon />}
-                        onClick={onContinue}
-                    >
-                        {t('resumeBooking.continue')}
-                    </PrimaryButton>
+                    {error && (
+                        <p className="resume-booking-modal__error" role="alert">
+                            {error}
+                        </p>
+                    )}
 
-                    <OutlineButton disabled={actionsDisabled} onClick={handleClose}>
-                        {t('resumeBooking.later')}
-                    </OutlineButton>
+                    <div className="resume-booking-modal__actions">
+                        <PrimaryButton
+                            fullWidth
+                            disabled={actionsDisabled || !selectedBooking}
+                            endIcon={<ArrowIcon />}
+                            onClick={onContinue}
+                        >
+                            {t('resumeBooking.continue')}
+                        </PrimaryButton>
+
+                        <OutlineButton disabled={actionsDisabled} onClick={handleClose}>
+                            {t('resumeBooking.later')}
+                        </OutlineButton>
+                    </div>
                 </div>
             </div>
         </Modal>

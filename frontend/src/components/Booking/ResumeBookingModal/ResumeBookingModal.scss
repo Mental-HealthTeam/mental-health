@@ -1,9 +1,17 @@
 @use '../../../styles/abstracts/index' as a;
 
 .modal.resume-booking-modal {
+  display: flex;
+  flex-direction: column;
+
   width: min(480px, calc(100vw - 32px));
+  max-height: calc(100dvh - 32px);
+
   padding: 0;
+  overflow: hidden;
+
   border: 1px solid a.$color-gray-10;
+
   color: a.$color-text-primary;
   background: a.$color-surface;
   font-family: a.$font-family-primary;
@@ -13,6 +21,7 @@
   }
 
   .modal__header {
+    flex-shrink: 0;
     padding: 28px 28px 0;
   }
 
@@ -36,7 +45,15 @@
 
 .resume-booking-modal {
   &__content {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+
+    min-height: 0;
+    overflow: hidden;
+
     padding: 0 28px 28px;
+
     font-size: a.$font-size-body;
     font-weight: a.$font-weight-body;
     line-height: a.$line-height-body;
@@ -44,32 +61,106 @@
   }
 
   &__description {
+    flex-shrink: 0;
+
     margin: 12px 0 24px;
+
     color: a.$color-text-secondary;
+  }
+
+  &__bookings {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    flex: 0 1 auto;
+
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    padding: 2px 4px 2px 2px;
+
+    overscroll-behavior: contain;
+
+    scrollbar-width: thin;
+    scrollbar-color: a.$color-gray-20 transparent;
+  }
+
+  &__booking {
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+
+    gap: 16px;
+
+    padding: 16px;
+
+    border: 1px solid a.$color-gray-10;
+    border-radius: 16px;
+
+    background: a.$color-surface;
+
+    cursor: pointer;
+
+    transition:
+            border-color 0.2s ease,
+            background-color 0.2s ease;
+
+    &:hover {
+      border-color: a.$color-primary;
+    }
+
+    &--selected {
+      border-color: a.$color-secondary-start;
+      background: a.$color-surface-muted;
+    }
+
+    &:focus-within {
+      outline: 2px solid a.$color-process;
+      outline-offset: 2px;
+    }
+
+    &:has(input:disabled) {
+      cursor: not-allowed;
+    }
   }
 
   &__specialist {
     display: flex;
     align-items: center;
-    gap: 16px;
 
-    h3 {
-      min-width: 0;
-      margin: 0;
-      font-size: a.$font-size-h5;
-      font-weight: a.$font-weight-h5;
-      line-height: a.$line-height-h5;
-      letter-spacing: a.$letter-spacing-h5;
-      overflow-wrap: anywhere;
+    gap: 12px;
+    min-width: 0;
+
+    .radio-button {
+      flex-shrink: 0;
+      margin-left: auto;
     }
+  }
+
+  &__specialist-name {
+    flex: 1 1 auto;
+
+    min-width: 0;
+    margin: 0;
+
+    font-size: a.$font-size-h5;
+    font-weight: a.$font-weight-h5;
+    line-height: a.$line-height-h5;
+    letter-spacing: a.$letter-spacing-h5;
+
+    overflow-wrap: anywhere;
   }
 
   &__details {
     display: grid;
-    gap: 16px;
-    margin: 24px 0 0;
-    padding: 20px;
-    border-radius: 16px;
+    gap: 12px;
+
+    margin: 0;
+    padding: 16px;
+
+    border-radius: 12px;
     background: a.$color-surface-muted;
 
     > div {
@@ -79,6 +170,7 @@
 
     dt {
       color: a.$color-text-secondary;
+
       font-size: a.$font-size-caption-secondary;
       font-weight: a.$font-weight-caption-secondary;
       line-height: a.$line-height-caption-secondary;
@@ -87,37 +179,54 @@
 
     dd {
       margin: 0;
+
       font-size: a.$font-size-body;
       font-weight: a.$font-weight-body-semibold;
       line-height: a.$line-height-body;
       letter-spacing: a.$letter-spacing-body;
+
       overflow-wrap: anywhere;
     }
   }
 
+  &__footer {
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+
+    padding-top: 12px;
+  }
+
   &__timezone {
-    margin: 12px 0 0;
+    margin: 0;
+
     color: a.$color-text-secondary;
+
     font-size: a.$font-size-caption-third;
     font-weight: a.$font-weight-caption-third;
     line-height: a.$line-height-caption-third;
     letter-spacing: a.$letter-spacing-caption-third;
+
     overflow-wrap: anywhere;
   }
 
   &__error {
     margin: 16px 0 0;
+
     color: a.$color-error;
+
     font-size: a.$font-size-caption-secondary;
     font-weight: a.$font-weight-caption-secondary;
     line-height: a.$line-height-caption-secondary;
     letter-spacing: a.$letter-spacing-caption-secondary;
+
     overflow-wrap: anywhere;
   }
 
   &__actions {
     display: flex;
     flex-direction: column;
+
     gap: 12px;
     margin-top: 24px;
   }
@@ -125,6 +234,31 @@
   @media (max-width: 479px) {
     &__content {
       padding: 0 20px 20px;
+    }
+
+    &__description {
+      margin-bottom: 16px;
+    }
+
+    &__bookings {
+      gap: 10px;
+    }
+
+    &__booking {
+      padding: 12px;
+      gap: 12px;
+    }
+
+    &__specialist {
+      gap: 10px;
+    }
+
+    &__details {
+      padding: 12px;
+    }
+
+    &__actions {
+      margin-top: 16px;
     }
   }
 }

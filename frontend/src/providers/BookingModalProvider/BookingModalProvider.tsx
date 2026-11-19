@@ -1,17 +1,24 @@
+import { skipToken } from '@reduxjs/toolkit/query'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router-dom'
 
 import { PageLoadingOverlay } from '../../components/UI/PageLoadingOverlay'
+import { useGetPendingBookingsQuery } from '../../services/bookingsApi'
+import type { Booking } from '../../types/booking'
 
 import { BookingModalContext } from './booking-modal-context'
 import type { OpenBookingModalOptions } from './booking-modal-context'
 import { BookingSlotsFlow } from './BookingSlotsFlow'
 import { ResumeBookingFlow } from './ResumeBookingFlow'
+import { canContinuePayment } from './bookingResume.utils'
 import { usePendingBookingResume } from './usePendingBookingResume'
 import { useDraftBookingResume } from './useDraftBookingResume'
 import type { BookingModalRequest } from './useDraftBookingResume'
+
+const BOOKING_CHECK_INTERVAL = 5000
+const BOOKING_POLLING_INTERVAL = 20000
 
 type Request = BookingModalRequest & {
     instanceId: number
@@ -30,41 +37,120 @@ export const BookingModalProvider = ({ children }: Props) => {
     const redirectingRef = useRef(false)
 
     const [request, setRequest] = useState<Request | null>(null)
+    const [manualBookings, setManualBookings] = useState<Booking[] | null>(null)
     const [paymentRedirectUrl, setPaymentRedirectUrl] = useState<string | null>(null)
+    const [now, setNow] = useState(() => Date.now())
 
     const activeRequest = request?.locationKey === location.key ? request : null
 
     const closeBookingModal = useCallback(() => {
         setRequest(null)
+        setManualBookings(null)
     }, [])
 
-    const {
-        user,
-        isCheckingUser,
-        isReturnPage,
-        language,
-        activeOffer,
-        closeResumeModal,
-        expireBooking,
-    } = usePendingBookingResume({
-        hasActiveModal: Boolean(activeRequest),
+    const { user, isCheckingUser, isReturnPage, language } = usePendingBookingResume({
         onUserChange: closeBookingModal,
     })
 
-    const handleCheckoutReady = useCallback(
-        (checkoutUrl: string) => {
-            if (redirectingRef.current) {
-                return
+    const { data: pendingBookingsResponse, refetch: refetchPendingBookings } =
+        useGetPendingBookingsQuery(user && !isCheckingUser ? undefined : skipToken, {
+            refetchOnMountOrArgChange: true,
+            refetchOnFocus: true,
+            refetchOnReconnect: true,
+        })
+
+    const pendingBookings = useMemo(() => {
+        const items = pendingBookingsResponse?.items ?? []
+
+        return items.filter((booking) => {
+            const expiresAt = booking.hold_expires_at ? Date.parse(booking.hold_expires_at) : NaN
+
+            return (
+                booking.status === 'pending' &&
+                booking.payment_status === 'unpaid' &&
+                Number.isFinite(expiresAt) &&
+                expiresAt > now
+            )
+        })
+    }, [pendingBookingsResponse, now])
+
+    const hasPendingBookings = pendingBookings.length > 0
+
+    useEffect(() => {
+        if (!hasPendingBookings) {
+            return
+        }
+
+        const interval = window.setInterval(() => {
+            setNow(Date.now())
+        }, BOOKING_CHECK_INTERVAL)
+
+        return () => {
+            window.clearInterval(interval)
+        }
+    }, [hasPendingBookings])
+
+    useEffect(() => {
+        if (!hasPendingBookings || !user || isCheckingUser) {
+            return
+        }
+
+        const interval = window.setInterval(() => {
+            if (document.visibilityState === 'visible') {
+                void refetchPendingBookings()
             }
+        }, BOOKING_POLLING_INTERVAL)
 
-            redirectingRef.current = true
+        return () => {
+            window.clearInterval(interval)
+        }
+    }, [hasPendingBookings, user, isCheckingUser, refetchPendingBookings])
 
-            setRequest(null)
-            closeResumeModal()
-            setPaymentRedirectUrl(checkoutUrl)
-        },
-        [closeResumeModal],
-    )
+    const activeManualBookings = useMemo(() => {
+        if (!manualBookings) {
+            return []
+        }
+
+        const bookingIds = new Set(manualBookings.map((booking) => booking.booking_id))
+
+        return pendingBookings.filter((booking) => bookingIds.has(booking.booking_id))
+    }, [manualBookings, pendingBookings])
+
+    const closePendingBookingModal = useCallback(() => {
+        setManualBookings(null)
+    }, [])
+
+    const openPendingBookingModal = useCallback((bookings: Booking[]) => {
+        if (redirectingRef.current) {
+            return
+        }
+
+        const activeBookings = bookings.filter(canContinuePayment)
+
+        if (activeBookings.length === 0) {
+            return
+        }
+
+        setRequest(null)
+        setManualBookings(activeBookings)
+    }, [])
+
+    const handleExpiredBooking = useCallback(() => {
+        setManualBookings(null)
+        void refetchPendingBookings()
+    }, [refetchPendingBookings])
+
+    const handleCheckoutReady = useCallback((checkoutUrl: string) => {
+        if (redirectingRef.current) {
+            return
+        }
+
+        redirectingRef.current = true
+
+        setRequest(null)
+        setManualBookings(null)
+        setPaymentRedirectUrl(checkoutUrl)
+    }, [])
 
     useEffect(() => {
         if (!paymentRedirectUrl) {
@@ -109,7 +195,8 @@ export const BookingModalProvider = ({ children }: Props) => {
             }
 
             nextId.current += 1
-            closeResumeModal()
+
+            setManualBookings(null)
 
             setRequest({
                 ...options,
@@ -117,7 +204,7 @@ export const BookingModalProvider = ({ children }: Props) => {
                 locationKey: location.key,
             })
         },
-        [location.key, closeResumeModal],
+        [location.key],
     )
 
     const openBookingModal = useCallback(
@@ -137,8 +224,10 @@ export const BookingModalProvider = ({ children }: Props) => {
         () => ({
             openBookingModal,
             closeBookingModal,
+            pendingBookings,
+            openPendingBookingModal,
         }),
-        [openBookingModal, closeBookingModal],
+        [openBookingModal, closeBookingModal, pendingBookings, openPendingBookingModal],
     )
 
     return (
@@ -159,12 +248,11 @@ export const BookingModalProvider = ({ children }: Props) => {
                 />
             )}
 
-            {!paymentRedirectUrl && !activeRequest && activeOffer && (
+            {!paymentRedirectUrl && !activeRequest && activeManualBookings.length > 0 && (
                 <ResumeBookingFlow
-                    key={activeOffer.booking.booking_id}
-                    booking={activeOffer.booking}
-                    onClose={closeResumeModal}
-                    onExpired={expireBooking}
+                    bookings={activeManualBookings}
+                    onClose={closePendingBookingModal}
+                    onExpired={handleExpiredBooking}
                     onCheckoutReady={handleCheckoutReady}
                 />
             )}
