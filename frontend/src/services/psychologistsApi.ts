@@ -2,7 +2,7 @@ import { createApi } from '@reduxjs/toolkit/query/react'
 
 import type { Booking } from '../types/booking'
 import type { GetPsychologistsParams, Psychologist, SymptomCode } from '../types/psychologist'
-import type { SpecialistProfile, UpdateProfileBody } from '../types/specialist'
+import type { SpecialistProfile } from '../types/specialist'
 import { baseQueryWithReauth } from './baseQueryWithReauth'
 
 export const psychologistsApi = createApi({
@@ -66,27 +66,6 @@ export const psychologistsApi = createApi({
                 params: { lang },
             }),
         }),
-
-        updateMyProfile: builder.mutation<SpecialistProfile, UpdateProfileBody>({
-            query: (body) => ({ url: '/psychologists/me/profile', method: 'PATCH', body }),
-            invalidatesTags: ['MyProfile'],
-        }),
-        updateMe: builder.mutation<void, { name: string }>({
-            query: (body) => ({ url: '/users/me', method: 'PATCH', body }),
-            invalidatesTags: ['MyProfile'],
-        }),
-        uploadAvatar: builder.mutation<void, File>({
-            query: (file) => {
-                const body = new FormData()
-                body.append('file', file)
-                return { url: '/users/me/avatar', method: 'POST', body }
-            },
-            invalidatesTags: ['MyProfile'],
-        }),
-        deleteAvatar: builder.mutation<void, void>({
-            query: () => ({ url: '/users/me/avatar', method: 'DELETE' }),
-            invalidatesTags: ['MyProfile'],
-        }),
     }),
 })
 
@@ -96,8 +75,4 @@ export const {
     useGetBookingByIdQuery,
     useGetSymptomCodesQuery,
     useGetPsychologistByIdQuery,
-    useUpdateMyProfileMutation,
-    useDeleteAvatarMutation,
-    useUpdateMeMutation,
-    useUploadAvatarMutation
 } = psychologistsApi

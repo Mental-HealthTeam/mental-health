@@ -77,3 +77,15 @@ export type OnFieldChange = <K extends keyof ProfileFormState>(
     field: K,
     value: ProfileFormState[K],
 ) => void
+
+export type SpecialistMe = {
+    id: number | string
+    name: string | null
+    avatar_url: string | null
+    experience_years: number | null
+    price_per_hour: number | null
+    approach: string | null
+    about: string | null
+    certificates: { title: string }[]
+    topics: SymptomCode[]
+}

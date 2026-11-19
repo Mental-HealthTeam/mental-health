@@ -50,4 +50,15 @@
     &:focus-within &__label {
         color: a.$color-optional;
     }
+
+    &__error {
+        margin: 0;
+        color: a.$color-error;
+        font-size: 12px;
+        line-height: 1.4;
+    }
+
+    &__input[aria-invalid='true'] {
+        border-color: a.$color-error;
+    }
 }

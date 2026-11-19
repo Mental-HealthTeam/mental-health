@@ -1,0 +1,69 @@
+{
+    "title": "Profile settings",
+    "loading": "Loading profile...",
+    "loadError": "Could not load your profile. Please refresh the page.",
+
+    "personalData": "My details",
+    "mainInfo": "Main information",
+
+    "addPhoto": "Add profile photo",
+    "changePhoto": "Change",
+    "deletePhoto": "Delete",
+
+    "fields": {
+        "name": {
+            "label": "Enter your first and last name",
+            "placeholder": "Enter your full name"
+        },
+        "experience_years": {
+            "label": "Experience",
+            "placeholder": "Enter your experience in years"
+        },
+        "price_per_hour": {
+            "label": "Session price (50 min)",
+            "placeholder": "Enter your consultation price"
+        },
+        "approach": {
+            "label": "Therapeutic approach:",
+            "placeholder": "Describe your main areas and approaches"
+        }
+    },
+
+    "about": {
+        "label": "About you",
+        "placeholder": "Describe the concerns you work with"
+    },
+
+    "education": {
+        "label": "Education",
+        "placeholder": "Add the name of your institution",
+        "add": "Add education",
+        "remove": "Remove education"
+    },
+
+    "topicsTitle": "Areas of work",
+    "myTopics": "Your areas of work:",
+    "topicsHint": "Add other areas of work:",
+    "topicsLoading": "Loading areas…",
+    "topicsLoadError": "Could not load areas.",
+    "removeTopic": "Remove area: {{topic}}",
+    "retry": "Try again",
+
+    "save": "Save changes",
+    "saving": "Saving…",
+    "unsavedChangesConfirm": "You have unsaved changes. Leave without saving?",
+
+    "errors": {
+        "name": "Enter a name up to 255 characters.",
+        "experience_years": "Enter experience in years: a whole number from 0 to 80.",
+        "price_per_hour": "Enter the session price as a number.",
+        "approach": "The approach description must be up to 1000 characters.",
+        "about": "The “About you” text must be up to 2000 characters.",
+        "certificates": "Check the education entries.",
+        "topics": "Check the selected areas.",
+        "imageType": "Choose a JPEG, PNG or WebP image.",
+        "imageSize": "Choose a non-empty file up to 5 MB.",
+        "imageInvalid": "The image could not be opened. Choose another file.",
+        "save": "Your changes could not be saved. Please try again."
+    }
+}

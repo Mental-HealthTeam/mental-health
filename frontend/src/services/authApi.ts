@@ -10,7 +10,7 @@ type UpdateProfileBody = {
 export const authApi = createApi({
     reducerPath: 'authApi',
     baseQuery: baseQueryWithReauth,
-    tagTypes: ['Me'],
+    tagTypes: ['Me', 'SpecialistMe'],
 
     endpoints: (builder) => ({
         me: builder.query<UserPublic, void>({

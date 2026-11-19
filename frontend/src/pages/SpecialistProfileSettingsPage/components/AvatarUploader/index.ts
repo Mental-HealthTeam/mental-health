@@ -1,1 +1,0 @@
-export { AvatarUploader } from './AvatarUploader'

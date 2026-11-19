@@ -1,0 +1,61 @@
+@use '../../../styles/abstracts' as a;
+
+.specialist-profile-form {
+  &__avatar {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    height: 100%;
+    min-width: 0;
+  }
+
+  &__photo {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex: 1;
+    min-height: 200px;
+    overflow: hidden;
+
+    border-radius: 18px;
+
+    background-color: a.$color-gray-10;
+
+    > img {
+      position: absolute;
+      inset: 0;
+
+      display: block;
+
+      width: 100%;
+      height: 100%;
+
+      object-fit: cover;
+    }
+
+    > svg {
+      width: 72px;
+      height: 72px;
+    }
+  }
+
+  &__file {
+    display: none;
+  }
+
+  &__photo-actions {
+    display: flex;
+    gap: 8px;
+
+    flex-shrink: 0;
+
+    > * {
+      flex: 1 1 0;
+      min-width: 0;
+    }
+  }
+}

@@ -27,6 +27,7 @@ export const NAMESPACES = [
     'login',
     'catalog',
     'specialistCabinet',
+    'specialistProfileSettings',
 ] as const
 
 export type Namespace = (typeof NAMESPACES)[number]
