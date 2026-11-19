@@ -1,6 +1,6 @@
 @use '../../styles/abstracts' as a;
 
-.client-cabinet-page {
+.client-profile-settings-page {
   min-height: 100dvh;
 
   color: a.$color-primary;
@@ -11,12 +11,15 @@
   }
 
   &__container {
-    max-width: 1200px;
+    max-width: 800px;
   }
 
   &__back {
-    display: inline-flex;
-    margin-bottom: 16px;
+    margin-bottom: 12px;
+    padding-inline: 0;
+
+    text-decoration: underline;
+    text-underline-offset: 3px;
   }
 
   &__title {
@@ -27,10 +30,15 @@
     font-weight: 700;
   }
 
-  &__sections {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
+  &__notice {
+    margin-top: 16px;
+
+    color: a.$color-gray-60;
+
+    font-size: 14px;
+    line-height: 1.5;
+
+    text-align: center;
   }
 
   @media (min-width: 768px) {
@@ -39,14 +47,7 @@
     }
 
     &__title {
-      margin-bottom: 20px;
       font-size: 24px;
-    }
-  }
-
-  @media (min-width: 1280px) {
-    &__main {
-      padding-inline: 48px;
     }
   }
 }

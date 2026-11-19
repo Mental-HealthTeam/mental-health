@@ -38,6 +38,7 @@ class BaseAppSettings(BaseSettings):
     BOOKING_HORIZON_DAYS: int = 30
     SESSION_DURATION_MIN: int = 50
 
+    WAYFORPAY_RETURN_URL_PART: str = "/api/payments/return/wayforpay"
     WAYFORPAY_MERCHANT_ACCOUNT: str = ""
     WAYFORPAY_SECRET_KEY: str = ""
     WAYFORPAY_MERCHANT_DOMAIN: str = ""
