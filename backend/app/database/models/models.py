@@ -246,14 +246,6 @@ class Psychologist(Base):
     )
 
     @property
-    def display_full_name(self) -> str | None:
-        return self.full_name or self.full_name_eng
-
-    @property
-    def display_title(self) -> str | None:
-        return self.title or self.title_eng
-
-    @property
     def is_verified(self) -> bool:
         return self.profile_status == PsychologistStatus.ACTIVE
     
