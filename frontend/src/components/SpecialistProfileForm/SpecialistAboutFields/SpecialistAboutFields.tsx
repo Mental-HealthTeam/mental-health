@@ -82,13 +82,15 @@ export const SpecialistAboutFields = ({
                     </div>
                 ))}
 
-                <button
-                    type="button"
-                    className="specialist-about-fields__button-add"
-                    onClick={handleAdd}
-                >
-                    {t('education.add')}
-                </button>
+                {items.length <= 5 && (
+                    <button
+                        type="button"
+                        className="specialist-about-fields__button-add"
+                        onClick={handleAdd}
+                    >
+                        {t('education.add')}
+                    </button>
+                )}
             </div>
         </div>
     )

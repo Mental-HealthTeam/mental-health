@@ -92,7 +92,7 @@ export const SpecialistProfileCard = ({ className, specialist, actions }: Props)
                 <p className="profile-card__approach-label">
                     {t('specialistProfile:card.approach')}
                 </p>
-                <p className="profile-card__approach-value">{specialist.methods?.join(', ')}</p>
+                <p className="profile-card__approach-value">{specialist.bio.approach}</p>
             </div>
 
             <div className="profile-card__actions">

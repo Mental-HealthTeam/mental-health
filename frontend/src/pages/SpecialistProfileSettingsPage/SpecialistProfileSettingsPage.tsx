@@ -121,9 +121,6 @@ const ProfileEditor = ({ specialist }: ProfileEditorProps) => {
         navigate('/specialist/cabinet', { replace: true })
     }
 
-    console.log('specialist', specialist)
-    console.log('initialValues', getInitialValues(initialProfile))
-
     return (
         <>
             <SpecialistProfileForm

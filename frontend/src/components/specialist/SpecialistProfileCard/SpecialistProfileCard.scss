@@ -49,6 +49,7 @@
     }
 
     &__name {
+        overflow-wrap: anywhere;
         color: a.$color-primary;
         font-size: a.$font-size-h5;
         line-height: a.$line-height-h5;
@@ -124,6 +125,7 @@
     }
 
     &__approach-value {
+        overflow-wrap: anywhere;
         color: a.$color-optional;
         font-size: a.$font-size-body;
         line-height: a.$line-height-body;
@@ -219,7 +221,7 @@
         }
 
         &__wrapper-button {
-          max-width: max-content;
+            max-width: max-content;
         }
     }
 }

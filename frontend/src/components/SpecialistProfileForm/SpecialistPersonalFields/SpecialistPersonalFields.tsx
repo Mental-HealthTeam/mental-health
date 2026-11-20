@@ -29,7 +29,7 @@ const fields: FieldConfig[] = [
     { name: 'name', maxLength: 255 },
     { name: 'experience_years', inputMode: 'numeric', maxLength: 2 },
     { name: 'price_per_hour', inputMode: 'decimal', maxLength: 7 },
-    { name: 'approach', maxLength: 1000 },
+    { name: 'approach', maxLength: 100 },
 ]
 
 export const SpecialistPersonalFields = ({ values, errors, onChange }: Props) => {

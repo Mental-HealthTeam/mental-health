@@ -11,6 +11,7 @@
     border-radius: c.$pp-about-card-radius;
 
     &__text {
+        overflow-wrap: anywhere;
         color: a.$color-primary;
         font-size: a.$font-size-body;
         line-height: a.$line-height-body;
