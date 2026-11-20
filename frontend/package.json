@@ -20,9 +20,11 @@
         "motion": "^14.1.0",
         "react": "^19.2.8",
         "react-dom": "^19.2.8",
+        "react-easy-crop": "^6.2.5",
         "react-i18next": "^17.0.15",
         "react-redux": "^9.3.0",
-        "react-router-dom": "^7.18.4"
+        "react-router-dom": "^7.18.4",
+        "zod": "^4.6.7"
     },
     "devDependencies": {
         "@eslint/js": "^10.0.1",

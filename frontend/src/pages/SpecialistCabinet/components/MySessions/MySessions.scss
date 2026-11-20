@@ -81,7 +81,7 @@
         background-color: a.$color-background;
         border: c.$sc-sessions-day-border-width solid a.$color-gray-10;
         border-radius: c.$sc-sessions-day-radius;
-        min-width: 0;
+        min-width: max-content;
         width: 100%;
     }
 

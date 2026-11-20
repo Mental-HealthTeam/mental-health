@@ -86,9 +86,11 @@ class PsychologistMatchResult(BaseModel):
     title: str
     avatar_url: str | None
     price_per_hour: Decimal
+    experience_years: int
     languages: list[str]
     mock_slots: list[MockSlot]
     matched_symptom_codes: list[SymptomCode]
+    topics: list[SymptomCode]
 
     model_config = {"from_attributes": True}
 

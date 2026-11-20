@@ -1,6 +1,7 @@
-export type BookingStatus = 'pending' | 'confirmed' | 'completed' | 'cancelled' | 'disputed'
+export type BookingStatus =
+    'pending' | 'confirmed' | 'declined' | 'cancelled' | 'completed' | 'disputed'
 
-export type PaymentStatus = 'pending' | 'held' | 'paid' | 'refunded'
+export type PaymentStatus = 'unpaid' | 'held' | 'paid' | 'refunded'
 
 export type SessionStatus = 'scheduled' | 'completed' | 'available'
 
@@ -13,7 +14,7 @@ export type SessionPsychologist = {
 
 export type SessionClient = {
     id: string
-    name: string
+    name: string | null
     avatar_url: string | null
 }
 
@@ -26,7 +27,12 @@ export type SessionBooking = {
     currency: string
     meet_link: string | null
     psychologist: SessionPsychologist
-    client: SessionClient
+    client: SessionClient | null
+}
+
+export type SessionsResponse = {
+    items: SessionBooking[]
+    total: number
 }
 
 export type SessionsResponse = {

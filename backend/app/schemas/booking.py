@@ -81,3 +81,24 @@ class BookingListResponse(BaseModel):
 
 class BookingCancelRequest(BaseModel):
     confirm_no_refund: bool = False
+
+
+class BookingRetryPaymentPsychologist(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    psychologist_id: UUID
+    full_name: str
+    title: str
+    is_verified: bool
+    avatar_url: str | None
+
+
+class BookingRetryPaymentResponse(BaseModel):
+    booking_id: UUID
+    psychologist: BookingRetryPaymentPsychologist
+    selected_time: datetime.datetime
+    status: BookingStatus
+    payment_status: PaymentStatus
+    price: Decimal
+    currency: str
+    hold_expires_at: datetime.datetime | None

@@ -8,13 +8,19 @@ from auth.dependencies import get_current_user, require_roles
 from config.dependencies import get_settings, get_payment_provider
 from config.settings import Settings
 from database import get_db
-from database.models.models import BookingStatus, User, UserRole
+from database.models.models import (
+    BookingStatus,
+    User,
+    UserRole,
+    Language
+)
 from services.booking_service import (
     create_booking,
     get_booking_for_user,
     list_bookings_for_user,
     mark_disputed,
     resolve_dispute,
+    get_booking_for_cancel_payment
 )
 from schemas.booking import (
     BookingCreateRequest,
@@ -22,10 +28,12 @@ from schemas.booking import (
     BookingResponse,
     DisputeRequest,
     ResolveDisputeRequest,
-    BookingCancelRequest
+    BookingCancelRequest,
+    BookingRetryPaymentResponse
 )
 from payment_provider.payment_interface import PaymentProviderInterface
 from services.payment_service import cancel_booking_service
+
 
 router = APIRouter()
 
@@ -191,4 +199,23 @@ async def resolve_dispute_endpoint(
         booking_id=booking_id,
         new_status=data.new_status,
         admin=admin,
+    )
+
+
+@router.get(
+    "/{booking_id}/retry-info",
+    status_code=status.HTTP_200_OK,
+    response_model=BookingRetryPaymentResponse
+)
+async def get_booking_payment_status_endpoint(
+    db: Annotated[AsyncSession, Depends(get_db)],
+    current_user: Annotated[User, Depends(get_current_user)],
+    booking_id: UUID,
+    lang: Language = Query(default=Language.UKRAINIAN)
+):
+    return await get_booking_for_cancel_payment(
+        db=db,
+        user=current_user,
+        booking_id=booking_id,
+        lang=lang
     )
