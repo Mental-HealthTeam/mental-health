@@ -13,7 +13,7 @@ from fastapi import (
 )
 from config.settings import BaseAppSettings
 from redis_storage.redis_storage import RedisSessionStorage
-
+from ai_model.claude_client import ClaudeClient
 
 logger = logging.getLogger(__name__)
 
@@ -43,6 +43,14 @@ def get_groq_client(
 ):
     return GroqClient(
         api_key=settings.GROQ_API_KEY
+    )
+
+
+def get_claude_client(
+    settings: Annotated[BaseAppSettings, Depends(get_settings)]
+):
+    return ClaudeClient(
+        api_key=settings.CLAUDE_API_KEY
     )
 
 
