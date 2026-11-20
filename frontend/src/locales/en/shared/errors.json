@@ -3,6 +3,7 @@
     "network": "Can't reach the server. Check your connection and try again.",
     "server": "Something went wrong on our side. Try again later.",
     "unknown": "Something went wrong. Try again.",
+    "loadError": "Could not load the cabinet. Please try refreshing the page",
     "notFoundPage": {
         "title": "Page not found",
         "description": "Don’t worry, we’ll help you get back to the right section.",
