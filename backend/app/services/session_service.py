@@ -8,6 +8,7 @@ from database.models.models import (
     Booking,
     BookingStatus,
     PaymentStatus,
+    Psychologist,
 )
 
 
@@ -45,7 +46,11 @@ async def get_sessions_for_user(
             Booking.client_id == user_id,
             Booking.status.in_(SESSION_STATUSES),
         )
-        .options(selectinload(Booking.psychologist))
+        .options(
+            selectinload(Booking.psychologist).selectinload(
+                Psychologist.psychologist_specializations
+            )
+        )
         .order_by(Booking.selected_time.asc())
     )
 
@@ -70,7 +75,9 @@ async def get_sessions_for_psychologist(
             Booking.status.in_(SESSION_STATUSES),
         )
         .options(
-            selectinload(Booking.psychologist),
+            selectinload(Booking.psychologist).selectinload(
+                Psychologist.psychologist_specializations
+            ),
             selectinload(Booking.client),
         )
         .order_by(Booking.selected_time.asc())
