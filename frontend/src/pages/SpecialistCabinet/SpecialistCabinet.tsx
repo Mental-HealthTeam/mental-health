@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 
@@ -14,15 +14,30 @@ import { BackButton } from '../../components/UI/Buttons/BackButton'
 
 import './SpecialistCabinet.scss'
 import { useGetPsychologistMeQuery } from '../../services/psychologistsApi'
+import { useMeQuery } from '../../services/authApi'
 
 export const SpecialistCabinet = () => {
     const navigate = useNavigate()
     const { t, i18n } = useTranslation(['specialistCabinet'])
     const {
-        data: specialist,
+        data: profile,
         isError: isErrorPsychologist,
         isLoading: isLoadingPsychologist,
     } = useGetPsychologistMeQuery({ lang: i18n.language })
+    const { data: me } = useMeQuery()
+
+    const specialist = useMemo(
+        () =>
+            profile && me
+                ? {
+                      ...profile,
+                      full_name: me.name ?? '',
+                      avatar_url: me.avatar_url,
+                      session_minutes: profile.session_minutes ?? 50,
+                  }
+                : undefined,
+        [profile, me],
+    )
 
     useEffect(() => {
         window.scrollTo({ top: 0, behavior: 'instant' })

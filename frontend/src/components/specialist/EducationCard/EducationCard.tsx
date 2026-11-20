@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next'
 
 type Props = {
     className?: string
-    certificates?: { title: string }[]
+    certificates?: string []
 }
 
 export const EducationCard = ({ className, certificates }: Props) => {
@@ -24,9 +24,9 @@ export const EducationCard = ({ className, certificates }: Props) => {
                 <p className="education-card__text-no-education">{t('education.empty')}</p>
             ) : (
                 <ul className="education-card__list">
-                    {certificates.map((item) => (
-                        <li className="education-card__item" key={item.title}>
-                            {item.title}
+                    {certificates.map((item, i) => (
+                        <li className="education-card__item" key={`item--${i}`}>
+                            {item}
                         </li>
                     ))}
                 </ul>
