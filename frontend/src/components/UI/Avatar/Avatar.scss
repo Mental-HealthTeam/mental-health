@@ -2,28 +2,72 @@
 @use '../../../styles/components' as c;
 
 .avatar {
+    position: relative;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     flex-shrink: 0;
 
-    border-radius: c.$avatar-border-radius;
+    overflow: hidden;
 
-    object-fit: cover;
-    object-position: center;
+    background-color: #f3f7eb;
 
-    background-color: a.$color-background;
+    &__placeholder {
+        position: absolute;
+        inset: 0;
 
-    &--fallback {
-        display: inline-flex;
+        display: flex;
         align-items: center;
         justify-content: center;
 
-        overflow: hidden;
+        width: 100%;
+        height: 100%;
 
-        svg {
-            display: block;
+        color: #bec5b5;
+    }
 
-            width: 100%;
-            height: 100%;
+    &__placeholder-icon {
+        display: block;
+
+        width: 55%;
+        height: 55%;
+
+        max-width: 100%;
+        max-height: 100%;
+
+        flex-shrink: 0;
+    }
+
+    &__image {
+        position: absolute;
+        inset: 0;
+
+        display: block;
+
+        width: 100%;
+        height: 100%;
+
+        object-fit: cover;
+        object-position: center;
+
+        opacity: 0;
+
+        &--loaded {
+            opacity: 1;
         }
+    }
+
+    &--rounded {
+        border-radius: c.$avatar-border-radius;
+    }
+
+    &--circle {
+        border-radius: 50%;
+    }
+
+    &--rectangle {
+        border-radius: 18px;
     }
 
     &--small {
@@ -39,6 +83,11 @@
     &--large {
         width: c.$avatar-size-large;
         height: c.$avatar-size-large;
+    }
+
+    &--fluid {
+        width: 100%;
+        height: 100%;
     }
 }
 

@@ -1,6 +1,6 @@
 import classNames from 'classnames'
 import { Avatar } from '../UI/Avatar'
-import { AvatarFallbackIcon, ReviewIcon, StarIcon } from '../UI/Icons'
+import { ReviewIcon, StarIcon } from '../UI/Icons'
 
 import './ReviewCard.scss'
 import { useTranslation } from 'react-i18next'
@@ -35,12 +35,7 @@ export const ReviewCard = ({ age, avatar, date, name, rating, text, className }:
             <ReviewIcon className="review-card__icon" />
 
             <div className="review-card__header">
-                <Avatar
-                    src={avatar ?? undefined}
-                    fallback={<AvatarFallbackIcon />}
-                    className="review-card__avatar"
-                    alt=""
-                />
+                <Avatar src={avatar ?? undefined} className="review-card__avatar" alt="" />
                 <div className="review-card__author">
                     <h3 className="review-card__name">
                         {name}

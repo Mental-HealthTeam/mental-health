@@ -12,6 +12,7 @@ import type {
     ClientProfileValues,
     ClientTextField,
 } from './clientProfile.types'
+import type { FetchBaseQueryError } from '@reduxjs/toolkit/query'
 
 import './ClientProfileForm.scss'
 import { useAvatar } from '../../hooks'
@@ -75,6 +76,27 @@ export const ClientProfileForm = ({
         }))
     }
 
+    const isTelegramAlreadyTaken = (error: unknown): boolean => {
+        if (!error || typeof error !== 'object' || !('status' in error)) {
+            return false
+        }
+
+        const apiError = error as FetchBaseQueryError
+
+        if (apiError.status !== 409) {
+            return false
+        }
+
+        const data = 'data' in apiError ? apiError.data : undefined
+
+        return (
+            typeof data === 'object' &&
+            data !== null &&
+            'code' in data &&
+            data.code === 'TELEGRAM_ALREADY_TAKEN'
+        )
+    }
+
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault()
 
@@ -110,8 +132,16 @@ export const ClientProfileForm = ({
                 avatarFile: avatar.avatarFile,
                 removeAvatar: avatar.removeAvatar,
             })
-        } catch {
-            setErrors({ submit: t('errors.save') })
+        } catch (error) {
+            if (isTelegramAlreadyTaken(error)) {
+                setErrors({
+                    telegram: t('errors.telegramTaken'),
+                })
+            } else {
+                setErrors({
+                    submit: t('errors.save'),
+                })
+            }
         } finally {
             submittingRef.current = false
             setIsSaving(false)
