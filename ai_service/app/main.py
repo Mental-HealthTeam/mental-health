@@ -10,7 +10,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from ai_model.ai_interface import AIClientInterface
 from ai_model.system_prompt import SYSTEM_PROMPT
 from config.dependencies import (
-    get_groq_client,
+    get_claude_client,
     get_redis_storage,
     get_settings,
     verify_origin
@@ -223,7 +223,7 @@ async def event_generator(
 )
 async def send_message(
     request: ChatRequest,
-    ai_client: Annotated[AIClientInterface, Depends(get_groq_client)],
+    ai_client: Annotated[AIClientInterface, Depends(get_claude_client)],
     redis_storage: Annotated[SessionStorageInterface, Depends(get_redis_storage)]
 ) -> StreamingResponse:
     """
