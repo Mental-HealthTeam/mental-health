@@ -29,6 +29,8 @@ from payment_provider.wayforpay_signature import (
     calculate_signature,
     verify_signature
 )
+from database.models.models import Language
+
 
 logger = logging.getLogger(__name__)
 
@@ -39,6 +41,16 @@ _WAYFORPAY_TRANSACTION_MAP = {
     "declined": PaymentEventType.FAILED,
     "refunded": PaymentEventType.REFUNDED,
     "voided": PaymentEventType.REFUNDED
+}
+
+AVAILABLE_LANGUAGES = {
+    Language.UKRAINIAN.value: "UA",
+    Language.ENGLISH.value: "EN"
+}
+
+REVERSED_AVAILABLE_LANGUAGES = {
+    "UA": Language.UKRAINIAN.value,
+    "EN": Language.ENGLISH.value
 }
 
 
@@ -160,6 +172,15 @@ class WayForPayPaymentProvider(PaymentProviderInterface):
             secret_key=self.secret_key
         )
 
+        if params.language in AVAILABLE_LANGUAGES:
+            language_interface = AVAILABLE_LANGUAGES[params.language]
+            lang = params.language
+        else:
+            language_interface = self.language
+            lang = REVERSED_AVAILABLE_LANGUAGES.get(
+                self.language, Language.UKRAINIAN.value
+            )
+
         request_params = {
             "transactionType": "CREATE_INVOICE",
             "merchantAccount": self.merchant_account,
@@ -167,9 +188,9 @@ class WayForPayPaymentProvider(PaymentProviderInterface):
             "merchantAuthType": "SimpleSignature",
             "merchantSignature": signature,
             "apiVersion": self.version,
-            "language": self.language,
+            "language": language_interface,
             "serviceUrl": self.service_url,
-            "returnUrl": self.return_url,
+            "returnUrl": self.return_url + f"?lang={lang}",
             "orderReference": order_reference,
             "orderDate": order_time,
             "amount": amount,
