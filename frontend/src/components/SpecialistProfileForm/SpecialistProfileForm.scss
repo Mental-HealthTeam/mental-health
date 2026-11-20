@@ -1,80 +1,92 @@
 @use '../../styles/abstracts' as a;
 
 .specialist-profile-form {
-  &__fieldset {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
+    &__fieldset {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
 
-    min-width: 0;
-    margin: 0;
-    padding: 0;
-    border: 0;
-  }
+        min-width: 0;
+        margin: 0;
+        padding: 0;
+        border: 0;
+    }
 
-  &__section {
-    min-width: 0;
-    padding: 24px;
-
-    border: 1px solid a.$color-gray-10;
-    border-radius: 25px;
-    background-color: a.$color-background;
-  }
-
-  &__section-title {
-    margin: 0 0 12px;
-
-    color: a.$color-primary;
-    font-size: a.$font-size-h5;
-    line-height: a.$line-height-h5;
-    font-weight: a.$font-weight-h5;
-  }
-
-  &__section-content {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    gap: 20px;
-    align-items: stretch;
-  }
-
-  &__actions {
-    display: flex;
-    justify-content: center;
-
-    padding-top: 4px;
-  }
-
-  &__save {
-    max-width: 100%;
-  }
-
-  &__error {
-    margin: 0;
-
-    color: a.$color-error;
-    font-size: 12px;
-    line-height: 1.4;
-  }
-
-  @media (min-width: 768px) {
     &__section {
-      padding: 24px;
+        min-width: 0;
+        padding: 24px;
+
+        border: 1px solid a.$color-gray-10;
+        border-radius: 25px;
+        background-color: a.$color-background;
     }
 
     &__section-title {
-      margin-bottom: 16px;
+        margin: 0 0 12px;
+
+        color: a.$color-primary;
+        font-size: a.$font-size-h5;
+        line-height: a.$line-height-h5;
+        font-weight: a.$font-weight-h5;
     }
 
     &__section-content {
-      gap: 24px;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 16px;
+        align-items: stretch;
     }
 
-    &__section-content--my-data {
-      grid-template-columns: minmax(0, 320px) minmax(0, 1fr);
+    &__actions {
+        display: flex;
+        justify-content: center;
+
+        padding-top: 4px;
     }
 
-    &__section-content--basic-inf {
-      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    &__save {
+        max-width: 100%;
     }
-  }
+
+    &__error {
+        margin: 0;
+
+        color: a.$color-error;
+        font-size: 12px;
+        line-height: 1.4;
+    }
+
+    &__topics-field {
+        padding-top: 16px;
+        border-top: 1px solid a.$color-gray-20;
+    }
+}
+
+@media (min-width: 768px) {
+    .specialist-profile-form {
+        &__section {
+            padding: 24px;
+        }
+
+        &__section-title {
+            margin-bottom: 16px;
+        }
+
+        &__section-content {
+            gap: 24px;
+        }
+
+        &__section-content--my-data {
+            grid-template-columns: minmax(0, 320px) minmax(0, 1fr);
+        }
+
+        &__section-content--basic-inf {
+            grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+        }
+
+        &__topics-field {
+            padding-top: 0;
+            border: 0;
+        }
+    }
 }

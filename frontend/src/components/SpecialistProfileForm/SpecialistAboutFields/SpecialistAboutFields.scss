@@ -32,8 +32,14 @@
     }
 
     &__remove {
+        color: a.$color-optional;
         position: absolute;
-        right: 10px;
-        top: 40px;
+        right: 6px;
+        top: 36px;
+        transform-origin: color a.$transition-default;
+
+        &:hover {
+            color: a.$color-gray-80;
+        }
     }
 }

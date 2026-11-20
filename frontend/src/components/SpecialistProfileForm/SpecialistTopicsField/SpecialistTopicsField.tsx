@@ -9,22 +9,25 @@ import { PrimaryButton, TagButton } from '../../UI/Buttons'
 import { CloseAiChatIcon } from '../../UI/Icons/CloseAiChatIcon.tsx'
 
 import './SpecialistTopicsField.scss'
+import type { SpecialistProfileErrors } from '../specialistProfile.schema.ts'
 
 type Props = {
     selectedTopics: SymptomCode[]
     onChange: (topics: SymptomCode[]) => void
+    errors: SpecialistProfileErrors
     className?: string
 }
 
 const layoutTransition = { type: 'spring' as const, stiffness: 350, damping: 30, mass: 0.8 }
 const fadeTransition = { duration: 0.2, ease: 'easeOut' as const }
 
-export const SpecialistTopicsField = ({ selectedTopics, onChange, className }: Props) => {
+export const SpecialistTopicsField = ({ selectedTopics, onChange, errors, className }: Props) => {
     const { t } = useTranslation('specialistProfileSettings')
     const { t: tSymptoms } = useTranslation('symptoms')
 
     const titleId = useId()
     const groupId = useId()
+    const errorId = useId()
     const shouldReduceMotion = useReducedMotion()
 
     const {
@@ -64,8 +67,9 @@ export const SpecialistTopicsField = ({ selectedTopics, onChange, className }: P
     return (
         <LayoutGroup id={groupId}>
             <section
-                className={`topics-field ${className}`}
+                className={['topics-field', className].filter(Boolean).join(' ')}
                 aria-labelledby={titleId}
+                aria-describedby={errors.topics ? errorId : undefined}
                 aria-busy={isFetching}
             >
                 <h2 className="visually-hidden" id={titleId}>
@@ -108,7 +112,11 @@ export const SpecialistTopicsField = ({ selectedTopics, onChange, className }: P
 
                 <AnimatePresence initial={false} mode="popLayout">
                     {(isLoading || isError || availableTopics.length > 0) && (
-                        <motion.div key="available" {...groupMotion} className="topics-field__group">
+                        <motion.div
+                            key="available"
+                            {...groupMotion}
+                            className="topics-field__group"
+                        >
                             <h3 className="topics-field__hint">{t('topicsHint')}</h3>
 
                             {isLoading && (
@@ -152,6 +160,11 @@ export const SpecialistTopicsField = ({ selectedTopics, onChange, className }: P
                         </motion.div>
                     )}
                 </AnimatePresence>
+                {errors.topics && (
+                    <p className="topics-field__error" id={errorId} role="alert">
+                        {errors.topics}
+                    </p>
+                )}
             </section>
         </LayoutGroup>
     )

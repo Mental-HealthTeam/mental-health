@@ -54,16 +54,16 @@
     "unsavedChangesConfirm": "You have unsaved changes. Leave without saving?",
 
     "errors": {
-        "name": "Enter a name up to 255 characters.",
+        "name": "Enter a name up to 100 characters.",
         "experience_years": "Enter experience in years: a whole number from 0 to 80.",
         "price_per_hour": "Enter the session price as a number.",
-        "approach": "The approach description must be up to 1000 characters.",
-        "about": "The “About you” text must be up to 2000 characters.",
+        "approach": "The approach description must be up to 100 characters.",
+        "about": "The “About you” text must be up to 500 characters.",
         "certificates": "Check the education entries.",
         "topics": "Check the selected areas.",
         "imageType": "Choose a JPEG, PNG or WebP image.",
         "imageSize": "Choose a non-empty file up to 5 MB.",
         "imageInvalid": "The image could not be opened. Choose another file.",
-        "save": "Your changes could not be saved. Please try again."
+        "submit": "Your changes could not be saved. Please try again."
     }
 }

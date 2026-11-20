@@ -6,7 +6,7 @@ import type {
     SpecialistTextField,
 } from './specialistProfile.types'
 import { SpecialistTopicsField } from './SpecialistTopicsField/SpecialistTopicsField'
-import { useEffect, useId, useRef, useState, type FormEvent } from 'react'
+import { useEffect, useId, useMemo, useRef, useState, type FormEvent } from 'react'
 import {
     getInvalidFields,
     specialistProfileSchema,
@@ -43,8 +43,24 @@ export const SpecialistProfileForm = ({
         ...initialValues,
         topics: [...new Set(initialValues.topics)],
     }))
-    const [errors, setErrors] = useState<SpecialistProfileErrors>({})
     const [isSaving, setIsSaving] = useState(false)
+
+    const [invalidFields, setInvalidFields] = useState<(keyof SpecialistProfileErrors)[]>([])
+    const [hasSubmitError, setHasSubmitError] = useState(false)
+
+    const errors = useMemo<SpecialistProfileErrors>(() => {
+        const result: SpecialistProfileErrors = {}
+
+        for (const field of invalidFields) {
+            result[field] = t(`errors.${field}`)
+        }
+
+        if (hasSubmitError) {
+            result.submit = t('errors.submit')
+        }
+
+        return result
+    }, [invalidFields, hasSubmitError, t])
 
     const submittingRef = useRef(false)
     const avatar = useAvatar(avatarUrl)
@@ -60,11 +76,8 @@ export const SpecialistProfileForm = ({
         value: SpecialistProfileValues[K],
     ) => {
         setValues((previous) => ({ ...previous, [field]: value }))
-        setErrors((previous) => ({
-            ...previous,
-            [field]: undefined,
-            submit: undefined,
-        }))
+        setInvalidFields((previous) => previous.filter((item) => item !== field))
+        setHasSubmitError(false)
     }
 
     const updateTextField = (field: SpecialistTextField, value: string) => {
@@ -81,19 +94,14 @@ export const SpecialistProfileForm = ({
         const result = specialistProfileSchema.safeParse(values)
 
         if (!result.success) {
-            const nextErrors: SpecialistProfileErrors = {}
-
-            for (const field of getInvalidFields(result.error)) {
-                nextErrors[field] = t(`errors.${field}`)
-            }
-
-            setErrors(nextErrors)
+            setInvalidFields(getInvalidFields(result.error))
             return
         }
 
         submittingRef.current = true
         setIsSaving(true)
-        setErrors({})
+        setInvalidFields([])
+        setHasSubmitError(false)
 
         try {
             await onSubmit({
@@ -102,7 +110,7 @@ export const SpecialistProfileForm = ({
                 removeAvatar: avatar.removeAvatar,
             })
         } catch {
-            setErrors({ submit: t('errors.save') })
+            setHasSubmitError(true)
         } finally {
             submittingRef.current = false
             setIsSaving(false)
@@ -156,6 +164,7 @@ export const SpecialistProfileForm = ({
                             selectedTopics={values.topics}
                             onChange={(topics) => updateField('topics', topics)}
                             className="specialist-profile-form__topics-field"
+                            errors={errors}
                         />
                     </div>
                 </section>

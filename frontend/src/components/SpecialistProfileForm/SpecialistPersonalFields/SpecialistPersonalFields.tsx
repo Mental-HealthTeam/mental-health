@@ -26,7 +26,7 @@ type FieldConfig = {
 }
 
 const fields: FieldConfig[] = [
-    { name: 'name', maxLength: 255 },
+    { name: 'name', maxLength: 100 },
     { name: 'experience_years', inputMode: 'numeric', maxLength: 2 },
     { name: 'price_per_hour', inputMode: 'decimal', maxLength: 7 },
     { name: 'approach', maxLength: 100 },

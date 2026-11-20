@@ -82,7 +82,7 @@ export const SpecialistAboutFields = ({
                     </div>
                 ))}
 
-                {items.length <= 5 && (
+                {items.length <= 4 && (
                     <button
                         type="button"
                         className="specialist-about-fields__button-add"

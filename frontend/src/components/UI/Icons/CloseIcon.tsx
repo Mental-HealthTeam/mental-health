@@ -15,7 +15,7 @@ export const CloseIcon = ({ width = 12, height = 12, ...props }: Props) => {
             xmlns="http://www.w3.org/2000/svg"
             {...props}
         >
-            <path d="M11 1L1 11M1 1L11 11" stroke="#3A5B4A" strokeWidth="2" strokeLinecap="round" />
+            <path d="M11 1L1 11M1 1L11 11" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
         </svg>
     )
 }

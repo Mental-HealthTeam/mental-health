@@ -1,22 +1,33 @@
 import { z } from 'zod'
 import type { SymptomCode } from '../../types/psychologist'
 
+const required = 'validation.required'
+
 export const specialistProfileSchema = z.object({
-    name: z.string().trim().min(1).max(255),
+    name: z.string().trim().min(1, required).max(100),
 
-    experience_years: z.string().trim().min(1).pipe(z.coerce.number<string>().int().min(0).max(80)),
+    experience_years: z
+        .string()
+        .trim()
+        .min(1, required)
+        .pipe(z.coerce.number<string>().int().min(0).max(80)),
 
-    price_per_hour: z.string().trim().min(1).pipe(z.coerce.number<string>().min(0).max(1_000_000)),
+    price_per_hour: z
+        .string()
+        .trim()
+        .min(1, required)
+        .pipe(z.coerce.number<string>().min(0).max(1_000_000)),
 
-    approach: z.string().trim().max(1000),
+    approach: z.string().trim().min(1, required).max(100),
 
-    about: z.string().trim().max(2000),
+    about: z.string().trim().min(1, required).max(500),
 
     certificates: z
         .array(z.string().trim().max(255))
-        .transform((list) => list.filter((title) => title !== '')),
+        .transform((list) => list.filter((title) => title !== ''))
+        .pipe(z.array(z.string()).min(1, required)),
 
-    topics: z.array(z.custom<SymptomCode>((value) => typeof value === 'string')),
+    topics: z.array(z.custom<SymptomCode>((value) => typeof value === 'string')).min(1, required),
 })
 
 export type SpecialistProfileInput = z.input<typeof specialistProfileSchema>
