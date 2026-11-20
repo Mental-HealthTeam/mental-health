@@ -12,16 +12,9 @@ from database.models.models import (
     BookingStatus,
     User,
     UserRole,
-    Language
+    Language,
 )
-from services.booking_service import (
-    create_booking,
-    get_booking_for_user,
-    list_bookings_for_user,
-    mark_disputed,
-    resolve_dispute,
-    get_booking_for_cancel_payment
-)
+from payment_provider.payment_interface import PaymentProviderInterface
 from schemas.booking import (
     BookingCreateRequest,
     BookingListResponse,
@@ -29,9 +22,19 @@ from schemas.booking import (
     DisputeRequest,
     ResolveDisputeRequest,
     BookingCancelRequest,
-    BookingRetryPaymentResponse
+    BookingRetryPaymentResponse,
 )
-from payment_provider.payment_interface import PaymentProviderInterface
+from services.booking_localization import (
+    build_booking_response,
+)
+from services.booking_service import (
+    create_booking,
+    get_booking_for_user,
+    list_bookings_for_user,
+    mark_disputed,
+    resolve_dispute,
+    get_booking_for_cancel_payment,
+)
 from services.payment_service import cancel_booking_service
 
 
@@ -40,7 +43,9 @@ router = APIRouter()
 NOT_AUTHENTICATED = {"description": "Not authenticated"}
 NOT_ALLOWED = {"description": "Not enough permissions"}
 NOT_FOUND = {"description": "Booking not found"}
-WRONG_STATE = {"description": "Action is not allowed for the current booking state"}
+WRONG_STATE = {
+    "description": "Action is not allowed for the current booking state"
+}
 
 
 @router.post(
@@ -55,17 +60,20 @@ WRONG_STATE = {"description": "Action is not allowed for the current booking sta
     },
 )
 async def create_booking_endpoint(
-        db: Annotated[AsyncSession, Depends(get_db)],
-        settings: Annotated[Settings, Depends(get_settings)],
-        current_user: Annotated[User, Depends(get_current_user)],
-        data: BookingCreateRequest,
+    db: Annotated[AsyncSession, Depends(get_db)],
+    settings: Annotated[Settings, Depends(get_settings)],
+    current_user: Annotated[User, Depends(get_current_user)],
+    data: BookingCreateRequest,
+    lang: Language = Query(default=Language.UKRAINIAN),
 ):
-    return await create_booking(
+    booking = await create_booking(
         db=db,
         settings=settings,
         client=current_user,
         data=data,
     )
+
+    return build_booking_response(booking, lang)
 
 
 @router.get(
@@ -78,9 +86,13 @@ async def create_booking_endpoint(
 async def list_my_bookings(
     db: Annotated[AsyncSession, Depends(get_db)],
     current_user: Annotated[User, Depends(get_current_user)],
-    booking_status: Annotated[BookingStatus | None, Query(alias="status")] = None,
+    booking_status: Annotated[
+        BookingStatus | None,
+        Query(alias="status")
+    ] = None,
     limit: Annotated[int, Query(ge=1, le=100)] = 20,
     offset: Annotated[int, Query(ge=0)] = 0,
+    lang: Language = Query(default=Language.UKRAINIAN),
 ):
     bookings, total = await list_bookings_for_user(
         db=db,
@@ -90,12 +102,15 @@ async def list_my_bookings(
         offset=offset,
     )
 
-    return {
-        "items": bookings,
-        "total": total,
-        "limit": limit,
-        "offset": offset,
-    }
+    return BookingListResponse(
+        items=[
+            build_booking_response(booking, lang)
+            for booking in bookings
+        ],
+        total=total,
+        limit=limit,
+        offset=offset,
+    )
 
 
 @router.get(
@@ -109,12 +124,15 @@ async def get_booking_endpoint(
     db: Annotated[AsyncSession, Depends(get_db)],
     current_user: Annotated[User, Depends(get_current_user)],
     booking_id: UUID,
+    lang: Language = Query(default=Language.UKRAINIAN),
 ):
-    return await get_booking_for_user(
+    booking = await get_booking_for_user(
         db=db,
         booking_id=booking_id,
         user=current_user,
     )
+
+    return build_booking_response(booking, lang)
 
 
 @router.post(
@@ -130,15 +148,20 @@ async def get_booking_endpoint(
     },
 )
 async def cancel_booking_endpoint(
-        db: Annotated[AsyncSession, Depends(get_db)],
-        settings: Annotated[Settings, Depends(get_settings)],
-        current_user: Annotated[User, Depends(get_current_user)],
-        payment_provider: Annotated[PaymentProviderInterface, Depends(get_payment_provider)],
-        booking_id: UUID,
-        data: BookingCancelRequest | None = None
+    db: Annotated[AsyncSession, Depends(get_db)],
+    settings: Annotated[Settings, Depends(get_settings)],
+    current_user: Annotated[User, Depends(get_current_user)],
+    payment_provider: Annotated[
+        PaymentProviderInterface,
+        Depends(get_payment_provider)
+    ],
+    booking_id: UUID,
+    data: BookingCancelRequest | None = None,
+    lang: Language = Query(default=Language.UKRAINIAN),
 ):
     confirm_no_refund = data.confirm_no_refund if data else False
-    return await cancel_booking_service(
+
+    booking = await cancel_booking_service(
         db=db,
         payment_provider=payment_provider,
         user=current_user,
@@ -146,6 +169,8 @@ async def cancel_booking_endpoint(
         booking_id=booking_id,
         confirm_no_refund=confirm_no_refund,
     )
+
+    return build_booking_response(booking, lang)
 
 
 @router.post(
@@ -161,17 +186,20 @@ async def cancel_booking_endpoint(
     },
 )
 async def dispute_booking_endpoint(
-        db: Annotated[AsyncSession, Depends(get_db)],
-        admin: Annotated[User, Depends(require_roles(UserRole.ADMIN))],
-        booking_id: UUID,
-        data: DisputeRequest,
+    db: Annotated[AsyncSession, Depends(get_db)],
+    admin: Annotated[User, Depends(require_roles(UserRole.ADMIN))],
+    booking_id: UUID,
+    data: DisputeRequest,
+    lang: Language = Query(default=Language.UKRAINIAN),
 ):
-    return await mark_disputed(
+    booking = await mark_disputed(
         db=db,
         booking_id=booking_id,
         admin=admin,
         note=data.note,
     )
+
+    return build_booking_response(booking, lang)
 
 
 @router.post(
@@ -187,13 +215,17 @@ async def dispute_booking_endpoint(
     },
 )
 async def resolve_dispute_endpoint(
-        db: Annotated[AsyncSession, Depends(get_db)],
-        admin: Annotated[User, Depends(require_roles(UserRole.ADMIN))],
-        payment_provider: Annotated[PaymentProviderInterface, Depends(get_payment_provider)],
-        booking_id: UUID,
-        data: ResolveDisputeRequest,
+    db: Annotated[AsyncSession, Depends(get_db)],
+    admin: Annotated[User, Depends(require_roles(UserRole.ADMIN))],
+    payment_provider: Annotated[
+        PaymentProviderInterface,
+        Depends(get_payment_provider)
+    ],
+    booking_id: UUID,
+    data: ResolveDisputeRequest,
+    lang: Language = Query(default=Language.UKRAINIAN),
 ):
-    return await resolve_dispute(
+    booking = await resolve_dispute(
         db=db,
         payment_provider=payment_provider,
         booking_id=booking_id,
@@ -201,21 +233,23 @@ async def resolve_dispute_endpoint(
         admin=admin,
     )
 
+    return build_booking_response(booking, lang)
+
 
 @router.get(
     "/{booking_id}/retry-info",
     status_code=status.HTTP_200_OK,
-    response_model=BookingRetryPaymentResponse
+    response_model=BookingRetryPaymentResponse,
 )
 async def get_booking_payment_status_endpoint(
     db: Annotated[AsyncSession, Depends(get_db)],
     current_user: Annotated[User, Depends(get_current_user)],
     booking_id: UUID,
-    lang: Language = Query(default=Language.UKRAINIAN)
+    lang: Language = Query(default=Language.UKRAINIAN),
 ):
     return await get_booking_for_cancel_payment(
         db=db,
         user=current_user,
         booking_id=booking_id,
-        lang=lang
+        lang=lang,
     )

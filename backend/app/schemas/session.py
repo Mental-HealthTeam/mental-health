@@ -11,9 +11,10 @@ class SessionPsychologist(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
     psychologist_id: UUID
-    full_name: str = Field(validation_alias="display_full_name")
-    title: str = Field(validation_alias="display_title")
+    full_name: str
+    title: str | None = None
     avatar_url: str | None = None
+    specializations: list[str] = Field(default_factory=list)
 
 
 class SessionClient(BaseModel):
