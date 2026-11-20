@@ -1,5 +1,6 @@
 {
     "title": "My cabinet",
     "settingsProfile": "Edit profile",
-    "noProfile": "Cabinet not found"
+    "loading": "Loading...",
+    "loadError": "Could not load the cabinet. Please try refreshing the page"
 }
