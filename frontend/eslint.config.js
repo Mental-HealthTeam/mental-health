@@ -21,6 +21,15 @@ export default defineConfig([
         },
         rules: {
             'no-console': ['warn', { allow: ['warn', 'error'] }],
+            'no-unused-vars': 'off',
+            '@typescript-eslint/no-unused-vars': [
+                'error',
+                {
+                    varsIgnorePattern: '^_',
+                    argsIgnorePattern: '^_',
+                    ignoreRestSiblings: true,
+                },
+            ],
         },
     },
     eslintConfigPrettier,

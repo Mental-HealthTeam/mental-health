@@ -13,9 +13,9 @@ import { OutlineButton } from '../../components/UI/Buttons'
 import { BackButton } from '../../components/UI/Buttons/BackButton'
 
 import './SpecialistCabinet.scss'
-import { useGetPsychologistMeQuery } from '../../services/psychologistsApi'
 import { useMeQuery } from '../../services/authApi'
 import { localizeProfile } from '../../utils/localizeProfile'
+import { useGetSpecialistMeQuery } from '../../services/specialistProfileApi'
 
 export const SpecialistCabinet = () => {
     const navigate = useNavigate()
@@ -24,7 +24,7 @@ export const SpecialistCabinet = () => {
         data: profile,
         isError: isErrorPsychologist,
         isLoading: isLoadingPsychologist,
-    } = useGetPsychologistMeQuery({ lang: i18n.language })
+    } = useGetSpecialistMeQuery({ lang: i18n.language })
     const { data: me } = useMeQuery()
 
     const specialist = useMemo(() => {

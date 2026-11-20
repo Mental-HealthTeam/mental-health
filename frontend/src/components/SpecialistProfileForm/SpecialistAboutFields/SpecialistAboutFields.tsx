@@ -5,14 +5,12 @@ import type { SpecialistProfileErrors } from '../specialistProfile.schema'
 
 import './SpecialistAboutFields.scss'
 
-type Certificate = { title: string }
-
 type Props = {
     about: string
-    certificates: Certificate[]
+    certificates: string[]
     errors: SpecialistProfileErrors
     onAboutChange: (value: string) => void
-    onCertificatesChange: (value: Certificate[]) => void
+    onCertificatesChange: (value: string[]) => void
 }
 
 const MAX_LENGHT = 255
@@ -25,14 +23,14 @@ export const SpecialistAboutFields = ({
     onCertificatesChange,
 }: Props) => {
     const { t } = useTranslation('specialistProfileSettings')
-    const items = certificates.length > 0 ? certificates : [{ title: '' }]
+    const items = certificates.length > 0 ? certificates : ['']
 
     const handleItemChange = (index: number, title: string) => {
-        onCertificatesChange(items.map((item, i) => (i === index ? { ...item, title } : item)))
+        onCertificatesChange(items.map((item, i) => (i === index ? title : item)))
     }
 
     const handleAdd = () => {
-        onCertificatesChange([...items, { title: '' }])
+        onCertificatesChange([...items, ''])
     }
 
     const handleRemove = (index: number) => {
@@ -42,6 +40,7 @@ export const SpecialistAboutFields = ({
     return (
         <div className="specialist-about-fields">
             <FormField
+                variant="textarea"
                 id="about"
                 name="about"
                 label={t(`about.label`)}
@@ -57,6 +56,7 @@ export const SpecialistAboutFields = ({
                 {items.map((item, index) => (
                     <div className="specialist-about-fields__row" key={index}>
                         <FormField
+                            variant="textarea"
                             id={`education-${index}`}
                             name="education"
                             label={t(`education.label`)}
@@ -64,7 +64,7 @@ export const SpecialistAboutFields = ({
                             inputMode="text"
                             maxLength={MAX_LENGHT}
                             autoComplete="off"
-                            value={item.title}
+                            value={item}
                             error={errors.certificates}
                             onChange={(e) => handleItemChange(index, e.target.value)}
                         />

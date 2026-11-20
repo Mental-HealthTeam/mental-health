@@ -9,33 +9,36 @@ import type {
     SpecialistProfileSubmit,
     SpecialistProfileValues,
 } from '../../components/SpecialistProfileForm/specialistProfile.types'
-import { useDeleteAvatarMutation, useUploadAvatarMutation } from '../../services/authApi'
+import {
+    useDeleteAvatarMutation,
+    useMeQuery,
+    useUpdateProfileMutation,
+    useUploadAvatarMutation,
+} from '../../services/authApi'
 import { useTranslation } from 'react-i18next'
 
-import type { SpecialistMe } from '../../types/specialist'
+import type { SpecialistProfile, UpdateProfileBody } from '../../types/specialist'
 import { useBlocker, useNavigate } from 'react-router-dom'
-import { useEffect, useRef, useState } from 'react'
-import {
-    useGetSpecialistMeQuery,
-    useUpdateSpecialistProfileMutation,
-} from '../../services/specialistProfileApi'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import { useGetSpecialistMeQuery, useUpdateSpecialistProfileMutation } from '../../services/specialistProfileApi'
+import { localizeProfile } from '../../utils/localizeProfile'
 
 type ProfileEditorProps = {
-    specialist: SpecialistMe
+    specialist: SpecialistProfile
 }
 
-const getInitialValues = (specialist: SpecialistMe): SpecialistProfileValues => ({
-    name: specialist.name ?? '',
+const getInitialValues = (specialist: SpecialistProfile): SpecialistProfileValues => ({
+    name: specialist.full_name ?? '',
     experience_years: specialist.experience_years?.toString() ?? '',
     price_per_hour: specialist.price_per_hour?.toString() ?? '',
-    approach: specialist.approach ?? '',
-    about: specialist.about ?? '',
+    approach: specialist.bio.approach ?? '',
+    about: specialist.bio.about ?? '',
     certificates: specialist.certificates ?? [],
     topics: specialist.topics ?? [],
 })
 
 const ProfileEditor = ({ specialist }: ProfileEditorProps) => {
-    const { t } = useTranslation('clientProfileSettings')
+    const { t } = useTranslation('specialistProfileSettings')
     const navigate = useNavigate()
 
     const [initialProfile] = useState(specialist)
@@ -86,16 +89,26 @@ const ProfileEditor = ({ specialist }: ProfileEditorProps) => {
         }
     }, [isDirty])
 
+    const [updateMe] = useUpdateProfileMutation()
+
     const handleSubmit = async (values: SpecialistProfileSubmit) => {
-        await updateSpecialistProfile({
-            name: values.name,
+        const body: UpdateProfileBody = {
+            bio: {
+                about: values.about,
+                approach: values.approach,
+                scope: initialProfile.bio?.scope ?? '',
+            },
             experience_years: values.experience_years,
             price_per_hour: values.price_per_hour,
-            approach: values.approach,
-            about: values.about,
             certificates: values.certificates,
             topics: values.topics,
-        }).unwrap()
+        }
+
+        await updateSpecialistProfile(body).unwrap()
+
+        if (values.name !== (initialProfile.full_name ?? '')) {
+            await updateMe({ name: values.name }).unwrap()
+        }
 
         if (values.avatarFile) {
             await uploadAvatar(values.avatarFile).unwrap()
@@ -108,10 +121,11 @@ const ProfileEditor = ({ specialist }: ProfileEditorProps) => {
         navigate('/specialist/cabinet', { replace: true })
     }
 
+    console.log('specialist', specialist)
+    console.log('initialValues', getInitialValues(initialProfile))
+
     return (
         <>
-            <p className="specialist-profile-settings__notice">{t('supportedFieldsNotice')}</p>
-
             <SpecialistProfileForm
                 initialValues={getInitialValues(initialProfile)}
                 avatarUrl={initialProfile.avatar_url}
@@ -123,9 +137,25 @@ const ProfileEditor = ({ specialist }: ProfileEditorProps) => {
 }
 
 export const SpecialistProfileSettingsPage = () => {
-    const { t } = useTranslation('specialistProfileSettings')
+    const { t, i18n } = useTranslation('specialistProfileSettings')
 
-    const { data: specialist, isLoading, isError } = useGetSpecialistMeQuery()
+    const {
+        data: profile,
+        isError: isErrorPsychologist,
+        isLoading: isLoadingPsychologist,
+    } = useGetSpecialistMeQuery({ lang: i18n.language })
+    const { data: me } = useMeQuery()
+
+    const specialist = useMemo(() => {
+        if (!profile || !me) return undefined
+
+        return {
+            ...localizeProfile(profile, i18n.language),
+            full_name: me.name ?? '',
+            avatar_url: me.avatar_url,
+            session_minutes: profile.session_minutes ?? 50,
+        }
+    }, [profile, me, i18n.language])
 
     return (
         <div className="specialist-profile-settings">
@@ -137,11 +167,13 @@ export const SpecialistProfileSettingsPage = () => {
 
                     <h1 className="specialist-profile-settings__title">{t('title')}</h1>
 
-                    {isLoading && !specialist && <p role="status">{t('loading')}</p>}
+                    {isLoadingPsychologist && !specialist && <p role="status">{t('loading')}</p>}
 
-                    {isError && !specialist && <p role="alert">{t('loadError')}</p>}
+                    {isErrorPsychologist && !specialist && <p role="alert">{t('loadError')}</p>}
 
-                    {specialist && <ProfileEditor key={specialist.id} specialist={specialist} />}
+                    {specialist && (
+                        <ProfileEditor key={specialist.psychologist_id} specialist={specialist} />
+                    )}
                 </Container>
             </main>
 

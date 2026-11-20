@@ -69,7 +69,7 @@ export type UpdateProfileBody = {
     bio?: SpecialistBio
     topics?: SymptomCode[]
     methods?: string[]
-    certificates?: { title: string }[]
+    certificates?: string[]
     languages?: Language[]
     experience_years?: number
     price_per_hour?: number

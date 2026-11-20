@@ -13,8 +13,8 @@ export const specialistProfileSchema = z.object({
     about: z.string().trim().max(2000),
 
     certificates: z
-        .array(z.object({ title: z.string().trim().max(255) }))
-        .transform((list) => list.map((item) => item.title).filter((title) => title !== '')),
+        .array(z.string().trim().max(255))
+        .transform((list) => list.filter((title) => title !== '')),
 
     topics: z.array(z.custom<SymptomCode>((value) => typeof value === 'string')),
 })

@@ -7,7 +7,7 @@ export type SpecialistProfileValues = {
     price_per_hour: string
     approach: string
     about: string
-    certificates: { title: string }[]
+    certificates: string[]
     topics: SymptomCode[]
 }
 
