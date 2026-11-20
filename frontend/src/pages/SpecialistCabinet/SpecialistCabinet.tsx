@@ -15,6 +15,7 @@ import { BackButton } from '../../components/UI/Buttons/BackButton'
 import './SpecialistCabinet.scss'
 import { useGetPsychologistMeQuery } from '../../services/psychologistsApi'
 import { useMeQuery } from '../../services/authApi'
+import { localizeProfile } from '../../utils/localizeProfile'
 
 export const SpecialistCabinet = () => {
     const navigate = useNavigate()
@@ -26,18 +27,16 @@ export const SpecialistCabinet = () => {
     } = useGetPsychologistMeQuery({ lang: i18n.language })
     const { data: me } = useMeQuery()
 
-    const specialist = useMemo(
-        () =>
-            profile && me
-                ? {
-                      ...profile,
-                      full_name: me.name ?? '',
-                      avatar_url: me.avatar_url,
-                      session_minutes: profile.session_minutes ?? 50,
-                  }
-                : undefined,
-        [profile, me],
-    )
+    const specialist = useMemo(() => {
+        if (!profile || !me) return undefined
+
+        return {
+            ...localizeProfile(profile, i18n.language),
+            full_name: me.name ?? '',
+            avatar_url: me.avatar_url,
+            session_minutes: profile.session_minutes ?? 50,
+        }
+    }, [profile, me, i18n.language])
 
     useEffect(() => {
         window.scrollTo({ top: 0, behavior: 'instant' })

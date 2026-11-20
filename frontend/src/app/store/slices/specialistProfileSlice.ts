@@ -24,7 +24,9 @@ const specialistProfileSlice = createSlice({
             state.profile = { ...state.profile, ...action.payload }
         },
         addSpecialistReview: (state, action: PayloadAction<SpecialistReview>) => {
-            state.profile?.reviews.unshift(action.payload)
+            if (!state.profile) return
+
+            state.profile.reviews = [...(state.profile.reviews ?? []), action.payload]
         },
         clearSpecialistProfile: (state) => {
             state.profile = null

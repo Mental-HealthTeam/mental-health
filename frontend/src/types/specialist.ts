@@ -28,19 +28,31 @@ export type SpecialistReview = {
 // GET /api/psychologists/{id} і GET /api/psychologists/me/profile
 export type SpecialistProfile = {
     psychologist_id: string
-    full_name: string
+
+    full_name?: string
+    avatar_url?: string | null
+    is_verified?: boolean
+
     title: string
-    avatar_url: string | null
-    is_verified: boolean
-    experience_years: number
-    session_minutes: number
-    price_per_hour: string // "1200.00"
-    topics: SymptomCode[]
-    methods: string[]
-    languages: Language[]
-    certificates: { title: string }[]
+    title_eng?: string | null
+
     bio: SpecialistBio
-    reviews: SpecialistReview[]
+    bio_eng?: SpecialistBio | null
+
+    methods: string[]
+    methods_eng?: string[] | null
+
+    certificates: string[]
+    certificates_eng?: string[] | null
+
+    topics: SymptomCode[]
+    languages: string[]
+
+    experience_years: number
+    price_per_hour: string
+    session_minutes?: number
+
+    reviews?: SpecialistReview[]
     mock_slots: Slot[]
 }
 
