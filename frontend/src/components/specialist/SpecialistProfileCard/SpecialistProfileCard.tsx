@@ -2,11 +2,11 @@ import classNames from 'classnames'
 
 import './SpecialistProfileCard.scss'
 import { InfoTile } from '../../InfoTile'
-import { AvatarFallbackIcon, AwardIcon, ClockCardIcon, MoneyIcon } from '../../UI/Icons'
+import { AwardIcon, ClockCardIcon, MoneyIcon } from '../../UI/Icons'
 import { type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { SpecialistProfile } from '../../../types/specialist'
-import { SpecialistPhoto } from '../../UI/SpecialistPhoto'
+import { Avatar } from '../../UI/Avatar'
 
 type Props = {
     specialist: SpecialistProfile
@@ -32,11 +32,12 @@ export const SpecialistProfileCard = ({ className, specialist, actions }: Props)
             aria-labelledby="profile-card-name"
         >
             <div className="profile-card__region-photo">
-                <SpecialistPhoto
+                <Avatar
                     src={specialist.avatar_url}
                     className="profile-card__photo"
-                    alt=""
-                    fallback={<AvatarFallbackIcon className="profile-card__fallback-icon" />}
+                    alt={specialist.full_name}
+                    shape="rectangle"
+                    fluid
                 />
             </div>
 

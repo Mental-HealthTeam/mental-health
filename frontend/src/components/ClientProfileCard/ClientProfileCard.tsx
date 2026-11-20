@@ -1,10 +1,10 @@
-import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { AvatarFallbackIcon } from '../UI/Icons'
+import { Avatar } from '../UI/Avatar'
+import { OutlineButton } from '../UI/Buttons'
+
+import type { SymptomCode } from '../../types/psychologist'
 
 import './ClientProfileCard.scss'
-import type { SymptomCode } from '../../types/psychologist.ts'
-import { OutlineButton } from '../UI/Buttons'
 
 export type ClientRequest = {
     code: SymptomCode
@@ -21,25 +21,17 @@ type Props = {
 
 export const ClientProfileCard = ({ name, email, avatarUrl, requests, onEditProfile }: Props) => {
     const { t } = useTranslation(['clientCabinet', 'symptoms'])
-    const [failedAvatarUrl, setFailedAvatarUrl] = useState<string | null>(null)
-
-    const hasAvatar = Boolean(avatarUrl) && avatarUrl !== failedAvatarUrl
 
     return (
         <section className="client-profile-card" aria-labelledby="client-profile-name">
             <div className="client-profile-card__photo">
-                {hasAvatar && avatarUrl ? (
-                    <img
-                        className="client-profile-card__image"
-                        src={avatarUrl}
-                        alt=""
-                        onError={() => setFailedAvatarUrl(avatarUrl)}
-                    />
-                ) : (
-                    <span className="client-profile-card__fallback" aria-hidden="true">
-                        <AvatarFallbackIcon />
-                    </span>
-                )}
+                <Avatar
+                    src={avatarUrl}
+                    alt={name?.trim() || t('clientCabinet:profile.defaultName')}
+                    shape="rectangle"
+                    fluid
+                    className="client-profile-card__avatar"
+                />
             </div>
 
             <div className="client-profile-card__content">
