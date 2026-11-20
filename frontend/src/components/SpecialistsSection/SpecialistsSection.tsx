@@ -9,7 +9,7 @@ import {
 import type { Psychologist, SymptomCode } from '../../types/psychologist'
 
 import { Container } from '../Container'
-import { SpecialistCard } from '../SpecialistCard'
+import { SpecialistCard, SpecialistCardSkeleton } from '../SpecialistCard'
 import { ArrowButton } from '../UI/ArrowButton'
 import { OutlineButton } from '../UI/Buttons'
 import { SectionIndex } from '../UI/SectionIndex'
@@ -261,15 +261,6 @@ export const SpecialistsSection = () => {
                     </p>
                 )}
 
-                {/* TODO: Add reusable StatusState for loading/error/empty states,
-                    ErrorBoundary for runtime/render errors,
-                    and Zod runtime validation for psychologists API responses. */}
-                {isInitialLoading && (
-                    <p className="specialists-section__status">
-                        {t('psychologists:section.loading')}
-                    </p>
-                )}
-
                 {!isInitialLoading && isSpecialistsError && !hasSpecialists && (
                     <p className="specialists-section__status">
                         {t('psychologists:section.specialistsError')}
@@ -282,10 +273,10 @@ export const SpecialistsSection = () => {
                     </p>
                 )}
 
-                {!isInitialLoading && hasSpecialists && (
+                {(isInitialLoading || hasSpecialists) && (
                     <>
-                        <div className="specialists-section__carousel">
-                            {hasDesktopNavigation && (
+                        <div className="specialists-section__carousel" aria-busy={isInitialLoading}>
+                            {!isInitialLoading && hasDesktopNavigation && (
                                 <div className="specialists-section__side-navigation">
                                     <ArrowButton
                                         direction="left"
@@ -300,18 +291,28 @@ export const SpecialistsSection = () => {
                                 style={sliderStyle}
                             >
                                 <div className="specialists-section__slider" ref={sliderRef}>
-                                    {specialists.map((specialist) => (
-                                        <div
-                                            className="specialists-section__slide"
-                                            key={specialist.psychologist_id}
-                                        >
-                                            <SpecialistCard {...specialist} />
-                                        </div>
-                                    ))}
+                                    {isInitialLoading
+                                        ? Array.from({ length: DEFAULT_LIMIT }, (_, index) => (
+                                              <div
+                                                  className="specialists-section__slide"
+                                                  key={`skeleton-${index}`}
+                                                  aria-hidden="true"
+                                              >
+                                                  <SpecialistCardSkeleton />
+                                              </div>
+                                          ))
+                                        : specialists.map((specialist) => (
+                                              <div
+                                                  className="specialists-section__slide"
+                                                  key={specialist.psychologist_id}
+                                              >
+                                                  <SpecialistCard {...specialist} />
+                                              </div>
+                                          ))}
                                 </div>
                             </div>
 
-                            {hasDesktopNavigation && (
+                            {!isInitialLoading && hasDesktopNavigation && (
                                 <div className="specialists-section__side-navigation">
                                     <ArrowButton
                                         direction="right"
@@ -322,7 +323,13 @@ export const SpecialistsSection = () => {
                             )}
                         </div>
 
-                        {hasMobileNavigation && (
+                        {isInitialLoading && (
+                            <span className="specialists-section__loading-label" role="status">
+                                {t('psychologists:section.loading')}
+                            </span>
+                        )}
+
+                        {!isInitialLoading && hasMobileNavigation && (
                             <div className="specialists-section__mobile-navigation">
                                 <ArrowButton
                                     direction="left"

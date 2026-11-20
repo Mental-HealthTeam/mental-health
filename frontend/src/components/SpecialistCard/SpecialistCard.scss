@@ -294,4 +294,13 @@
   &--compact &__slots {
     justify-content: center;
   }
+
+  &__skeleton-avatar {
+    width: 76px;
+    height: 76px;
+  }
+
+  &--skeleton {
+    pointer-events: none;
+  }
 }
