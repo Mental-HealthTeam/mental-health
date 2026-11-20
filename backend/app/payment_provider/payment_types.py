@@ -37,6 +37,7 @@ class CheckoutParams(BaseModel):
     currency: str = Field(max_length=3)
     description: str
     hold_expires_at: datetime
+    language: str | None = "uk"
 
     @field_validator("amount")
     @classmethod

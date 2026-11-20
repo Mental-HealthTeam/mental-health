@@ -1,4 +1,3 @@
-
 from typing import Annotated
 from uuid import UUID
 
@@ -9,14 +8,13 @@ from auth.dependencies import get_current_user, require_roles
 from config.dependencies import get_settings, get_payment_provider
 from config.settings import Settings
 from database import get_db
-from database.models.models import BookingStatus, User, UserRole
-from services.booking_service import (
-    create_booking,
-    get_booking_for_user,
-    list_bookings_for_user,
-    mark_disputed,
-    resolve_dispute,
+from database.models.models import (
+    BookingStatus,
+    User,
+    UserRole,
+    Language,
 )
+from payment_provider.payment_interface import PaymentProviderInterface
 from schemas.booking import (
     BookingCreateRequest,
     BookingListResponse,
@@ -24,13 +22,23 @@ from schemas.booking import (
     DisputeRequest,
     ResolveDisputeRequest,
     BookingCancelRequest,
+    BookingRetryPaymentResponse,
 )
-from payment_provider.payment_interface import PaymentProviderInterface
+from services.booking_localization import (
+    build_booking_response,
+)
+from services.booking_service import (
+    create_booking,
+    get_booking_for_user,
+    list_bookings_for_user,
+    mark_disputed,
+    resolve_dispute,
+    get_booking_for_cancel_payment,
+)
 from services.payment_service import cancel_booking_service
 
 
 router = APIRouter()
-
 
 NOT_AUTHENTICATED = {"description": "Not authenticated"}
 NOT_ALLOWED = {"description": "Not enough permissions"}
@@ -38,98 +46,6 @@ NOT_FOUND = {"description": "Booking not found"}
 WRONG_STATE = {
     "description": "Action is not allowed for the current booking state"
 }
-
-
-SPECIALIZATION_TRANSLATIONS = {
-    "uk": {
-        "anxiety": "Тривога",
-        "burnout": "Вигорання",
-        "relationship": "Стосунки",
-        "stress": "Стрес",
-        "grief": "Втрата",
-        "self_esteem": "Самооцінка",
-        "low_mood": "Пригнічений настрій",
-        "sleep": "Сон",
-        "family": "Сім'я",
-        "anger": "Гнів",
-        "trauma": "Травма",
-        "addiction": "Залежність",
-        "eating": "Порушення харчової поведінки",
-        "loneliness": "Самотність",
-        "identity": "Ідентичність",
-        "work_career": "Робота та кар'єра",
-        "motivation": "Мотивація",
-    },
-    "en": {
-        "anxiety": "Anxiety",
-        "burnout": "Burnout",
-        "relationship": "Relationships",
-        "stress": "Stress",
-        "grief": "Grief",
-        "self_esteem": "Self-esteem",
-        "low_mood": "Low mood",
-        "sleep": "Sleep",
-        "family": "Family",
-        "anger": "Anger",
-        "trauma": "Trauma",
-        "addiction": "Addiction",
-        "eating": "Eating disorders",
-        "loneliness": "Loneliness",
-        "identity": "Identity",
-        "work_career": "Work & career",
-        "motivation": "Motivation",
-    },
-}
-
-
-def get_localized_psychologist(psychologist, lang: str) -> dict:
-    """
-    Build localized psychologist data for a booking response.
-    English values fall back to Ukrainian when translations are missing.
-    """
-    if lang == "en":
-        full_name = (
-            getattr(psychologist, "full_name_eng", None)
-            or psychologist.full_name
-        )
-        title = (
-            getattr(psychologist, "title_eng", None)
-            or psychologist.title
-        )
-    else:
-        full_name = (
-            psychologist.full_name
-            or getattr(psychologist, "full_name_eng", None)
-        )
-        title = (
-            psychologist.title
-            or getattr(psychologist, "title_eng", None)
-        )
-
-    translations = SPECIALIZATION_TRANSLATIONS[lang]
-
-    specializations = []
-
-    for item in psychologist.psychologist_specializations:
-        symptom_code = item.symptom_code
-        symptom_code = getattr(symptom_code, "value", symptom_code)
-
-        translated_name = translations.get(
-            symptom_code,
-            symptom_code.replace("_", " ").title(),
-        )
-
-        specializations.append(translated_name)
-
-    return {
-        "psychologist_id": psychologist.psychologist_id,
-        "display_full_name": full_name,
-        "display_title": title,
-        "display_specializations": specializations,
-        "experience_years": psychologist.experience_years,
-        "is_verified": psychologist.is_verified,
-        "avatar_url": psychologist.avatar_url,
-    }
 
 
 @router.post(
@@ -148,13 +64,16 @@ async def create_booking_endpoint(
     settings: Annotated[Settings, Depends(get_settings)],
     current_user: Annotated[User, Depends(get_current_user)],
     data: BookingCreateRequest,
+    lang: Language = Query(default=Language.UKRAINIAN),
 ):
-    return await create_booking(
+    booking = await create_booking(
         db=db,
         settings=settings,
         client=current_user,
         data=data,
     )
+
+    return build_booking_response(booking, lang)
 
 
 @router.get(
@@ -162,19 +81,18 @@ async def create_booking_endpoint(
     response_model=BookingListResponse,
     status_code=status.HTTP_200_OK,
     summary="List my bookings",
-    responses={
-        401: NOT_AUTHENTICATED,
-    },
+    responses={401: NOT_AUTHENTICATED},
 )
 async def list_my_bookings(
     db: Annotated[AsyncSession, Depends(get_db)],
     current_user: Annotated[User, Depends(get_current_user)],
     booking_status: Annotated[
         BookingStatus | None,
-        Query(alias="status"),
+        Query(alias="status")
     ] = None,
     limit: Annotated[int, Query(ge=1, le=100)] = 20,
     offset: Annotated[int, Query(ge=0)] = 0,
+    lang: Language = Query(default=Language.UKRAINIAN),
 ):
     bookings, total = await list_bookings_for_user(
         db=db,
@@ -184,12 +102,15 @@ async def list_my_bookings(
         offset=offset,
     )
 
-    return {
-        "items": bookings,
-        "total": total,
-        "limit": limit,
-        "offset": offset,
-    }
+    return BookingListResponse(
+        items=[
+            build_booking_response(booking, lang)
+            for booking in bookings
+        ],
+        total=total,
+        limit=limit,
+        offset=offset,
+    )
 
 
 @router.get(
@@ -197,19 +118,13 @@ async def list_my_bookings(
     response_model=BookingResponse,
     status_code=status.HTTP_200_OK,
     summary="Get one booking",
-    responses={
-        401: NOT_AUTHENTICATED,
-        404: NOT_FOUND,
-    },
+    responses={401: NOT_AUTHENTICATED, 404: NOT_FOUND},
 )
 async def get_booking_endpoint(
     db: Annotated[AsyncSession, Depends(get_db)],
     current_user: Annotated[User, Depends(get_current_user)],
     booking_id: UUID,
-    lang: Annotated[
-        str,
-        Query(pattern="^(uk|en)$"),
-    ] = "uk",
+    lang: Language = Query(default=Language.UKRAINIAN),
 ):
     booking = await get_booking_for_user(
         db=db,
@@ -217,22 +132,7 @@ async def get_booking_endpoint(
         user=current_user,
     )
 
-    return {
-        "id": booking.id,
-        "psychologist": get_localized_psychologist(
-            psychologist=booking.psychologist,
-            lang=lang,
-        ),
-        "selected_time": booking.selected_time,
-        "status": booking.status,
-        "payment_status": booking.payment_status,
-        "price": booking.price,
-        "currency": booking.currency,
-        "selection_source": booking.selection_source,
-        "ai_session_id": booking.ai_session_id,
-        "hold_expires_at": booking.hold_expires_at,
-        "meet_link": booking.meet_link,
-    }
+    return build_booking_response(booking, lang)
 
 
 @router.post(
@@ -253,14 +153,15 @@ async def cancel_booking_endpoint(
     current_user: Annotated[User, Depends(get_current_user)],
     payment_provider: Annotated[
         PaymentProviderInterface,
-        Depends(get_payment_provider),
+        Depends(get_payment_provider)
     ],
     booking_id: UUID,
     data: BookingCancelRequest | None = None,
+    lang: Language = Query(default=Language.UKRAINIAN),
 ):
     confirm_no_refund = data.confirm_no_refund if data else False
 
-    return await cancel_booking_service(
+    booking = await cancel_booking_service(
         db=db,
         payment_provider=payment_provider,
         user=current_user,
@@ -268,6 +169,8 @@ async def cancel_booking_endpoint(
         booking_id=booking_id,
         confirm_no_refund=confirm_no_refund,
     )
+
+    return build_booking_response(booking, lang)
 
 
 @router.post(
@@ -284,19 +187,19 @@ async def cancel_booking_endpoint(
 )
 async def dispute_booking_endpoint(
     db: Annotated[AsyncSession, Depends(get_db)],
-    admin: Annotated[
-        User,
-        Depends(require_roles(UserRole.ADMIN)),
-    ],
+    admin: Annotated[User, Depends(require_roles(UserRole.ADMIN))],
     booking_id: UUID,
     data: DisputeRequest,
+    lang: Language = Query(default=Language.UKRAINIAN),
 ):
-    return await mark_disputed(
+    booking = await mark_disputed(
         db=db,
         booking_id=booking_id,
         admin=admin,
         note=data.note,
     )
+
+    return build_booking_response(booking, lang)
 
 
 @router.post(
@@ -313,21 +216,40 @@ async def dispute_booking_endpoint(
 )
 async def resolve_dispute_endpoint(
     db: Annotated[AsyncSession, Depends(get_db)],
-    admin: Annotated[
-        User,
-        Depends(require_roles(UserRole.ADMIN)),
-    ],
+    admin: Annotated[User, Depends(require_roles(UserRole.ADMIN))],
     payment_provider: Annotated[
         PaymentProviderInterface,
-        Depends(get_payment_provider),
+        Depends(get_payment_provider)
     ],
     booking_id: UUID,
     data: ResolveDisputeRequest,
+    lang: Language = Query(default=Language.UKRAINIAN),
 ):
-    return await resolve_dispute(
+    booking = await resolve_dispute(
         db=db,
         payment_provider=payment_provider,
         booking_id=booking_id,
         new_status=data.new_status,
         admin=admin,
+    )
+
+    return build_booking_response(booking, lang)
+
+
+@router.get(
+    "/{booking_id}/retry-info",
+    status_code=status.HTTP_200_OK,
+    response_model=BookingRetryPaymentResponse,
+)
+async def get_booking_payment_status_endpoint(
+    db: Annotated[AsyncSession, Depends(get_db)],
+    current_user: Annotated[User, Depends(get_current_user)],
+    booking_id: UUID,
+    lang: Language = Query(default=Language.UKRAINIAN),
+):
+    return await get_booking_for_cancel_payment(
+        db=db,
+        user=current_user,
+        booking_id=booking_id,
+        lang=lang,
     )

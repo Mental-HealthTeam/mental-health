@@ -1,10 +1,11 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from auth.dependencies import require_roles
 from database import get_db
-from database.models.models import User, UserRole
+from database.models.models import Language, User, UserRole
 from schemas.session import SessionListResponse, SessionResponse
+from services.booking_localization import build_booking_psychologist
 from services.session_service import (
     get_sessions_for_psychologist,
     get_sessions_for_user,
@@ -21,6 +22,7 @@ router = APIRouter()
 async def read_user_sessions(
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(require_roles(UserRole.CLIENT)),
+    lang: Language = Query(default=Language.UKRAINIAN),
 ):
     bookings = await get_sessions_for_user(
         db=db,
@@ -37,7 +39,10 @@ async def read_user_sessions(
                 "price": booking.price,
                 "currency": booking.currency,
                 "meet_link": booking.meet_link,
-                "psychologist": booking.psychologist,
+                "psychologist": build_booking_psychologist(
+                    booking.psychologist,
+                    lang,
+                ),
             }
         )
         for booking in bookings
@@ -55,6 +60,7 @@ async def read_psychologist_sessions(
     current_user: User = Depends(
         require_roles(UserRole.PSYCHOLOGIST)
     ),
+    lang: Language = Query(default=Language.UKRAINIAN),
 ):
     bookings = await get_sessions_for_psychologist(
         db=db,
@@ -71,7 +77,10 @@ async def read_psychologist_sessions(
                 "price": booking.price,
                 "currency": booking.currency,
                 "meet_link": booking.meet_link,
-                "psychologist": booking.psychologist,
+                "psychologist": build_booking_psychologist(
+                    booking.psychologist,
+                    lang,
+                ),
                 "client": booking.client,
             }
         )

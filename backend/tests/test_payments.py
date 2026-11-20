@@ -1,227 +1,144 @@
 import asyncio
-import os
-import sys
+from datetime import datetime, timezone
 from decimal import Decimal
-from pathlib import Path
 from types import SimpleNamespace
-from unittest.mock import AsyncMock
-
-os.environ.setdefault(
-    "STRIPE_SECRET_KEY",
-    "sk_test_fake_key_for_tests",
-)
-os.environ.setdefault(
-    "STRIPE_WEBHOOK_SECRET",
-    "whsec_test_secret_for_tests",
-)
+from uuid import UUID
 
 import pytest
 import stripe
-from fastapi import HTTPException
-from starlette.requests import Request
 
-
-PROJECT_ROOT = Path(__file__).resolve().parent.parent
-APP_PATH = PROJECT_ROOT / "backend" / "app"
-
-if str(APP_PATH) not in sys.path:
-    sys.path.insert(0, str(APP_PATH))
-
-
-from routes.payments import (  # noqa: E402
-    CheckoutRequest,
-    create_checkout,
-    stripe_webhook,
+from schemas.payments import CheckoutRequest
+from payment_provider.payment_types import (
+    CheckoutParams,
+    PaymentEventType,
+    PaymentProviderName,
 )
-from services import payment_service  # noqa: E402
+from payment_provider.stripe_provider import StripePaymentProvider
+from exceptions.payments import WebhookVerificationError
 
 
-PSYCHOLOGIST_ID = "11111111-1111-1111-1111-111111111111"
-SELECTED_TIME = "2026-10-10 15:00"
+BOOKING_ID = UUID("11111111-1111-1111-1111-111111111111")
 
 
-def make_psychologist():
-    return SimpleNamespace(
-        psychologist_id=PSYCHOLOGIST_ID,
-        full_name="Test Psychologist",
-        price_per_hour=Decimal("100.00"),
+@pytest.fixture
+def stripe_provider():
+    return StripePaymentProvider(
+        api_key="sk_test_fake_key_for_tests",
+        webhook_secret="whsec_test_secret_for_tests",
+        success_url="https://example.com/success",
+        cancel_url="https://example.com/cancel",
     )
 
 
-def make_db(psychologist=None):
-    result = SimpleNamespace(
-        scalar_one_or_none=lambda: psychologist,
+def make_checkout_params():
+    return CheckoutParams(
+        booking_id=BOOKING_ID,
+        amount=Decimal("100.00"),
+        currency="UAH",
+        description="Consultation with psychologist",
+        hold_expires_at=datetime(2026, 12, 1, tzinfo=timezone.utc),
+        language="uk",
     )
 
-    db = AsyncMock()
-    db.execute = AsyncMock(return_value=result)
 
-    return db
-
-
-def make_request(payload=b"{}"):
-    async def receive():
-        return {
-            "type": "http.request",
-            "body": payload,
-            "more_body": False,
-        }
-
-    scope = {
-        "type": "http",
-        "method": "POST",
-        "path": "/webhook",
-        "headers": [
-            (b"stripe-signature", b"test-signature"),
-        ],
+def make_stripe_event(
+    event_type="checkout.session.completed",
+    payment_status="paid",
+):
+    return {
+        "id": "evt_test_123",
+        "type": event_type,
+        "data": {
+            "object": {
+                "id": "cs_test_123",
+                "payment_intent": "pi_test_123",
+                "payment_status": payment_status,
+                "metadata": {
+                    "booking_id": str(BOOKING_ID),
+                },
+                "client_reference_id": str(BOOKING_ID),
+            }
+        },
     }
 
-    return Request(scope, receive)
 
-
-def test_checkout_request_accepts_psychologist_id_and_selected_time():
+def test_checkout_request_accepts_booking_id():
     request = CheckoutRequest(
-        psychologist_id=PSYCHOLOGIST_ID,
-        selected_time=SELECTED_TIME,
+        booking_id=BOOKING_ID,
     )
 
-    assert str(request.psychologist_id) == PSYCHOLOGIST_ID
-    assert request.selected_time == SELECTED_TIME
+    assert request.booking_id == BOOKING_ID
 
 
-def test_checkout_returns_404_for_unknown_psychologist():
-    db = make_db(psychologist=None)
+def test_checkout_request_defaults_to_ukrainian_language():
+    request = CheckoutRequest(
+        booking_id=BOOKING_ID,
+    )
 
-    with pytest.raises(HTTPException) as error:
-        asyncio.run(
-            create_checkout(
-                body=CheckoutRequest(
-                    psychologist_id=PSYCHOLOGIST_ID,
-                    selected_time=SELECTED_TIME,
-                ),
-                db=db,
-            )
-        )
-
-    assert error.value.status_code == 404
-    assert error.value.detail == "Psychologist not found"
+    assert request.language.value == "uk"
 
 
-def test_stripe_session_is_created(monkeypatch):
-    psychologist = make_psychologist()
-    db = make_db(psychologist)
+def test_stripe_provider_name(stripe_provider):
+    assert stripe_provider.name == PaymentProviderName.STRIPE
 
+
+def test_stripe_checkout_session_is_created(
+    stripe_provider,
+    monkeypatch,
+):
     captured = {}
 
-    def create_session(**kwargs):
+    def fake_create(**kwargs):
         captured.update(kwargs)
 
         return SimpleNamespace(
-            url="https://checkout.stripe.com/test"
+            id="cs_test_123",
+            url="https://checkout.stripe.com/test",
         )
 
     monkeypatch.setattr(
-        payment_service.stripe.checkout.Session,
+        stripe.checkout.Session,
         "create",
-        create_session,
+        fake_create,
     )
 
     result = asyncio.run(
-        payment_service.create_checkout_session(
-            db=db,
-            psychologist_id=PSYCHOLOGIST_ID,
-            selected_time=SELECTED_TIME,
+        stripe_provider.create_checkout_session(
+            make_checkout_params()
         )
     )
 
-    assert result == "https://checkout.stripe.com/test"
-    assert captured
+    assert result.session_id == "cs_test_123"
+    assert result.checkout_url == "https://checkout.stripe.com/test"
+
+    assert captured["mode"] == "payment"
+    assert captured["metadata"]["booking_id"] == str(BOOKING_ID)
+    assert captured["client_reference_id"] == str(BOOKING_ID)
 
 
-def test_stripe_metadata_contains_psychologist_id(monkeypatch):
-    psychologist = make_psychologist()
-    db = make_db(psychologist)
-
+def test_stripe_checkout_amount_is_converted_to_minor_units(
+    stripe_provider,
+    monkeypatch,
+):
     captured = {}
 
-    def create_session(**kwargs):
+    def fake_create(**kwargs):
         captured.update(kwargs)
 
         return SimpleNamespace(
-            url="https://checkout.stripe.com/test"
+            id="cs_test_123",
+            url="https://checkout.stripe.com/test",
         )
 
     monkeypatch.setattr(
-        payment_service.stripe.checkout.Session,
+        stripe.checkout.Session,
         "create",
-        create_session,
+        fake_create,
     )
 
     asyncio.run(
-        payment_service.create_checkout_session(
-            db=db,
-            psychologist_id=PSYCHOLOGIST_ID,
-            selected_time=SELECTED_TIME,
-        )
-    )
-
-    assert captured["metadata"]["psychologist_id"] == PSYCHOLOGIST_ID
-
-
-def test_stripe_metadata_contains_selected_time(monkeypatch):
-    psychologist = make_psychologist()
-    db = make_db(psychologist)
-
-    captured = {}
-
-    def create_session(**kwargs):
-        captured.update(kwargs)
-
-        return SimpleNamespace(
-            url="https://checkout.stripe.com/test"
-        )
-
-    monkeypatch.setattr(
-        payment_service.stripe.checkout.Session,
-        "create",
-        create_session,
-    )
-
-    asyncio.run(
-        payment_service.create_checkout_session(
-            db=db,
-            psychologist_id=PSYCHOLOGIST_ID,
-            selected_time=SELECTED_TIME,
-        )
-    )
-
-    assert captured["metadata"]["selected_time"] == SELECTED_TIME
-
-
-def test_stripe_amount_is_taken_from_psychologist_price(monkeypatch):
-    psychologist = make_psychologist()
-    db = make_db(psychologist)
-
-    captured = {}
-
-    def create_session(**kwargs):
-        captured.update(kwargs)
-
-        return SimpleNamespace(
-            url="https://checkout.stripe.com/test"
-        )
-
-    monkeypatch.setattr(
-        payment_service.stripe.checkout.Session,
-        "create",
-        create_session,
-    )
-
-    asyncio.run(
-        payment_service.create_checkout_session(
-            db=db,
-            psychologist_id=PSYCHOLOGIST_ID,
-            selected_time=SELECTED_TIME,
+        stripe_provider.create_checkout_session(
+            make_checkout_params()
         )
     )
 
@@ -232,122 +149,117 @@ def test_stripe_amount_is_taken_from_psychologist_price(monkeypatch):
     assert unit_amount == 10000
 
 
-def test_stripe_product_contains_psychologist_name(monkeypatch):
-    psychologist = make_psychologist()
-    db = make_db(psychologist)
-
-    captured = {}
-
-    def create_session(**kwargs):
-        captured.update(kwargs)
-
-        return SimpleNamespace(
-            url="https://checkout.stripe.com/test"
+def test_webhook_rejects_missing_signature(stripe_provider):
+    with pytest.raises(WebhookVerificationError):
+        stripe_provider.verify_webhook_event(
+            payload=b"{}",
+            headers={},
         )
+
+
+def test_webhook_rejects_invalid_signature(
+    stripe_provider,
+    monkeypatch,
+):
+    def fake_construct_event(*args, **kwargs):
+        raise ValueError("Invalid payload")
 
     monkeypatch.setattr(
-        payment_service.stripe.checkout.Session,
-        "create",
-        create_session,
+        stripe.Webhook,
+        "construct_event",
+        fake_construct_event,
     )
 
-    asyncio.run(
-        payment_service.create_checkout_session(
-            db=db,
-            psychologist_id=PSYCHOLOGIST_ID,
-            selected_time=SELECTED_TIME,
+    with pytest.raises(WebhookVerificationError):
+        stripe_provider.verify_webhook_event(
+            payload=b"{}",
+            headers={"stripe-signature": "invalid"},
         )
-    )
-
-    product_name = (
-        captured["line_items"][0]
-        ["price_data"]
-        ["product_data"]
-        ["name"]
-    )
-
-    assert product_name == "Consultation with Test Psychologist"
 
 
-def test_checkout_endpoint_returns_checkout_url(monkeypatch):
-    expected_url = "https://checkout.stripe.com/test"
-
-    async def fake_create_checkout_session(
-        db,
-        psychologist_id,
-        selected_time,
-    ):
-        assert str(psychologist_id) == PSYCHOLOGIST_ID
-        assert selected_time == SELECTED_TIME
-
-        return expected_url
+def test_webhook_returns_paid_event(
+    stripe_provider,
+    monkeypatch,
+):
+    event = make_stripe_event()
 
     monkeypatch.setattr(
-        "routes.payments.create_checkout_session",
-        fake_create_checkout_session,
+        stripe.Webhook,
+        "construct_event",
+        lambda *args, **kwargs: SimpleNamespace(
+            to_dict=lambda: event
+        ),
     )
 
-    response = asyncio.run(
-        create_checkout(
-            body=CheckoutRequest(
-                psychologist_id=PSYCHOLOGIST_ID,
-                selected_time=SELECTED_TIME,
-            ),
-            db=AsyncMock(),
-        )
+    result = stripe_provider.verify_webhook_event(
+        payload=b"{}",
+        headers={"stripe-signature": "test-signature"},
     )
 
-    assert response.checkout_url == expected_url
+    assert result.event_id == "evt_test_123"
+    assert result.event_type == PaymentEventType.PAID
+    assert result.booking_id == BOOKING_ID
+    assert result.provider_session_id == "cs_test_123"
+    assert result.payment_reference == "pi_test_123"
 
 
-def test_webhook_rejects_missing_signature():
-    async def receive():
-        return {
-            "type": "http.request",
-            "body": b"{}",
-            "more_body": False,
-        }
+def test_webhook_does_not_confirm_unpaid_session(
+    stripe_provider,
+    monkeypatch,
+):
+    event = make_stripe_event(payment_status="unpaid")
 
-    scope = {
-        "type": "http",
-        "method": "POST",
-        "path": "/webhook",
-        "headers": [],
-    }
+    monkeypatch.setattr(
+        stripe.Webhook,
+        "construct_event",
+        lambda *args, **kwargs: SimpleNamespace(
+            to_dict=lambda: event
+        ),
+    )
 
-    request = Request(scope, receive)
+    result = stripe_provider.verify_webhook_event(
+        payload=b"{}",
+        headers={"stripe-signature": "test-signature"},
+    )
 
-    with pytest.raises(HTTPException) as error:
-        asyncio.run(stripe_webhook(request))
-
-    assert error.value.status_code == 400
-    assert error.value.detail == "Missing Stripe signature"
+    assert result.event_type == PaymentEventType.IGNORED
+    assert result.booking_id is None
 
 
-def test_webhook_does_not_confirm_unpaid_session(monkeypatch):
+def test_webhook_ignores_unknown_event(
+    stripe_provider,
+    monkeypatch,
+):
     event = {
-        "type": "checkout.session.completed",
+        "id": "evt_unknown",
+        "type": "customer.created",
         "data": {
-            "object": {
-                "payment_status": "unpaid",
-                "metadata": {
-                    "psychologist_id": PSYCHOLOGIST_ID,
-                    "selected_time": SELECTED_TIME,
-                },
-            }
+            "object": {},
         },
     }
 
     monkeypatch.setattr(
         stripe.Webhook,
         "construct_event",
-        lambda payload, signature, secret: event,
+        lambda *args, **kwargs: SimpleNamespace(
+            to_dict=lambda: event
+        ),
     )
 
-    request = make_request()
+    result = stripe_provider.verify_webhook_event(
+        payload=b"{}",
+        headers={"stripe-signature": "test-signature"},
+    )
 
-    result = asyncio.run(stripe_webhook(request))
+    assert result.event_type == PaymentEventType.IGNORED
+    assert result.booking_id is None
 
-    assert result == {
-        "status": "payment_not_completed",
-    }
+
+def test_stripe_builds_webhook_acknowledgement(
+    stripe_provider,
+):
+    event = stripe_provider.build_webhook_response(
+        event=None,
+    )
+
+    assert event.status_code == 200

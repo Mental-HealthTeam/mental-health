@@ -19,14 +19,23 @@ from database.models.models import (
     PsychologistStatus,
     User,
     UserRole,
+    Language
 )
-from payment_provider.payment_types import PaymentProviderName, RefundRequest
-from schemas.booking import BookingCreateRequest
+from payment_provider.payment_types import (
+    PaymentProviderName,
+    RefundRequest
+)
+from schemas.booking import (
+    BookingCreateRequest,
+    BookingRetryPaymentResponse,
+    BookingRetryPaymentPsychologist
+)
 from services.session_service import set_meet_link
 from payment_provider.payment_interface import PaymentProviderInterface
 from exceptions.payments import PaymentProviderError
 from services.slot_service import get_nearest_available_slot
 from exceptions.base import AppError
+from services.localization import pick
 
 logger = logging.getLogger(__name__)
 
@@ -321,7 +330,11 @@ async def mark_paid(
     ):
         result = await db.execute(
             select(Booking)
-            .options(selectinload(Booking.psychologist))
+            .options(
+            selectinload(Booking.psychologist).selectinload(
+                Psychologist.psychologist_specializations
+            )
+        )
             .where(Booking.id == booking_id)
         )
         return result.scalar_one()
@@ -363,7 +376,11 @@ async def mark_paid(
 
     result = await db.execute(
         select(Booking)
-        .options(selectinload(Booking.psychologist))
+        .options(
+            selectinload(Booking.psychologist).selectinload(
+                Psychologist.psychologist_specializations
+            )
+        )
         .where(Booking.id == booking_id)
     )
     return result.scalar_one()
@@ -416,7 +433,11 @@ async def mark_payment_failed(
 
     result = await db.execute(
         select(Booking)
-        .options(selectinload(Booking.psychologist))
+        .options(
+            selectinload(Booking.psychologist).selectinload(
+                Psychologist.psychologist_specializations
+            )
+        )
         .where(Booking.id == booking_id)
     )
     return result.scalar_one()
@@ -458,7 +479,11 @@ async def mark_cancelled(
 
         result = await db.execute(
             select(Booking)
-            .options(selectinload(Booking.psychologist))
+            .options(
+            selectinload(Booking.psychologist).selectinload(
+                Psychologist.psychologist_specializations
+            )
+        )
             .where(Booking.id == booking_id)
         )
         return result.scalar_one()
@@ -482,7 +507,11 @@ async def mark_cancelled(
 
     result = await db.execute(
         select(Booking)
-        .options(selectinload(Booking.psychologist))
+        .options(
+            selectinload(Booking.psychologist).selectinload(
+                Psychologist.psychologist_specializations
+            )
+        )
         .where(Booking.id == booking_id)
     )
     return result.scalar_one()
@@ -883,7 +912,9 @@ async def list_ready_for_payout(
             Booking.psychologist_id == psychologist_id
         )
         .options(
-            selectinload(Booking.psychologist)
+            selectinload(Booking.psychologist).selectinload(
+                Psychologist.psychologist_specializations
+            )
         )
         .order_by(Booking.selected_time.asc())
         .with_for_update(skip_locked=True)
@@ -938,7 +969,11 @@ async def mark_completed(
 
     result = await db.execute(
         select(Booking)
-        .options(selectinload(Booking.psychologist))
+        .options(
+            selectinload(Booking.psychologist).selectinload(
+                Psychologist.psychologist_specializations
+            )
+        )
         .where(Booking.id == booking_id)
     )
     return result.scalar_one()
@@ -1021,3 +1056,60 @@ async def mark_refund_failed(
             "Booking cannot be marked as refund failed in its current state.",
         )
     return booking
+
+
+async def get_booking_for_cancel_payment(
+    db: AsyncSession,
+    user: User,
+    booking_id: UUID,
+    lang: Language
+):
+    result = await db.execute(
+        select(Booking)
+        .options(
+            selectinload(Booking.psychologist).selectinload(
+                Psychologist.psychologist_specializations
+            )
+        )
+        .where(Booking.id == booking_id)
+    )
+    booking = result.scalar_one_or_none()
+
+    if not booking:
+        raise AppError(
+            status.HTTP_404_NOT_FOUND,
+            "BOOKING_NOT_FOUND",
+            "Booking not found.",
+        )
+    if booking.client_id != user.id:
+        raise AppError(
+            status.HTTP_403_FORBIDDEN,
+            "BOOKING_ACCESS_DENIED",
+            "You do not have access to this booking.",
+        )
+    psychologist = booking.psychologist
+    psychologist_response = BookingRetryPaymentPsychologist(
+        psychologist_id=psychologist.psychologist_id,
+        full_name=pick(
+            psychologist.full_name,
+            psychologist.full_name_eng,
+            lang
+        ),
+        title=pick(
+            psychologist.title,
+            psychologist.title_eng,
+            lang
+        ),
+        is_verified=psychologist.is_verified,
+        avatar_url=psychologist.avatar_url
+    )
+    return BookingRetryPaymentResponse(
+        booking_id=booking.id,
+        psychologist=psychologist_response,
+        selected_time=booking.selected_time,
+        status=booking.status,
+        payment_status=booking.payment_status,
+        price=booking.price,
+        currency=booking.currency,
+        hold_expires_at=booking.hold_expires_at
+    )
