@@ -14,7 +14,7 @@ $sc-page-button-border-width: 1px;
 // Table layout (shared by head and session card)
 // ======================================================
 
-$sc-table-columns: 180px 80px minmax(200px, 1fr) 200px;
+$sc-table-columns: 180px 80px minmax(200px, 300px) minmax(200px, 300px);
 $sc-table-cell-padding-inline: 16px;
 $sc-table-border-width: 1px;
 

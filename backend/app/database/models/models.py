@@ -179,6 +179,9 @@ class Psychologist(Base):
     certificates: Mapped[list[str] | None] = mapped_column(
         JSON,
     )
+    certificates_eng: Mapped[list[str] | None] = mapped_column(
+        JSON,
+    )
     bio: Mapped[dict | None] = mapped_column(
         JSON,
     )
