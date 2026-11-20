@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { Avatar } from '../UI/Avatar'
 import { OutlineButton, PrimaryButton } from '../UI/Buttons'
-import { AvatarFallbackIcon, AwardIcon, MoneyIcon } from '../UI/Icons'
+import { AwardIcon, MoneyIcon } from '../UI/Icons'
 import { TimeSlot } from '../UI/TimeSlot'
 
 import type { Psychologist } from '../../types/psychologist.ts'
@@ -74,7 +74,7 @@ export const SpecialistCard = ({
     topics,
     mock_slots: timeSlots,
     variant = 'default',
-    className
+    className,
 }: Props) => {
     const { t, i18n } = useTranslation(['psychologists', 'symptoms', 'accessibility'])
     const navigate = useNavigate()
@@ -148,13 +148,12 @@ export const SpecialistCard = ({
     return (
         <article
             ref={cardRef}
-             className={classNames('specialist-card', `specialist-card--${variant}`, className)}
+            className={classNames('specialist-card', `specialist-card--${variant}`, className)}
             aria-labelledby={`specialist-${id}-name`}
         >
             <header className="specialist-card__header">
                 <Avatar
                     src={avatar ?? undefined}
-                    fallback={<AvatarFallbackIcon />}
                     alt=""
                     size="large"
                     className="specialist-card__avatar"

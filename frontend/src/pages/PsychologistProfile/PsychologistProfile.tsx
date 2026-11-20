@@ -14,7 +14,7 @@ import { AiChat } from '../../components/AiChat'
 import { BookingBlock } from '../../components/BookingBlock'
 import { useGetPsychologistByIdQuery } from '../../services/psychologistsApi'
 import { skipToken } from '@reduxjs/toolkit/query'
-import { BackButton } from '../../components/UI/Buttons/BackButton'
+import { BackButton } from '../../components/UI/Buttons'
 import { ProfileTabs } from '../../components/specialist/ProfileTabs'
 
 export const PsychologistProfile = () => {

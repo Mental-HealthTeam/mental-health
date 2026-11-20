@@ -1,7 +1,7 @@
 import classNames from 'classnames'
 import './SpecialistReviewCard.scss'
 import { Avatar } from '../../../../components/UI/Avatar'
-import { AvatarFallbackIcon, StarIcon } from '../../../../components/UI/Icons'
+import { StarIcon } from '../../../../components/UI/Icons'
 import { useTranslation } from 'react-i18next'
 
 type Props = {
@@ -30,12 +30,7 @@ export const SpecialistReviewCard = ({
     return (
         <article className={classNames('specialist-review-card', className)}>
             <div className="specialist-review-card__header">
-                <Avatar
-                    className="review-card__avatar"
-                    src={avatar ?? undefined}
-                    fallback={<AvatarFallbackIcon />}
-                    alt=""
-                />
+                <Avatar className="review-card__avatar" src={avatar ?? undefined} alt="" />
 
                 <div className="specialist-review-card__author">
                     <h3 className="specialist-review-card__name">
