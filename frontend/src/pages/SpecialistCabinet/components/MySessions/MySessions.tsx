@@ -9,10 +9,10 @@ import { SessionCard } from '../SessionCard/SessionCard'
 import { getSessionKey, getSessionStatus, isVisibleSession } from '../../../../utils/session'
 import { formatDate } from '../../../../utils/date'
 import { OutlineButton } from '../../../../components/UI/Buttons'
+import { useGetPsychologistSessionsQuery } from '../../../../services/psychologistsApi'
 
 type Props = {
     className?: string
-    sessions: SessionItem[]
 }
 
 type GroupSessions = {
@@ -58,10 +58,18 @@ const groupSessionsByDate = (sessions: SessionItem[]): GroupSessions[] => {
     return groupedSessions.sort((a, b) => b.dayKey.localeCompare(a.dayKey))
 }
 
-export const MySessions = ({ className, sessions }: Props) => {
+export const MySessions = ({ className }: Props) => {
     const { t, i18n } = useTranslation('session')
     const [showSessions, setShowSessions] = useState<ShowSessions>('all')
     const [visibleDays, setVisibleDays] = useState(DAYS_STEP)
+
+    const {
+        data: sessions,
+        isError: isErrorSessions,
+        isLoading: isLoadingSessions,
+    } = useGetPsychologistSessionsQuery({ lang: i18n.language })
+
+    const showContent = !isLoadingSessions && !isErrorSessions
 
     const handleFilterChange = (filter: ShowSessions) => {
         setShowSessions(filter)
@@ -69,13 +77,17 @@ export const MySessions = ({ className, sessions }: Props) => {
     }
 
     const filteredSessions = useMemo(() => {
-        const visible = sessions.filter(isVisibleSession)
+        if (sessions) {
+            const visible = sessions.filter(isVisibleSession)
 
-        if (showSessions === 'all') {
-            return visible
+            if (showSessions === 'all') {
+                return visible
+            }
+
+            return visible.filter((session) => getSessionStatus(session) === showSessions)
+        } else {
+            return []
         }
-
-        return visible.filter((session) => getSessionStatus(session) === showSessions)
     }, [showSessions, sessions])
 
     const todayKey = getDayKey(new Date().toISOString())
@@ -104,7 +116,19 @@ export const MySessions = ({ className, sessions }: Props) => {
                 ))}
             </div>
 
-            {shownGroups.length !== 0 && (
+            {isLoadingSessions && (
+                <span className="my-sessions__status" role="status" aria-live="polite">
+                    {t('loading')}
+                </span>
+            )}
+
+            {isErrorSessions && (
+                <span className="my-sessions__status my-sessions__status--error" role="alert">
+                    {t('loadError')}
+                </span>
+            )}
+
+            {showContent && shownGroups.length !== 0 && (
                 <>
                     <div className="my-sessions__scroll">
                         <div className="my-sessions__days">
@@ -128,7 +152,7 @@ export const MySessions = ({ className, sessions }: Props) => {
                                         <div className="my-sessions__head" aria-hidden="true">
                                             <span>{t('tableHead.status')}</span>
                                             <span>{t('tableHead.time')}</span>
-                                            <span>{t('tableHead.specialist')}</span>
+                                            <span>{t('tableHead.client')}</span>
                                             <span>{t('tableHead.actions')}</span>
                                         </div>
 
@@ -158,7 +182,7 @@ export const MySessions = ({ className, sessions }: Props) => {
                 </>
             )}
 
-            {groupedSessions.length === 0 && (
+            {showContent && groupedSessions.length === 0 && (
                 <span className="my-sessions__no-sessions">{t('noSessions')}</span>
             )}
         </div>
