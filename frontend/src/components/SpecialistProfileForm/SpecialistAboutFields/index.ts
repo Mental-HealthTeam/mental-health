@@ -1,0 +1,1 @@
+export { SpecialistAboutFields } from './SpecialistAboutFields'

@@ -1,0 +1,77 @@
+@use '../../../../styles/abstracts' as a;
+
+.form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    &__label {
+        font-size: 14px;
+        font-weight: 600;
+        color: a.$color-gray-40;
+        transition: color 0.2s ease;
+    }
+
+    &__input {
+        width: 100%;
+        padding: 9px 12px;
+        border: 1px solid a.$color-gray-40;
+        border-radius: 12px;
+        background: a.$color-background;
+        font-family: inherit;
+        font-size: a.$font-size-body;
+        line-height: a.$line-height-body;
+        color: a.$color-primary;
+        text-overflow: ellipsis;
+        outline: none;
+        transition:
+            border-color a.$transition-default,
+            box-shadow a.$transition-default;
+
+        &::placeholder {
+            color: a.$color-gray-60;
+        }
+
+        &:hover {
+            border-color: a.$color-gray-40;
+        }
+
+        &:focus {
+            border-color: a.$color-optional;
+            box-shadow: 0 0 0 1px a.$color-optional;
+        }
+
+        &:disabled {
+            background: a.$color-gray-0;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        &[aria-invalid='true'] {
+            border-color: a.$color-error;
+        }
+
+        &--textarea {
+            width: 100%;
+            min-height: 44px;
+            max-height: 200px;
+
+            resize: none;
+            overflow-y: auto;
+
+            box-sizing: border-box;
+            line-height: 22px;
+        }
+    }
+
+    &:focus-within &__label {
+        color: a.$color-optional;
+    }
+
+    &__error {
+        margin: 0;
+        color: a.$color-error;
+        font-size: 12px;
+        line-height: 1.4;
+    }
+}

@@ -19,6 +19,7 @@
 
     &__item,
     &__text-no-education {
+        overflow-wrap: anywhere;
         color: a.$color-gray-0;
         font-size: a.$font-size-body;
         line-height: a.$line-height-body;

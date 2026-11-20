@@ -9,4 +9,13 @@
     text-align: left;
     border-bottom: 2px solid a.$color-optional;
     cursor: pointer;
+
+    transform-origin:
+        color a.$transition-default,
+        border-bottom-color a.$transition-default;
+
+    &:hover {
+        color: a.$color-primary;
+        border-bottom-color: a.$color-primary;
+    }
 }

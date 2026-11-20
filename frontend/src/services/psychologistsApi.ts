@@ -11,7 +11,7 @@ export const psychologistsApi = createApi({
 
     baseQuery: baseQueryWithReauth,
 
-    tagTypes: ['Sessions'],
+    tagTypes: ['MyProfile', 'Sessions'],
 
     endpoints: (builder) => ({
         getPsychologists: builder.query<Psychologist[], GetPsychologistsParams | void>({
@@ -68,14 +68,6 @@ export const psychologistsApi = createApi({
             }),
         }),
 
-        getPsychologistMe: builder.query<SpecialistProfile, { lang?: string }>({
-            query: ({ lang = 'uk' }) => ({
-                url: `/psychologists/me/profile`,
-                method: 'GET',
-                params: { lang },
-            }),
-        }),
-
         getPsychologistSessions: builder.query<SessionBooking[], { lang?: string }>({
             query: ({ lang = 'uk' }) => ({
                 url: '/psychologist/sessions',
@@ -94,6 +86,5 @@ export const {
     useGetBookingByIdQuery,
     useGetSymptomCodesQuery,
     useGetPsychologistByIdQuery,
-    useGetPsychologistMeQuery,
     useGetPsychologistSessionsQuery,
 } = psychologistsApi

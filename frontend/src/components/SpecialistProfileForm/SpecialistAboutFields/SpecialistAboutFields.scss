@@ -1,0 +1,45 @@
+@use '../../../styles/abstracts' as a;
+@use '../../../styles/components' as c;
+
+.specialist-about-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+
+    &__button-add {
+        max-width: max-content;
+        margin-top: 9px;
+        color: a.$color-optional;
+        border-bottom: 2px solid a.$color-optional;
+        transform-origin:
+            color a.$transition-default,
+            border-bottom-color a.$transition-default;
+
+        &:hover {
+            color: a.$color-gray-80;
+            border-bottom-color: a.$color-gray-80;
+        }
+    }
+
+    &__education {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    &__row {
+        position: relative;
+    }
+
+    &__remove {
+        color: a.$color-optional;
+        position: absolute;
+        right: 6px;
+        top: 36px;
+        transform-origin: color a.$transition-default;
+
+        &:hover {
+            color: a.$color-gray-80;
+        }
+    }
+}
