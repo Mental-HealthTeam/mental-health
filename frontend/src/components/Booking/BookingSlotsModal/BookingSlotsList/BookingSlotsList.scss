@@ -1,0 +1,55 @@
+@use '../../../../styles/abstracts/index' as a;
+
+.booking-slots-modal {
+  &__slots {
+    min-height: 0;
+    padding: 24px 32px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+
+    border-block: 1px solid a.$color-gray-10;
+
+    scrollbar-width: thin;
+    scrollbar-color: a.$color-gray-20 transparent;
+  }
+
+  &__day + &__day {
+    margin-top: 24px;
+  }
+
+  &__day h3 {
+    margin: 0 0 12px;
+    color: a.$color-optional;
+    font-size: 16px;
+    line-height: 1.4;
+
+    &::first-letter {
+      text-transform: uppercase;
+    }
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  &__empty {
+    padding-block: 24px;
+    color: a.$color-gray-60;
+    text-align: center;
+  }
+}
+
+@media (max-width: 479px) {
+  .booking-slots-modal {
+    &__slots {
+      padding: 20px;
+    }
+
+    &__grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+  }
+}

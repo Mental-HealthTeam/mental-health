@@ -1,5 +1,4 @@
 import { createBrowserRouter } from 'react-router-dom'
-
 import { Home } from '../pages/Home'
 import { PsychologistProfile } from '../pages/PsychologistProfile'
 import { SpecialistCabinet } from '../pages/SpecialistCabinet/SpecialistCabinet'
@@ -12,21 +11,32 @@ import { SlotUnavailablePage } from '../pages/SlotUnavailablePage'
 import { SuccessPage } from '../pages/SuccessPage'
 import { SpecialistProfileSettingsPage } from '../pages/SpecialistProfileSettingsPage'
 import { ClientCabinetPage } from '../pages/ClientCabinetPage'
+import { PaymentCancelPage } from '../pages/PaymentCancelPage'
+import { RootLayout } from './RootLayout.tsx'
 
 export const router = createBrowserRouter([
-    { path: '/', element: <Home /> },
-    { path: '/specialist/cabinet', element: <SpecialistCabinet /> },
     {
-        path: '/specialist/settings/profile',
-        element: <SpecialistProfileSettingsPage />,
+        element: <RootLayout />,
+        children: [
+            { path: '/', element: <Home /> },
+            { path: '/specialist/cabinet', element: <SpecialistCabinet /> },
+            {
+                path: '/specialist/settings/profile',
+                element: <SpecialistProfileSettingsPage />,
+            },
+            { path: '/psychologist-profile/:id', element: <PsychologistProfile /> },
+            { path: '/cabinet/settings', element: <ClientProfileSettingsPage /> },
+            { path: '/catalog', element: <CatalogPage /> },
+            { path: '/slot-unavailable', element: <SlotUnavailablePage /> },
+            { path: '/payment/success', element: <SuccessPage /> },
+            { path: '/cabinet', element: <ClientCabinetPage /> },
+            { path: '/sign-in', element: <SignIn /> },
+            { path: '/sign-up', element: <SignUp /> },
+            { path: '*', element: <NotFoundPage /> },
+            {
+                path: '/payment/cancel',
+                element: <PaymentCancelPage />,
+            },
+        ],
     },
-    { path: '/psychologist-profile/:id', element: <PsychologistProfile /> },
-    { path: '/cabinet/settings', element: <ClientProfileSettingsPage /> },
-    { path: '/catalog', element: <CatalogPage /> },
-    { path: '/slot-unavailable', element: <SlotUnavailablePage /> },
-    { path: '/payment/success', element: <SuccessPage /> },
-    { path: '/cabinet', element: <ClientCabinetPage /> },
-    { path: '/sign-in', element: <SignIn /> },
-    { path: '/sign-up', element: <SignUp /> },
-    { path: '*', element: <NotFoundPage /> },
 ])

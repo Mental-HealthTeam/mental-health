@@ -1,0 +1,1 @@
+export { BookingSlotsModal } from './BookingSlotsModal'

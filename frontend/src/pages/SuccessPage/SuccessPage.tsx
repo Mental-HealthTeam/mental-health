@@ -1,11 +1,12 @@
 import { skipToken } from '@reduxjs/toolkit/query'
+import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useSearchParams } from 'react-router-dom'
 
 import { BookingSummaryCard } from '../../components/BookingSummaryCard'
 import { Footer } from '../../components/Footer'
 import { Header } from '../../components/Header'
-import { BackButton } from '../../components/UI/Buttons/BackButton'
+import { BackButton } from '../../components/UI/Buttons'
 import {
     useGetBookingByIdQuery,
     useGetPsychologistByIdQuery,
@@ -13,25 +14,7 @@ import {
 
 import './SuccessPage.scss'
 
-const mockNames = {
-    uk: 'Катерина Ковальська',
-    en: 'Kateryna Kovalska',
-}
-
-const mockBooking = {
-    status: 'confirmed',
-    psychologist: {
-        psychologist_id: 'preview-psychologist',
-        avatar_url: '',
-        is_verified: true,
-    },
-    selected_time: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
-    price: '2500',
-}
-
-const mockPsychologist = {
-    experience_years: 8,
-}
+const POLLING_INTERVAL = 3000
 
 export const SuccessPage = () => {
     const [searchParams] = useSearchParams()
@@ -40,12 +23,11 @@ export const SuccessPage = () => {
     const language = i18n.resolvedLanguage?.startsWith('en') ? 'en' : 'uk'
     const bookingId = searchParams.get('booking_id')
 
-    const isPreview = import.meta.env.DEV && searchParams.get('preview') === 'true' && !bookingId
-
     const {
-        currentData: bookingData,
-        isFetching: isBookingFetching,
+        currentData: booking,
+        isLoading: isBookingLoading,
         isError: isBookingError,
+        refetch: refetchBooking,
     } = useGetBookingByIdQuery(
         bookingId
             ? {
@@ -53,24 +35,34 @@ export const SuccessPage = () => {
                   lang: language,
               }
             : skipToken,
+        {
+            refetchOnMountOrArgChange: true,
+        },
     )
 
-    const booking = isPreview
-        ? {
-              ...mockBooking,
-              psychologist: {
-                  ...mockBooking.psychologist,
-                  full_name: mockNames[language],
-              },
-          }
-        : bookingData
+    const isConfirmed = booking?.status === 'confirmed'
+    const isPending = booking?.status === 'pending'
+
+    useEffect(() => {
+        if (!isPending) {
+            return
+        }
+
+        const interval = window.setInterval(() => {
+            void refetchBooking()
+        }, POLLING_INTERVAL)
+
+        return () => {
+            window.clearInterval(interval)
+        }
+    }, [isPending, refetchBooking])
 
     const {
-        currentData: psychologistData,
-        isFetching: isPsychologistFetching,
+        currentData: psychologist,
+        isLoading: isPsychologistLoading,
         isError: isPsychologistError,
     } = useGetPsychologistByIdQuery(
-        !isPreview && booking?.status === 'confirmed'
+        booking
             ? {
                   id: booking.psychologist.psychologist_id,
                   lang: language,
@@ -78,32 +70,29 @@ export const SuccessPage = () => {
             : skipToken,
     )
 
-    const psychologist = isPreview ? mockPsychologist : psychologistData
-    const isLoading = !isPreview && (isBookingFetching || isPsychologistFetching)
+    const isLoading = isBookingLoading || (Boolean(booking) && isPsychologistLoading)
 
     let stateMessage: string | null = null
     let isError = false
 
-    if (!bookingId && !isPreview) {
+    if (!bookingId) {
         stateMessage = t('states.missingBookingId')
         isError = true
-    } else if (!isPreview && isBookingFetching) {
+    } else if (isBookingLoading) {
         stateMessage = t('states.loading')
-    } else if ((!isPreview && isBookingError) || !booking) {
+    } else if (isBookingError || !booking) {
         stateMessage = t('states.loadError')
         isError = true
-    } else if (booking.status !== 'confirmed') {
-        stateMessage = booking.status === 'pending' ? t('states.pending') : t('states.notConfirmed')
-    } else if (!isPreview && isPsychologistFetching) {
+    } else if (isPsychologistLoading) {
         stateMessage = t('states.loading')
-    } else if ((!isPreview && isPsychologistError) || !psychologist) {
+    } else if (isPsychologistError || !psychologist) {
         stateMessage = t('states.loadError')
         isError = true
     }
 
     return (
         <div className="success-page">
-            <Header />
+            <Header variant={'page'} />
 
             <main className="success-page__main" aria-busy={isLoading}>
                 <div className="success-page__container">
@@ -115,16 +104,26 @@ export const SuccessPage = () => {
                         </div>
                     )}
 
-                    {stateMessage === null && booking?.status === 'confirmed' && psychologist && (
+                    {stateMessage === null && booking && psychologist && (
                         <section
                             className="success-page__content"
                             aria-labelledby="success-page-title"
                         >
-                            <h1 className="success-page__title" id="success-page-title">
-                                {t('title')}
-                            </h1>
+                            {isConfirmed && (
+                                <>
+                                    <h1 className="success-page__title" id="success-page-title">
+                                        {t('title')}
+                                    </h1>
 
-                            <p className="success-page__description">{t('description')}</p>
+                                    <p className="success-page__description">{t('description')}</p>
+                                </>
+                            )}
+
+                            {!isConfirmed && (
+                                <h1 className="success-page__title" id="success-page-title">
+                                    {isPending ? t('states.pending') : t('states.notConfirmed')}
+                                </h1>
+                            )}
 
                             <div className="success-page__card">
                                 <BookingSummaryCard
@@ -139,11 +138,25 @@ export const SuccessPage = () => {
                                         booking.psychologist.is_verified === true
                                     }
                                 />
+
+                                {isPending && (
+                                    <p className="success-page__description" role="status">
+                                        {t('states.pending')}
+                                    </p>
+                                )}
+
+                                {!isPending && !isConfirmed && (
+                                    <p className="success-page__description" role="alert">
+                                        {t('states.notConfirmed')}
+                                    </p>
+                                )}
                             </div>
 
-                            <Link className="success-page__cabinet-link" to="/cabinet">
-                                {t('cabinetLink')}
-                            </Link>
+                            {isConfirmed && (
+                                <Link className="success-page__cabinet-link" to="/cabinet">
+                                    {t('cabinetLink')}
+                                </Link>
+                            )}
                         </section>
                     )}
                 </div>
