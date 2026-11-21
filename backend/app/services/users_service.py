@@ -6,7 +6,6 @@ from sqlalchemy.exc import SQLAlchemyError, IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 
-from config.settings import BaseAppSettings
 from database.models.models import (
     User,
     UserRole,
@@ -15,9 +14,8 @@ from database.models.models import (
 )
 from exceptions.base import AppError
 from schemas.users import UserProfileResponse, UserProfileUpdate
-from services.avatar_storage import save_avatar, delete_avatar_file
 from sqlalchemy.orm import selectinload
-
+from storage.storage_interface import AvatarStorageInterface
 
 logger = logging.getLogger(__name__)
 
@@ -105,18 +103,18 @@ async def update_user_profile_service(
 async def upload_user_avatar_service(
     db: AsyncSession,
     current_user: User,
-    settings: BaseAppSettings,
+    storage: AvatarStorageInterface,
     file: UploadFile,
 ):
     old_avatar_url = current_user.avatar_url
-    new_avatar_url = await save_avatar(file, current_user.id, settings)
+    new_avatar_url = await storage.save_avatar(file, current_user.id)
 
     current_user.avatar_url = new_avatar_url
 
     try:
         await db.commit()
     except SQLAlchemyError as e:
-        delete_avatar_file(new_avatar_url, current_user.id, settings)
+        storage.delete_avatar_file(new_avatar_url, current_user.id)
         await db.rollback()
         raise AppError(
             status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -125,7 +123,7 @@ async def upload_user_avatar_service(
         ) from e
     else:
         if old_avatar_url != new_avatar_url:
-            delete_avatar_file(old_avatar_url, current_user.id, settings)
+            storage.delete_avatar_file(old_avatar_url, current_user.id)
 
     return await build_profile_response(db, current_user)
 
@@ -133,13 +131,21 @@ async def upload_user_avatar_service(
 async def delete_user_avatar_service(
     db: AsyncSession,
     current_user: User,
-    settings: BaseAppSettings
+    storage: AvatarStorageInterface,
 ):
     old_avatar_url = current_user.avatar_url
     current_user.avatar_url = None
+    try:
+        await db.commit()
+    except SQLAlchemyError as e:
+        await db.rollback()
+        raise AppError(
+            status.HTTP_500_INTERNAL_SERVER_ERROR,
+            "AVATAR_DELETE_FAILED",
+            "Could not delete your avatar."
+        ) from e
 
-    await db.commit()
 
-    delete_avatar_file(old_avatar_url, current_user.id, settings)
+    storage.delete_avatar_file(old_avatar_url, current_user.id)
 
     return await build_profile_response(db, current_user)
