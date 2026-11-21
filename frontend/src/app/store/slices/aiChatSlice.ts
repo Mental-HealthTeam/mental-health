@@ -7,11 +7,15 @@ import type { Psychologist } from '../../../types/psychologist.ts'
 
 export type MessageAuthor = 'bot' | 'user'
 
+export type MessageKind = 'text' | 'psychologists'
+
 export type Message = {
     id: string
-    message: string
     fromWho: MessageAuthor
+    message: string
     createdAt: number
+    kind?: MessageKind
+    psychologists?: Psychologist[]
 }
 
 export type ChatErrorCode = 'timeout' | 'empty' | 'noResults' | 'unknown'
@@ -23,7 +27,6 @@ type InitialState = {
     sessionId: string
     lastActivity: number
     matchData: MatchData | null
-    psychologists: Psychologist[]
     lastUserText: string | null
     initialText: string
     error: ChatErrorCode | null
@@ -53,7 +56,6 @@ const initialState: InitialState = {
     sessionId: crypto.randomUUID(),
     lastActivity: Date.now(),
     matchData: null,
-    psychologists: [],
     error: null,
     lastUserText: null,
     initialText: '',
@@ -114,9 +116,6 @@ export const aiChatSlice = createSlice({
         setMatchData: (state, action: PayloadAction<MatchData>) => {
             state.matchData = action.payload
         },
-        setPsychologists: (state, action: PayloadAction<Psychologist[]>) => {
-            state.psychologists = action.payload
-        },
         addInitialText: (state, action: PayloadAction<string>) => {
             state.initialText = action.payload
         },
@@ -124,7 +123,6 @@ export const aiChatSlice = createSlice({
             state.messages = [createGreeting()]
             state.sessionId = crypto.randomUUID()
             state.matchData = null
-            state.psychologists = []
             state.error = null
             state.errorSource = null
             state.status = 'idle'
@@ -146,7 +144,6 @@ export const {
     searchStarted,
     resetAiChat,
     setMatchData,
-    setPsychologists,
     addInitialText,
 } = aiChatSlice.actions
 
@@ -216,9 +213,13 @@ export const sendUserMessage = createAsyncThunk<
 
 const API_URL = '/api'
 
-export const searchPsychologists = createAsyncThunk<void, void, { state: RootState }>(
+export const searchPsychologists = createAsyncThunk<
+    void,
+    { lang: 'uk' | 'en' },
+    { state: RootState }
+>(
     'aiChat/searchPsychologists',
-    async (_, { dispatch, getState }) => {
+    async ({ lang }, { dispatch, getState }) => {
         const { matchData, sessionId } = getState().aiChat
 
         dispatch(searchStarted())
@@ -227,15 +228,18 @@ export const searchPsychologists = createAsyncThunk<void, void, { state: RootSta
         const timer = setTimeout(() => controller.abort(), 40_000)
 
         try {
-            const response = await fetch(`${API_URL}/matching/search`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                credentials: 'include',
-                signal: controller.signal,
-                body: JSON.stringify({
-                    matching_info: { ...matchData, session_id: sessionId },
-                }),
-            })
+            const response = await fetch(
+                `${API_URL}/matching/search?${new URLSearchParams({ lang })}`,
+                {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    signal: controller.signal,
+                    body: JSON.stringify({
+                        matching_info: { ...matchData, session_id: sessionId },
+                    }),
+                },
+            )
 
             if (!response.ok) throw new Error('unknown')
 
@@ -253,12 +257,15 @@ export const searchPsychologists = createAsyncThunk<void, void, { state: RootSta
                 return
             }
 
-            dispatch(setPsychologists(data.result))
+            dispatch(addMessage(createMessage('', 'bot', 'psychologists', data.result)))
             dispatch(requestFinished())
         } catch (error) {
             dispatch(requestFailed({ message: toErrorCode(error), source: 'search' }))
         } finally {
             clearTimeout(timer)
         }
+    },
+    {
+        condition: (_, { getState }) => getState().aiChat.status === 'idle',
     },
 )
