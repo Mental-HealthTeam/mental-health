@@ -39,6 +39,13 @@ export const MessageList = ({ className }: Props) => {
 
     const isAnswering = status === 'waiting' || status === 'streaming'
 
+    const lastMessage = messages[messages.length - 1]
+    const showSearchButton =
+        Boolean(readyForSearch) &&
+        !isAnswering &&
+        lastMessage?.fromWho === 'bot' &&
+        lastMessage.kind !== 'psychologists'
+
     const errorText =
         error && errorSource
             ? t(`errors:${errorSource}.${error}`, {
@@ -83,7 +90,7 @@ export const MessageList = ({ className }: Props) => {
                 )}
             </div>
 
-            {readyForSearch && (
+            {showSearchButton && (
                 <PrimaryButton
                     className="message-list__button-search-psy"
                     startIcon={<SparkIcon />}
