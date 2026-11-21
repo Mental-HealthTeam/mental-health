@@ -213,9 +213,13 @@ export const sendUserMessage = createAsyncThunk<
 
 const API_URL = '/api'
 
-export const searchPsychologists = createAsyncThunk<void, void, { state: RootState }>(
+export const searchPsychologists = createAsyncThunk<
+    void,
+    { lang: 'uk' | 'en' },
+    { state: RootState }
+>(
     'aiChat/searchPsychologists',
-    async (_, { dispatch, getState }) => {
+    async ({ lang }, { dispatch, getState }) => {
         const { matchData, sessionId } = getState().aiChat
 
         dispatch(searchStarted())
@@ -224,15 +228,18 @@ export const searchPsychologists = createAsyncThunk<void, void, { state: RootSta
         const timer = setTimeout(() => controller.abort(), 40_000)
 
         try {
-            const response = await fetch(`${API_URL}/matching/search`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                credentials: 'include',
-                signal: controller.signal,
-                body: JSON.stringify({
-                    matching_info: { ...matchData, session_id: sessionId },
-                }),
-            })
+            const response = await fetch(
+                `${API_URL}/matching/search?${new URLSearchParams({ lang })}`,
+                {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    signal: controller.signal,
+                    body: JSON.stringify({
+                        matching_info: { ...matchData, session_id: sessionId },
+                    }),
+                },
+            )
 
             if (!response.ok) throw new Error('unknown')
 
@@ -257,5 +264,8 @@ export const searchPsychologists = createAsyncThunk<void, void, { state: RootSta
         } finally {
             clearTimeout(timer)
         }
+    },
+    {
+        condition: (_, { getState }) => getState().aiChat.status === 'idle',
     },
 )

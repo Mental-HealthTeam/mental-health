@@ -22,8 +22,8 @@ type Props = {
 }
 
 export const MessageList = ({ className }: Props) => {
-    const { t } = useTranslation(['aiChat', 'errors'])
-    const { i18n } = useTranslation()
+    const { t, i18n } = useTranslation(['aiChat', 'errors'])
+    const lang: 'uk' | 'en' = i18n.resolvedLanguage?.startsWith('en') ? 'en' : 'uk'
 
     const messages = useAppSelector((s) => s.aiChat.messages)
     const status = useAppSelector((s) => s.aiChat.status)
@@ -52,7 +52,7 @@ export const MessageList = ({ className }: Props) => {
 
     const handleRetry = () => {
         if (errorSource === 'search') {
-            dispatch(searchPsychologists())
+            dispatch(searchPsychologists({ lang }))
         } else if (lastUserText) {
             dispatch(sendUserMessage({ text: lastUserText, retry: true }))
         }
@@ -93,7 +93,8 @@ export const MessageList = ({ className }: Props) => {
                         </span>
                     }
                     aria-label={t('messageList.searchPsychologist')}
-                    onClick={() => dispatch(searchPsychologists())}
+                    disabled={isAnswering}
+                    onClick={() => dispatch(searchPsychologists({ lang }))}
                 >
                     <span className="message-list__search-label">
                         {t('messageList.searchPsychologist')}
