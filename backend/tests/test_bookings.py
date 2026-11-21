@@ -16,6 +16,7 @@ from database.models.models import (
     Booking,
     BookingStatus,
     Gender,
+    Language,
     PaymentStatus,
     Psychologist,
     PsychologistSpecialization,
@@ -27,6 +28,8 @@ from database.models.models import (
 )
 from exceptions.base import AppError
 from routes import bookings as booking_routes
+from routes import sessions as session_routes
+from services.booking_localization import build_booking_response
 
 
 @pytest.fixture
@@ -102,7 +105,7 @@ def psychologist():
 
 @pytest.fixture
 def booking_response(client_user, psychologist):
-    return Booking(
+    booking = Booking(
         id=uuid.uuid4(),
         client_id=client_user.id,
         psychologist_id=psychologist.psychologist_id,
@@ -117,6 +120,8 @@ def booking_response(client_user, psychologist):
         ai_session_id=None,
         hold_expires_at=datetime.now(timezone.utc) + timedelta(minutes=15),
     )
+    booking.meet_link = "https://example.com/meeting"
+    return booking
 
 
 def test_create_booking_returns_201(
@@ -325,3 +330,138 @@ def test_list_bookings_passes_filters_and_pagination(
     assert call_kwargs["booking_status"] == BookingStatus.PENDING
     assert call_kwargs["limit"] == 5
     assert call_kwargs["offset"] == 10
+
+
+@pytest.mark.parametrize(
+    ("language", "expected_name", "expected_title"),
+    [
+        (
+            Language.UKRAINIAN,
+            "Тестовый психолог",
+            "Клинический психолог",
+        ),
+        (
+            Language.ENGLISH,
+            "Test Psychologist",
+            "Clinical Psychologist",
+        ),
+    ],
+)
+def test_booking_localization(
+    client_user,
+    psychologist,
+    booking_response,
+    language,
+    expected_name,
+    expected_title,
+):
+    response = build_booking_response(booking_response, language)
+
+    assert response.psychologist.full_name == expected_name
+    assert response.psychologist.title == expected_title
+    assert response.psychologist.specializations == [
+        "anxiety",
+        "stress",
+    ]
+
+
+@pytest.mark.parametrize(
+    ("language", "expected_name", "expected_title"),
+    [
+        (
+            Language.UKRAINIAN,
+            "Тестовый психолог",
+            "Клинический психолог",
+        ),
+        (
+            Language.ENGLISH,
+            "Test Psychologist",
+            "Clinical Psychologist",
+        ),
+    ],
+)
+def test_user_sessions_localization(
+    bookings_client,
+    client_user,
+    booking_response,
+    language,
+    expected_name,
+    expected_title,
+    monkeypatch,
+):
+    app.dependency_overrides[get_current_user] = lambda: client_user
+
+    sessions_mock = AsyncMock(return_value=[booking_response])
+    monkeypatch.setattr(
+        session_routes,
+        "get_sessions_for_user",
+        sessions_mock,
+    )
+
+    response = bookings_client.get(
+        "/api/user/sessions",
+        params={"lang": language.value},
+    )
+
+    assert response.status_code == 200
+
+    psychologist_data = response.json()["items"][0]["psychologist"]
+
+    assert psychologist_data["full_name"] == expected_name
+    assert psychologist_data["title"] == expected_title
+    assert psychologist_data["specializations"] == [
+        "anxiety",
+        "stress",
+    ]
+
+
+@pytest.mark.parametrize(
+    ("language", "expected_name", "expected_title"),
+    [
+        (
+            Language.UKRAINIAN,
+            "Тестовый психолог",
+            "Клинический психолог",
+        ),
+        (
+            Language.ENGLISH,
+            "Test Psychologist",
+            "Clinical Psychologist",
+        ),
+    ],
+)
+def test_psychologist_sessions_localization(
+    bookings_client,
+    psychologist,
+    booking_response,
+    language,
+    expected_name,
+    expected_title,
+    monkeypatch,
+):
+    app.dependency_overrides[get_current_user] = (
+        lambda: psychologist.user
+    )
+
+    sessions_mock = AsyncMock(return_value=[booking_response])
+    monkeypatch.setattr(
+        session_routes,
+        "get_sessions_for_psychologist",
+        sessions_mock,
+    )
+
+    response = bookings_client.get(
+        "/api/psychologist/sessions",
+        params={"lang": language.value},
+    )
+
+    assert response.status_code == 200
+
+    psychologist_data = response.json()["items"][0]["psychologist"]
+
+    assert psychologist_data["full_name"] == expected_name
+    assert psychologist_data["title"] == expected_title
+    assert psychologist_data["specializations"] == [
+        "anxiety",
+        "stress",
+    ]
