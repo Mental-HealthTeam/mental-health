@@ -1,11 +1,14 @@
 import { useId } from 'react'
 import { useTranslation } from 'react-i18next'
+
 import type {
     ClientProfileErrors,
     ClientProfileValues,
     ClientTextField,
-} from '../clientProfile.types.ts'
+} from '../clientProfile.types'
+
 import './ClientPersonalFields.scss'
+
 type Props = {
     values: ClientProfileValues
     errors: ClientProfileErrors
@@ -23,6 +26,7 @@ export const ClientPersonalFields = ({ values, errors, onChange }: Props) => {
             {fields.map((field) => {
                 const inputId = `${id}-${field}`
                 const errorId = `${inputId}-error`
+                const isEmail = field === 'email'
 
                 return (
                     <div className="client-profile-form__field" key={field}>
@@ -31,7 +35,7 @@ export const ClientPersonalFields = ({ values, errors, onChange }: Props) => {
                         <input
                             id={inputId}
                             name={field}
-                            type={field === 'email' ? 'email' : 'text'}
+                            type={isEmail ? 'email' : 'text'}
                             autoComplete={field === 'telegram' ? 'off' : field}
                             autoCapitalize={field === 'name' ? 'words' : 'none'}
                             spellCheck={false}
@@ -39,9 +43,15 @@ export const ClientPersonalFields = ({ values, errors, onChange }: Props) => {
                             value={values[field]}
                             maxLength={field === 'name' ? 255 : undefined}
                             required={field !== 'telegram'}
+                            readOnly={isEmail}
+                            title={isEmail ? t('emailReadOnlyHint') : undefined}
                             aria-invalid={Boolean(errors[field])}
                             aria-describedby={errors[field] ? errorId : undefined}
-                            onChange={(event) => onChange(field, event.target.value)}
+                            onChange={(event) => {
+                                if (!isEmail) {
+                                    onChange(field, event.target.value)
+                                }
+                            }}
                         />
 
                         {errors[field] && (
