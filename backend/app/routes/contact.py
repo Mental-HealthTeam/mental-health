@@ -3,12 +3,10 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, status
 
-from config.dependencies import get_settings
-from config.settings import Settings
 from schemas.contact import ContactRequest
-from services.contact_service import ContactService
+from email_sender.email_sender_interface import ContactServiceInterface
 from exceptions.base import AppError
-
+from config.dependencies import get_email_sender
 
 logger = logging.getLogger(__name__)
 
@@ -19,12 +17,12 @@ router = APIRouter()
     "/contact",
     status_code=status.HTTP_202_ACCEPTED,
 )
-def submit_contact_request(
+async def submit_contact_request(
     payload: ContactRequest,
-    settings: Annotated[Settings, Depends(get_settings)],
+    email_sender: Annotated[ContactServiceInterface, Depends(get_email_sender)]
 ):
     try:
-        ContactService(settings).send_contact_message(
+        await email_sender.send_contact_message(
             name=payload.name,
             contact=payload.contact,
             message=payload.message,

@@ -21,12 +21,11 @@ class BaseAppSettings(BaseSettings):
 
     CONTACT_SUPPORT_EMAIL: str = "support@platform.com"
     SMTP_HOST: str = ""
-    SMTP_PORT: int = 587
+    SMTP_PORT: int = 1025
     SMTP_USERNAME: str = ""
     SMTP_PASSWORD: str = ""
     SMTP_FROM_EMAIL: str = ""
     SMTP_USE_TLS: bool = True
-    APP_ENV: str = "development"
 
     STRIPE_SECRET_KEY: str = ""
     STRIPE_WEBHOOK_SECRET: str = ""
@@ -63,6 +62,8 @@ class BaseAppSettings(BaseSettings):
     MAX_AVATAR_SIZE: int = 5 * 1024 * 1024
     MAX_AVATAR_PIXELS: int = 4096 * 4096
     AVATAR_STORAGE_URL: str = "/media/avatars/"
+
+    ENVIRONMENT: str = "development"
 
 
 class Settings(BaseAppSettings):

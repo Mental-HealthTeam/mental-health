@@ -127,13 +127,22 @@
         color: a.$color-optional;
         font-size: a.$font-size-body;
         line-height: a.$line-height-body;
-        letter-spacing: a.$letter-spacing-body;
         font-weight: a.$font-weight-body-extrabold;
     }
 
     &__actions {
         grid-area: button;
         border-top: 1px solid a.$color-gray-10;
+    }
+
+    &__wrapper-button {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        width: 100%;
+        min-width: 0;
     }
 
     &__label--mobile {
@@ -219,7 +228,7 @@
         }
 
         &__wrapper-button {
-          max-width: max-content;
+            justify-content: flex-start;
         }
     }
 }

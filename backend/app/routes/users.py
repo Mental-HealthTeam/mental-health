@@ -6,16 +6,18 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from auth.dependencies import get_current_user
 from database import get_db
 from database.models.models import User
-from schemas.users import UserProfileResponse, UserProfileUpdate
-from config.dependencies import get_settings
-from config.settings import BaseAppSettings
+from schemas.users import (
+    UserProfileResponse,
+    UserProfileUpdate
+)
+from config.dependencies import get_local_storage
 from services.users_service import (
     build_profile_response,
     update_user_profile_service,
     upload_user_avatar_service,
     delete_user_avatar_service
 )
-
+from storage.storage_interface import AvatarStorageInterface
 
 router = APIRouter()
 
@@ -57,13 +59,13 @@ async def update_user_profile(
 async def upload_user_avatar(
     db: Annotated[AsyncSession, Depends(get_db)],
     current_user: Annotated[User, Depends(get_current_user)],
-    settings: Annotated[BaseAppSettings, Depends(get_settings)],
+    storage: Annotated[AvatarStorageInterface, Depends(get_local_storage)],
     file: UploadFile = File(...),
 ):
     return await upload_user_avatar_service(
         db=db,
         current_user=current_user,
-        settings=settings,
+        storage=storage,
         file=file
     )
 
@@ -76,10 +78,10 @@ async def upload_user_avatar(
 async def delete_user_avatar(
     db: Annotated[AsyncSession, Depends(get_db)],
     current_user: Annotated[User, Depends(get_current_user)],
-    settings: Annotated[BaseAppSettings, Depends(get_settings)]
+    storage: Annotated[AvatarStorageInterface, Depends(get_local_storage)]
 ):
     return await delete_user_avatar_service(
         db=db,
         current_user=current_user,
-        settings=settings
+        storage=storage
     )
