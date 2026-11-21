@@ -202,6 +202,7 @@ def _to_match_result(
             title=pick(psychologist.title, psychologist.title_eng, lang),
             avatar_url=psychologist.avatar_url,
             price_per_hour=psychologist.price_per_hour,
+            experience_years=psychologist.experience_years,
             languages=psychologist.languages,
             mock_slots=[
                 MockSlot(time=slot) for slot in (
@@ -216,6 +217,12 @@ def _to_match_result(
                 set(symptom_codes) & {
                     s.symptom_code for s in psychologist.psychologist_specializations
                 }
+            ),
+            topics=sorted(
+                [
+                    psychologist_specialization.symptom_code
+                    for psychologist_specialization in psychologist.psychologist_specializations
+                ]
             )
         )
         for psychologist, _ in rows
