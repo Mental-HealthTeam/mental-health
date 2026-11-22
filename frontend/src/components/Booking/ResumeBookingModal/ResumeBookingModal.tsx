@@ -5,7 +5,7 @@ import type { Booking } from '../../../types/booking'
 
 import { Avatar } from '../../UI/Avatar'
 import { OutlineButton, PrimaryButton } from '../../UI/Buttons'
-import { ArrowIcon, AvatarFallbackIcon } from '../../UI/Icons'
+import { ArrowIcon } from '../../UI/Icons'
 import { Modal } from '../../UI/Modal'
 import { RadioButton } from '../../UI/RadioButton'
 
@@ -95,7 +95,6 @@ export const ResumeBookingModal = ({
                                         src={booking.psychologist.avatar_url ?? undefined}
                                         alt=""
                                         size="medium"
-                                        fallback={<AvatarFallbackIcon />}
                                     />
 
                                     <h3 className="resume-booking-modal__specialist-name">

@@ -1,7 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import type { BookingSpecialistData } from '../bookingSlots.types.ts'
 import { Avatar } from '../../../UI/Avatar'
-import { AvatarFallbackIcon } from '../../../UI/Icons'
 import './BookingSpecialist.scss'
 
 type Props = {
@@ -22,7 +21,6 @@ export const BookingSpecialist = ({ specialist, language }: Props) => {
                 src={specialist.avatar_url ?? undefined}
                 alt=""
                 size="medium"
-                fallback={<AvatarFallbackIcon />}
                 className="booking-slots-modal__avatar"
             />
 
