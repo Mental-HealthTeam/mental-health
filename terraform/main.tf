@@ -85,7 +85,17 @@ resource "aws_instance" "app_server" {
     delete_on_termination = false
   }
 
-  user_data = file("${path.module}/scripts/setup.sh")
+  user_data = <<-EOF
+#!/bin/bash
+set -e
+
+mkdir -p /opt/mental-health
+
+echo '${base64encode(file("${path.module}/scripts/prod_setup.sh"))}' | base64 -d > /opt/mental-health/prod_setup.sh
+
+chmod +x /opt/mental-health/prod_setup.sh
+chown ubuntu:ubuntu /opt/mental-health/prod_setup.sh
+EOF
 
   tags = {
     Name        = "${var.project_name}-${var.environment}"

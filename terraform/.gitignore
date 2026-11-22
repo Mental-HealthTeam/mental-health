@@ -5,3 +5,4 @@ test-server.pem
 tfplan
 scripts
 terraform.tfstate.d
+prod-key.pem
