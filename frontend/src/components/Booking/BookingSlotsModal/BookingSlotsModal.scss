@@ -1,0 +1,93 @@
+@use '../../../styles/abstracts/index' as a;
+
+.modal.booking-slots-modal {
+  width: min(580px, calc(100vw - 32px));
+  max-height: min(820px, calc(100dvh - 48px));
+  overflow: hidden;
+  border-radius: 26px;
+
+  &[open] {
+    display: flex;
+    flex-direction: column;
+  }
+
+  > .modal__header {
+    flex-shrink: 0;
+    padding: 32px 32px 0;
+  }
+
+  .modal__title {
+    font-size: 28px;
+    font-weight: a.$font-weight-bold;
+    line-height: 1.2;
+  }
+}
+
+.booking-slots-modal {
+  &__layout {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  &__header {
+    flex-shrink: 0;
+    padding: 0 32px 24px;
+  }
+
+  &__description {
+    margin: 10px 0 0;
+    color: a.$color-gray-60;
+    font-size: 16px;
+    line-height: 1.5;
+  }
+}
+
+@media (max-width: 479px) {
+  .modal.booking-slots-modal {
+    width: calc(100vw - 24px);
+    max-height: calc(100dvh - 24px);
+    border-radius: 20px;
+
+    > .modal__header {
+      padding: 24px 20px 0;
+    }
+
+    .modal__title {
+      font-size: 23px;
+    }
+  }
+
+  .booking-slots-modal {
+    &__header {
+      padding: 0 20px 20px;
+    }
+
+    &__description {
+      font-size: 14px;
+    }
+  }
+}
+
+@media (max-height: 540px) {
+  .modal.booking-slots-modal {
+    > .modal__header {
+      padding-top: 16px;
+    }
+
+    .modal__close {
+      top: 8px;
+    }
+  }
+
+  .booking-slots-modal {
+    &__header {
+      padding-bottom: 16px;
+    }
+
+    &__description {
+      display: none;
+    }
+  }
+}

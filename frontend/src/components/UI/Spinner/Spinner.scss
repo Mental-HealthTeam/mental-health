@@ -1,0 +1,31 @@
+@use '../../../styles/abstracts' as a;
+
+.spinner {
+  display: inline-block;
+  flex-shrink: 0;
+  vertical-align: middle;
+
+  color: a.$color-gray-60;
+
+  animation: spinner-rotate 800ms linear infinite;
+
+  &--small {
+    width: 18px;
+    height: 18px;
+  }
+
+  &--medium {
+    width: 39px;
+    height: 39px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+
+@keyframes spinner-rotate {
+  to {
+    transform: rotate(360deg);
+  }
+}

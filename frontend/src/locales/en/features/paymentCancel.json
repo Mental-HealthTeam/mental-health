@@ -1,0 +1,22 @@
+{
+    "retry": {
+        "title": "Payment not completed",
+        "description": "Your booking is still active. You can try paying again or choose another specialist.",
+        "button": "Try payment again"
+    },
+    "expired": {
+        "title": "Payment time expired",
+        "description": "This booking can no longer be paid for. Choose another time or specialist.",
+        "button": "Choose another time"
+    },
+    "browseSpecialists": "Browse other specialists",
+    "states": {
+        "loading": "Loading booking information...",
+        "redirecting": "Redirecting to payment..."
+    },
+    "errors": {
+        "missingBooking": "Booking ID is missing.",
+        "loadFailed": "Failed to load booking information.",
+        "checkoutFailed": "Could not proceed to payment. Please try again."
+    }
+}
