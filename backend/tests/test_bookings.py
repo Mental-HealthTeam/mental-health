@@ -30,6 +30,7 @@ from exceptions.base import AppError
 from routes import bookings as booking_routes
 from routes import sessions as session_routes
 from services.booking_localization import build_booking_response
+from services.session_service import set_meet_link
 
 
 @pytest.fixture
@@ -76,9 +77,9 @@ def psychologist():
 
     psychologist = Psychologist(
         psychologist_id=psychologist_user.id,
-        full_name="Тестовый психолог",
+        full_name="Тестовий психолог",
         full_name_eng="Test Psychologist",
-        title="Клинический психолог",
+        title="Клінічний психолог",
         title_eng="Clinical Psychologist",
         experience_years=5,
         price_per_hour=Decimal("500.00"),
@@ -337,8 +338,8 @@ def test_list_bookings_passes_filters_and_pagination(
     [
         (
             Language.UKRAINIAN,
-            "Тестовый психолог",
-            "Клинический психолог",
+            "Тестовий психолог",
+            "Клінічний психолог",
         ),
         (
             Language.ENGLISH,
@@ -370,8 +371,8 @@ def test_booking_localization(
     [
         (
             Language.UKRAINIAN,
-            "Тестовый психолог",
-            "Клинический психолог",
+            "Тестовий психолог",
+            "Клінічний психолог",
         ),
         (
             Language.ENGLISH,
@@ -420,8 +421,8 @@ def test_user_sessions_localization(
     [
         (
             Language.UKRAINIAN,
-            "Тестовый психолог",
-            "Клинический психолог",
+            "Тестовий психолог",
+            "Клінічний психолог",
         ),
         (
             Language.ENGLISH,
@@ -465,3 +466,50 @@ def test_psychologist_sessions_localization(
         "anxiety",
         "stress",
     ]
+
+
+@pytest.mark.parametrize(
+    ("status", "payment_status"),
+    [
+        (BookingStatus.CONFIRMED, PaymentStatus.PAID),
+        (BookingStatus.CONFIRMED, PaymentStatus.HELD),
+        (BookingStatus.COMPLETED, PaymentStatus.PAID),
+        (BookingStatus.DISPUTED, PaymentStatus.PAID),
+    ],
+)
+def test_set_meet_link_for_paid_eligible_sessions(
+    booking_response,
+    psychologist,
+    status,
+    payment_status,
+):
+    psychologist.meet_link = "https://example.com/meeting"
+    booking_response.status = status
+    booking_response.payment_status = payment_status
+
+    set_meet_link(booking_response)
+
+    assert booking_response.meet_link == "https://example.com/meeting"
+
+
+@pytest.mark.parametrize(
+    ("status", "payment_status"),
+    [
+        (BookingStatus.PENDING, PaymentStatus.PAID),
+        (BookingStatus.CONFIRMED, PaymentStatus.UNPAID),
+        (BookingStatus.PENDING, PaymentStatus.UNPAID),
+    ],
+)
+def test_set_meet_link_for_ineligible_sessions(
+    booking_response,
+    psychologist,
+    status,
+    payment_status,
+):
+    psychologist.meet_link = "https://example.com/meeting"
+    booking_response.status = status
+    booking_response.payment_status = payment_status
+
+    set_meet_link(booking_response)
+
+    assert booking_response.meet_link is None
