@@ -1,5 +1,4 @@
 from pathlib import Path
-from typing import Any
 
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -18,6 +17,19 @@ class BaseAppSettings(BaseSettings):
     DB_PORT: int = 5432
     DB_HOST: str = "db"
     REDIS_URL: str = "redis://redis:6379/0"
+
+    GOOGLE_CLIENT_ID: str = "GOOGLE_CLIENT_ID"
+    SECRET_KEY_ACCESS: str = "SECRET_KEY_ACCESS"
+    SECRET_KEY_REFRESH: str = "SECRET_KEY_REFRESH"
+    JWT_SIGNING_ALGORITHM: str = "HS256"
+    COOKIE_SECURE: bool = False
+    ACCESS_TTL_MIN: int = 15
+    REFRESH_TTL_DAYS: int = 30
+    CORS_ORIGINS: str = "http://localhost"
+    ACCESS_COOKIE: str = "access"
+    REFRESH_COOKIE: str = "refresh"
+    ACCESS_PATH: str = "/"
+    REFRESH_PATH: str = "/api/auth"
 
     CONTACT_SUPPORT_EMAIL: str = "support@platform.com"
     SMTP_HOST: str = ""
@@ -47,6 +59,7 @@ class BaseAppSettings(BaseSettings):
     WAYFORPAY_SIMULATE_PAYOUTS: bool = True
     WAYFORPAY_LANGUAGE: str = "UA"
     WAYFORPAY_SERVICE_URL_PART: str = "/api/payments/webhook/wayforpay"
+    NO_ORDER_REFERENCE_REDIRECT: str = ""
 
     PUBLIC_BASE_URL: str = "http://localhost:8000"
 
@@ -65,21 +78,6 @@ class BaseAppSettings(BaseSettings):
 
     ENVIRONMENT: str = "development"
 
-
-class Settings(BaseAppSettings):
-    GOOGLE_CLIENT_ID: str = "GOOGLE_CLIENT_ID"
-    SECRET_KEY_ACCESS: str = "SECRET_KEY_ACCESS"
-    SECRET_KEY_REFRESH: str = "SECRET_KEY_REFRESH"
-    JWT_SIGNING_ALGORITHM: str = "HS256"
-    COOKIE_SECURE: bool = False
-    ACCESS_TTL_MIN: int = 15
-    REFRESH_TTL_DAYS: int = 30
-    CORS_ORIGINS: str = "http://localhost"
-    ACCESS_COOKIE: str = "access"
-    REFRESH_COOKIE: str = "refresh"
-    ACCESS_PATH: str = "/"
-    REFRESH_PATH: str = "/api/auth"
-
     @property
     def refresh_ttl_min(self):
         return self.REFRESH_TTL_DAYS * 24 * 60
@@ -89,11 +87,40 @@ class Settings(BaseAppSettings):
         return [cor_origin.strip() for cor_origin in self.CORS_ORIGINS.strip().split(",")]
 
 
+class Settings(BaseAppSettings):
+    pass
+
+
 class TestSettings(BaseAppSettings):
-    def model_post_init(self, context: Any, /) -> None:
-        object.__setattr__(self, "PATH_TO_DB", ":memory:")
-        object.__setattr__(
-            self,
-            "PATH_TO_JSON",
-            Path(self.BASE_DIR / "database" / "seed_data" / "test_data.json")
-        )
+    __test__ = False
+
+    model_config = SettingsConfigDict(env_file=None, extra="ignore")
+
+    ENVIRONMENT: str = "testing"
+    PATH_TO_DB: str = ":memory:"
+    PATH_TO_JSON: Path = Path(__file__).parent.parent / "database" / "seed_data" / "test_data.json"
+
+    SECRET_KEY_ACCESS: str = "test-access-secret-key-at-least-32-bytes!!"
+    SECRET_KEY_REFRESH: str = "test-refresh-secret-key-at-least-32-bytes!"
+    GOOGLE_CLIENT_ID: str = "test-google-client-id"
+    CORS_ORIGINS: str = "http://localhost"
+    COOKIE_SECURE: bool = False
+
+    PLATFORM_FEE_PERCENT: int = 20
+    BOOKING_HOLD_MINUTES: int = 20
+    BOOKING_FREE_CANCEL_HOURS: int = 24
+    BOOKING_HORIZON_DAYS: int = 30
+    SESSION_DURATION_MIN: int = 50
+
+    PAYMENT_PROVIDER: PaymentProviderName = PaymentProviderName.WAYFORPAY
+    WAYFORPAY_MERCHANT_ACCOUNT: str = "test_merchant"
+    WAYFORPAY_SECRET_KEY: str = "test_secret"
+    WAYFORPAY_MERCHANT_DOMAIN: str = "test.local"
+    WAYFORPAY_SIMULATE_PAYOUTS: bool = True
+
+    SMTP_HOST: str = ""
+    SMTP_USE_TLS: bool = False
+
+    MAX_AVATAR_UPLOAD_SIZE: int = 1024 * 1024
+    MAX_AVATAR_SIZE: int = 512 * 1024
+    MAX_AVATAR_PIXELS: int = 1000 * 1000
