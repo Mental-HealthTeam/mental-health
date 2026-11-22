@@ -62,12 +62,20 @@ data "aws_ami" "ubuntu" {
   owners = ["099720109477"]
 }
 
+resource "aws_iam_instance_profile" "app_server" {
+  name = "${var.project_name}-${var.environment}-profile"
+  role = "MentalHealthProdRole"
+}
+
+
 resource "aws_instance" "app_server" {
   ami           = data.aws_ami.ubuntu.id
   instance_type = var.instance_type
   key_name      = aws_key_pair.deployer.key_name
 
   vpc_security_group_ids = [aws_security_group.server_sg.id]
+
+  iam_instance_profile = aws_iam_instance_profile.app_server.name
 
   associate_public_ip_address = true
 
@@ -77,7 +85,17 @@ resource "aws_instance" "app_server" {
     delete_on_termination = false
   }
 
-  user_data = file("${path.module}/scripts/setup.sh")
+  user_data = <<-EOF
+#!/bin/bash
+set -e
+
+mkdir -p /opt/mental-health
+
+echo '${base64encode(file("${path.module}/scripts/prod_setup.sh"))}' | base64 -d > /opt/mental-health/prod_setup.sh
+
+chmod +x /opt/mental-health/prod_setup.sh
+chown ubuntu:ubuntu /opt/mental-health/prod_setup.sh
+EOF
 
   tags = {
     Name        = "${var.project_name}-${var.environment}"
