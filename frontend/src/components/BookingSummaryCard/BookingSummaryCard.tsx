@@ -7,7 +7,7 @@ import type { Psychologist } from '../../types/psychologist'
 
 import { Avatar } from '../UI/Avatar'
 import { OutlineButton } from '../UI/Buttons'
-import { AvatarFallbackIcon, AwardIcon, MoneyIcon } from '../UI/Icons'
+import { AwardIcon, MoneyIcon } from '../UI/Icons'
 
 import './BookingSummaryCard.scss'
 
@@ -90,7 +90,6 @@ export const BookingSummaryCard = ({
             <header className="booking-summary-card__header">
                 <Avatar
                     src={avatar || undefined}
-                    fallback={<AvatarFallbackIcon />}
                     alt=""
                     size="large"
                     className="booking-summary-card__avatar"

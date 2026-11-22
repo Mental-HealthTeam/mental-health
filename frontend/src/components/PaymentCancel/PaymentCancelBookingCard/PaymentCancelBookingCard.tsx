@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next'
 import type { BookingRetryInfo } from '../../../types/bookingsApi'
 
 import { Avatar } from '../../UI/Avatar'
-import { AvatarFallbackIcon } from '../../UI/Icons'
 import { TimeSlot } from '../../UI/TimeSlot'
 
 import './PaymentCancelBookingCard.scss'
@@ -63,7 +62,6 @@ export const PaymentCancelBookingCard = ({ booking, expired }: Props) => {
                     src={psychologist.avatar_url ?? undefined}
                     alt=""
                     size="large"
-                    fallback={<AvatarFallbackIcon />}
                     className="payment-cancel-booking-card__avatar"
                 />
 

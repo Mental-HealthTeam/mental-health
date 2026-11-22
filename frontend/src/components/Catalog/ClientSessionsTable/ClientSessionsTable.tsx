@@ -1,11 +1,10 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-
-import { AvatarFallbackIcon } from '../../UI/Icons'
 import { OutlineButton, PrimaryButton, SaveButton, TagButton } from '../../UI/Buttons'
 import { type ClientSession, clientSessionsMock } from './clientSessions.mock'
 
 import './ClientSessionsTable.scss'
+import { Avatar } from '../../UI/Avatar'
 
 type Filter = 'all' | 'scheduled' | 'completed' | 'saved'
 
@@ -238,13 +237,13 @@ export const ClientSessionsTable = ({ onJoinSession }: Props) => {
 
                                     <td>
                                         <div className="client-sessions-table__specialist">
-                                            <span className="client-sessions-table__avatar">
-                                                {session.avatarUrl ? (
-                                                    <img src={session.avatarUrl} alt="" />
-                                                ) : (
-                                                    <AvatarFallbackIcon />
-                                                )}
-                                            </span>
+                                            <Avatar
+                                                src={session.avatarUrl}
+                                                alt=""
+                                                size="small"
+                                                shape="circle"
+                                                className="client-sessions-table__avatar"
+                                            />
 
                                             <span>{specialistName}</span>
                                         </div>
