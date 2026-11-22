@@ -422,6 +422,9 @@ class Booking(Base):
             unique=True,
             postgresql_where=text(
                 "status IN ('CONFIRMED', 'PENDING', 'DISPUTED', 'COMPLETED')"
+            ),
+            sqlite_where=text(
+                "status IN ('CONFIRMED', 'PENDING', 'DISPUTED', 'COMPLETED')"
             )
         ),
         Index(

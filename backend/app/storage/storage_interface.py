@@ -4,8 +4,6 @@ from abc import ABC, abstractmethod
 
 from fastapi import UploadFile
 
-logger = logging.getLogger(__name__)
-
 
 class AvatarStorageInterface(ABC):
 

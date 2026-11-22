@@ -1,6 +1,8 @@
+import os
 from typing import Annotated
 
-from config.settings import Settings
+from config.settings import Settings, TestSettings
+from dotenv import load_dotenv
 from fastapi import Depends, status
 
 from redis_storage.redis_storage import RedisSessionStorage
@@ -14,7 +16,16 @@ from storage.local_storage import AvatarLocalStorage
 from email_sender.contact_sender import ContactService
 
 
+ENVIRONMENT = os.getenv("ENVIRONMENT")
+
+if ENVIRONMENT != "testing":
+    load_dotenv()
+    ENVIRONMENT = os.getenv("ENVIRONMENT")
+
+
 def get_settings():
+    if ENVIRONMENT == "testing":
+        return TestSettings()
     return Settings()
 
 
