@@ -7,6 +7,10 @@ environment = os.getenv("ENVIRONMENT", "developing")
 if environment == "testing":
     from database.session_sqlite import (  # noqa: F401
         get_sqlite_db as get_db,
+        reset_sqlite_database as reset_database,
+        get_sqlite_db_contextmanager as get_db_contextmanager,
+        get_sqlite_db_contextmanager as get_postgresql_db_contextmanager_celery_task,
+        sqlite_engine as sqlite_engine
     )
 else:
     from database.session_postgresql import (  # noqa: F401
