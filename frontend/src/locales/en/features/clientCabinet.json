@@ -4,7 +4,10 @@
         "defaultName": "Client",
         "requests": "My concerns:",
         "noRequests": "No concerns added yet",
-        "edit": "Edit profile"
+        "edit": "Edit profile",
+        "loading": "Loading profile...",
+        "loadError": "Could not load your profile.",
+        "retry": "Try again"
     },
     "sessions": {
         "title": "My sessions",
@@ -32,7 +35,11 @@
         },
         "statuses": {
             "scheduled": "Scheduled",
-            "completed": "Completed"
+            "completed": "Completed",
+            "pending": "Pending confirmation",
+            "declined": "Declined",
+            "cancelled": "Cancelled",
+            "disputed": "Disputed"
         },
         "join": "Join session",
         "joinHint": "*Available 10 minutes before the start",
@@ -42,5 +49,13 @@
         "empty": "There are no sessions in this category yet",
         "shown": "Showing {{visible}} of {{total}}",
         "showMore": "Show more"
+    },
+    "apiState": {
+        "loading": "Loading...",
+        "profileError": "Could not load your profile.",
+        "sessionsError": "Could not load your sessions.",
+        "retry": "Try again",
+        "clientOnly": "This cabinet is available to clients only.",
+        "noMeetingLink": "The session link is not available yet."
     }
 }

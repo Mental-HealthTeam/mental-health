@@ -1,0 +1,54 @@
+@use '../../../../styles/abstracts/index' as a;
+
+.booking-slots-modal {
+  &__specialist {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-top: 24px;
+
+    h3 {
+      margin: 0;
+      font-size: 18px;
+      line-height: 1.35;
+      overflow-wrap: anywhere;
+    }
+
+    p {
+      margin: 5px 0 0;
+      color: a.$color-gray-60;
+      font-size: 15px;
+    }
+  }
+
+  &__avatar {
+    flex: 0 0 64px;
+    width: 64px;
+    height: 64px;
+  }
+}
+
+@media (max-width: 479px) {
+  .booking-slots-modal {
+    &__specialist {
+      gap: 12px;
+      margin-top: 20px;
+
+      h3 {
+        font-size: 16px;
+      }
+    }
+
+    &__avatar {
+      flex-basis: 52px;
+      width: 52px;
+      height: 52px;
+    }
+  }
+}
+
+@media (max-height: 540px) {
+  .booking-slots-modal__specialist {
+    margin-top: 12px;
+  }
+}

@@ -16,3 +16,8 @@ export type Booking = {
     hold_expires_at: string | null
     meet_link: string | null
 }
+export type CreateBookingRequest = {
+    psychologist_id: string
+    selected_time: string
+    ai_session_id?: string
+}

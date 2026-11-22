@@ -13,6 +13,7 @@
             "experienceValue_one": "{{count}} year",
             "experienceValue_other": "{{count}} years",
             "price": "Price",
+            "priceWithDuration": "Price for {{count}} min",
             "sessionDuration": "Session duration",
             "sessionDurationValue_one": "{{count}} minute",
             "sessionDurationValue_other": "{{count}} minutes"
@@ -41,5 +42,32 @@
         "previousAriaLabel": "Previous review",
         "nextAriaLabel": "Next review",
         "ratingAriaLabel": "Rating {{rating}} out of {{max}}"
+    },
+    "bookingModal": {
+        "title": "Choose a date and time",
+        "description": "Choose a convenient time for your online session",
+        "close": "Close time selection",
+        "session": "{{count}} min · {{price}} ₴",
+        "availableTimes": "Available dates and times",
+        "empty": "No time slots are currently available",
+        "timeZone": "Time zone: {{timeZone}}",
+        "selected": "Selected: {{date}}",
+        "selectTime": "Choose a time to continue",
+        "continue": "Continue to payment",
+        "requestError": "Unable to proceed to payment. Please try again.",
+        "loading": "Loading…"
+    },
+    "resumeBooking": {
+        "title": "You have an unfinished booking",
+        "description": "You selected a session time but haven’t completed payment yet. Would you like to continue?",
+        "date": "Date and time",
+        "price": "Price",
+        "timeZone": "Time zone: {{timeZone}}",
+        "continue": "Continue to payment",
+        "later": "Later",
+        "close": "Close"
+    },
+    "pendingBooking": {
+        "button": "Incomplete booking"
     }
 }

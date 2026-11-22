@@ -60,14 +60,3 @@ class RevokeAllSchema(BaseModel):
 class TokenPair(BaseModel):
     access_token: str
     refresh_token: str
-
-
-class UserProfileResponse(UserPublic):
-    meet_link: str | None = None
-
-
-class UserProfileUpdate(BaseModel):
-    model_config = ConfigDict(extra="forbid")
-
-    name: str | None = Field(default=None, max_length=255)
-    meet_link: str | None = Field(default=None, max_length=255)

@@ -6,8 +6,6 @@ import { Footer } from '../../components/Footer'
 import { Header } from '../../components/Header'
 import { Container } from '../../components/Container'
 import { AiChat } from '../../components/AiChat'
-import { SPECIALIST_MOCK } from '../../mocks/specialistMock'
-import { SESSIONS_MOCK } from '../../mocks/sessions'
 import { SpecialistProfileCard } from '../../components/specialist/SpecialistProfileCard'
 import { ProfileTabs } from '../../components/specialist/ProfileTabs'
 import { MySessions } from './components/MySessions'
@@ -15,14 +13,16 @@ import { OutlineButton } from '../../components/UI/Buttons'
 import { BackButton } from '../../components/UI/Buttons/BackButton'
 
 import './SpecialistCabinet.scss'
+import { useGetPsychologistMeQuery } from '../../services/psychologistsApi'
 
 export const SpecialistCabinet = () => {
     const navigate = useNavigate()
-    const { t } = useTranslation('specialistCabinet')
-
-    // тимчасові моки, потім я їх після підключення заберу
-    const specialist = SPECIALIST_MOCK
-    const sessions = SESSIONS_MOCK
+    const { t, i18n } = useTranslation(['specialistCabinet'])
+    const {
+        data: specialist,
+        isError: isErrorPsychologist,
+        isLoading: isLoadingPsychologist,
+    } = useGetPsychologistMeQuery({ lang: i18n.language })
 
     useEffect(() => {
         window.scrollTo({ top: 0, behavior: 'instant' })
@@ -36,7 +36,9 @@ export const SpecialistCabinet = () => {
                 <Container className="specialist-cabinet__container">
                     <BackButton />
 
-                    {specialist ? (
+                    {isLoadingPsychologist && <p>{t('loading')}</p>}
+                    {isErrorPsychologist && <p role="alert">{t('loadError')}</p>}
+                    {specialist && (
                         <>
                             <h1 className="specialist-cabinet__title">{t('title')}</h1>
 
@@ -60,15 +62,8 @@ export const SpecialistCabinet = () => {
                                 specialist={specialist}
                             />
 
-                            <MySessions
-                                className="specialist-cabinet__my-sessions"
-                                sessions={sessions}
-                            />
+                            <MySessions className="specialist-cabinet__my-sessions" />
                         </>
-                    ) : (
-                        <div className="specialist-cabinet__text-no-profile">
-                            {t('noProfile')}
-                        </div>
                     )}
                 </Container>
             </main>

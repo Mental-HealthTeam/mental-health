@@ -15,6 +15,7 @@
             "experienceValue_many": "{{count}} років",
             "experienceValue_other": "{{count}} років",
             "price": "Вартість",
+            "priceWithDuration": "Вартість {{count}} хв",
             "sessionDuration": "Тривалість сесії",
             "sessionDurationValue_one": "{{count}} хвилина",
             "sessionDurationValue_few": "{{count}} хвилини",
@@ -45,5 +46,32 @@
         "previousAriaLabel": "Попередній відгук",
         "nextAriaLabel": "Наступний відгук",
         "ratingAriaLabel": "Оцінка {{rating}} з {{max}}"
+    },
+    "bookingModal": {
+        "title": "Оберіть дату й час",
+        "description": "Оберіть зручний час для онлайн-сесії",
+        "close": "Закрити вибір часу",
+        "session": "{{count}} хв · {{price}} ₴",
+        "availableTimes": "Доступні дати й час",
+        "empty": "Наразі немає доступних слотів",
+        "timeZone": "Часовий пояс: {{timeZone}}",
+        "selected": "Обрано: {{date}}",
+        "selectTime": "Оберіть час для продовження",
+        "continue": "Перейти до оплати",
+        "requestError": "Не вдалося перейти до оплати. Спробуйте ще раз.",
+        "loading": "Завантаження…"
+    },
+    "resumeBooking": {
+        "title": "У вас є незавершене бронювання",
+        "description": "Ви обрали час для сесії, але ще не завершили оплату. Бажаєте продовжити?",
+        "date": "Дата й час",
+        "price": "Вартість",
+        "timeZone": "Часовий пояс: {{timeZone}}",
+        "continue": "Продовжити оплату",
+        "later": "Пізніше",
+        "close": "Закрити"
+    },
+    "pendingBooking": {
+        "button": "Незавершене бронювання"
     }
 }
