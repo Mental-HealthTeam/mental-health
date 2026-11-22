@@ -1,6 +1,7 @@
 from database.models.models import Booking, Language, Psychologist
 from schemas.booking import BookingPsychologist, BookingResponse
 from services.localization import pick
+from services.session_service import set_meet_link
 
 
 def build_booking_psychologist(
@@ -35,6 +36,8 @@ def build_booking_response(
     booking: Booking,
     lang: Language,
 ) -> BookingResponse:
+    set_meet_link(booking)
+
     return BookingResponse(
         id=booking.id,
         psychologist=BookingPsychologist(
@@ -48,5 +51,5 @@ def build_booking_response(
         selection_source=booking.selection_source,
         ai_session_id=booking.ai_session_id,
         hold_expires_at=booking.hold_expires_at,
-        meet_link=booking.psychologist.meet_link,
+        meet_link=booking.meet_link,
     )
