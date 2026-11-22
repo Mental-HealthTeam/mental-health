@@ -64,15 +64,29 @@ async def update_user_profile_service(
                 )
                 for symptom_code in symptom_codes
             )
-
+    if "telegram" in changes:
+        telegram = changes.pop("telegram")
+        stmt = select(User).where(
+            User.telegram == telegram
+        )
+        result = await db.execute(stmt)
+        is_taken = result.scalar_one_or_none() is not None
+        if is_taken:
+            raise AppError(
+                status.HTTP_409_CONFLICT,
+                "TELEGRAM_ALREADY_TAKEN",
+                "This Telegram username is already used by another account.",
+            )
+        current_user.telegram = telegram
     for field, value in changes.items():
         setattr(current_user, field, value)
     try:
         await db.commit()
     except IntegrityError as e:
+        current_user_id = current_user.id
         await db.rollback()
         logger.warning(
-            "Profile update conflict (user_id=%s)", current_user.id
+            "Profile update conflict (user_id=%s)", current_user_id
         )
         raise AppError(
             status.HTTP_409_CONFLICT,
@@ -80,9 +94,10 @@ async def update_user_profile_service(
             "This Telegram username is already used by another account.",
         ) from e
     except SQLAlchemyError as e:
+        current_user_id = current_user.id
         await db.rollback()
         logger.exception(
-            "Failed to update profile (user_id=%s)", current_user.id
+            "Failed to update profile (user_id=%s)", current_user_id
         )
         raise AppError(
             status.HTTP_500_INTERNAL_SERVER_ERROR,
