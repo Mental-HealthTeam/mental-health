@@ -1,0 +1,46 @@
+@use '../../styles/abstracts' as a;
+
+.payment-cancel-page {
+  display: flex;
+  flex-direction: column;
+
+  width: 100%;
+  min-height: 100dvh;
+
+  background-color: a.$color-background;
+  color: a.$color-text-primary;
+
+  font-family: a.$font-family-primary;
+
+  &__main {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+
+    width: 100%;
+    min-width: 0;
+  }
+
+  &__container {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+
+    width: 100%;
+    min-width: 0;
+
+    padding: 24px 28px 80px;
+  }
+
+  &__back {
+    align-self: flex-start;
+  }
+}
+
+@media (max-width: 767px) {
+  .payment-cancel-page {
+    &__container {
+      padding: 24px 18px 64px;
+    }
+  }
+}

@@ -173,3 +173,12 @@ async def wayforpay_return(
                 url=url_target,
                 status_code=status.HTTP_303_SEE_OTHER
             )
+        else:
+            url_target = (
+                f"{settings.NO_ORDER_REFERENCE_REDIRECT}"
+                f"?{urlencode(params)}"
+            )
+            return RedirectResponse(
+                url=url_target,
+                status_code=status.HTTP_303_SEE_OTHER
+            )

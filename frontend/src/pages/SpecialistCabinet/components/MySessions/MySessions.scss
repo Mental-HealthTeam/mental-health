@@ -139,4 +139,10 @@
         width: max-content;
         margin-inline: auto;
     }
+
+    &__status {
+        color: a.$color-gray-60;
+        font-size: a.$font-size-body;
+        line-height: a.$line-height-body;
+    }
 }

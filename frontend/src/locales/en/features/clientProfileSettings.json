@@ -22,16 +22,18 @@
     "removeTopic": "Remove concern: {{topic}}",
     "loading": "Loading profile...",
     "loadError": "Could not load your profile. Please refresh the page.",
-    "supportedFieldsNotice": "You can currently save your name and profile photo. Saving other fields is not available yet.",
-    "saveSuccess": "Your name and profile photo have been saved.",
+    "supportedFieldsNotice": "You can save your name, Telegram, concerns and profile photo. Email changes and notification preferences are not available yet.",
+    "saveSuccess": "Your profile has been saved successfully.",
     "unsavedChangesConfirm": "You have unsaved changes. Leave without saving?",
+    "emailReadOnlyHint": "Changing your email address is currently under development.",
     "errors": {
         "name": "Enter your name using up to 255 characters.",
         "email": "Enter a valid email address.",
-        "telegram": "Enter a Telegram username or a phone number with country code, for example @anton123 or +380671234567.",
+        "telegram": "Enter a Telegram username containing 5–32 characters: Latin letters, numbers or underscores.",
         "imageType": "Choose a JPEG, PNG or WebP image.",
         "imageSize": "Choose a non-empty file up to 5 MB.",
         "imageInvalid": "The image could not be opened. Choose another file.",
-        "save": "Your changes could not be saved. Please try again."
+        "save": "Your changes could not be saved. Please try again.",
+        "telegramTaken": "This Telegram username is already used by another account."
     }
 }

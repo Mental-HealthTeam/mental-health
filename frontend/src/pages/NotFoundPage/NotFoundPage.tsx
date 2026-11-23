@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import umbrellaImage from '../../assets/images/errors/umbrella.png'
 import { Container } from '../../components/Container'
 import { Header } from '../../components/Header'
-import { BackButton } from '../../components/UI/Buttons/BackButton'
+import { BackButton } from '../../components/UI/Buttons'
 
 import './NotFoundPage.scss'
 

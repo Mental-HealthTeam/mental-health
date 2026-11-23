@@ -32,7 +32,7 @@ jobs:
       - name: Pytest
         env:
           PYTHONPATH: ${{ github.workspace }}/backend/app
-        run: python -m pytest tests/test_auth.py tests/test_bookings.py -v
+        run: python -m pytest tests -q
 
       - name: Build Docker image
         uses: docker/build-push-action@v6
