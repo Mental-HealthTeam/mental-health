@@ -1,12 +1,18 @@
 @use '../../styles/abstracts' as a;
 
 .client-profile-settings-page {
+  display: flex;
+  flex-direction: column;
+
   min-height: 100dvh;
 
   color: a.$color-primary;
   background-color: a.$color-gray-0;
 
   &__main {
+    flex: 1 0 auto;
+    min-width: 0;
+
     padding: 24px 16px 32px;
   }
 

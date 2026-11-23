@@ -9,6 +9,9 @@
 
   color: a.$color-primary;
   background-color: a.$color-background;
+  &__skeleton.skeleton {
+    display: block;
+  }
 
   &__title {
     margin: 0 0 16px;

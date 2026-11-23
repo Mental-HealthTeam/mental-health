@@ -42,11 +42,13 @@ export const ClientTopicsField = ({ selectedTopics, onChange }: Props) => {
         refetch,
     } = useGetSymptomCodesQuery()
 
-    const availableTopics = [...new Set(topicCodes)].filter(
-        (code) => !selectedTopics.includes(code),
-    )
+    const selectedTopicSet = new Set(selectedTopics)
+    const availableTopics = [...new Set(topicCodes)].filter((code) => !selectedTopicSet.has(code))
 
-    const showTopicSkeletons = isLoading && !isError
+    const remainingTopicCount = Math.max(0, TOPIC_SKELETON_WIDTHS.length - selectedTopicSet.size)
+    const topicSkeletonWidths = TOPIC_SKELETON_WIDTHS.slice(0, remainingTopicCount)
+    const showTopicSkeletons = isLoading && !isError && topicSkeletonWidths.length > 0
+
     const transition = shouldReduceMotion ? { duration: 0 } : layoutTransition
 
     const visibilityTransition = {
@@ -182,12 +184,12 @@ export const ClientTopicsField = ({ selectedTopics, onChange }: Props) => {
                                         exit={{ opacity: 0 }}
                                         transition={visibilityTransition}
                                     >
-                                        {TOPIC_SKELETON_WIDTHS.map((width, index) => (
+                                        {topicSkeletonWidths.map((width, index) => (
                                             <li
                                                 key={index}
                                                 className="client-profile-form__topic-skeleton"
                                             >
-                                                <TagButtonSkeleton width={width} />
+                                                <TagButtonSkeleton width={width} height={28} />
                                             </li>
                                         ))}
                                     </motion.ul>

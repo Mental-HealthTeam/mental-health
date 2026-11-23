@@ -12,9 +12,10 @@ type Props = {
     specialist: SpecialistProfile
     actions: ReactNode
     className?: string
+    isLoading?: boolean
 }
 
-export const SpecialistProfileCard = ({ className, specialist, actions }: Props) => {
+export const SpecialistProfileCard = ({ className, specialist, actions, isLoading }: Props) => {
     const { t, i18n } = useTranslation([
         'psychologists',
         'symptoms',
@@ -33,6 +34,7 @@ export const SpecialistProfileCard = ({ className, specialist, actions }: Props)
         >
             <div className="profile-card__region-photo">
                 <Avatar
+                    isLoading={isLoading}
                     src={specialist.avatar_url}
                     className="profile-card__photo"
                     alt={specialist.full_name}

@@ -1,14 +1,18 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+
+import { Avatar } from '../../UI/Avatar'
 import { OutlineButton, PrimaryButton, SaveButton, TagButton } from '../../UI/Buttons'
+
 import { type ClientSession, clientSessionsMock } from './clientSessions.mock'
+import { ClientSessionsTableSkeleton } from './ClientSessionsTableSkeleton'
 
 import './ClientSessionsTable.scss'
-import { Avatar } from '../../UI/Avatar'
 
 type Filter = 'all' | 'scheduled' | 'completed' | 'saved'
 
 type Props = {
+    isLoading?: boolean
     onJoinSession?: (sessionId: string) => void
 }
 
@@ -48,7 +52,7 @@ const canJoinSession = (session: ClientSession, now: number): boolean => {
     )
 }
 
-export const ClientSessionsTable = ({ onJoinSession }: Props) => {
+export const ClientSessionsTable = ({ isLoading = false, onJoinSession }: Props) => {
     const { t, i18n } = useTranslation('clientCabinet', {
         keyPrefix: 'sessionsTable',
     })
@@ -185,133 +189,138 @@ export const ClientSessionsTable = ({ onJoinSession }: Props) => {
                 className="client-sessions-table__scroll"
                 role="region"
                 aria-label={t('listLabel')}
-                tabIndex={0}
+                aria-busy={isLoading}
+                tabIndex={isLoading ? -1 : 0}
             >
-                <table className="client-sessions-table__table">
-                    <caption className="client-sessions-table__caption">
-                        {t(`filters.${activeFilter}`)}
-                    </caption>
+                {isLoading ? (
+                    <ClientSessionsTableSkeleton />
+                ) : (
+                    <table className="client-sessions-table__table">
+                        <caption className="client-sessions-table__caption">
+                            {t(`filters.${activeFilter}`)}
+                        </caption>
 
-                    <thead>
-                        <tr>
-                            <th scope="col">{t('columns.status')}</th>
-                            <th scope="col">{t('columns.specialist')}</th>
-                            <th scope="col">{t('columns.date')}</th>
-                            <th scope="col">{t('columns.time')}</th>
-                            <th scope="col">{t('columns.actions')}</th>
-                            <th scope="col">
-                                <span className="client-sessions-table__caption">
-                                    {t('columns.save')}
-                                </span>
-                            </th>
-                        </tr>
-                    </thead>
+                        <thead>
+                            <tr>
+                                <th scope="col">{t('columns.status')}</th>
+                                <th scope="col">{t('columns.specialist')}</th>
+                                <th scope="col">{t('columns.date')}</th>
+                                <th scope="col">{t('columns.time')}</th>
+                                <th scope="col">{t('columns.actions')}</th>
+                                <th scope="col">
+                                    <span className="client-sessions-table__caption">
+                                        {t('columns.save')}
+                                    </span>
+                                </th>
+                            </tr>
+                        </thead>
 
-                    <tbody key={activeFilter}>
-                        {visibleSessions.map((session) => {
-                            const specialistName = session.specialistName[language]
-                            const canJoin = canJoinSession(session, now)
+                        <tbody key={activeFilter}>
+                            {visibleSessions.map((session) => {
+                                const specialistName = session.specialistName[language]
+                                const canJoin = canJoinSession(session, now)
 
-                            return (
-                                <tr key={session.id} className="client-sessions-table__row">
-                                    <td>
-                                        <div className="client-sessions-table__status">
-                                            <span
-                                                className="client-sessions-table__check"
-                                                aria-hidden="true"
-                                            >
-                                                <svg viewBox="0 0 16 16" fill="none">
-                                                    <path
-                                                        d="m4 8 2.5 2.5L12 5"
-                                                        stroke="currentColor"
-                                                        strokeWidth="2"
-                                                        strokeLinecap="round"
-                                                        strokeLinejoin="round"
-                                                    />
-                                                </svg>
-                                            </span>
-
-                                            {t(`statuses.${session.status}`)}
-                                        </div>
-                                    </td>
-
-                                    <td>
-                                        <div className="client-sessions-table__specialist">
-                                            <Avatar
-                                                src={session.avatarUrl}
-                                                alt=""
-                                                size="small"
-                                                shape="circle"
-                                                className="client-sessions-table__avatar"
-                                            />
-
-                                            <span>{specialistName}</span>
-                                        </div>
-                                    </td>
-
-                                    <td>
-                                        <span className="client-sessions-table__value">
-                                            {session.date}
-                                        </span>
-                                    </td>
-
-                                    <td>
-                                        <span className="client-sessions-table__value">
-                                            {session.time}
-                                        </span>
-                                    </td>
-
-                                    <td>
-                                        {session.status === 'scheduled' ? (
-                                            <div className="client-sessions-table__actions">
-                                                <PrimaryButton
-                                                    type="button"
-                                                    className="client-sessions-table__join"
-                                                    disabled={!canJoin}
-                                                    onClick={() => handleJoin(session)}
+                                return (
+                                    <tr key={session.id} className="client-sessions-table__row">
+                                        <td>
+                                            <div className="client-sessions-table__status">
+                                                <span
+                                                    className="client-sessions-table__check"
+                                                    aria-hidden="true"
                                                 >
-                                                    {t('join')}
-                                                </PrimaryButton>
+                                                    <svg viewBox="0 0 16 16" fill="none">
+                                                        <path
+                                                            d="m4 8 2.5 2.5L12 5"
+                                                            stroke="currentColor"
+                                                            strokeWidth="2"
+                                                            strokeLinecap="round"
+                                                            strokeLinejoin="round"
+                                                        />
+                                                    </svg>
+                                                </span>
 
-                                                {!canJoin && (
-                                                    <span className="client-sessions-table__hint">
-                                                        {t('joinHint')}
-                                                    </span>
-                                                )}
+                                                {t(`statuses.${session.status}`)}
                                             </div>
-                                        ) : (
-                                            <span className="client-sessions-table__hint">
-                                                {t('completed')}
-                                            </span>
-                                        )}
-                                    </td>
+                                        </td>
 
-                                    <td>
-                                        <SaveButton
-                                            isSaved={session.isSaved}
-                                            aria-label={t(session.isSaved ? 'unsave' : 'save', {
-                                                name: specialistName,
-                                                date: session.date,
-                                            })}
-                                            onClick={() => toggleSaved(session.id)}
-                                        />
+                                        <td>
+                                            <div className="client-sessions-table__specialist">
+                                                <Avatar
+                                                    src={session.avatarUrl}
+                                                    alt=""
+                                                    size="small"
+                                                    shape="circle"
+                                                    className="client-sessions-table__avatar"
+                                                />
+
+                                                <span>{specialistName}</span>
+                                            </div>
+                                        </td>
+
+                                        <td>
+                                            <span className="client-sessions-table__value">
+                                                {session.date}
+                                            </span>
+                                        </td>
+
+                                        <td>
+                                            <span className="client-sessions-table__value">
+                                                {session.time}
+                                            </span>
+                                        </td>
+
+                                        <td>
+                                            {session.status === 'scheduled' ? (
+                                                <div className="client-sessions-table__actions">
+                                                    <PrimaryButton
+                                                        type="button"
+                                                        className="client-sessions-table__join"
+                                                        disabled={!canJoin}
+                                                        onClick={() => handleJoin(session)}
+                                                    >
+                                                        {t('join')}
+                                                    </PrimaryButton>
+
+                                                    {!canJoin && (
+                                                        <span className="client-sessions-table__hint">
+                                                            {t('joinHint')}
+                                                        </span>
+                                                    )}
+                                                </div>
+                                            ) : (
+                                                <span className="client-sessions-table__hint">
+                                                    {t('completed')}
+                                                </span>
+                                            )}
+                                        </td>
+
+                                        <td>
+                                            <SaveButton
+                                                isSaved={session.isSaved}
+                                                aria-label={t(session.isSaved ? 'unsave' : 'save', {
+                                                    name: specialistName,
+                                                    date: session.date,
+                                                })}
+                                                onClick={() => toggleSaved(session.id)}
+                                            />
+                                        </td>
+                                    </tr>
+                                )
+                            })}
+
+                            {filteredSessions.length === 0 && (
+                                <tr>
+                                    <td colSpan={6} className="client-sessions-table__empty">
+                                        {t('empty')}
                                     </td>
                                 </tr>
-                            )
-                        })}
-
-                        {filteredSessions.length === 0 && (
-                            <tr>
-                                <td colSpan={6} className="client-sessions-table__empty">
-                                    {t('empty')}
-                                </td>
-                            </tr>
-                        )}
-                    </tbody>
-                </table>
+                            )}
+                        </tbody>
+                    </table>
+                )}
             </div>
 
-            {filteredSessions.length > 0 && (
+            {!isLoading && filteredSessions.length > 0 && (
                 <div className="client-sessions-table__pagination">
                     <p className="client-sessions-table__count" role="status" aria-atomic="true">
                         {t('shown', {

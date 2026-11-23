@@ -3,7 +3,7 @@ import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 
-import { useAppDispatch, useAppSelector } from '../../app/hooks'
+import { useAppDispatch } from '../../app/hooks'
 import { setSpecialistProfile } from '../../app/store/slices/specialistProfileSlice'
 
 import { AiChat } from '../../components/AiChat'
@@ -13,8 +13,10 @@ import { Container } from '../../components/Container'
 import { Footer } from '../../components/Footer'
 import { Header } from '../../components/Header'
 import { ProfileTabs } from '../../components/specialist/ProfileTabs'
+import { ProfileTabsSkeleton } from '../../components/specialist/ProfileTabs/ProfileTabsSkeleton'
 import { SpecialistProfileCard } from '../../components/specialist/SpecialistProfileCard'
 import { BackButton } from '../../components/UI/Buttons'
+import { Skeleton } from '../../components/UI/Skeleton'
 
 import { useGetPsychologistByIdQuery } from '../../services/psychologistsApi'
 
@@ -23,13 +25,11 @@ import './PsychologistProfile.scss'
 export const PsychologistProfile = () => {
     const { t, i18n } = useTranslation(['specialistProfile', 'common', 'errors'])
     const { id } = useParams()
-
     const dispatch = useAppDispatch()
-    const { profile } = useAppSelector((state) => state.specialistProfile)
 
     const {
-        currentData: psychologist,
-        isLoading,
+        currentData: profile,
+        isFetching,
         isError,
     } = useGetPsychologistByIdQuery(id ? { id, lang: i18n.language } : skipToken, {
         refetchOnMountOrArgChange: true,
@@ -37,19 +37,36 @@ export const PsychologistProfile = () => {
         refetchOnReconnect: true,
     })
 
+    const isProfileLoading = isFetching && !profile
+
     useEffect(() => {
         window.scrollTo({ top: 0, behavior: 'instant' })
     }, [id])
 
     useEffect(() => {
-        if (psychologist) {
-            dispatch(setSpecialistProfile(psychologist))
+        if (profile) {
+            dispatch(setSpecialistProfile(profile))
         }
-    }, [dispatch, psychologist])
+    }, [dispatch, profile])
 
     const renderContent = () => {
-        if (isLoading) {
-            return <p role="status">{t('common:loading')}</p>
+        if (isProfileLoading) {
+            return (
+                <>
+                    <h1 className="psychologist-profile__title">{t('page.title')}</h1>
+
+                    <div
+                        className="psychologist-profile__specialist-card"
+                        role="status"
+                        aria-label={t('common:loading')}
+                        style={{ display: 'grid', width: '100%' }}
+                    >
+                        <Skeleton width="100%" height={320} radius={24} />
+                    </div>
+
+                    <ProfileTabsSkeleton className="psychologist-profile__profile-tabs" />
+                </>
+            )
         }
 
         if (isError || !profile || profile.psychologist_id !== id) {
@@ -90,7 +107,6 @@ export const PsychologistProfile = () => {
             </main>
 
             <Footer />
-
             <AiChat />
         </div>
     )
