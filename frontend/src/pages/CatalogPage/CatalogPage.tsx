@@ -1,4 +1,4 @@
-import { useId, useState } from 'react'
+import { useId, useLayoutEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { useAppDispatch } from '../../app/hooks'
@@ -14,6 +14,7 @@ import { Search } from '../../components/UI/Search'
 import './CatalogPage.scss'
 import { Header } from '../../components/Header'
 import { Footer } from '../../components/Footer'
+import { useLocation } from 'react-router-dom'
 
 const createEmptyFilters = (): CatalogFilterValues => ({
     topics: [],
@@ -53,6 +54,15 @@ export const CatalogPage = () => {
             dispatch(openAiChat())
         }
     }
+
+    const { state } = useLocation()
+
+    useLayoutEffect(() => {
+        if (state?.scrollToTop) {
+            window.scrollTo({ top: 0, behavior: 'instant' })
+        }
+    }, [state])
+
     return (
         <div className="catalog-page">
             <Header variant="page" />

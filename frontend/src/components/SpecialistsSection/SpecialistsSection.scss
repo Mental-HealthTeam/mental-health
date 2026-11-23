@@ -1,23 +1,22 @@
 @use '../../styles/abstracts' as a;
 @use '../../styles/components' as c;
 
-.specialists-section__loading-label {
-  position: absolute;
-
-  width: 1px;
-  height: 1px;
-
-  overflow: hidden;
-  clip-path: inset(50%);
-  white-space: nowrap;
-}
-
 .specialists-section {
   width: 100%;
-
   overflow: hidden;
 
   background-color: a.$color-gray-0;
+
+  &__loading-label {
+    position: absolute;
+
+    width: 1px;
+    height: 1px;
+
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
 
   &__container {
     display: flex;
@@ -59,7 +58,6 @@
     gap: 8px;
 
     width: 100%;
-    max-width: 520px;
 
     margin-bottom: 28px;
   }
@@ -113,7 +111,6 @@
     display: none;
     align-items: center;
     justify-content: center;
-
     flex-shrink: 0;
   }
 
@@ -121,15 +118,12 @@
     --slider-gap: #{c.$specialists-section-slider-gap};
     --card-width: #{c.$specialists-section-card-width};
     --slide-width: calc(
-            (
-            100% -
-            var(--slider-gap) * (var(--visible-cards) - 1)
-            ) /
-            var(--visible-cards)
+            (100% - var(--slider-gap) * (var(--visible-cards) - 1)) / var(--visible-cards)
     );
 
     width: 100%;
-    max-width: c.$specialists-section-card-width;
+    min-width: 0;
+    max-width: var(--card-width);
 
     margin-inline: auto;
 
@@ -158,9 +152,7 @@
   }
 
   &__slide {
-    flex-grow: 0;
-    flex-shrink: 0;
-    flex-basis: var(--slide-width);
+    flex: 0 0 var(--slide-width);
 
     min-width: 0;
 
@@ -169,6 +161,15 @@
     .specialist-card {
       width: 100%;
     }
+
+    .specialist-card__topic-list {
+      min-height: 70px;
+      align-content: center;
+    }
+  }
+
+  &__slide-content > .specialist-card > * {
+    opacity: var(--specialist-content-opacity, 1);
   }
 
   &__mobile-navigation {
@@ -181,6 +182,11 @@
     width: 100%;
 
     margin-top: 20px;
+  }
+
+  &__side-navigation[aria-hidden='true'],
+  &__mobile-navigation[aria-hidden='true'] {
+    visibility: hidden;
   }
 
   &__all-button {
@@ -210,10 +216,6 @@
     }
 
     &__filters {
-      max-width: 720px;
-
-      gap: 8px;
-
       margin-bottom: 32px;
     }
 
@@ -232,13 +234,7 @@
       padding: 40px 32px 0;
     }
 
-    &__title {
-      margin-bottom: 22px;
-    }
-
     &__filters {
-      max-width: 760px;
-
       margin-bottom: 34px;
     }
 
@@ -247,9 +243,11 @@
       align-items: center;
       justify-content: center;
 
-      gap: 24px;
+      gap: 22px;
+    }
 
-      width: 100%;
+    &__slider-wrapper {
+      margin-inline: 0;
     }
 
     &__side-navigation {
@@ -258,10 +256,6 @@
 
     &__mobile-navigation {
       display: none;
-    }
-
-    &__all-button {
-      margin-top: 24px;
     }
   }
 }
@@ -291,10 +285,6 @@
 
     &__filters {
       margin-bottom: 36px;
-    }
-
-    &__carousel {
-      gap: 32px;
     }
 
     &__all-button {
