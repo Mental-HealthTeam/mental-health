@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import {
     GREETING_ID,
     searchPsychologists,
@@ -22,17 +22,29 @@ type Props = {
 }
 
 export const MessageList = ({ className }: Props) => {
-    const { t } = useTranslation(['aiChat', 'errors'])
-    const { i18n } = useTranslation()
+    const { t, i18n } = useTranslation(['aiChat', 'errors'])
+    const lang: 'uk' | 'en' = i18n.resolvedLanguage?.startsWith('en') ? 'en' : 'uk'
+
+    const messages = useAppSelector((s) => s.aiChat.messages)
+    const status = useAppSelector((s) => s.aiChat.status)
+    const error = useAppSelector((s) => s.aiChat.error)
+    const errorSource = useAppSelector((s) => s.aiChat.errorSource)
+    const lastUserText = useAppSelector((s) => s.aiChat.lastUserText)
+    const readyForSearch = useAppSelector((s) => s.aiChat.matchData?.ready_for_search)
 
     const dispatch = useAppDispatch()
-    const { messages, error, errorSource, lastUserText, matchData, status, psychologists } =
-        useAppSelector((state) => state.aiChat)
     const endRef = useRef<HTMLDivElement>(null)
 
     const firstCreatedAt = messages[0].createdAt
 
-    const isAnswering = useMemo(() => status === 'waiting' || status === 'streaming', [status])
+    const isAnswering = status === 'waiting' || status === 'streaming'
+
+    const lastMessage = messages[messages.length - 1]
+    const showSearchButton =
+        Boolean(readyForSearch) &&
+        !isAnswering &&
+        lastMessage?.fromWho === 'bot' &&
+        lastMessage.kind !== 'psychologists'
 
     const errorText =
         error && errorSource
@@ -45,23 +57,40 @@ export const MessageList = ({ className }: Props) => {
         endRef.current?.scrollIntoView({ behavior: 'smooth' })
     }, [messages.length, isAnswering, error])
 
+    const handleRetry = () => {
+        if (errorSource === 'search') {
+            dispatch(searchPsychologists({ lang }))
+        } else if (lastUserText) {
+            dispatch(sendUserMessage({ text: lastUserText, retry: true }))
+        }
+    }
+
     return (
         <div className={classNames('message-list', className)}>
             <time className="message-list__date" dateTime={new Date(firstCreatedAt).toISOString()}>
                 {formatChatDate(firstCreatedAt, i18n.language)}
             </time>
+
             <div className="message-list__messages">
-                {messages.map((item) => (
-                    <ChatMessage
-                        key={item.id}
-                        message={item.id === GREETING_ID ? t('greeting') : item.message}
-                        fromWho={item.fromWho}
-                        className="message-list__message"
-                    />
-                ))}
+                {messages.map((item) =>
+                    item.kind === 'psychologists' ? (
+                        <div className="message-list__specialists" key={item.id}>
+                            {item.psychologists?.map((s) => (
+                                <SpecialistCard key={s.psychologist_id} {...s} variant="compact" />
+                            ))}
+                        </div>
+                    ) : (
+                        <ChatMessage
+                            key={item.id}
+                            message={item.id === GREETING_ID ? t('greeting') : item.message}
+                            fromWho={item.fromWho}
+                            className="message-list__message"
+                        />
+                    ),
+                )}
             </div>
 
-            {matchData?.ready_for_search && (
+            {showSearchButton && (
                 <PrimaryButton
                     className="message-list__button-search-psy"
                     startIcon={<SparkIcon />}
@@ -71,7 +100,8 @@ export const MessageList = ({ className }: Props) => {
                         </span>
                     }
                     aria-label={t('messageList.searchPsychologist')}
-                    onClick={() => dispatch(searchPsychologists())}
+                    disabled={isAnswering}
+                    onClick={() => dispatch(searchPsychologists({ lang }))}
                 >
                     <span className="message-list__search-label">
                         {t('messageList.searchPsychologist')}
@@ -79,17 +109,9 @@ export const MessageList = ({ className }: Props) => {
                 </PrimaryButton>
             )}
 
-            {psychologists.length > 0 && (
-                <div className="message-list__specialists">
-                    {psychologists.map((specialist) => (
-                        <SpecialistCard {...specialist} variant="compact" key={specialist.psychologist_id} />
-                    ))}
-                </div>
-            )}
-
             {isAnswering && <TypingIndicator />}
 
-            {errorText && lastUserText && (
+            {errorText && (
                 <div className="message-list__error" role="alert">
                     <span className="message-list__error-text">{errorText}</span>
                     <Button
@@ -97,13 +119,7 @@ export const MessageList = ({ className }: Props) => {
                         size="small"
                         variant="secondary"
                         ariaLabel={t('messageList.retry')}
-                        onClick={() => {
-                            if (errorSource === 'message') {
-                                dispatch(sendUserMessage({ text: lastUserText, retry: true }))
-                            } else {
-                                dispatch(searchPsychologists())
-                            }
-                        }}
+                        onClick={handleRetry}
                     >
                         {t('messageList.retry')}
                     </Button>

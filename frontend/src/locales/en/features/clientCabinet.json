@@ -4,7 +4,10 @@
         "defaultName": "Client",
         "requests": "My concerns:",
         "noRequests": "No concerns added yet",
-        "edit": "Edit profile"
+        "edit": "Edit profile",
+        "loading": "Loading profile...",
+        "loadError": "Could not load your profile.",
+        "retry": "Try again"
     },
     "sessions": {
         "title": "My sessions",

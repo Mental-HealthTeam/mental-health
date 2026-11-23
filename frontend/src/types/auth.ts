@@ -1,3 +1,5 @@
+import type { SymptomCode } from './psychologist'
+
 export type Role = 'client' | 'psychologist' | 'admin'
 
 export type UserPublic = {
@@ -10,4 +12,6 @@ export type UserPublic = {
 
 export type UserProfile = UserPublic & {
     meet_link: string | null
+    telegram: string | null
+    topics: SymptomCode[] | null
 }
