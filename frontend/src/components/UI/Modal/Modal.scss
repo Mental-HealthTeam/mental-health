@@ -1,0 +1,144 @@
+@use '../../../styles/abstracts' as a;
+
+.modal {
+  box-sizing: border-box;
+  width: min(560px, calc(100vw - 32px));
+  max-width: none;
+  max-height: calc(100dvh - 32px);
+
+  margin: auto;
+  padding: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+
+  border: 1px solid a.$color-gray-10;
+  border-radius: 24px;
+
+  background: a.$color-surface;
+  color: a.$color-text-primary;
+
+  font-family: a.$font-family-primary;
+  font-size: a.$font-size-body;
+  font-weight: a.$font-weight-body;
+  line-height: a.$line-height-body;
+  letter-spacing: a.$letter-spacing-body;
+
+  box-shadow: 0 24px 80px rgba(a.$color-gray-100, 0.18);
+
+  scrollbar-width: thin;
+  scrollbar-color: a.$color-gray-20 transparent;
+
+  &::backdrop {
+    background: rgba(a.$color-gray-100, 0.45);
+  }
+
+  &[open] {
+    animation: modal-appear 200ms ease-out both;
+
+    &::backdrop {
+      animation: modal-backdrop-appear 200ms ease-out both;
+    }
+  }
+
+  &[open].modal--closing {
+    pointer-events: none;
+    animation: modal-disappear 180ms ease-in both;
+
+    &::backdrop {
+      animation: modal-backdrop-disappear 180ms ease-in both;
+    }
+  }
+
+  &__header {
+    position: relative;
+    padding: 32px 32px 0;
+  }
+
+  &__title {
+    margin: 0;
+    padding-right: 44px;
+
+    font-size: a.$font-size-h4;
+    font-weight: a.$font-weight-h4;
+    line-height: a.$line-height-h4;
+    letter-spacing: a.$letter-spacing-h4;
+
+    overflow-wrap: anywhere;
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  &__close {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+  }
+
+  @media (max-width: 479px) {
+    &__header {
+      padding: 24px 20px 0;
+    }
+
+    &__close {
+      top: 14px;
+      right: 10px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    &[open],
+    &[open].modal--closing {
+      animation-duration: 1ms;
+
+      &::backdrop {
+        animation-duration: 1ms;
+      }
+    }
+  }
+}
+
+@keyframes modal-appear {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes modal-disappear {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+@keyframes modal-backdrop-appear {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes modal-backdrop-disappear {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
