@@ -120,6 +120,7 @@ def booking_response(client_user, psychologist):
         selection_source=SelectionSource.MANUAL_FILTER,
         ai_session_id=None,
         hold_expires_at=datetime.now(timezone.utc) + timedelta(minutes=15),
+        saved=False,
     )
     booking.meet_link = "https://example.com/meeting"
     return booking
