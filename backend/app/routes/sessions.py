@@ -10,12 +10,14 @@ from fastapi import (
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from auth.dependencies import require_roles
+from config.dependencies import get_settings
+from config.settings import BaseAppSettings
 from database import get_db
 from database.models.models import Language, User, UserRole
 from schemas.session import (
     SessionListResponse,
+    SessionPsychologistResponse,
     SessionPsychologistListResponse,
-    SessionPsychologistResponseList,
     SessionResponse,
     SessionSavedResponse,
 )
@@ -38,6 +40,9 @@ router = APIRouter()
 async def read_user_sessions(
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(require_roles(UserRole.CLIENT)),
+    settings: BaseAppSettings = Depends(
+        get_settings
+    ),
     lang: Language = Query(default=Language.UKRAINIAN),
 ):
     bookings = await get_sessions_for_user(
@@ -65,7 +70,9 @@ async def read_user_sessions(
         for booking in bookings
     ]
     now = datetime.now(timezone.utc)
-    items.sort(key=lambda session: sort_all_sessions(now, session))
+    items.sort(key=lambda session: sort_all_sessions(
+        now, session, settings.SESSION_DURATION_MIN
+    ))
 
     return SessionListResponse(items=items, total=len(items))
 
@@ -88,7 +95,7 @@ async def read_psychologist_sessions(
     )
 
     items = [
-        SessionPsychologistResponseList.model_validate(
+        SessionPsychologistResponse.model_validate(
             {
                 "id": booking.id,
                 "selected_time": booking.selected_time,
@@ -125,6 +132,9 @@ async def read_user_scheduled_sessions(
         current_user: User = Depends(
             require_roles(UserRole.CLIENT)
         ),
+        settings: BaseAppSettings = Depends(
+            get_settings
+        ),
         lang: Language = Query(default=Language.UKRAINIAN),
 ) -> SessionListResponse:
     now = datetime.now(timezone.utc)
@@ -132,7 +142,8 @@ async def read_user_scheduled_sessions(
     bookings = await get_scheduled_sessions_for_user(
         db=db,
         current_user=current_user,
-        now=now
+        now=now,
+        settings=settings
     )
 
     items = [
@@ -170,6 +181,9 @@ async def read_user_completed_sessions(
         current_user: User = Depends(
             require_roles(UserRole.CLIENT)
         ),
+        settings: BaseAppSettings = Depends(
+            get_settings
+        ),
         lang: Language = Query(default=Language.UKRAINIAN),
 ) -> SessionListResponse:
     now = datetime.now(timezone.utc)
@@ -177,7 +191,8 @@ async def read_user_completed_sessions(
     bookings = await get_completed_sessions_for_user(
         db=db,
         current_user=current_user,
-        now=now
+        now=now,
+        settings=settings
     )
 
     items = [
@@ -215,6 +230,9 @@ async def read_user_saved_sessions(
         current_user: User = Depends(
             require_roles(UserRole.CLIENT)
         ),
+        settings: BaseAppSettings = Depends(
+            get_settings
+        ),
         lang: Language = Query(default=Language.UKRAINIAN),
 ) -> SessionListResponse:
     now = datetime.now(timezone.utc)
@@ -244,7 +262,9 @@ async def read_user_saved_sessions(
         for booking in bookings
     ]
 
-    items.sort(key=lambda session: sort_all_sessions(now, session))
+    items.sort(key=lambda session: sort_all_sessions(
+        now, session, settings.SESSION_DURATION_MIN
+    ))
 
     return SessionListResponse(items=items, total=len(items))
 

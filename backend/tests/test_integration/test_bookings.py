@@ -41,6 +41,7 @@ def bookings_client():
     app.dependency_overrides[get_settings] = lambda: SimpleNamespace(
         ACCESS_COOKIE="access_token",
         SECRET_KEY_ACCESS="test-secret-key",
+        SESSION_DURATION_MIN=50,
     )
     app.dependency_overrides[
         auth_dependencies.get_jwt_manager

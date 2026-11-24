@@ -45,7 +45,7 @@ class SessionListResponse(BaseModel):
     total: int
 
 
-class SessionPsychologistResponseList(BaseModel):
+class SessionPsychologistResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
     booking_id: UUID = Field(validation_alias="id")
@@ -62,7 +62,7 @@ class SessionPsychologistResponseList(BaseModel):
 
 
 class SessionPsychologistListResponse(BaseModel):
-    items: list[SessionPsychologistResponseList]
+    items: list[SessionPsychologistResponse]
     total: int
 
 
