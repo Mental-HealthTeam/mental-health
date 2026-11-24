@@ -97,3 +97,5 @@ class PsychologistMatchResult(BaseModel):
 
 class MatchingSearchResponse(BaseModel):
     result: list[PsychologistMatchResult]
+    relaxed_filters: list[str] = []
+    relaxed: bool

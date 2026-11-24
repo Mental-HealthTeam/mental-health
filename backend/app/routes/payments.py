@@ -142,7 +142,7 @@ async def wayforpay_return(
             status_code=status.HTTP_303_SEE_OTHER
         )
     elif (
-        reason_code == 1125
+        reason_code in (1125, 1108)
     ):
         params = {"lang": lang.value}
         if order_reference:

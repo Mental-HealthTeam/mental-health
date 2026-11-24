@@ -127,7 +127,7 @@ async def test_matching_no_results_is_empty_list(client):
     response = await client.post(SEARCH, json=info())
 
     assert response.status_code == 200
-    assert response.json() == {"result": []}
+    assert response.json()["result"] == []
 
 
 async def test_matching_filter_gender(client, make_psychologist):
@@ -335,7 +335,7 @@ async def test_matching_psychologist_with_only_taken_slot_is_excluded(
 
     response = await client.post(SEARCH, json=info())
 
-    assert response.json() == {"result": []}
+    assert response.json()["result"] == []
 
 
 async def test_matching_lang_en_with_fallback(client, make_psychologist):
