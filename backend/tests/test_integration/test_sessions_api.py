@@ -3,9 +3,16 @@ from datetime import datetime, timedelta, timezone
 
 import pytest
 
-from database.models.models import BookingStatus, PaymentStatus
+from database.models.models import (
+    BookingStatus,
+    PaymentStatus,
+    SymptomCode,
+    UserRole,
+)
 
 USER_SESSIONS = "/api/user/sessions"
+PSYCHOLOGIST_COMPLETED_SESSIONS = "/api/psychologist/sessions/completed"
+PSYCHOLOGIST_FREE_SLOTS = "/api/psychologist/sessions/free"
 USER_SCHEDULED_SESSIONS = "/api/user/sessions/scheduled"
 USER_COMPLETED_SESSIONS = "/api/user/sessions/completed"
 USER_SAVED_SESSIONS = "/api/user/sessions/saved"
@@ -25,6 +32,10 @@ def minutes_from_now(minutes: int) -> datetime:
 
 def save_url(booking_id) -> str:
     return f"{USER_SESSIONS}/{booking_id}/save"
+
+
+def slot_times(items: list[dict]) -> list[datetime]:
+    return [datetime.fromisoformat(item["time"]) for item in items]
 
 
 async def test_user_sessions_only_session_statuses(
@@ -144,8 +155,9 @@ async def test_psychologist_sessions_with_client(
 
     assert response.status_code == 200
     body = response.json()
-    assert body["total"] == 1
-    item = body["items"][0]
+    assert len(body["booked_items"]) == 1
+    assert body["total"] == len(body["booked_items"]) + len(body["free_slots"])
+    item = body["booked_items"][0]
     assert item["booking_id"] == str(mine.id)
     assert item["client"]["id"] == str(client_user.id)
     assert item["client"]["name"] == client_user.name
@@ -163,7 +175,7 @@ async def test_psychologist_sessions_hide_unpaid_and_cancelled(
 
     response = await client.get(PSYCHOLOGIST_SESSIONS, headers=psychologist_headers)
 
-    assert response.json()["total"] == 0
+    assert response.json()["booked_items"] == []
 
 
 async def test_psychologist_sessions_forbidden_for_client(client, client_headers):
@@ -476,3 +488,241 @@ async def test_save_unauthorized(client, method):
     response = await getattr(client, method)(save_url(uuid.uuid4()))
 
     assert response.status_code == 401
+
+
+async def test_psychologist_completed_sessions_scope(
+    client, client_user, other_client, psychologist, psychologist_headers,
+    make_psychologist, make_paid_booking, slot,
+):
+    stranger = await make_psychologist()
+    finished = await make_paid_booking(
+        client_user, psychologist, selected_time=minutes_from_now(-180)
+    )
+    finished_old = await make_paid_booking(
+        other_client, psychologist, selected_time=slot(-2, 10),
+        status=BookingStatus.COMPLETED,
+    )
+    await make_paid_booking(
+        client_user, psychologist, selected_time=minutes_from_now(-20)
+    )
+    await make_paid_booking(client_user, psychologist, selected_time=slot(2, 10))
+    await make_paid_booking(
+        other_client, stranger, selected_time=minutes_from_now(-240)
+    )
+
+    response = await client.get(
+        PSYCHOLOGIST_COMPLETED_SESSIONS, headers=psychologist_headers
+    )
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["total"] == 2
+    assert [item["booking_id"] for item in body["items"]] == [
+        str(finished.id), str(finished_old.id)
+    ]
+    first = body["items"][0]
+    assert first["client"]["id"] == str(client_user.id)
+    assert first["meet_link"] is None
+    assert "saved" not in first
+
+
+async def test_psychologist_completed_sessions_request_uses_snapshot(
+    client, client_user, psychologist, psychologist_headers,
+    make_paid_booking, set_user_symptoms,
+):
+    await set_user_symptoms(client_user, [SymptomCode.ANXIETY])
+    snapshot = await make_paid_booking(
+        client_user, psychologist, selected_time=minutes_from_now(-180),
+        request=[SymptomCode.STRESS, SymptomCode.GRIEF],
+    )
+    empty_snapshot = await make_paid_booking(
+        client_user, psychologist, selected_time=minutes_from_now(-300),
+        request=[],
+    )
+    no_snapshot = await make_paid_booking(
+        client_user, psychologist, selected_time=minutes_from_now(-420)
+    )
+
+    response = await client.get(
+        PSYCHOLOGIST_COMPLETED_SESSIONS, headers=psychologist_headers
+    )
+
+    requests = {
+        item["booking_id"]: item["request"] for item in response.json()["items"]
+    }
+    assert sorted(requests[str(snapshot.id)]) == ["grief", "stress"]
+    assert requests[str(empty_snapshot.id)] == []
+    assert requests[str(no_snapshot.id)] == ["anxiety"]
+
+
+async def test_psychologist_sessions_request_follows_client_before_snapshot(
+    client, client_user, psychologist, psychologist_headers,
+    make_paid_booking, set_user_symptoms, slot,
+):
+    await set_user_symptoms(client_user, [SymptomCode.STRESS])
+    upcoming = await make_paid_booking(
+        client_user, psychologist, selected_time=slot(2, 10)
+    )
+
+    first = await client.get(PSYCHOLOGIST_SESSIONS, headers=psychologist_headers)
+    await set_user_symptoms(client_user, [SymptomCode.SLEEP])
+    second = await client.get(PSYCHOLOGIST_SESSIONS, headers=psychologist_headers)
+
+    assert first.json()["booked_items"][0]["request"] == ["stress"]
+    assert second.json()["booked_items"][0]["request"] == ["sleep"]
+    assert first.json()["booked_items"][0]["booking_id"] == str(upcoming.id)
+
+
+async def test_psychologist_sessions_have_no_saved_field(
+    client, client_user, psychologist, psychologist_headers, make_paid_booking
+):
+    await make_paid_booking(client_user, psychologist, saved=True)
+
+    response = await client.get(PSYCHOLOGIST_SESSIONS, headers=psychologist_headers)
+
+    assert "saved" not in response.json()["booked_items"][0]
+
+
+async def test_psychologist_completed_sessions_empty(client, psychologist_headers):
+    response = await client.get(
+        PSYCHOLOGIST_COMPLETED_SESSIONS, headers=psychologist_headers
+    )
+
+    assert response.status_code == 200
+    assert response.json() == {"items": [], "total": 0}
+
+
+async def test_psychologist_completed_sessions_forbidden_for_other_roles(
+    client, client_headers, admin_headers
+):
+    for headers in (client_headers, admin_headers):
+        response = await client.get(
+            PSYCHOLOGIST_COMPLETED_SESSIONS, headers=headers
+        )
+        assert response.status_code == 403
+        assert response.json()["code"] == "PERMISSION_DENIED"
+
+
+async def test_psychologist_completed_sessions_unauthorized(client):
+    response = await client.get(PSYCHOLOGIST_COMPLETED_SESSIONS)
+
+    assert response.status_code == 401
+    assert response.json()["code"] == "NOT_AUTHENTICATED"
+
+
+async def test_psychologist_free_slots_returns_all_when_nothing_booked(
+    client, psychologist_headers, slot
+):
+    response = await client.get(PSYCHOLOGIST_FREE_SLOTS, headers=psychologist_headers)
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["total"] == 2
+    assert slot_times(body["items"]) == [slot(2, 10), slot(3, 12)]
+
+
+async def test_psychologist_free_slots_exclude_booked_slot(
+    client, client_user, psychologist, psychologist_headers,
+    make_paid_booking, slot,
+):
+    await make_paid_booking(client_user, psychologist, selected_time=slot(2, 10))
+
+    response = await client.get(PSYCHOLOGIST_FREE_SLOTS, headers=psychologist_headers)
+
+    body = response.json()
+    assert body["total"] == 1
+    assert slot_times(body["items"]) == [slot(3, 12)]
+
+
+async def test_psychologist_free_slots_ignore_cancelled_booking(
+    client, client_user, psychologist, psychologist_headers,
+    make_booking, slot,
+):
+    await make_booking(
+        client_user, psychologist, selected_time=slot(2, 10),
+        status=BookingStatus.CANCELLED,
+    )
+
+    response = await client.get(PSYCHOLOGIST_FREE_SLOTS, headers=psychologist_headers)
+
+    assert response.json()["total"] == 2
+
+
+async def test_psychologist_free_slots_ignore_other_psychologists_bookings(
+    client, client_user, psychologist_headers, make_psychologist,
+    make_paid_booking, slot,
+):
+    stranger = await make_psychologist()
+    await make_paid_booking(client_user, stranger, selected_time=slot(2, 10))
+
+    response = await client.get(PSYCHOLOGIST_FREE_SLOTS, headers=psychologist_headers)
+
+    assert response.json()["total"] == 2
+
+
+async def test_psychologist_free_slots_skip_past_and_sort(
+    client, make_psychologist, auth_headers, slot
+):
+    psychologist = await make_psychologist(
+        slots=[slot(5, 10), slot(-1, 10), slot(2, 10), slot(3, 10)]
+    )
+
+    response = await client.get(
+        PSYCHOLOGIST_FREE_SLOTS, headers=auth_headers(psychologist.user)
+    )
+
+    assert slot_times(response.json()["items"]) == [
+        slot(2, 10), slot(3, 10), slot(5, 10)
+    ]
+
+
+async def test_psychologist_free_slots_empty(client, make_psychologist, auth_headers):
+    psychologist = await make_psychologist(slots=[])
+
+    response = await client.get(
+        PSYCHOLOGIST_FREE_SLOTS, headers=auth_headers(psychologist.user)
+    )
+
+    assert response.status_code == 200
+    assert response.json() == {"items": [], "total": 0}
+
+
+async def test_psychologist_free_slots_without_profile_returns_404(
+    client, make_user, auth_headers
+):
+    user = await make_user(role=UserRole.PSYCHOLOGIST)
+
+    response = await client.get(PSYCHOLOGIST_FREE_SLOTS, headers=auth_headers(user))
+
+    assert response.status_code == 404
+    assert response.json()["code"] == "PSYCHOLOGIST_NOT_FOUND"
+
+
+async def test_psychologist_free_slots_forbidden_for_other_roles(
+    client, client_headers, admin_headers
+):
+    for headers in (client_headers, admin_headers):
+        response = await client.get(PSYCHOLOGIST_FREE_SLOTS, headers=headers)
+        assert response.status_code == 403
+        assert response.json()["code"] == "PERMISSION_DENIED"
+
+
+async def test_psychologist_free_slots_unauthorized(client):
+    response = await client.get(PSYCHOLOGIST_FREE_SLOTS)
+
+    assert response.status_code == 401
+    assert response.json()["code"] == "NOT_AUTHENTICATED"
+
+
+async def test_psychologist_sessions_include_free_slots(
+    client, client_user, psychologist, psychologist_headers,
+    make_paid_booking, slot,
+):
+    await make_paid_booking(client_user, psychologist, selected_time=slot(2, 10))
+
+    response = await client.get(PSYCHOLOGIST_SESSIONS, headers=psychologist_headers)
+
+    body = response.json()
+    assert len(body["booked_items"]) == 1
+    assert slot_times(body["free_slots"]) == [slot(3, 12)]
+    assert body["total"] == 2

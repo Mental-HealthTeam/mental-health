@@ -5,6 +5,7 @@ from uuid import UUID
 from pydantic import BaseModel, ConfigDict, Field
 
 from database.models.models import BookingStatus, PaymentStatus, SymptomCode
+from schemas.psychologist import MockSlot
 
 
 class SessionPsychologist(BaseModel):
@@ -57,7 +58,6 @@ class SessionPsychologistResponse(BaseModel):
     meet_link: str | None = None
     psychologist: SessionPsychologist
     request: list[SymptomCode]
-    saved: bool = False
     client: SessionClient | None = None
 
 
@@ -66,6 +66,17 @@ class SessionPsychologistListResponse(BaseModel):
     total: int
 
 
+class AllSessionPsychologist(BaseModel):
+    booked_items: list[SessionPsychologistResponse]
+    free_slots: list[MockSlot]
+    total: int
+
+
 class SessionSavedResponse(BaseModel):
     booking_id: UUID
     saved: bool
+
+
+class FreeSlotListResponse(BaseModel):
+    items: list[MockSlot]
+    total: int

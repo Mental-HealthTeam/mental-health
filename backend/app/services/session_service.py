@@ -124,6 +124,39 @@ async def get_sessions_for_psychologist(
     return bookings
 
 
+async def get_completed_sessions_for_psychologist(
+    db: AsyncSession,
+    psychologist_id: UUID,
+    settings: BaseAppSettings,
+    now: datetime
+) -> list[Booking]:
+    now = now - timedelta(minutes=settings.SESSION_DURATION_MIN)
+    statement = (
+        select(Booking)
+        .where(
+            Booking.selected_time < now,
+            Booking.psychologist_id == psychologist_id,
+            Booking.status.in_(SESSION_STATUSES),
+        )
+        .options(
+            selectinload(Booking.psychologist).selectinload(
+                Psychologist.psychologist_specializations
+            ),
+            selectinload(Booking.client)
+            .selectinload(User.user_symptom_codes)
+        )
+        .order_by(Booking.selected_time.desc())
+    )
+
+    result = await db.execute(statement)
+    bookings = list(result.scalars().all())
+
+    for booking in bookings:
+        set_meet_link(booking)
+
+    return bookings
+
+
 async def get_scheduled_sessions_for_user(
     db: AsyncSession,
     current_user: User,

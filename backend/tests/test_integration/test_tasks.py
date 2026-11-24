@@ -9,12 +9,14 @@ from database.models.models import (
     PaymentStatus,
     Psychologist,
     PsychologistStatus,
+    SymptomCode,
 )
 from exceptions.payments import PaymentProviderError
 from payment_provider.payment_types import PayoutStatus
 from services.booking_service import (
     complete_session_with_psychologist,
     expire_pending_bookings,
+    mark_completed,
 )
 from services.payment_service import payout_service
 
@@ -178,6 +180,118 @@ async def test_complete_ignores_other_statuses(
     )
 
     assert count == 0
+
+
+async def test_complete_stores_request_snapshot(
+    client_user, psychologist, make_paid_booking, set_user_symptoms,
+    db_session, reload, settings,
+):
+    await set_user_symptoms(client_user, [SymptomCode.STRESS, SymptomCode.ANXIETY])
+    now = datetime.now(timezone.utc)
+    booking = await make_paid_booking(
+        client_user, psychologist,
+        selected_time=now - timedelta(minutes=settings.SESSION_DURATION_MIN + 1),
+    )
+
+    await complete_session_with_psychologist(
+        db=db_session, now=now, session_time_min=settings.SESSION_DURATION_MIN
+    )
+
+    await reload(booking)
+    assert sorted(booking.request) == ["anxiety", "stress"]
+
+
+async def test_complete_request_snapshot_is_empty_without_symptoms(
+    client_user, psychologist, make_paid_booking, db_session, reload, settings
+):
+    now = datetime.now(timezone.utc)
+    booking = await make_paid_booking(
+        client_user, psychologist,
+        selected_time=now - timedelta(minutes=settings.SESSION_DURATION_MIN + 1),
+    )
+
+    await complete_session_with_psychologist(
+        db=db_session, now=now, session_time_min=settings.SESSION_DURATION_MIN
+    )
+
+    await reload(booking)
+    assert booking.request == []
+
+
+async def test_request_snapshot_does_not_follow_later_symptom_changes(
+    client_user, psychologist, make_paid_booking, set_user_symptoms,
+    db_session, reload, settings,
+):
+    await set_user_symptoms(client_user, [SymptomCode.STRESS])
+    now = datetime.now(timezone.utc)
+    booking = await make_paid_booking(
+        client_user, psychologist,
+        selected_time=now - timedelta(minutes=settings.SESSION_DURATION_MIN + 1),
+    )
+    await complete_session_with_psychologist(
+        db=db_session, now=now, session_time_min=settings.SESSION_DURATION_MIN
+    )
+
+    await set_user_symptoms(client_user, [SymptomCode.GRIEF, SymptomCode.SLEEP])
+
+    await reload(booking)
+    assert booking.request == ["stress"]
+
+
+async def test_running_session_has_no_request_snapshot(
+    client_user, psychologist, make_paid_booking, set_user_symptoms,
+    db_session, reload, settings,
+):
+    await set_user_symptoms(client_user, [SymptomCode.STRESS])
+    now = datetime.now(timezone.utc)
+    booking = await make_paid_booking(
+        client_user, psychologist, selected_time=now - timedelta(minutes=10)
+    )
+
+    await complete_session_with_psychologist(
+        db=db_session, now=now, session_time_min=settings.SESSION_DURATION_MIN
+    )
+
+    await reload(booking)
+    assert booking.request is None
+
+
+async def test_mark_completed_stores_request_snapshot(
+    client_user, psychologist, make_paid_booking, set_user_symptoms,
+    db_session, reload,
+):
+    await set_user_symptoms(client_user, [SymptomCode.BURNOUT])
+    booking = await make_paid_booking(client_user, psychologist)
+
+    await mark_completed(
+        db=db_session, booking_id=booking.id,
+        completed_at=datetime.now(timezone.utc),
+    )
+
+    await reload(booking)
+    assert booking.status == BookingStatus.COMPLETED
+    assert booking.request == ["burnout"]
+
+
+async def test_mark_completed_keeps_existing_request_snapshot(
+    client_user, psychologist, make_paid_booking, set_user_symptoms,
+    db_session, reload,
+):
+    await set_user_symptoms(client_user, [SymptomCode.BURNOUT])
+    booking = await make_paid_booking(client_user, psychologist)
+    completed_at = datetime.now(timezone.utc)
+    await mark_completed(
+        db=db_session, booking_id=booking.id, completed_at=completed_at
+    )
+    await set_user_symptoms(client_user, [SymptomCode.ANGER])
+
+    await mark_completed(
+        db=db_session, booking_id=booking.id,
+        completed_at=completed_at + timedelta(hours=1),
+    )
+
+    await reload(booking)
+    assert booking.request == ["burnout"]
 
 
 async def completed_booking(make_paid_booking, client_user, psychologist, when, price):
