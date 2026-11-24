@@ -12,35 +12,16 @@ import { BackButton } from '../../components/UI/Buttons'
 import { ClientSessionsTable } from '../../components/Catalog/ClientSessionsTable'
 import { Footer } from '../../components/Footer'
 
-const previewClient = {
-    names: {
-        uk: 'Ангеліна Квіткова',
-        en: 'Anhelina Kvitkova',
-    },
-    email: 'deadpool@gmail.com',
-    avatarUrl: null,
-}
-
-const previewRequests: ClientRequest[] = [
-    { code: 'anxiety', isActive: true },
-    { code: 'stress' },
-    { code: 'relationship' },
-    { code: 'low_mood' },
-    { code: 'self_esteem' },
-    { code: 'burnout' },
-]
-
 export const ClientCabinetPage = () => {
-    const { t, i18n } = useTranslation('clientCabinet')
+    const { t } = useTranslation('clientCabinet')
     const navigate = useNavigate()
 
-    const { data: profile } = useClientProfileQuery()
+    const { data: profile, isLoading, isError, refetch } = useClientProfileQuery()
 
-    const language = i18n.resolvedLanguage?.startsWith('en') ? 'en' : 'uk'
-
-    const name = profile ? profile.name : previewClient.names[language]
-    const avatarUrl = profile ? profile.avatar_url : previewClient.avatarUrl
-    const email = profile ? profile.email : previewClient.email
+    const requests: ClientRequest[] = (profile?.topics ?? []).map((code) => ({
+        code,
+        isActive: true,
+    }))
 
     return (
         <div className="client-cabinet-page">
@@ -53,13 +34,27 @@ export const ClientCabinetPage = () => {
                     <h1 className="client-cabinet-page__title">{t('title')}</h1>
 
                     <div className="client-cabinet-page__sections">
-                        <ClientProfileCard
-                            name={name}
-                            email={email}
-                            avatarUrl={avatarUrl}
-                            requests={previewRequests}
-                            onEditProfile={() => navigate('/cabinet/settings')}
-                        />
+                        {isLoading && !profile && <p role="status">{t('profile.loading')}</p>}
+
+                        {isError && (
+                            <div role="alert">
+                                <p>{t('profile.loadError')}</p>
+                                <button type="button" onClick={() => void refetch()}>
+                                    {t('profile.retry')}
+                                </button>
+                            </div>
+                        )}
+
+                        {profile && !isError && (
+                            <ClientProfileCard
+                                name={profile.name}
+                                email={profile.email}
+                                telegram={profile.telegram}
+                                avatarUrl={profile.avatar_url}
+                                requests={requests}
+                                onEditProfile={() => navigate('/cabinet/settings')}
+                            />
+                        )}
 
                         <ClientSessionsTable />
                     </div>

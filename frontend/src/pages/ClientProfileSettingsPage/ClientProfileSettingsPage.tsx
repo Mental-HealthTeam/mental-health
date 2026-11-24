@@ -13,24 +13,24 @@ import { Header } from '../../components/Header'
 import { Footer } from '../../components/Footer'
 
 import {
-    useMeQuery,
     useUpdateProfileMutation,
     useUploadAvatarMutation,
     useDeleteAvatarMutation,
 } from '../../services/authApi'
-import type { UserPublic } from '../../types/auth'
+import { useClientProfileQuery } from '../../services/clientCabinetApi'
+import type { UserProfile } from '../../types/auth'
 
 import './ClientProfileSettingsPage.scss'
 
 type ProfileEditorProps = {
-    user: UserPublic
+    user: UserProfile
 }
 
-const getInitialValues = (user: UserPublic): ClientProfileValues => ({
+const getInitialValues = (user: UserProfile): ClientProfileValues => ({
     name: user.name ?? '',
     email: user.email,
-    telegram: '',
-    topics: [],
+    telegram: user.telegram ?? '',
+    topics: user.topics ?? [],
     notifications: false,
 })
 
@@ -89,6 +89,8 @@ const ProfileEditor = ({ user }: ProfileEditorProps) => {
     const handleSubmit = async (values: ClientProfileSubmit) => {
         await updateProfile({
             name: values.name,
+            telegram: values.telegram.trim() || null,
+            topics: values.topics,
         }).unwrap()
 
         if (values.avatarFile) {
@@ -99,13 +101,12 @@ const ProfileEditor = ({ user }: ProfileEditorProps) => {
 
         allowLeaveRef.current = true
         setIsDirty(false)
+
         navigate('/cabinet', { replace: true })
     }
 
     return (
         <>
-            <p className="client-profile-settings-page__notice">{t('supportedFieldsNotice')}</p>
-
             <ClientProfileForm
                 initialValues={getInitialValues(initialProfile)}
                 avatarUrl={initialProfile.avatar_url}
@@ -119,7 +120,7 @@ const ProfileEditor = ({ user }: ProfileEditorProps) => {
 export const ClientProfileSettingsPage = () => {
     const { t } = useTranslation('clientProfileSettings')
 
-    const { data: user, isLoading, isError } = useMeQuery()
+    const { data: user, isLoading, isError } = useClientProfileQuery()
 
     return (
         <div className="client-profile-settings-page">

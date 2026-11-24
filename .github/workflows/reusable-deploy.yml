@@ -63,12 +63,21 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
 
           script: |
+            sudo bash -se <<'DEPLOY'
+            set -e
+            
             cd /opt/mental-health/mental-health
             
             DEPLOY_SHA="${{ github.sha }}"
 
-            git fetch origin develop
+            if [ "${{ inputs.environment }}" = "prod" ]; then
+              git fetch origin main
+            else
+              git fetch origin develop
+            fi
             git checkout --detach "$DEPLOY_SHA"
+            
+            sed -i "s/^IMAGE_TAG=.*/IMAGE_TAG=$DEPLOY_SHA/" .env
 
             export IMAGE_TAG="$DEPLOY_SHA"
 
@@ -89,3 +98,7 @@ jobs:
               echo "Monitoring started."
             
             fi
+            
+            echo "Deployment completed."
+            
+            DEPLOY
