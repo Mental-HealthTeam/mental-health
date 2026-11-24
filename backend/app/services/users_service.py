@@ -66,17 +66,22 @@ async def update_user_profile_service(
             )
     if "telegram" in changes:
         telegram = changes.pop("telegram")
-        stmt = select(User).where(
-            User.telegram == telegram
-        )
-        result = await db.execute(stmt)
-        is_taken = result.scalar_one_or_none() is not None
-        if is_taken:
-            raise AppError(
-                status.HTTP_409_CONFLICT,
-                "TELEGRAM_ALREADY_TAKEN",
-                "This Telegram username is already used by another account.",
+        if telegram:
+            stmt = select(User).where(
+                User.telegram == telegram
             )
+            result = await db.execute(stmt)
+            user = result.scalar_one_or_none()
+            is_taken = user is not None
+            if (
+                is_taken
+                and user != current_user
+            ):
+                raise AppError(
+                    status.HTTP_409_CONFLICT,
+                    "TELEGRAM_ALREADY_TAKEN",
+                    "This Telegram username is already used by another account.",
+                )
         current_user.telegram = telegram
     for field, value in changes.items():
         setattr(current_user, field, value)
