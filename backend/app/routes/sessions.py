@@ -235,7 +235,7 @@ async def read_user_scheduled_sessions(
     )
 
     items = [
-        SessionPsychologistResponseList.model_validate(
+        SessionResponse.model_validate(
             {
                 "id": booking.id,
                 "selected_time": booking.selected_time,
