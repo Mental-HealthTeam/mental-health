@@ -50,18 +50,37 @@
   }
 
   &__header {
-    position: relative;
-    padding: 32px 32px 0;
+    display: grid;
+    gap: 4px;
+    padding: 8px;
   }
 
-  &__title {
+  &__close-row {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .modal__close-row > .modal__close {
+    position: static;
+    display: grid;
+    place-items: center;
+    box-sizing: border-box;
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+    min-height: 36px;
+    padding: 0;
+  }
+
+  &__header > &__title {
     margin: 0;
-    padding-right: 44px;
+    padding-inline: 12px;
 
     font-size: a.$font-size-h4;
     font-weight: a.$font-weight-h4;
     line-height: a.$line-height-h4;
     letter-spacing: a.$letter-spacing-h4;
+    text-align: center;
 
     overflow-wrap: anywhere;
 
@@ -70,20 +89,9 @@
     }
   }
 
-  &__close {
-    position: absolute;
-    top: 24px;
-    right: 24px;
-  }
-
   @media (max-width: 479px) {
     &__header {
-      padding: 24px 20px 0;
-    }
-
-    &__close {
-      top: 14px;
-      right: 10px;
+      padding-inline: 8px;
     }
   }
 

@@ -1,9 +1,8 @@
 import { useTranslation } from 'react-i18next'
 
+import type { SymptomCode } from '../../types/psychologist'
 import { Avatar } from '../UI/Avatar'
 import { OutlineButton } from '../UI/Buttons'
-
-import type { SymptomCode } from '../../types/psychologist'
 
 import './ClientProfileCard.scss'
 
@@ -75,12 +74,12 @@ export const ClientProfileCard = ({
                         <ul className="client-profile-card__tags">
                             {requests.map(({ code, isActive }) => (
                                 <li
+                                    key={code}
                                     className={
                                         isActive
                                             ? 'client-profile-card__tag client-profile-card__tag--active'
                                             : 'client-profile-card__tag'
                                     }
-                                    key={code}
                                 >
                                     {t(`symptoms:${code}.title`)}
                                 </li>
@@ -94,7 +93,7 @@ export const ClientProfileCard = ({
                 </div>
 
                 <div className="client-profile-card__actions">
-                    <OutlineButton variant="secondary" onClick={onEditProfile}>
+                    <OutlineButton type="button" variant="secondary" onClick={onEditProfile}>
                         {t('clientCabinet:profile.edit')}
                     </OutlineButton>
                 </div>
