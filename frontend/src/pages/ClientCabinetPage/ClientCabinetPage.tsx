@@ -1,16 +1,17 @@
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
+import { AiChat } from '../../components/AiChat'
+import { ClientSessionsTable } from '../../components/Catalog/ClientSessionsTable'
+import { ClientProfileCard, type ClientRequest } from '../../components/ClientProfileCard'
+import { ClientProfileCardSkeleton } from '../../components/ClientProfileCard/ClientProfileCardSkeleton'
+import { Container } from '../../components/Container'
+import { Footer } from '../../components/Footer'
+import { Header } from '../../components/Header'
+import { BackButton } from '../../components/UI/Buttons'
 import { useClientProfileQuery } from '../../services/clientCabinetApi'
 
 import './ClientCabinetPage.scss'
-import { AiChat } from '../../components/AiChat'
-import { ClientProfileCard, type ClientRequest } from '../../components/ClientProfileCard'
-import { Header } from '../../components/Header'
-import { Container } from '../../components/Container'
-import { BackButton } from '../../components/UI/Buttons'
-import { ClientSessionsTable } from '../../components/Catalog/ClientSessionsTable'
-import { Footer } from '../../components/Footer'
 
 export const ClientCabinetPage = () => {
     const { t } = useTranslation('clientCabinet')
@@ -34,7 +35,7 @@ export const ClientCabinetPage = () => {
                     <h1 className="client-cabinet-page__title">{t('title')}</h1>
 
                     <div className="client-cabinet-page__sections">
-                        {isLoading && !profile && <p role="status">{t('profile.loading')}</p>}
+                        {isLoading && !profile && <ClientProfileCardSkeleton />}
 
                         {isError && (
                             <div role="alert">
@@ -47,6 +48,7 @@ export const ClientCabinetPage = () => {
 
                         {profile && !isError && (
                             <ClientProfileCard
+                                isLoading={false}
                                 name={profile.name}
                                 email={profile.email}
                                 telegram={profile.telegram}
@@ -56,7 +58,7 @@ export const ClientCabinetPage = () => {
                             />
                         )}
 
-                        <ClientSessionsTable />
+                        <ClientSessionsTable isLoading={isLoading} />
                     </div>
                 </Container>
             </main>

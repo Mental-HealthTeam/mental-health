@@ -1,10 +1,13 @@
 from datetime import datetime, timezone
 from uuid import UUID
 
+from fastapi import status
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from database.models.models import Booking, BookingStatus, Psychologist
+from exceptions.base import AppError
+from schemas.psychologist import MockSlot
 
 
 async def get_unavailable_slots(
@@ -84,3 +87,36 @@ async def get_nearest_available_slot(
     )
 
     return nearest_available_slot
+
+
+async def get_free_slots_for_psychologist(
+    db: AsyncSession,
+    psychologist_id: UUID
+) -> list[MockSlot]:
+    psychologist = await db.get(Psychologist, psychologist_id)
+    if psychologist is None:
+        raise AppError(
+            status.HTTP_404_NOT_FOUND,
+            "PSYCHOLOGIST_NOT_FOUND",
+            "Psychologist not found.",
+        )
+    taken_slots = await get_unavailable_slots(
+        db=db,
+        psychologist_ids=[psychologist_id]
+    )
+    free_slots_records = free_slots(
+        mock_slots=psychologist.mock_slots,
+        taken_slots=taken_slots,
+        psychologist_id=psychologist_id
+    )
+    free_slots_result = []
+    for free_slots_record in free_slots_records:
+        free_slots_record = (
+            datetime.fromisoformat(free_slots_record)
+            .astimezone(timezone.utc)
+        )
+        free_slots_result.append(MockSlot(time=free_slots_record))
+
+    free_slots_result.sort(key=lambda slot: slot.time)
+
+    return free_slots_result

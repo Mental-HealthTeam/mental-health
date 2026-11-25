@@ -33,6 +33,25 @@
     }
   }
 
+  &__topic-skeleton {
+    display: flex;
+
+    > .skeleton {
+      max-width: 100%;
+    }
+  }
+
+  &__topics-loading {
+    position: absolute;
+
+    width: 1px;
+    height: 1px;
+
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
   &__topics-error {
     display: flex;
     flex-direction: column;

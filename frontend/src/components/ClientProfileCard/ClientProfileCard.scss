@@ -12,6 +12,20 @@
   border-radius: 24px;
   background-color: a.$color-background;
 
+  &__skeleton.skeleton {
+    display: block;
+    height: clamp(360px, 90vw, 520px);
+  }
+
+  &__loading-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
   &__photo {
     width: 100%;
     aspect-ratio: 1.23;
@@ -157,6 +171,10 @@
 
   @media (min-width: 768px) {
     grid-template-columns: minmax(220px, 30%) minmax(0, 1fr);
+
+    &__skeleton.skeleton {
+      height: 340px;
+    }
 
     &__photo {
       height: 100%;

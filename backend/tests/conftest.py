@@ -8,6 +8,7 @@ import pytest
 import pytest_asyncio
 from httpx import ASGITransport, AsyncClient
 from PIL import Image
+from sqlalchemy import delete
 
 from auth.dependencies import get_google_provider
 from auth.token_manager import JWTAuthManager
@@ -36,6 +37,7 @@ from database.models.models import (
     SymptomCode,
     User,
     UserRole,
+    UserSymptomCode,
 )
 from main import app
 from payment_provider.factory import build_payment_provider, clear_provider_cache
@@ -261,6 +263,20 @@ async def admin_user(make_user):
 @pytest.fixture
 def client_headers(client_user, auth_headers):
     return auth_headers(client_user)
+
+
+@pytest.fixture
+def set_user_symptoms(db_session):
+    """set_user_symptoms(user, [SymptomCode.STRESS]) -> replaces the user's symptom codes."""
+    async def _set(user: User, codes: list[SymptomCode]) -> None:
+        await db_session.execute(
+            delete(UserSymptomCode).where(UserSymptomCode.user_id == user.id)
+        )
+        db_session.add_all(
+            UserSymptomCode(user_id=user.id, symptom_code=code) for code in codes
+        )
+        await db_session.commit()
+    return _set
 
 
 @pytest.fixture

@@ -9,6 +9,7 @@ import { ApiErrorResolver, type BookingCancellationErrorKey } from '../../../uti
 import { Avatar } from '../../UI/Avatar'
 import { OutlineButton, PrimaryButton, SaveButton, TagButton } from '../../UI/Buttons'
 import { CancelSessionModal } from './CancelSessionModal'
+import { ClientSessionsTableSkeleton } from './ClientSessionsTableSkeleton'
 import { SessionDetailsModal } from './SessionDetailsModal'
 
 import './ClientSessionsTable.scss'
@@ -67,6 +68,9 @@ export const ClientSessionsTable = ({ onJoinSession }: Props) => {
         refetchOnMountOrArgChange: true,
     })
     const [cancelBooking, { isLoading: isCancelling }] = useCancelBookingMutation()
+
+    const showSkeleton = isFetching && !currentData
+    const showLoadError = isError && !currentData && !isFetching
 
     const [activeFilter, setActiveFilter] = useState<Filter>('scheduled')
     const [savedIds, setSavedIds] = useState<string[]>([])
@@ -250,7 +254,7 @@ export const ClientSessionsTable = ({ onJoinSession }: Props) => {
     }
 
     return (
-        <section className="client-sessions-table" aria-busy={isFetching}>
+        <section className="client-sessions-table">
             <h2 className="client-sessions-table__title">{t('title')}</h2>
 
             <div
@@ -271,9 +275,17 @@ export const ClientSessionsTable = ({ onJoinSession }: Props) => {
                 ))}
             </div>
 
-            {isFetching && !currentData && <p role="status">{tApi('loading')}</p>}
+            {showSkeleton && (
+                <div
+                    className="client-sessions-table__scroll"
+                    role="status"
+                    aria-label={tApi('loading')}
+                >
+                    <ClientSessionsTableSkeleton />
+                </div>
+            )}
 
-            {isError && !currentData && (
+            {showLoadError && (
                 <div role="alert">
                     <p>{tApi('sessionsError')}</p>
                     <OutlineButton type="button" variant="secondary" onClick={() => void refetch()}>
@@ -288,6 +300,7 @@ export const ClientSessionsTable = ({ onJoinSession }: Props) => {
                     className="client-sessions-table__scroll"
                     role="region"
                     aria-label={t('listLabel')}
+                    aria-busy={isFetching}
                     tabIndex={0}
                 >
                     <table className="client-sessions-table__table">
@@ -405,6 +418,7 @@ export const ClientSessionsTable = ({ onJoinSession }: Props) => {
                                             ) : isScheduled ? (
                                                 <div className="client-sessions-table__actions">
                                                     <PrimaryButton
+                                                        type="button"
                                                         className="client-sessions-table__join"
                                                         onClick={() => openSessionDetails(session)}
                                                     >

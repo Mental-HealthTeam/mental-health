@@ -18,16 +18,14 @@ export const ArrowButton = ({
     ariaLabel,
     className,
     onClick,
-}: Props) => {
-    return (
-        <button
-            className={classNames('arrow-button', className)}
-            type="button"
-            disabled={disabled}
-            aria-label={ariaLabel}
-            onClick={onClick}
-        >
-            <ArrowIcon direction={direction} />
-        </button>
-    )
-}
+}: Props) => (
+    <button
+        className={classNames('arrow-button', `arrow-button--${direction}`, className)}
+        type="button"
+        disabled={disabled}
+        aria-label={ariaLabel}
+        onClick={onClick}
+    >
+        <ArrowIcon direction={direction} />
+    </button>
+)

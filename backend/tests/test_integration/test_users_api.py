@@ -13,6 +13,7 @@ from database.models.models import (
     UserSymptomCode,
 )
 
+
 ME = "/api/users/me"
 AVATAR = "/api/users/me/avatar"
 
@@ -94,6 +95,22 @@ async def test_update_profile_blank_telegram_becomes_none(
     client, client_user, client_headers, db_session, value
 ):
     client_user.telegram = "old_name"
+    await db_session.commit()
+
+    response = await client.patch(
+        ME, json={"telegram": value}, headers=client_headers
+    )
+
+    assert response.status_code == 200
+    assert response.json()["telegram"] is None
+
+
+@pytest.mark.parametrize("value", [None])
+async def test_update_profile_none_telegram(
+    client, client_user, client_headers, db_session, value, make_user
+):
+    client_user.telegram = "old_name"
+    await make_user()
     await db_session.commit()
 
     response = await client.patch(

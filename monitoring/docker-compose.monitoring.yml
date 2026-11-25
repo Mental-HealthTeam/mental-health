@@ -56,7 +56,7 @@ services:
     mem_limit: 128m
 
   cadvisor:
-    image: gcr.io/cadvisor/cadvisor:v0.52.1
+    image: ghcr.io/google/cadvisor:v0.60.6
     container_name: mental-health-cadvisor
     restart: unless-stopped
     privileged: true
