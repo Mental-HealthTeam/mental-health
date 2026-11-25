@@ -2,11 +2,13 @@ import { useTranslation } from 'react-i18next'
 
 import { useGetPsychologistsQuery } from '../../../services/psychologistsApi'
 
-import { SpecialistCard } from '../../SpecialistCard'
+import { SpecialistCard, SpecialistCardSkeleton } from '../../SpecialistCard'
 import { OutlineButton } from '../../UI/Buttons'
 import { ArrowIcon } from '../../UI/Icons'
 
 import type { CatalogQuery } from '../catalog.types'
+
+const SKELETON_COUNT = 6
 
 type Props = {
     params: CatalogQuery
@@ -33,27 +35,33 @@ export const CatalogResultsPage = ({ params, limit, offset, isLast, onLoadMore }
     const visiblePsychologists = psychologists?.slice(0, limit)
     const hasMore = (psychologists?.length ?? 0) > limit
 
+    const showSkeleton = isFetching && !psychologists
+
     return (
         <>
             {visiblePsychologists?.map((psychologist) => (
                 <SpecialistCard key={psychologist.psychologist_id} {...psychologist} />
             ))}
 
-            {isFetching && (
-                <p className="catalog-results__status catalog-results__wide" role="status">
-                    {t('loading')}
-                </p>
+            {showSkeleton && (
+                <div
+                    className="catalog-results__skeleton-grid catalog-results__wide"
+                    role="status"
+                    aria-label={t('loading')}
+                >
+                    {Array.from({ length: Math.min(limit, SKELETON_COUNT) }, (_, index) => (
+                        <SpecialistCardSkeleton key={index} />
+                    ))}
+                </div>
             )}
 
-            {isError && (
+            {isError && !isFetching && (
                 <div className="catalog-results__feedback catalog-results__wide">
                     <p className="catalog-results__error" role="alert">
                         {t('loadError')}
                     </p>
 
-                    <OutlineButton disabled={isFetching} onClick={() => void refetch()}>
-                        {t('retry')}
-                    </OutlineButton>
+                    <OutlineButton onClick={() => void refetch()}>{t('retry')}</OutlineButton>
                 </div>
             )}
 

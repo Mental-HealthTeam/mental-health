@@ -1,14 +1,19 @@
 import { useId, useState } from 'react'
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
 
 import { useGetSymptomCodesQuery } from '../../../services/psychologistsApi.ts'
 import type { SymptomCode } from '../../../types/psychologist.ts'
 
-import { OutlineButton, PrimaryButton, TagButton } from '../../UI/Buttons'
+import { OutlineButton, PrimaryButton, TagButton, TagButtonSkeleton } from '../../UI/Buttons'
 import { ArrowIcon } from '../../UI/Icons'
+import { TimeSlot } from '../../UI/TimeSlot'
 
 import './CatalogFilters.scss'
-import { TimeSlot } from '../../UI/TimeSlot'
+
+const TOPIC_SKELETON_WIDTHS = [
+    56, 143, 125, 123, 74, 154, 137, 191, 187, 174, 64, 92, 135, 197, 133, 192, 185, 123,
+]
 
 export type CatalogFilterValues = {
     topics: SymptomCode[]
@@ -32,10 +37,13 @@ export const CatalogFilters = ({ onApply }: Props) => {
     const { t } = useTranslation('catalog')
     const { t: tSymptoms } = useTranslation('symptoms')
     const id = useId()
+    const prefersReducedMotion = useReducedMotion()
 
     const [values, setValues] = useState(createEmptyFilters)
 
     const { data: topics = [], isLoading, isError, isFetching, refetch } = useGetSymptomCodesQuery()
+
+    const showTopicSkeletons = isLoading && !isError
 
     const hasPriceError =
         values.minPrice !== '' &&
@@ -63,30 +71,59 @@ export const CatalogFilters = ({ onApply }: Props) => {
             <fieldset className="catalog-filters__group">
                 <legend className="catalog-filters__label">{t('topic')}</legend>
 
-                <div className="catalog-filters__options">
-                    <TagButton
-                        isSelected={values.topics.length === 0}
-                        onClick={() => setValues((previous) => ({ ...previous, topics: [] }))}
-                    >
-                        {t('all')}
-                    </TagButton>
+                <span className="catalog-filters__loading-label" role="status">
+                    {showTopicSkeletons ? t('topicsLoading') : ''}
+                </span>
 
-                    {topics.map((code) => (
-                        <TagButton
-                            key={code}
-                            isSelected={values.topics.includes(code)}
-                            onClick={() => toggleTopic(code)}
+                <AnimatePresence initial={false} mode="wait">
+                    {showTopicSkeletons ? (
+                        <motion.div
+                            key="topic-skeletons"
+                            className="catalog-filters__options catalog-filters__topic-skeletons"
+                            aria-hidden="true"
+                            exit={{
+                                opacity: 0,
+                                transition: {
+                                    duration: prefersReducedMotion ? 0 : 0.16,
+                                },
+                            }}
                         >
-                            {tSymptoms(`${code}.title` as const)}
-                        </TagButton>
-                    ))}
-                </div>
+                            {TOPIC_SKELETON_WIDTHS.map((width, index) => (
+                                <TagButtonSkeleton key={index} width={width} />
+                            ))}
+                        </motion.div>
+                    ) : (
+                        <motion.div
+                            key="topic-buttons"
+                            className="catalog-filters__options"
+                            initial={prefersReducedMotion ? false : { opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{
+                                duration: prefersReducedMotion ? 0 : 0.4,
+                                ease: 'easeOut',
+                            }}
+                        >
+                            <TagButton
+                                isSelected={values.topics.length === 0}
+                                onClick={() =>
+                                    setValues((previous) => ({ ...previous, topics: [] }))
+                                }
+                            >
+                                {t('all')}
+                            </TagButton>
 
-                {isLoading && (
-                    <p className="catalog-filters__message" role="status">
-                        {t('topicsLoading')}
-                    </p>
-                )}
+                            {topics.map((code) => (
+                                <TagButton
+                                    key={code}
+                                    isSelected={values.topics.includes(code)}
+                                    onClick={() => toggleTopic(code)}
+                                >
+                                    {tSymptoms(`${code}.title` as const)}
+                                </TagButton>
+                            ))}
+                        </motion.div>
+                    )}
+                </AnimatePresence>
 
                 {isError && (
                     <div className="catalog-filters__feedback">
