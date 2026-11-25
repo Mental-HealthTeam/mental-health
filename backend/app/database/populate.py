@@ -166,6 +166,18 @@ def populate_psychologists() -> None:
                     existing.tax_id = entry["tax_id"]
                     existing.account_name = entry["account_name"]
                     existing.price_per_hour = entry["price_uah"]
+                    existing.experience_years = entry["experience_years"]
+                    existing.languages = entry["languages"]
+                    session.query(PsychologistSpecialization).filter_by(
+                        psychologist_id=user.id
+                    ).delete()
+                    for tag in entry["tags_symptoms"]:
+                        session.add(
+                            PsychologistSpecialization(
+                                psychologist_id=user.id,
+                                symptom_code=TAG_TO_SYMPTOM_CODE[tag],
+                            )
+                        )
                     refreshed += 1
                     continue
                 new_id = user.id
@@ -216,7 +228,7 @@ def populate_psychologists() -> None:
             created += 1
 
         session.commit()
-        print(f"Created {created} psychologists, refreshed mock_slots for {refreshed}.")
+        print(f"Created {created} psychologists, refreshed {refreshed}.")
 
 
 if __name__ == "__main__":

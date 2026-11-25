@@ -414,6 +414,9 @@ class Booking(Base):
     dispute_note: Mapped[str | None] = mapped_column(
         String(550)
     )
+    saved: Mapped[bool] = mapped_column(
+        default=False
+    )
 
     __table_args__ = (
         Index(
