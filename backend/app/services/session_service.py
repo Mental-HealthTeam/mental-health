@@ -7,6 +7,7 @@ from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
+from config.settings import BaseAppSettings
 from database.models.models import (
     Booking,
     BookingStatus,
@@ -32,9 +33,16 @@ PAID_STATUSES = {
 }
 
 
-def sort_all_sessions(now: datetime, session: Booking) -> int | float:
+def sort_all_sessions(
+        now: datetime,
+        session: Booking,
+        session_duration: int
+) -> int | float:
     result_score = abs(now - session.selected_time).total_seconds()
-    time_ended_session = session.selected_time.astimezone(timezone.utc) + timedelta(minutes=50)
+    time_ended_session = (
+        session.selected_time.astimezone(timezone.utc)
+        + timedelta(minutes=session_duration)
+    )
     if time_ended_session >= now:
         result_score -= COMPLETED_SESSION_OFFSET
     return result_score
@@ -116,12 +124,46 @@ async def get_sessions_for_psychologist(
     return bookings
 
 
+async def get_completed_sessions_for_psychologist(
+    db: AsyncSession,
+    psychologist_id: UUID,
+    settings: BaseAppSettings,
+    now: datetime
+) -> list[Booking]:
+    now = now - timedelta(minutes=settings.SESSION_DURATION_MIN)
+    statement = (
+        select(Booking)
+        .where(
+            Booking.selected_time < now,
+            Booking.psychologist_id == psychologist_id,
+            Booking.status.in_(SESSION_STATUSES),
+        )
+        .options(
+            selectinload(Booking.psychologist).selectinload(
+                Psychologist.psychologist_specializations
+            ),
+            selectinload(Booking.client)
+            .selectinload(User.user_symptom_codes)
+        )
+        .order_by(Booking.selected_time.desc())
+    )
+
+    result = await db.execute(statement)
+    bookings = list(result.scalars().all())
+
+    for booking in bookings:
+        set_meet_link(booking)
+
+    return bookings
+
+
 async def get_scheduled_sessions_for_user(
     db: AsyncSession,
     current_user: User,
-    now: datetime
+    now: datetime,
+    settings: BaseAppSettings
 ) -> list[Booking]:
-    now = now - timedelta(minutes=50)
+    now = now - timedelta(minutes=settings.SESSION_DURATION_MIN)
     stmt = select(Booking).where(
         Booking.selected_time >= now,
         Booking.client_id == current_user.id,
@@ -143,9 +185,10 @@ async def get_scheduled_sessions_for_user(
 async def get_completed_sessions_for_user(
     db: AsyncSession,
     current_user: User,
-    now: datetime
+    now: datetime,
+    settings: BaseAppSettings
 ) -> list[Booking]:
-    now = now - timedelta(minutes=50)
+    now = now - timedelta(minutes=settings.SESSION_DURATION_MIN)
     stmt = select(Booking).where(
         Booking.selected_time < now,
         Booking.client_id == current_user.id,
