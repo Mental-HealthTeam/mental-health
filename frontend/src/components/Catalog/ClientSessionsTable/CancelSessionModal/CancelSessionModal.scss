@@ -1,0 +1,29 @@
+@use '../../../../styles/abstracts' as a;
+
+.cancel-session-modal.modal {
+  width: min(360px, calc(100vw - 32px));
+}
+
+.cancel-session-modal {
+  .modal__title {
+    padding-inline: 28px;
+    text-align: center;
+  }
+
+  &__content {
+    display: grid;
+    gap: 8px;
+    padding: 16px 24px 24px;
+  }
+
+  &__message {
+    margin: 0 0 8px;
+    font-size: 14px;
+    text-align: center;
+  }
+
+  &__confirm.outline-button {
+    border-color: a.$color-error;
+    color: a.$color-error;
+  }
+}

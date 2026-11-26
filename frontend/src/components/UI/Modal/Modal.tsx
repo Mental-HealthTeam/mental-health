@@ -1,4 +1,4 @@
-import { useEffect, useId, useRef, useState } from 'react'
+import { useEffect, useId, useLayoutEffect, useRef, useState } from 'react'
 import type { AnimationEvent, MouseEvent, ReactNode } from 'react'
 import { createPortal } from 'react-dom'
 import classNames from 'classnames'
@@ -16,6 +16,54 @@ type Props = {
     onExited?: () => void
     className?: string
     closeDisabled?: boolean
+}
+
+const SCROLLBAR_GAP_PROPERTY = '--modal-scrollbar-gap'
+
+let scrollLockCount = 0
+let restorePageScroll: (() => void) | undefined
+
+const lockPageScroll = () => {
+    if (scrollLockCount === 0) {
+        const { body, documentElement } = document
+        const previousOverflow = body.style.overflow
+        const previousPaddingRight = body.style.paddingRight
+        const previousGap = body.style.getPropertyValue(SCROLLBAR_GAP_PROPERTY)
+        const previousGapPriority = body.style.getPropertyPriority(SCROLLBAR_GAP_PROPERTY)
+        const previousViewportWidth = documentElement.clientWidth
+        const currentPaddingRight = window.getComputedStyle(body).paddingRight
+
+        body.style.overflow = 'hidden'
+
+        const scrollbarGap = Math.max(0, documentElement.clientWidth - previousViewportWidth)
+        body.style.setProperty(SCROLLBAR_GAP_PROPERTY, `${scrollbarGap}px`)
+
+        if (scrollbarGap > 0) {
+            body.style.paddingRight = `calc(${currentPaddingRight} + ${scrollbarGap}px)`
+        }
+
+        restorePageScroll = () => {
+            body.style.overflow = previousOverflow
+            body.style.paddingRight = previousPaddingRight
+
+            if (previousGap) {
+                body.style.setProperty(SCROLLBAR_GAP_PROPERTY, previousGap, previousGapPriority)
+            } else {
+                body.style.removeProperty(SCROLLBAR_GAP_PROPERTY)
+            }
+        }
+    }
+
+    scrollLockCount += 1
+
+    return () => {
+        scrollLockCount -= 1
+
+        if (scrollLockCount === 0) {
+            restorePageScroll?.()
+            restorePageScroll = undefined
+        }
+    }
 }
 
 export const Modal = ({
@@ -43,6 +91,51 @@ export const Modal = ({
         callbacksRef.current = { onClose, onExited }
     }, [onClose, onExited])
 
+    useEffect(() => {
+        const frame = window.requestAnimationFrame(() => {
+            if (open) {
+                closingRef.current = false
+                userCloseRef.current = false
+                setIsClosing(false)
+                setIsPresent(true)
+            } else if (dialogRef.current?.open && !closingRef.current) {
+                closingRef.current = true
+                userCloseRef.current = false
+                setIsClosing(true)
+            }
+        })
+
+        return () => window.cancelAnimationFrame(frame)
+    }, [open])
+
+    useLayoutEffect(() => {
+        const dialog = dialogRef.current
+
+        if (!isPresent || !dialog) {
+            return
+        }
+
+        const previousFocus =
+            document.activeElement instanceof HTMLElement ? document.activeElement : null
+
+        const unlockPageScroll = lockPageScroll()
+
+        if (!dialog.open) {
+            dialog.showModal()
+        }
+
+        titleRef.current?.focus({ preventScroll: true })
+
+        return () => {
+            dialog.close()
+            unlockPageScroll()
+
+            if (previousFocus?.isConnected) {
+                previousFocus.focus({ preventScroll: true })
+            }
+        }
+    }, [isPresent])
+
     const finishClose = () => {
         if (!closingRef.current) {
             return
@@ -55,7 +148,6 @@ export const Modal = ({
         userCloseRef.current = false
 
         dialogRef.current?.close()
-
         setIsPresent(false)
         setIsClosing(false)
 
@@ -66,71 +158,14 @@ export const Modal = ({
         callbacks.onExited?.()
     }
 
-    const startClose = (initiatedByUser: boolean) => {
-        if (closingRef.current) {
+    const handleClose = () => {
+        if (closeDisabled || closingRef.current) {
             return
         }
 
         closingRef.current = true
-        userCloseRef.current = initiatedByUser
-
+        userCloseRef.current = true
         setIsClosing(true)
-    }
-
-    useEffect(() => {
-        const frame = window.requestAnimationFrame(() => {
-            if (open) {
-                closingRef.current = false
-                userCloseRef.current = false
-
-                setIsClosing(false)
-                setIsPresent(true)
-            } else if (dialogRef.current?.open && !closingRef.current) {
-                closingRef.current = true
-                userCloseRef.current = false
-
-                setIsClosing(true)
-            }
-        })
-
-        return () => {
-            window.cancelAnimationFrame(frame)
-        }
-    }, [open])
-
-    useEffect(() => {
-        const dialog = dialogRef.current
-
-        if (!isPresent || !dialog) {
-            return
-        }
-
-        const previousFocus =
-            document.activeElement instanceof HTMLElement ? document.activeElement : null
-
-        const previousOverflow = document.body.style.overflow
-
-        if (!dialog.open) {
-            dialog.showModal()
-            titleRef.current?.focus({ preventScroll: true })
-        }
-
-        document.body.style.overflow = 'hidden'
-
-        return () => {
-            dialog.close()
-            document.body.style.overflow = previousOverflow
-
-            if (previousFocus?.isConnected) {
-                previousFocus.focus({ preventScroll: true })
-            }
-        }
-    }, [isPresent])
-
-    const handleClose = () => {
-        if (!closeDisabled) {
-            startClose(true)
-        }
     }
 
     const handleBackdropClick = (event: MouseEvent<HTMLDialogElement>) => {
@@ -138,21 +173,24 @@ export const Modal = ({
             return
         }
 
-        const rect = event.currentTarget.getBoundingClientRect()
+        const { left, right, top, bottom } = event.currentTarget.getBoundingClientRect()
 
-        const isOutside =
-            event.clientX < rect.left ||
-            event.clientX > rect.right ||
-            event.clientY < rect.top ||
-            event.clientY > rect.bottom
-
-        if (isOutside) {
+        if (
+            event.clientX < left ||
+            event.clientX > right ||
+            event.clientY < top ||
+            event.clientY > bottom
+        ) {
             handleClose()
         }
     }
 
     const handleAnimationEnd = (event: AnimationEvent<HTMLDialogElement>) => {
-        if (event.target === event.currentTarget && event.animationName === 'modal-disappear') {
+        if (
+            event.target === event.currentTarget &&
+            event.animationName === 'modal-disappear' &&
+            !event.pseudoElement
+        ) {
             finishClose()
         }
     }
@@ -176,16 +214,18 @@ export const Modal = ({
             onAnimationEnd={handleAnimationEnd}
         >
             <header className="modal__header">
+                <div className="modal__close-row">
+                    <CloseButton
+                        className="modal__close"
+                        aria-label={closeLabel}
+                        disabled={closeDisabled || isClosing}
+                        onClick={handleClose}
+                    />
+                </div>
+
                 <h2 ref={titleRef} id={titleId} className="modal__title" tabIndex={-1}>
                     {title}
                 </h2>
-
-                <CloseButton
-                    className="modal__close"
-                    aria-label={closeLabel}
-                    disabled={closeDisabled || isClosing}
-                    onClick={handleClose}
-                />
             </header>
 
             {children}

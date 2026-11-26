@@ -1,341 +1,346 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { motion, useReducedMotion } from 'motion/react'
 import { useTranslation } from 'react-i18next'
+import { useDispatch } from 'react-redux'
 
-import { Avatar } from '../../UI/Avatar'
-import { OutlineButton, PrimaryButton, SaveButton, TagButton } from '../../UI/Buttons'
-
-import { type ClientSession, clientSessionsMock } from './clientSessions.mock'
+import { useCancelBookingMutation } from '../../../services/bookingsApi'
+import {
+    clientCabinetApi,
+    useClientSessionsQuery,
+    useSetSessionSavedMutation,
+    type ClientSessionsFilter,
+} from '../../../services/clientCabinetApi'
+import type { SessionBooking } from '../../../types/session'
+import { ApiErrorResolver, type BookingCancellationErrorKey } from '../../../utils/ApiErrorResolver'
+import { OutlineButton } from '../../UI/Buttons'
+import { CancelSessionModal } from './CancelSessionModal'
+import { ClientSessionFilters } from './ClientSessionFilters'
+import { ClientSessionRow } from './ClientSessionRow'
+import { ClientSessionsPagination } from './ClientSessionsPagination'
+import { ClientSessionsPanel } from './ClientSessionsPanel'
 import { ClientSessionsTableSkeleton } from './ClientSessionsTableSkeleton'
+import { formatSessionDateTime, getJoinUrl } from './clientSessionTime'
+import { SessionDetailsModal } from './SessionDetailsModal'
 
 import './ClientSessionsTable.scss'
 
-type Filter = 'all' | 'scheduled' | 'completed' | 'saved'
+const PAGE_SIZE = 5
+
+type SessionModal = 'details' | 'cancel'
+
+type CancellationError = {
+    messageKey: BookingCancellationErrorKey
+    retryBlocked: boolean
+}
 
 type Props = {
-    isLoading?: boolean
     onJoinSession?: (sessionId: string) => void
+    isLoading: boolean
 }
 
-const PAGE_SIZE = 5
-const JOIN_BEFORE_START_MS = 10 * 60 * 1000
-const SESSION_DURATION_MS = 50 * 60 * 1000
-
-const filters: Filter[] = ['all', 'scheduled', 'completed', 'saved']
-
-const getMeetingUrl = (value: string | null): string | null => {
-    if (!value) {
-        return null
-    }
-
-    try {
-        const url = new URL(value)
-
-        return url.protocol === 'https:' ? url.href : null
-    } catch {
-        return null
-    }
-}
-
-const canJoinSession = (session: ClientSession, now: number): boolean => {
-    if (session.status !== 'scheduled' || !getMeetingUrl(session.meetLink)) {
-        return false
-    }
-
-    const [day, month, year] = session.date.split('.').map(Number)
-    const [hours, minutes] = session.time.split(':').map(Number)
-    const startsAt = new Date(year, month - 1, day, hours, minutes).getTime()
-
-    return (
-        Number.isFinite(startsAt) &&
-        now >= startsAt - JOIN_BEFORE_START_MS &&
-        now < startsAt + SESSION_DURATION_MS
-    )
-}
-
-export const ClientSessionsTable = ({ isLoading = false, onJoinSession }: Props) => {
-    const { t, i18n } = useTranslation('clientCabinet', {
-        keyPrefix: 'sessionsTable',
-    })
-
+export const ClientSessionsTable = ({ onJoinSession, isLoading }: Props) => {
+    const dispatch = useDispatch()
+    const reduceMotion = Boolean(useReducedMotion())
+    const { t, i18n } = useTranslation('clientCabinet', { keyPrefix: 'sessionsTable' })
+    const { t: tApi } = useTranslation('clientCabinet', { keyPrefix: 'apiState' })
     const language = (i18n.resolvedLanguage ?? i18n.language).startsWith('en') ? 'en' : 'uk'
 
-    const [activeFilter, setActiveFilter] = useState<Filter>('scheduled')
-    const [sessions, setSessions] = useState<ClientSession[]>(clientSessionsMock)
+    const [activeFilter, setActiveFilter] = useState<ClientSessionsFilter>('scheduled')
     const [visibleCount, setVisibleCount] = useState(PAGE_SIZE)
     const [now, setNow] = useState(() => Date.now())
+    const [selectedSession, setSelectedSession] = useState<SessionBooking | null>(null)
+    const [sessionModal, setSessionModal] = useState<SessionModal>('details')
+    const [isModalOpen, setIsModalOpen] = useState(false)
+    const [confirmNoRefund, setConfirmNoRefund] = useState(false)
+    const [cancelError, setCancelError] = useState<CancellationError | null>(null)
+
+    const { currentData, isFetching, isError, refetch } = useClientSessionsQuery(activeFilter)
+    const [cancelBooking, { isLoading: isCancelling }] = useCancelBookingMutation()
+    const [
+        setSessionSaved,
+        { isLoading: isSavingSession, isError: hasSaveError, reset: resetSave },
+    ] = useSetSessionSavedMutation()
 
     const scrollRef = useRef<HTMLDivElement>(null)
     const nextRowIndexRef = useRef<number | null>(null)
+    const nextModalRef = useRef<SessionModal | null>(null)
+    const cancelInFlightRef = useRef(false)
 
-    const filteredSessions = sessions.filter((session) => {
-        if (activeFilter === 'all') {
-            return true
-        }
+    const showSkeleton = isFetching && !currentData
+    const showLoadError = isError && !currentData && !isFetching
+    const panelState = currentData ? 'table' : showLoadError ? 'error' : 'loading'
+    const sessions = currentData?.items ?? []
+    const visibleSessions = sessions.slice(0, visibleCount)
 
-        if (activeFilter === 'saved') {
-            return session.isSaved
-        }
-
-        return session.status === activeFilter
-    })
-
-    const visibleSessions = filteredSessions.slice(0, visibleCount)
-    const hasMoreSessions = visibleSessions.length < filteredSessions.length
+    const liveSession = sessions.find(
+        (session) => session.booking_id === selectedSession?.booking_id,
+    )
+    const modalSession = liveSession ?? selectedSession
+    const { date: modalDate, time: modalTime } = formatSessionDateTime(
+        modalSession?.selected_time,
+        language,
+    )
+    const modalJoinUrl = liveSession ? getJoinUrl(liveSession, now) : null
 
     useEffect(() => {
-        const timer = window.setInterval(() => {
-            setNow(Date.now())
-        }, 1000)
-
+        const timer = window.setInterval(() => setNow(Date.now()), 1000)
         return () => window.clearInterval(timer)
     }, [])
 
     useLayoutEffect(() => {
         const container = scrollRef.current
         const rowIndex = nextRowIndexRef.current
-
         nextRowIndexRef.current = null
 
-        if (!container || rowIndex === null) {
-            return
-        }
+        if (!container || rowIndex === null) return
 
-        const row = container.querySelectorAll<HTMLTableRowElement>('tbody tr')[rowIndex]
-
-        if (!row) {
-            return
-        }
+        const row = container.querySelectorAll('tbody tr')[rowIndex]
+        if (!row) return
 
         const headerHeight = container.querySelector('thead')?.getBoundingClientRect().height ?? 0
-
         const top =
             container.scrollTop +
             row.getBoundingClientRect().top -
             container.getBoundingClientRect().top -
             headerHeight
 
-        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-
         container.scrollTo({
             top: Math.max(0, top),
             behavior: reduceMotion ? 'instant' : 'smooth',
         })
-    }, [visibleCount])
+    }, [reduceMotion, visibleCount])
 
-    const changeFilter = (filter: Filter) => {
-        if (filter === activeFilter) {
-            return
-        }
+    const changeFilter = (filter: ClientSessionsFilter) => {
+        if (filter === activeFilter) return
 
+        if (hasSaveError) resetSave()
         nextRowIndexRef.current = null
         setActiveFilter(filter)
         setVisibleCount(PAGE_SIZE)
-
-        scrollRef.current?.scrollTo({
-            top: 0,
-            left: 0,
-            behavior: 'instant',
-        })
+        scrollRef.current?.scrollTo({ top: 0, left: 0, behavior: 'instant' })
     }
 
     const showMore = () => {
         nextRowIndexRef.current = visibleSessions.length
-        setVisibleCount((current) => current + PAGE_SIZE)
+        setVisibleCount((count) => count + PAGE_SIZE)
     }
 
-    const toggleSaved = (sessionId: string) => {
-        setSessions((current) =>
-            current.map((session) =>
-                session.id === sessionId ? { ...session, isSaved: !session.isSaved } : session,
-            ),
-        )
+    const handleSave = (bookingId: string, saved: boolean) => {
+        void setSessionSaved({ bookingId, saved })
     }
 
-    const handleJoin = (session: ClientSession) => {
-        if (!canJoinSession(session, now)) return
+    const openSessionDetails = (session: SessionBooking) => {
+        nextModalRef.current = null
+        setConfirmNoRefund(false)
+        setCancelError(null)
+        setSelectedSession(session)
+        setSessionModal('details')
+        setIsModalOpen(true)
+    }
 
-        const url = getMeetingUrl(session.meetLink)
+    const closeSessionModal = () => {
+        setIsModalOpen(false)
+    }
 
-        if (!url) return
+    const openCancelModal = () => {
+        if (!isModalOpen || cancelInFlightRef.current) return
 
-        window.open(url, '_blank', 'noopener,noreferrer')
-        onJoinSession?.(session.id)
+        setConfirmNoRefund(false)
+        setCancelError(null)
+        nextModalRef.current = 'cancel'
+        closeSessionModal()
+    }
+
+    const handleSessionModalExited = () => {
+        const nextModal = nextModalRef.current
+        nextModalRef.current = null
+
+        if (nextModal) {
+            setSessionModal(nextModal)
+            setIsModalOpen(true)
+            return
+        }
+
+        setSelectedSession(null)
+    }
+
+    const handleJoin = () => {
+        if (!liveSession || !modalJoinUrl) return
+
+        window.open(modalJoinUrl, '_blank', 'noopener,noreferrer')
+        onJoinSession?.(liveSession.booking_id)
+    }
+
+    const handleCancelSession = async () => {
+        if (
+            !selectedSession ||
+            !isModalOpen ||
+            cancelInFlightRef.current ||
+            cancelError?.retryBlocked
+        ) {
+            return
+        }
+
+        cancelInFlightRef.current = true
+
+        try {
+            await cancelBooking({
+                bookingId: selectedSession.booking_id,
+                confirmNoRefund,
+            }).unwrap()
+
+            closeSessionModal()
+            dispatch(clientCabinetApi.util.invalidateTags(['ClientSessions']))
+        } catch (error: unknown) {
+            const resolution = ApiErrorResolver.forBookingCancellation(error)
+
+            if (resolution.action === 'confirmNoRefund') {
+                setCancelError(null)
+                setConfirmNoRefund(true)
+            } else {
+                setCancelError({
+                    messageKey: resolution.messageKey,
+                    retryBlocked: resolution.retryBlocked,
+                })
+            }
+        } finally {
+            cancelInFlightRef.current = false
+        }
     }
 
     return (
         <section className="client-sessions-table">
             <h2 className="client-sessions-table__title">{t('title')}</h2>
 
-            <div
-                className="client-sessions-table__filters"
-                role="group"
-                aria-label={t('filtersLabel')}
+            <ClientSessionFilters activeFilter={activeFilter} onChange={changeFilter} />
+
+            <ClientSessionsPanel
+                panelKey={`${activeFilter}:${panelState}`}
+                reduceMotion={reduceMotion}
             >
-                {filters.map((filter) => (
-                    <TagButton
-                        key={filter}
-                        type="button"
-                        variant="black"
-                        isSelected={activeFilter === filter}
-                        onClick={() => changeFilter(filter)}
+                {hasSaveError && <p role="alert">{t('saveError')}</p>}
+
+                {showSkeleton && (
+                    <div
+                        className="client-sessions-table__scroll"
+                        role="status"
+                        aria-label={tApi('loading')}
                     >
-                        {t(`filters.${filter}`)}
-                    </TagButton>
-                ))}
-            </div>
+                        <ClientSessionsTableSkeleton />
+                    </div>
+                )}
 
-            <div
-                ref={scrollRef}
-                className="client-sessions-table__scroll"
-                role="region"
-                aria-label={t('listLabel')}
-                aria-busy={isLoading}
-                tabIndex={isLoading ? -1 : 0}
-            >
-                {isLoading ? (
-                    <ClientSessionsTableSkeleton />
-                ) : (
-                    <table className="client-sessions-table__table">
-                        <caption className="client-sessions-table__caption">
-                            {t(`filters.${activeFilter}`)}
-                        </caption>
+                {showLoadError && (
+                    <div role="alert">
+                        <p>{tApi('sessionsError')}</p>
+                        <OutlineButton
+                            type="button"
+                            variant="secondary"
+                            onClick={() => void refetch()}
+                        >
+                            {tApi('retry')}
+                        </OutlineButton>
+                    </div>
+                )}
 
-                        <thead>
-                            <tr>
-                                <th scope="col">{t('columns.status')}</th>
-                                <th scope="col">{t('columns.specialist')}</th>
-                                <th scope="col">{t('columns.date')}</th>
-                                <th scope="col">{t('columns.time')}</th>
-                                <th scope="col">{t('columns.actions')}</th>
-                                <th scope="col">
-                                    <span className="client-sessions-table__caption">
-                                        {t('columns.save')}
-                                    </span>
-                                </th>
-                            </tr>
-                        </thead>
+                {currentData && (
+                    <div
+                        ref={scrollRef}
+                        className="client-sessions-table__scroll"
+                        role="region"
+                        aria-label={t('listLabel')}
+                        aria-busy={isFetching}
+                        tabIndex={0}
+                    >
+                        <table className="client-sessions-table__table">
+                            <caption className="client-sessions-table__caption">
+                                {t(`filters.${activeFilter}`)}
+                            </caption>
 
-                        <tbody key={activeFilter}>
-                            {visibleSessions.map((session) => {
-                                const specialistName = session.specialistName[language]
-                                const canJoin = canJoinSession(session, now)
+                            <thead>
+                                <tr>
+                                    <th scope="col">{t('columns.status')}</th>
+                                    <th scope="col">{t('columns.specialist')}</th>
+                                    <th scope="col">{t('columns.date')}</th>
+                                    <th scope="col">{t('columns.time')}</th>
+                                    <th scope="col">{t('columns.actions')}</th>
+                                    <th scope="col">
+                                        <span className="client-sessions-table__caption">
+                                            {t('columns.save')}
+                                        </span>
+                                    </th>
+                                </tr>
+                            </thead>
 
-                                return (
-                                    <tr key={session.id} className="client-sessions-table__row">
-                                        <td>
-                                            <div className="client-sessions-table__status">
-                                                <span
-                                                    className="client-sessions-table__check"
-                                                    aria-hidden="true"
-                                                >
-                                                    <svg viewBox="0 0 16 16" fill="none">
-                                                        <path
-                                                            d="m4 8 2.5 2.5L12 5"
-                                                            stroke="currentColor"
-                                                            strokeWidth="2"
-                                                            strokeLinecap="round"
-                                                            strokeLinejoin="round"
-                                                        />
-                                                    </svg>
-                                                </span>
+                            <motion.tbody
+                                key={activeFilter}
+                                initial={reduceMotion ? false : { opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{ duration: reduceMotion ? 0 : 0.16, ease: 'easeOut' }}
+                            >
+                                {visibleSessions.map((session) => (
+                                    <ClientSessionRow
+                                        key={session.booking_id}
+                                        session={session}
+                                        now={now}
+                                        isLoading={isLoading}
+                                        saveDisabled={isSavingSession || isFetching}
+                                        showCompletedActions={activeFilter === 'completed'}
+                                        onOpenDetails={openSessionDetails}
+                                        onSave={handleSave}
+                                    />
+                                ))}
 
-                                                {t(`statuses.${session.status}`)}
-                                            </div>
-                                        </td>
-
-                                        <td>
-                                            <div className="client-sessions-table__specialist">
-                                                <Avatar
-                                                    src={session.avatarUrl}
-                                                    alt=""
-                                                    size="small"
-                                                    shape="circle"
-                                                    className="client-sessions-table__avatar"
-                                                />
-
-                                                <span>{specialistName}</span>
-                                            </div>
-                                        </td>
-
-                                        <td>
-                                            <span className="client-sessions-table__value">
-                                                {session.date}
-                                            </span>
-                                        </td>
-
-                                        <td>
-                                            <span className="client-sessions-table__value">
-                                                {session.time}
-                                            </span>
-                                        </td>
-
-                                        <td>
-                                            {session.status === 'scheduled' ? (
-                                                <div className="client-sessions-table__actions">
-                                                    <PrimaryButton
-                                                        type="button"
-                                                        className="client-sessions-table__join"
-                                                        disabled={!canJoin}
-                                                        onClick={() => handleJoin(session)}
-                                                    >
-                                                        {t('join')}
-                                                    </PrimaryButton>
-
-                                                    {!canJoin && (
-                                                        <span className="client-sessions-table__hint">
-                                                            {t('joinHint')}
-                                                        </span>
-                                                    )}
-                                                </div>
-                                            ) : (
-                                                <span className="client-sessions-table__hint">
-                                                    {t('completed')}
-                                                </span>
-                                            )}
-                                        </td>
-
-                                        <td>
-                                            <SaveButton
-                                                isSaved={session.isSaved}
-                                                aria-label={t(session.isSaved ? 'unsave' : 'save', {
-                                                    name: specialistName,
-                                                    date: session.date,
-                                                })}
-                                                onClick={() => toggleSaved(session.id)}
-                                            />
+                                {sessions.length === 0 && (
+                                    <tr>
+                                        <td colSpan={6} className="client-sessions-table__empty">
+                                            {t('empty')}
                                         </td>
                                     </tr>
-                                )
-                            })}
-
-                            {filteredSessions.length === 0 && (
-                                <tr>
-                                    <td colSpan={6} className="client-sessions-table__empty">
-                                        {t('empty')}
-                                    </td>
-                                </tr>
-                            )}
-                        </tbody>
-                    </table>
+                                )}
+                            </motion.tbody>
+                        </table>
+                    </div>
                 )}
-            </div>
 
-            {!isLoading && filteredSessions.length > 0 && (
-                <div className="client-sessions-table__pagination">
-                    <p className="client-sessions-table__count" role="status" aria-atomic="true">
-                        {t('shown', {
-                            visible: visibleSessions.length,
-                            total: filteredSessions.length,
-                        })}
-                    </p>
+                {sessions.length > 0 && (
+                    <ClientSessionsPagination
+                        visible={visibleSessions.length}
+                        total={sessions.length}
+                        onShowMore={showMore}
+                    />
+                )}
+            </ClientSessionsPanel>
 
-                    {hasMoreSessions && (
-                        <OutlineButton type="button" variant="secondary" onClick={showMore}>
-                            {t('showMore')}
-                        </OutlineButton>
-                    )}
-                </div>
-            )}
+            {modalSession &&
+                (sessionModal === 'details' ? (
+                    <SessionDetailsModal
+                        open={isModalOpen}
+                        isVerified={modalSession.psychologist.is_verified}
+                        name={modalSession.psychologist.full_name}
+                        avatarUrl={modalSession.psychologist.avatar_url}
+                        date={modalDate}
+                        time={modalTime}
+                        canJoin={Boolean(modalJoinUrl)}
+                        onJoin={handleJoin}
+                        onCancel={openCancelModal}
+                        onClose={closeSessionModal}
+                        onExited={handleSessionModalExited}
+                    />
+                ) : (
+                    <CancelSessionModal
+                        open={isModalOpen}
+                        date={modalDate}
+                        time={modalTime}
+                        confirmNoRefund={confirmNoRefund}
+                        isCancelling={isCancelling}
+                        error={cancelError ? t(cancelError.messageKey) : null}
+                        retryBlocked={cancelError?.retryBlocked ?? false}
+                        onConfirm={() => void handleCancelSession()}
+                        onClose={closeSessionModal}
+                        onExited={handleSessionModalExited}
+                    />
+                ))}
         </section>
     )
 }
