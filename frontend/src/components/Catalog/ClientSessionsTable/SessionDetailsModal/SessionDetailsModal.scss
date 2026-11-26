@@ -21,9 +21,20 @@
   }
 
   &__specialist {
-    display: flex;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
     align-items: center;
     gap: 12px;
+  }
+
+  &__identity {
+    display: grid;
+    justify-items: start;
+    gap: 4px;
+  }
+
+  &__name {
+    overflow-wrap: anywhere;
   }
 
   &__schedule {

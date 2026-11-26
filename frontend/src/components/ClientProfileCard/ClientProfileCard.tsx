@@ -46,6 +46,7 @@ export const ClientProfileCard = ({
         <section className="client-profile-card" aria-labelledby="client-profile-name">
             <div className="client-profile-card__photo">
                 <Avatar
+                    isLoading={isLoading}
                     src={avatarUrl}
                     alt={displayName}
                     shape="rectangle"

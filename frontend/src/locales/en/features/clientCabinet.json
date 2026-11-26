@@ -19,6 +19,7 @@
         "title": "My sessions",
         "filtersLabel": "Session filters",
         "listLabel": "Session list",
+        "saveError": "Could not update the bookmark. Please try again.",
         "modal": {
             "title": "Session details",
             "close": "Close",

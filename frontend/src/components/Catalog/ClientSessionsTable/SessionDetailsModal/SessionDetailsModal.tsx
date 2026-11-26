@@ -5,6 +5,7 @@ import { Avatar } from '../../../UI/Avatar'
 import { OutlineButton, PrimaryButton } from '../../../UI/Buttons'
 import { CalendarIcon, ClockCardIcon } from '../../../UI/Icons'
 import { Modal } from '../../../UI/Modal'
+import { VerifiedBadge } from '../../../UI/VerifiedBadge'
 
 import './SessionDetailsModal.scss'
 
@@ -47,7 +48,11 @@ export const SessionDetailsModal = ({
             <div className="session-details-modal__card">
                 <div className="session-details-modal__specialist">
                     <Avatar src={avatarUrl} alt="" size="large" shape="circle" />
-                    <strong>{name}</strong>
+
+                    <div className="session-details-modal__identity">
+                        <strong className="session-details-modal__name">{name}</strong>
+                        <VerifiedBadge />
+                    </div>
                 </div>
 
                 <div className="session-details-modal__schedule">
@@ -65,12 +70,11 @@ export const SessionDetailsModal = ({
                     />
                 </div>
 
-                <PrimaryButton type="button" disabled={!canJoin} onClick={onJoin}>
+                <PrimaryButton disabled={!canJoin} onClick={onJoin}>
                     {t('modal.join')}
                 </PrimaryButton>
 
                 <OutlineButton
-                    type="button"
                     variant="secondary"
                     className="session-details-modal__cancel"
                     onClick={onCancel}

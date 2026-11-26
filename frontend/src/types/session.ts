@@ -28,6 +28,7 @@ export type SessionBooking = {
     meet_link: string | null
     psychologist: SessionPsychologist
     client: SessionClient | null
+    saved: boolean
 }
 
 export type SessionsResponse = {
