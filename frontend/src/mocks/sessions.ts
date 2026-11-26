@@ -27,6 +27,7 @@ const PSYCHOLOGIST: SessionPsychologist = {
     full_name: 'Оксана Петренко',
     title: 'Клінічний психолог',
     avatar_url: avatar1,
+    is_verified: true,
 }
 
 const OLENA: SessionClient = {
