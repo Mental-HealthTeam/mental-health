@@ -10,6 +10,7 @@ import { VerifiedBadge } from '../../../UI/VerifiedBadge'
 import './SessionDetailsModal.scss'
 
 type Props = {
+    isVerified: boolean
     open: boolean
     name: string
     avatarUrl: string | null
@@ -23,6 +24,7 @@ type Props = {
 }
 
 export const SessionDetailsModal = ({
+    isVerified,
     open,
     name,
     avatarUrl,
@@ -51,7 +53,7 @@ export const SessionDetailsModal = ({
 
                     <div className="session-details-modal__identity">
                         <strong className="session-details-modal__name">{name}</strong>
-                        <VerifiedBadge />
+                        {isVerified && <VerifiedBadge />}
                     </div>
                 </div>
 

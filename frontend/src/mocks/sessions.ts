@@ -34,10 +34,22 @@ const OLENA: SessionClient = {
     name: 'Олена Колченовська Аліксоновська',
     avatar_url: avatar1,
 }
-const ANDRII: SessionClient = { id: uuid('c0000001', 2), name: 'Андрій Мельник', avatar_url: avatar2 }
-const MARYNA: SessionClient = { id: uuid('c0000001', 3), name: 'Марина Іваненко', avatar_url: avatar3 }
+const ANDRII: SessionClient = {
+    id: uuid('c0000001', 2),
+    name: 'Андрій Мельник',
+    avatar_url: avatar2,
+}
+const MARYNA: SessionClient = {
+    id: uuid('c0000001', 3),
+    name: 'Марина Іваненко',
+    avatar_url: avatar3,
+}
 const IRYNA: SessionClient = { id: uuid('c0000001', 4), name: 'Ірина Шевчук', avatar_url: avatar1 }
-const DMYTRO: SessionClient = { id: uuid('c0000001', 5), name: 'Дмитро Коваль', avatar_url: avatar2 }
+const DMYTRO: SessionClient = {
+    id: uuid('c0000001', 5),
+    name: 'Дмитро Коваль',
+    avatar_url: avatar2,
+}
 
 type BookingParams = {
     n: number
@@ -57,6 +69,7 @@ const booking = ({ n, offsetDays, hour, status, client }: BookingParams): Sessio
     meet_link: status === 'confirmed' ? `https://meet.google.com/mock-${n}` : null,
     psychologist: PSYCHOLOGIST,
     client,
+    saved: true,
 })
 
 let slotCounter = 0

@@ -316,6 +316,7 @@ export const ClientSessionsTable = ({ onJoinSession, isLoading }: Props) => {
                 (sessionModal === 'details' ? (
                     <SessionDetailsModal
                         open={isModalOpen}
+                        isVerified={modalSession.psychologist.is_verified}
                         name={modalSession.psychologist.full_name}
                         avatarUrl={modalSession.psychologist.avatar_url}
                         date={modalDate}

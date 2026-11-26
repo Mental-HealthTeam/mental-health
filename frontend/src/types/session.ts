@@ -10,6 +10,7 @@ export type SessionPsychologist = {
     full_name: string
     title: string
     avatar_url: string | null
+    is_verified: boolean
 }
 
 export type SessionClient = {
