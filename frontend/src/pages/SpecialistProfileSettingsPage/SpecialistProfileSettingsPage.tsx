@@ -20,8 +20,10 @@ import { useTranslation } from 'react-i18next'
 import type { SpecialistProfile, UpdateProfileBody } from '../../types/specialist'
 import { useBlocker, useNavigate } from 'react-router-dom'
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { useGetSpecialistMeQuery, useUpdateSpecialistProfileMutation } from '../../services/specialistProfileApi'
-import { localizeProfile } from '../../utils/localizeProfile'
+import {
+    useGetSpecialistMeQuery,
+    useUpdateSpecialistProfileMutation,
+} from '../../services/specialistProfileApi'
 
 type ProfileEditorProps = {
     specialist: SpecialistProfile
@@ -141,18 +143,22 @@ export const SpecialistProfileSettingsPage = () => {
         isError: isErrorPsychologist,
         isLoading: isLoadingPsychologist,
     } = useGetSpecialistMeQuery({ lang: i18n.language })
-    const { data: me } = useMeQuery()
 
-    const specialist = useMemo(() => {
+    const { data: me, isError: isErrorMe, isLoading: isLoadingMe } = useMeQuery()
+
+    const isError = isErrorPsychologist || isErrorMe
+    const isLoading = isLoadingPsychologist || isLoadingMe
+
+    const specialist = useMemo<SpecialistProfile | undefined>(() => {
         if (!profile || !me) return undefined
 
         return {
-            ...localizeProfile(profile, i18n.language),
+            ...profile,
             full_name: me.name ?? '',
             avatar_url: me.avatar_url,
             session_minutes: profile.session_minutes ?? 50,
         }
-    }, [profile, me, i18n.language])
+    }, [profile, me])
 
     return (
         <div className="specialist-profile-settings">
@@ -164,9 +170,9 @@ export const SpecialistProfileSettingsPage = () => {
 
                     <h1 className="specialist-profile-settings__title">{t('title')}</h1>
 
-                    {isLoadingPsychologist && !specialist && <p role="status">{t('loading')}</p>}
+                    {isLoading && !specialist && <p role="status">{t('loading')}</p>}
 
-                    {isErrorPsychologist && !specialist && <p role="alert">{t('loadError')}</p>}
+                    {isError && !specialist && <p role="alert">{t('loadError')}</p>}
 
                     {specialist && (
                         <ProfileEditor key={specialist.psychologist_id} specialist={specialist} />
