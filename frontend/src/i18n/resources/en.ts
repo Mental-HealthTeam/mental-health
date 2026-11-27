@@ -24,6 +24,7 @@ import login from '../../locales/en/features/login.json'
 import specialistCabinet from '../../locales/en/features/specialistCabinet.json'
 import clientCabinet from '../../locales/en/features/clientCabinet.json'
 import specialistProfileSettings from '../../locales/en/features/specialistProfileSettings.json'
+import paymentCancel from '../../locales/en/features/paymentCancel.json'
 
 export const enResources = {
     common,
@@ -51,4 +52,5 @@ export const enResources = {
     specialistCabinet,
     clientCabinet,
     specialistProfileSettings,
+    paymentCancel,
 } as const

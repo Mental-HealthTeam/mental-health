@@ -9,7 +9,6 @@ import { authApi, useLogoutMutation } from '../../services/authApi'
 import type { UserPublic } from '../../types/auth'
 
 import { Avatar } from '../UI/Avatar'
-import { AvatarPlaceholderIcon } from '../UI/Icons'
 
 import './UserMenu.scss'
 
@@ -104,7 +103,6 @@ export const UserMenu = ({ user, className, variant = 'full', noBackground = fal
                     alt=""
                     size="small"
                     className="user-menu__avatar"
-                    fallback={<AvatarPlaceholderIcon className="user-menu__avatar-icon" />}
                 />
 
                 <span className="user-menu__name">{user.name ?? user.email}</span>

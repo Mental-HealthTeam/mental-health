@@ -72,16 +72,21 @@ async def _complete_session_with_psychologist_task():
     settings = Settings()
     async with get_postgresql_db_contextmanager_celery_task() as db:
         now = datetime.now(timezone.utc)
-        count_bookings_completed = await complete_session_with_psychologist(
-            db=db,
-            now=now,
-            session_time_min=settings.SESSION_DURATION_MIN
-        )
-        logger.info(
-            "Session completion task: %s bookings completed",
-            count_bookings_completed,
-        )
-        return count_bookings_completed
+        try:
+            count_bookings_completed = await complete_session_with_psychologist(
+                db=db,
+                now=now,
+                session_time_min=settings.SESSION_DURATION_MIN
+            )
+        except SQLAlchemyError:
+            await db.rollback()
+            logger.exception("Session completion task failed")
+        else:
+            logger.info(
+                "Session completion task: %s bookings completed",
+                count_bookings_completed,
+            )
+            return count_bookings_completed
 
 
 @app.task

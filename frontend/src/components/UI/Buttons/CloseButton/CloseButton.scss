@@ -1,0 +1,53 @@
+@use '../../../../styles/abstracts' as a;
+
+.close-button {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+
+  margin: 0;
+  padding: 0;
+
+  border: 0;
+  border-radius: 50%;
+
+  background: transparent;
+  color: a.$color-optional;
+  cursor: pointer;
+
+  &--medium {
+    width: 44px;
+    height: 44px;
+  }
+
+  &--small {
+    width: 36px;
+    height: 36px;
+  }
+
+  &:hover:not(:disabled) {
+    background: a.$color-gray-0;
+  }
+
+  &:focus-visible {
+    outline: 2px solid a.$color-optional;
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+
+  svg {
+    display: block;
+    pointer-events: none;
+  }
+
+  @media (max-width: 479px) {
+    &--medium {
+      width: 36px;
+      height: 36px;
+    }
+  }
+}

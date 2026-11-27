@@ -1,10 +1,13 @@
 import { createApi } from '@reduxjs/toolkit/query/react'
 
 import { baseQueryWithReauth } from './baseQueryWithReauth'
-import type { UserPublic } from '../types/auth'
+import type { UserPublic, UserProfile } from '../types/auth'
+import type { SymptomCode } from '../types/psychologist'
 
 type UpdateProfileBody = {
     name: string
+    telegram?: string | null
+    topics?: SymptomCode[]
 }
 
 export const authApi = createApi({
@@ -18,7 +21,7 @@ export const authApi = createApi({
             providesTags: ['Me'],
         }),
 
-        updateProfile: builder.mutation<UserPublic, UpdateProfileBody>({
+        updateProfile: builder.mutation<UserProfile, UpdateProfileBody>({
             query: (body) => ({
                 url: '/users/me',
                 method: 'PATCH',

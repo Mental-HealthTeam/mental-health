@@ -1,10 +1,11 @@
-import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { AvatarFallbackIcon } from '../UI/Icons'
+
+import { Avatar } from '../UI/Avatar'
+import { OutlineButton } from '../UI/Buttons'
+
+import type { SymptomCode } from '../../types/psychologist'
 
 import './ClientProfileCard.scss'
-import type { SymptomCode } from '../../types/psychologist.ts'
-import { OutlineButton } from '../UI/Buttons'
 
 export type ClientRequest = {
     code: SymptomCode
@@ -14,41 +15,55 @@ export type ClientRequest = {
 type Props = {
     name: string | null
     email: string
+    telegram: string | null
     avatarUrl: string | null
     requests: ClientRequest[]
     onEditProfile: () => void
 }
 
-export const ClientProfileCard = ({ name, email, avatarUrl, requests, onEditProfile }: Props) => {
+export const ClientProfileCard = ({
+    name,
+    email,
+    telegram,
+    avatarUrl,
+    requests,
+    onEditProfile,
+}: Props) => {
     const { t } = useTranslation(['clientCabinet', 'symptoms'])
-    const [failedAvatarUrl, setFailedAvatarUrl] = useState<string | null>(null)
 
-    const hasAvatar = Boolean(avatarUrl) && avatarUrl !== failedAvatarUrl
+    const displayName = name?.trim() || t('clientCabinet:profile.defaultName')
+    const telegramUsername = telegram?.trim().replace(/^@/, '') || null
 
     return (
         <section className="client-profile-card" aria-labelledby="client-profile-name">
             <div className="client-profile-card__photo">
-                {hasAvatar && avatarUrl ? (
-                    <img
-                        className="client-profile-card__image"
-                        src={avatarUrl}
-                        alt=""
-                        onError={() => setFailedAvatarUrl(avatarUrl)}
-                    />
-                ) : (
-                    <span className="client-profile-card__fallback" aria-hidden="true">
-                        <AvatarFallbackIcon />
-                    </span>
-                )}
+                <Avatar
+                    src={avatarUrl}
+                    alt={displayName}
+                    shape="rectangle"
+                    fluid
+                    className="client-profile-card__avatar"
+                />
             </div>
 
             <div className="client-profile-card__content">
                 <div className="client-profile-card__identity">
                     <h2 className="client-profile-card__name" id="client-profile-name">
-                        {name?.trim() || t('clientCabinet:profile.defaultName')}
+                        {displayName}
                     </h2>
 
                     <p className="client-profile-card__email">{email}</p>
+
+                    {telegramUsername && (
+                        <a
+                            className="client-profile-card__telegram"
+                            href={`https://t.me/${telegramUsername}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            @{telegramUsername}
+                        </a>
+                    )}
                 </div>
 
                 <div className="client-profile-card__requests">

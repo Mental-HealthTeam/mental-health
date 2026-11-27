@@ -24,6 +24,8 @@ import catalog from '../../locales/uk/features/catalog.json'
 import specialistCabinet from '../../locales/uk/features/specialistCabinet.json'
 import clientCabinet from '../../locales/uk/features/clientCabinet.json'
 import specialistProfileSettings from '../../locales/uk/features/specialistProfileSettings.json'
+import paymentCancel from '../../locales/uk/features/paymentCancel.json'
+
 
 export const ukResources = {
     common,
@@ -51,4 +53,5 @@ export const ukResources = {
     specialistCabinet,
     clientCabinet,
     specialistProfileSettings,
+    paymentCancel,
 } as const

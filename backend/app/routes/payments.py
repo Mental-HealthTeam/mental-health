@@ -142,7 +142,7 @@ async def wayforpay_return(
             status_code=status.HTTP_303_SEE_OTHER
         )
     elif (
-        reason_code == 1125
+        reason_code in (1125, 1108)
     ):
         params = {"lang": lang.value}
         if order_reference:
@@ -167,6 +167,15 @@ async def wayforpay_return(
                 params["reason"] = "expired"
             url_target = (
                 f"{settings.CANCEL_PAYMENTS_REDIRECT}"
+                f"?{urlencode(params)}"
+            )
+            return RedirectResponse(
+                url=url_target,
+                status_code=status.HTTP_303_SEE_OTHER
+            )
+        else:
+            url_target = (
+                f"{settings.NO_ORDER_REFERENCE_REDIRECT}"
                 f"?{urlencode(params)}"
             )
             return RedirectResponse(

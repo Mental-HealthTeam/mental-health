@@ -40,6 +40,15 @@ from services.localization import pick
 logger = logging.getLogger(__name__)
 
 
+def snapshot_request(
+    booking: Booking
+) -> None:
+    booking.request = [
+        topic.symptom_code
+        for topic in booking.client.user_symptom_codes
+    ]
+
+
 async def create_booking(
         db: AsyncSession,
         settings: Settings,
@@ -156,7 +165,11 @@ async def create_booking(
 
     result = await db.execute(
         select(Booking)
-        .options(selectinload(Booking.psychologist))
+        .options(
+            selectinload(Booking.psychologist).selectinload(
+                Psychologist.psychologist_specializations
+            )
+        )
         .where(Booking.id == booking.id)
     )
     return result.scalar_one()
@@ -170,7 +183,11 @@ async def get_booking_for_user(
     """Return a booking to its client, its psychologist or an admin."""
     result = await db.execute(
         select(Booking)
-        .options(selectinload(Booking.psychologist))
+        .options(
+            selectinload(Booking.psychologist).selectinload(
+                Psychologist.psychologist_specializations
+            )
+        )
         .where(Booking.id == booking_id)
     )
     booking = result.scalar_one_or_none()
@@ -231,7 +248,11 @@ async def list_bookings_for_user(
 
     result = await db.execute(
         select(Booking)
-        .options(selectinload(Booking.psychologist))
+        .options(
+            selectinload(Booking.psychologist).selectinload(
+                Psychologist.psychologist_specializations
+            )
+        )
         .where(*filters)
         .order_by(Booking.selected_time.desc())
         .limit(limit)
@@ -318,7 +339,11 @@ async def mark_paid(
     ):
         result = await db.execute(
             select(Booking)
-            .options(selectinload(Booking.psychologist))
+            .options(
+            selectinload(Booking.psychologist).selectinload(
+                Psychologist.psychologist_specializations
+            )
+        )
             .where(Booking.id == booking_id)
         )
         return result.scalar_one()
@@ -360,7 +385,11 @@ async def mark_paid(
 
     result = await db.execute(
         select(Booking)
-        .options(selectinload(Booking.psychologist))
+        .options(
+            selectinload(Booking.psychologist).selectinload(
+                Psychologist.psychologist_specializations
+            )
+        )
         .where(Booking.id == booking_id)
     )
     return result.scalar_one()
@@ -413,7 +442,11 @@ async def mark_payment_failed(
 
     result = await db.execute(
         select(Booking)
-        .options(selectinload(Booking.psychologist))
+        .options(
+            selectinload(Booking.psychologist).selectinload(
+                Psychologist.psychologist_specializations
+            )
+        )
         .where(Booking.id == booking_id)
     )
     return result.scalar_one()
@@ -455,7 +488,11 @@ async def mark_cancelled(
 
         result = await db.execute(
             select(Booking)
-            .options(selectinload(Booking.psychologist))
+            .options(
+            selectinload(Booking.psychologist).selectinload(
+                Psychologist.psychologist_specializations
+            )
+        )
             .where(Booking.id == booking_id)
         )
         return result.scalar_one()
@@ -479,7 +516,11 @@ async def mark_cancelled(
 
     result = await db.execute(
         select(Booking)
-        .options(selectinload(Booking.psychologist))
+        .options(
+            selectinload(Booking.psychologist).selectinload(
+                Psychologist.psychologist_specializations
+            )
+        )
         .where(Booking.id == booking_id)
     )
     return result.scalar_one()
@@ -539,7 +580,11 @@ async def mark_disputed(
 
     result = await db.execute(
         select(Booking)
-        .options(selectinload(Booking.psychologist))
+        .options(
+            selectinload(Booking.psychologist).selectinload(
+                Psychologist.psychologist_specializations
+            )
+        )
         .where(Booking.id == booking_id)
     )
     return result.scalar_one()
@@ -695,7 +740,11 @@ async def resolve_dispute(
 
     result = await db.execute(
         select(Booking)
-        .options(selectinload(Booking.psychologist))
+        .options(
+            selectinload(Booking.psychologist).selectinload(
+                Psychologist.psychologist_specializations
+            )
+        )
         .where(Booking.id == booking_id)
     )
     booking = result.scalar_one()
@@ -760,7 +809,11 @@ async def mark_paid_out(
 
     result = await db.execute(
         select(Booking)
-        .options(selectinload(Booking.psychologist))
+        .options(
+            selectinload(Booking.psychologist).selectinload(
+                Psychologist.psychologist_specializations
+            )
+        )
         .where(Booking.id == booking_id)
     )
     return result.scalar_one()
@@ -809,17 +862,21 @@ async def complete_session_with_psychologist(
     Route: none, called by the session completion task.
     """
 
-    stmt = select(Booking).where(
+    stmt = (select(Booking).where(
         Booking.status == BookingStatus.CONFIRMED,
         Booking.payment_status == PaymentStatus.HELD,
         Booking.selected_time + timedelta(minutes=session_time_min) <= now
-    ).with_for_update(skip_locked=True)
+    ).options(
+        selectinload(Booking.client)
+        .selectinload(User.user_symptom_codes)
+    ).with_for_update(skip_locked=True))
 
     result = await db.execute(stmt)
     bookings = result.scalars().all()
     for booking in bookings:
         booking.completed_at = now
         booking.status = BookingStatus.COMPLETED
+        snapshot_request(booking=booking)
     await db.commit()
     return len(bookings)
 
@@ -868,7 +925,9 @@ async def list_ready_for_payout(
             Booking.psychologist_id == psychologist_id
         )
         .options(
-            selectinload(Booking.psychologist)
+            selectinload(Booking.psychologist).selectinload(
+                Psychologist.psychologist_specializations
+            )
         )
         .order_by(Booking.selected_time.asc())
         .with_for_update(skip_locked=True)
@@ -890,6 +949,10 @@ async def mark_completed(
     result = await db.execute(
         select(Booking)
         .where(Booking.id == booking_id)
+        .options(
+            selectinload(Booking.client)
+            .selectinload(User.user_symptom_codes)
+        )
         .with_for_update()
         .execution_options(populate_existing=True)
     )
@@ -918,12 +981,17 @@ async def mark_completed(
 
     booking.status = BookingStatus.COMPLETED
     booking.completed_at = completed_at
+    snapshot_request(booking=booking)
 
     await db.commit()
 
     result = await db.execute(
         select(Booking)
-        .options(selectinload(Booking.psychologist))
+        .options(
+            selectinload(Booking.psychologist).selectinload(
+                Psychologist.psychologist_specializations
+            )
+        )
         .where(Booking.id == booking_id)
     )
     return result.scalar_one()
@@ -1016,7 +1084,11 @@ async def get_booking_for_cancel_payment(
 ):
     result = await db.execute(
         select(Booking)
-        .options(selectinload(Booking.psychologist))
+        .options(
+            selectinload(Booking.psychologist).selectinload(
+                Psychologist.psychologist_specializations
+            )
+        )
         .where(Booking.id == booking_id)
     )
     booking = result.scalar_one_or_none()

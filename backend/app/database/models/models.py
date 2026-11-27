@@ -13,7 +13,7 @@ from sqlalchemy import (
     String,
     func,
     Numeric,
-    UniqueConstraint, Index, text, CheckConstraint
+    UniqueConstraint, Index, text, CheckConstraint, ARRAY
 )
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -113,6 +113,10 @@ class User(Base):
         String(255),
         unique=True,
     )
+    telegram: Mapped[str | None] = mapped_column(
+        String(255),
+        unique=True
+    )
     role: Mapped[UserRole] = mapped_column(
         SAEnum(UserRole, name="user_role"),
         default=UserRole.CLIENT,
@@ -126,13 +130,16 @@ class User(Base):
         "Psychologist",
         back_populates="user"
     )
-
+    user_symptom_codes: Mapped[List["UserSymptomCode"]] = relationship(
+        "UserSymptomCode",
+        back_populates="user",
+        cascade="all, delete-orphan"
+    )
     bookings: Mapped[List["Booking"]] = relationship(
         "Booking",
         back_populates="client",
         foreign_keys="Booking.client_id"
     )
-
     user_identities: Mapped[List["UserIdentity"]] = relationship(
         "UserIdentity",
         back_populates="user"
@@ -151,6 +158,24 @@ class User(Base):
         "Booking",
         back_populates="dispute_resolved_by",
         foreign_keys="Booking.dispute_resolved_by_id"
+    )
+
+
+class UserSymptomCode(Base):
+    __tablename__ = "user_symptom_codes"
+
+    user_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("users.id"),
+        primary_key=True,
+    )
+    symptom_code: Mapped[SymptomCode] = mapped_column(
+        SAEnum(SymptomCode, name="symptom_code"),
+        primary_key=True,
+    )
+
+    user: Mapped["User"] = relationship(
+        "User",
+        back_populates="user_symptom_codes"
     )
 
 
@@ -246,17 +271,9 @@ class Psychologist(Base):
     )
 
     @property
-    def display_full_name(self) -> str | None:
-        return self.full_name or self.full_name_eng
-
-    @property
-    def display_title(self) -> str | None:
-        return self.title or self.title_eng
-
-    @property
     def is_verified(self) -> bool:
         return self.profile_status == PsychologistStatus.ACTIVE
-    
+
     @property
     def avatar_url(self) -> str | None:
         return self.user.avatar_url
@@ -397,6 +414,12 @@ class Booking(Base):
     dispute_note: Mapped[str | None] = mapped_column(
         String(550)
     )
+    saved: Mapped[bool] = mapped_column(
+        default=False
+    )
+    request: Mapped[List[SymptomCode] | None] = mapped_column(
+        ARRAY(SAEnum(SymptomCode, name="symptom_code")).with_variant(JSON(), "sqlite")
+    )
 
     __table_args__ = (
         Index(
@@ -404,6 +427,9 @@ class Booking(Base):
             "psychologist_id", "selected_time",
             unique=True,
             postgresql_where=text(
+                "status IN ('CONFIRMED', 'PENDING', 'DISPUTED', 'COMPLETED')"
+            ),
+            sqlite_where=text(
                 "status IN ('CONFIRMED', 'PENDING', 'DISPUTED', 'COMPLETED')"
             )
         ),

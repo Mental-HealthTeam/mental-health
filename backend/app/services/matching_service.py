@@ -13,7 +13,7 @@ from database import get_db
 from schemas.matching import (
     MatchingSearchRequest,
     MatchingSearchResponse,
-    PsychologistMatchResult
+    PsychologistMatchResult, MatchingInfo
 )
 from database.models.models import (
     PsychologistSpecialization,
@@ -230,20 +230,19 @@ def _to_match_result(
     return result
 
 
-async def find_matching_psychologists(
+RELAXATION_STEPS = (
+    ("experience", ("min_experience_years", "max_experience_years")),
+    ("gender", ("preferred_gender",)),
+    ("time", ("min_range_suitable_time", "max_range_suitable_time")),
+    ("price", ("min_price_per_hour", "max_price_per_hour")),
+    ("language", ("language",))
+)
+
+
+async def _search(
     db: Annotated[AsyncSession, Depends(get_db)],
-    redis_storage: Annotated[SessionStorageInterface, Depends(get_redis_storage)],
-    request: MatchingSearchRequest,
-    current_user: Annotated[User | None, Depends(get_current_user_optional)],
-    lang: Language
+    info: MatchingInfo,
 ):
-    if request.matching_info is None:
-        raise AppError(
-            status.HTTP_400_BAD_REQUEST,
-            "MATCHING_INFO_REQUIRED",
-            "matching_info is required",
-        )
-    info = request.matching_info
     stmt = _build_search_query(info=info)
     try:
         response = await db.execute(stmt)
@@ -283,6 +282,49 @@ async def find_matching_psychologists(
     )
     rows = rows[:3]
 
+    return rows, free_slots_by_id
+
+
+async def find_matching_psychologists(
+    db: Annotated[AsyncSession, Depends(get_db)],
+    redis_storage: Annotated[SessionStorageInterface, Depends(get_redis_storage)],
+    request: MatchingSearchRequest,
+    current_user: Annotated[User | None, Depends(get_current_user_optional)],
+    lang: Language
+):
+    if request.matching_info is None:
+        raise AppError(
+            status.HTTP_400_BAD_REQUEST,
+            "MATCHING_INFO_REQUIRED",
+            "matching_info is required",
+        )
+    relaxed_filters = []
+    info = request.matching_info
+    current_info = info.model_copy()
+    for step in range(len(RELAXATION_STEPS) + 1):
+        if step > 0:
+            step -= 1
+            if not any(
+                getattr(current_info, field) not in (None, [])
+                for field in RELAXATION_STEPS[step][1]
+            ):
+                continue
+            relaxed_filters.append(RELAXATION_STEPS[step][0])
+            for field in RELAXATION_STEPS[step][1]:
+                setattr(current_info, field, None)
+        rows, free_slots_by_id = await _search(
+            db=db,
+            info=current_info
+        )
+        if rows:
+            break
+    if (
+        current_info.max_range_suitable_time is None
+        and current_info.min_range_suitable_time is None
+    ):
+        info.min_range_suitable_time = None
+        info.max_range_suitable_time = None
+
     result = _to_match_result(
         rows=rows,
         symptom_codes=info.symptom_codes,
@@ -299,4 +341,8 @@ async def find_matching_psychologists(
         current_user=current_user
     )
 
-    return MatchingSearchResponse(result=result)
+    return MatchingSearchResponse(
+        result=result,
+        relaxed_filters=relaxed_filters if rows else [],
+        relaxed=bool(relaxed_filters) and bool(rows)
+    )

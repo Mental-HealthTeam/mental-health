@@ -1,0 +1,31 @@
+.payment-cancel-page {
+  &__actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+
+    gap: 16px;
+
+    width: 100%;
+    margin-top: 32px;
+
+    > button {
+      min-width: 240px;
+    }
+  }
+}
+
+@media (max-width: 767px) {
+  .payment-cancel-page {
+    &__actions {
+      flex-direction: column;
+      gap: 12px;
+
+      > button {
+        width: 100%;
+        min-width: 0;
+      }
+    }
+  }
+}
