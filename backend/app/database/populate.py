@@ -158,7 +158,6 @@ def populate_psychologists() -> None:
                     existing.title_eng = entry["title_eng"]
                     existing.bio = entry["bio"]
                     existing.bio_eng = entry["bio_eng"]
-                    existing.reviews = entry["reviews"]
                     existing.methods = entry["methods"]
                     existing.methods_eng = entry["methods_eng"]
                     existing.certificates_eng = entry["certificates_eng"]
@@ -204,7 +203,6 @@ def populate_psychologists() -> None:
                     certificates_eng=entry["certificates_eng"],
                     bio=entry["bio"],
                     bio_eng=entry["bio_eng"],
-                    reviews=entry["reviews"],
                     methods=entry["methods"],
                     methods_eng=entry["methods_eng"],
                     experience_years=entry["experience_years"],

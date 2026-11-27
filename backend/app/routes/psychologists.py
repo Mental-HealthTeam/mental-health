@@ -25,14 +25,16 @@ from schemas.psychologist import (
     PsychologistProfileResponse,
     PsychologistProfileUpdate,
 )
+from schemas.reviews import ReviewListResponse
 from services.psychologist_service import (
     get_psychologists,
     get_psychologist_by_id as get_psychologist_by_id_service,
     get_my_psychologist_profile,
-    update_my_psychologist_profile,
+    update_my_psychologist_profile
 )
 from config.dependencies import get_settings
 from config.settings import BaseAppSettings
+from services.review_service import get_psychologist_comments_service
 
 router = APIRouter()
 
@@ -312,3 +314,24 @@ async def get_psychologist_by_id(
         )
 
     return psychologist
+
+
+@router.get(
+    "/{psychologist_id}/reviews",
+    response_model=ReviewListResponse,
+    status_code=status.HTTP_200_OK
+)
+async def list_psychologist_reviews(
+    psychologist_id: UUID,
+    db: Annotated[AsyncSession, Depends(get_db)],
+    lang: Language = Query(default=Language.UKRAINIAN),
+    limit: int = Query(default=5, ge=1, le=100),
+    offset: int = Query(default=0, ge=0)
+):
+    return await get_psychologist_comments_service(
+        psychologist_id=psychologist_id,
+        db=db,
+        lang=lang,
+        limit=limit,
+        offset=offset
+    )

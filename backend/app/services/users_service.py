@@ -41,7 +41,8 @@ async def build_profile_response(
         role=user.role,
         meet_link=meet_link,
         telegram=user.telegram,
-        topics=topics
+        topics=topics,
+        allow_notifications=user.allow_notifications
     )
 
 
@@ -83,6 +84,10 @@ async def update_user_profile_service(
                     "This Telegram username is already used by another account.",
                 )
         current_user.telegram = telegram
+    if "allow_notifications" in changes:
+        allow_notifications = changes.pop("allow_notifications")
+        if allow_notifications is not None:
+            current_user.allow_notifications = allow_notifications
     for field, value in changes.items():
         setattr(current_user, field, value)
     try:
@@ -164,7 +169,6 @@ async def delete_user_avatar_service(
             "AVATAR_DELETE_FAILED",
             "Could not delete your avatar."
         ) from e
-
 
     storage.delete_avatar_file(old_avatar_url, current_user.id)
 
