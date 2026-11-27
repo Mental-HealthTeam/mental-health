@@ -52,4 +52,5 @@ def build_booking_response(
         ai_session_id=booking.ai_session_id,
         hold_expires_at=booking.hold_expires_at,
         meet_link=booking.meet_link,
+        has_review=booking.review is not None,
     )

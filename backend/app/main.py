@@ -17,6 +17,7 @@ from routes import (
     sessions_router,
     users_router,
     contact_router,
+    review_router
 )
 
 
@@ -93,6 +94,11 @@ app.include_router(
 app.include_router(
     contact_router,
     tags=["Contact"],
+)
+app.include_router(
+    review_router,
+    prefix=f"{BASE_PREFIX}/reviews",
+    tags=["Reviews"]
 )
 
 

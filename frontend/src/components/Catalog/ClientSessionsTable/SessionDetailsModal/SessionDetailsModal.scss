@@ -1,0 +1,50 @@
+@use '../../../../styles/abstracts' as a;
+
+.session-details-modal.modal {
+  width: min(400px, calc(100vw - 32px));
+}
+
+.session-details-modal {
+  .modal__title {
+    padding-inline: 28px;
+    text-align: center;
+  }
+
+  &__card {
+    display: grid;
+    gap: 10px;
+    margin: 16px;
+    padding: 12px;
+
+    border: 1px solid a.$color-gray-10;
+    border-radius: 16px;
+  }
+
+  &__specialist {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: 12px;
+  }
+
+  &__identity {
+    display: grid;
+    justify-items: start;
+    gap: 4px;
+  }
+
+  &__name {
+    overflow-wrap: anywhere;
+  }
+
+  &__schedule {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  &__cancel.outline-button {
+    border-color: a.$color-error;
+    color: a.$color-error;
+  }
+}

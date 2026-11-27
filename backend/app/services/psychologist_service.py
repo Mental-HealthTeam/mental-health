@@ -24,8 +24,7 @@ from schemas.psychologist import (
     PsychologistDetailResponse,
     PsychologistListItem,
     PsychologistProfileResponse,
-    PsychologistProfileUpdate,
-    Review,
+    PsychologistProfileUpdate
 )
 from services.slot_service import (
     get_unavailable_slots,
@@ -220,10 +219,6 @@ async def get_psychologist_by_id(
         methods=pick(psychologist.methods, psychologist.methods_eng, lang) or [],
         bio=pick(psychologist.bio, psychologist.bio_eng, lang),
         certificates=pick(certificates, certificates_eng, lang),
-        reviews=[
-            Review(**review)
-            for review in (psychologist.reviews or [])
-        ],
         mock_slots=[
             MockSlot(
                 time=slot,
@@ -288,6 +283,14 @@ async def get_my_psychologist_profile(
 def _contains_cyrillic(value: str) -> bool:
     return any(
         "\u0400" <= char <= "\u04FF"
+        for char in value
+    )
+
+
+def _contains_latin(value: str) -> bool:
+    return any(
+        "\u0041" <= char <= "\u005A"
+        or "\u0061" <= char <= "\u007A"
         for char in value
     )
 

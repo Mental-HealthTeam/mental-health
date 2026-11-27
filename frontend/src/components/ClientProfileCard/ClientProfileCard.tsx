@@ -46,6 +46,7 @@ export const ClientProfileCard = ({
         <section className="client-profile-card" aria-labelledby="client-profile-name">
             <div className="client-profile-card__photo">
                 <Avatar
+                    isLoading={isLoading}
                     src={avatarUrl}
                     alt={displayName}
                     shape="rectangle"
@@ -102,7 +103,7 @@ export const ClientProfileCard = ({
                 </div>
 
                 <div className="client-profile-card__actions">
-                    <OutlineButton variant="secondary" onClick={onEditProfile}>
+                    <OutlineButton type="button" variant="secondary" onClick={onEditProfile}>
                         {t('clientCabinet:profile.edit')}
                     </OutlineButton>
                 </div>

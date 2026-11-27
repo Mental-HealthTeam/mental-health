@@ -4,15 +4,16 @@ import type { ReactNode } from 'react'
 import './InfoTile.scss'
 
 type Props = {
+    as?: 'li' | 'div'
     className?: string
     icon: ReactNode
-    label: string | ReactNode
+    label: ReactNode
     value: string
 }
 
-export const InfoTile = ({ className, icon, label, value }: Props) => {
+export const InfoTile = ({ as: Tile = 'li', className, icon, label, value }: Props) => {
     return (
-        <li className={classNames('info-tile', className)}>
+        <Tile className={classNames('info-tile', className)}>
             <span className="info-tile__icon" aria-hidden="true">
                 {icon}
             </span>
@@ -20,6 +21,6 @@ export const InfoTile = ({ className, icon, label, value }: Props) => {
                 <span className="info-tile__label">{label}</span>
                 <span className="info-tile__value">{value}</span>
             </div>
-        </li>
+        </Tile>
     )
 }

@@ -19,7 +19,11 @@
     "bio_eng": {"about": "Hello! I am a practicing psychologist. I help you restore your inner support, overcome anxiety and better understand your emotions in a safe and caring space.", "approach": "Taras Shevchenko National University of Kyiv. Accredited in Cognitive Behavioral Therapy (CBT) and the Gestalt approach. Education verified.", "scope": "Worry, panic attacks, chronic burnout at work, conflicts with a partner and difficulties with trust."},
     "certificates": ["КНУ ім. Т. Шевченка (Практична психологія)", "Сертифікат з Когнітивно-поведінкової терапії (КБТ) та Гештальт-підходу"],
     "certificates_eng": ["Taras Shevchenko National University of Kyiv (Practical Psychology)", "Certificate in Cognitive Behavioral Therapy (CBT) and Gestalt Approach"],
-    "reviews": [{"id": "aa0573f0-0087-555c-8b28-1ed3853cda7c", "author": "Марина К.", "avatar_url": null, "created_at": "2026-09-14", "topic_id": "anxiety", "age": 26, "rating": 5, "verified": true, "text": "Дуже вдячна за сесії! Тривожність значно знизилася вже за місяць роботи."}],
+    "bookings": [
+      {"id": "psy-01-b1", "client_id": "client-11", "day_offset": -54, "time": "16:00", "status": "completed", "payment_status": "paid", "selection_source": "manual_filter", "saved": false, "review": null},
+      {"id": "psy-01-b2", "client_id": "client-04", "day_offset": -37, "time": "17:00", "status": "completed", "payment_status": "paid", "selection_source": "manual_filter", "saved": false,
+       "review": {"rating": 4, "review_text": "Добра підтримка і спокійний темп. Часом хотілося більше конкретики.", "review_text_eng": "Good support and a calm pace. At times I wanted more specifics."}}
+    ],
     "base_slots": {"3": ["18:00"], "5": ["14:00"]},
     "meet_link": "https://meet.google.com/psy-01-meet"
   },
@@ -43,7 +47,13 @@
     "bio_eng": {"about": "Hello. I work with those who are tired of living in constant tension and want to bring back the joy of everyday life and work.", "approach": "Drahomanov National Pedagogical University. Certified CBT therapist (UICBT). Education verified.", "scope": "Tension, fears, deadlines, work overload, a feeling of emptiness and trembling from anxiety."},
     "certificates": ["НПУ ім. М.П. Драгоманова", "Сертифікат КБТ-терапевта (УІКБТ)"],
     "certificates_eng": ["M.P. Drahomanov Ukrainian State University", "CBT Therapist Certificate (UICBT)"],
-    "reviews": [{"id": "1bf721ff-1e8f-5628-b865-505ed496841d", "author": "Андрій Т.", "avatar_url": null, "created_at": "2026-09-01", "topic_id": "burnout", "age": 31, "rating": 5, "verified": true, "text": "Професійний підхід, комфортна атмосфера та чіткі інструменти."}],
+    "bookings": [
+      {"id": "psy-02-b1", "client_id": "client-12", "day_offset": -51, "time": "16:00", "status": "completed", "payment_status": "paid", "selection_source": "ai_recommendation", "saved": false,
+       "review": {"rating": 5, "review_text": "Вдалося розібратися, звідки береться вигорання, і поставити здорові межі.", "review_text_eng": "We figured out where my burnout comes from and set healthy boundaries."}},
+      {"id": "psy-02-b2", "client_id": "client-06", "day_offset": -20, "time": "13:00", "status": "completed", "payment_status": "paid", "selection_source": "ai_recommendation", "saved": false,
+       "review": {"rating": 4, "review_text": "Допомогло поглянути на проблему з іншого боку. Є над чим думати.", "review_text_eng": "It helped me see the problem from another angle. Plenty to think about."}},
+      {"id": "psy-02-b3", "client_id": "client-03", "day_offset": -6, "time": "17:00", "status": "completed", "payment_status": "paid", "selection_source": "manual_filter", "saved": true, "review": null}
+    ],
     "base_slots": {"4": ["16:00"], "6": ["10:00"], "7": ["16:00"]},
     "meet_link": "https://meet.google.com/psy-02-meet"
   },
@@ -67,7 +77,12 @@
     "bio_eng": {"about": "Good day. My main priority is to create a trusting space for you where you can go through difficult feelings without fear of judgment.", "approach": "Ivan Franko National University of Lviv. Gestalt therapist (VOPPPG). Education verified.", "scope": "Low mood, sadness without an obvious reason, insomnia, nightmares, restlessness and apathy toward everything."},
     "certificates": ["ЛНУ ім. Івана Франка", "Сертифікат гештальт-терапевта (ВОПППГ)"],
     "certificates_eng": ["Ivan Franko National University of Lviv", "Gestalt Therapist Certificate (VOPPPG)"],
-    "reviews": [{"id": "6f978a4c-c0e9-50c0-a101-a41826431699", "author": "Ірина С.", "avatar_url": null, "created_at": "2026-08-19", "topic_id": "low_mood", "age": 24, "rating": 5, "verified": true, "text": "Допомогло поглянути на ситуацію під іншим кутом. Дуже задоволена."}],
+    "bookings": [
+      {"id": "psy-03-b1", "client_id": "client-14", "day_offset": -108, "time": "16:00", "status": "completed", "payment_status": "paid", "selection_source": "ai_recommendation", "saved": false, "review": null},
+      {"id": "psy-03-b2", "client_id": "client-23", "day_offset": -22, "time": "13:00", "status": "completed", "payment_status": "paid", "selection_source": "manual_filter", "saved": true,
+       "review": {"rating": 5, "review_text": "Вдалося прожити втрату без відчуття самотності. Щиро дякую.", "review_text_eng": null}},
+      {"id": "psy-03-b3", "client_id": "client-07", "day_offset": -69, "time": "12:00", "status": "cancelled", "payment_status": "refunded", "selection_source": "manual_filter", "saved": false, "review": null}
+    ],
     "base_slots": {"2": ["20:00"], "3": ["11:00"], "4": ["12:00"], "5": ["17:00"]},
     "meet_link": "https://meet.google.com/psy-03-meet"
   },
@@ -91,7 +106,12 @@
     "bio_eng": {"about": "Hello! I help people find their own self-worth, overcome self-criticism and get out of an oppressive state of indifference.", "approach": "National University of Kyiv-Mohyla Academy (Practical Psychology). Schema therapy and CBT. Education verified.", "scope": "Low self-esteem, a feeling of worthlessness, no strength for everyday tasks, a search for the meaning of life."},
     "certificates": ["НаУКМА (Практична психологія)", "Сертифікат зі схема-терапії та КБТ"],
     "certificates_eng": ["National University of Kyiv-Mohyla Academy (Practical Psychology)", "Certificate in Schema Therapy and CBT"],
-    "reviews": [{"id": "d1f68e6d-b647-5efe-ad47-0742776826b8", "author": "Олексій П.", "avatar_url": null, "created_at": "2026-08-06", "topic_id": "self_esteem", "age": 29, "rating": 5, "verified": true, "text": "Безпечний простір та повне розуміння мого запиту з першої зустрічі."}],
+    "bookings": [
+      {"id": "psy-04-b1", "client_id": "client-01", "day_offset": -72, "time": "14:00", "status": "completed", "payment_status": "paid", "selection_source": "manual_filter", "saved": true,
+       "review": {"rating": 5, "review_text": "Допомога прийшла вчасно. Зараз набагато простіше давати раду стресу на роботі.", "review_text_eng": "The help came at the right time. Handling stress at work is much easier now."}},
+      {"id": "psy-04-b2", "client_id": "client-10", "day_offset": -74, "time": "17:00", "status": "cancelled", "payment_status": "unpaid", "selection_source": "ai_recommendation", "saved": false, "review": null},
+      {"id": "psy-04-b3", "client_id": "client-08", "day_offset": 12, "time": "18:00", "status": "confirmed", "payment_status": "held", "selection_source": "ai_recommendation", "saved": true, "review": null}
+    ],
     "base_slots": {"1": ["10:00"], "3": ["18:00"]},
     "meet_link": "https://meet.google.com/psy-04-meet"
   },
@@ -115,7 +135,11 @@
     "bio_eng": {"about": "Hello. Working with me is a practical step toward understanding your own needs and building a harmonious life.", "approach": "Taras Shevchenko National University of Kyiv. Certified psychotherapist in the systemic approach. Education verified.", "scope": "Breakup of a relationship, jealousy, loss of motivation at work, dissatisfaction with the profession, choosing a career direction."},
     "certificates": ["КНУ ім. Т. Шевченка", "Сертифікат системного сімейного терапевта"],
     "certificates_eng": ["Taras Shevchenko National University of Kyiv", "Systemic Family Therapist Certificate"],
-    "reviews": [{"id": "2d491289-e6fe-52c6-ba4a-a18e5dfe8eda", "author": "Марина К.", "avatar_url": null, "created_at": "2026-07-24", "topic_id": "relationship", "age": 26, "rating": 5, "verified": true, "text": "Дуже вдячна за сесії! Розуміння моїх меж значно покращилося."}],
+    "bookings": [
+      {"id": "psy-05-b1", "client_id": "client-15", "day_offset": -22, "time": "10:00", "status": "completed", "payment_status": "paid", "selection_source": "ai_recommendation", "saved": false,
+       "review": {"rating": 5, "review_text": null, "review_text_eng": "The help came at the right time. Handling stress at work is much easier now."}},
+      {"id": "psy-05-b2", "client_id": "client-20", "day_offset": -19, "time": "16:00", "status": "cancelled", "payment_status": "refunded", "selection_source": "ai_recommendation", "saved": false, "review": null}
+    ],
     "base_slots": {"5": ["11:00"], "6": ["13:00"], "7": ["20:00"]},
     "meet_link": "https://meet.google.com/psy-05-meet"
   },
@@ -139,7 +163,16 @@
     "bio_eng": {"about": "Good day! I teach effective emotion-control techniques that help you regain control over your own life.", "approach": "V.N. Karazin Kharkiv National University. Specialization in cognitive behavioral therapy. Education verified.", "scope": "Procrastination, difficulty starting to act, professional exhaustion, deadlines, a feeling that \"everything is falling apart\"."},
     "certificates": ["ХНУ ім. В.Н. Каразіна", "Диплом КБТ-спеціаліста"],
     "certificates_eng": ["V.N. Karazin Kharkiv National University", "CBT Specialist Diploma"],
-    "reviews": [{"id": "adc1101a-2c82-586d-a0af-e96730a02707", "author": "Андрій Т.", "avatar_url": null, "created_at": "2026-07-11", "topic_id": "burnout", "age": 31, "rating": 5, "verified": true, "text": "Чіткі інструменти і ніякої води. Дуже допомагає."}],
+    "bookings": [
+      {"id": "psy-06-b1", "client_id": "client-22", "day_offset": -94, "time": "09:00", "status": "completed", "payment_status": "paid", "selection_source": "ai_recommendation", "saved": true,
+       "review": {"rating": 5, "review_text": "Вдалося розібратися, звідки береться вигорання, і поставити здорові межі.", "review_text_eng": "We figured out where my burnout comes from and set healthy boundaries."}},
+      {"id": "psy-06-b2", "client_id": "client-18", "day_offset": -88, "time": "16:00", "status": "completed", "payment_status": "paid", "selection_source": "ai_recommendation", "saved": false, "review": null},
+      {"id": "psy-06-b3", "client_id": "client-17", "day_offset": -48, "time": "15:00", "status": "completed", "payment_status": "paid", "selection_source": "manual_filter", "saved": false,
+       "review": {"rating": 4, "review_text": "Зміни є, але повільніші, ніж очікувалося. Підхід подобається.", "review_text_eng": "There is progress, slower than I expected. I like the approach."}},
+      {"id": "psy-06-b4", "client_id": "client-13", "day_offset": -39, "time": "12:00", "status": "completed", "payment_status": "paid", "selection_source": "manual_filter", "saved": true,
+       "review": {"rating": 3, "review_text": "Розмова корисна, проте метод виявився не зовсім моїм.", "review_text_eng": "A helpful conversation, but the method was not quite for me."}},
+      {"id": "psy-06-b5", "client_id": "client-05", "day_offset": 4, "time": "19:00", "status": "confirmed", "payment_status": "held", "selection_source": "manual_filter", "saved": false, "review": null}
+    ],
     "base_slots": {"1": ["17:00"], "2": ["10:00"], "4": ["19:00"], "7": ["20:00"]},
     "meet_link": "https://meet.google.com/psy-06-meet"
   },
@@ -163,7 +196,7 @@
     "bio_eng": {"about": "Hello. My goal is to help you break out of the cycle of self-criticism and restore trusting relationships with yourself and your loved ones.", "approach": "I.I. Mechnikov Odesa National University. Psychodrama and Gestalt therapy. Education verified.", "scope": "Divorce, betrayal, loss of a loved one, mourning, a feeling of isolation and a lack of social connections."},
     "certificates": ["ОНУ ім. І.І. Мечникова", "Сертифікат з психодрами та гештальт-терапії"],
     "certificates_eng": ["I.I. Mechnikov Odesa National University", "Certificate in Psychodrama and Gestalt Therapy"],
-    "reviews": [{"id": "9cb89250-62e9-5a16-a8aa-7e9abbd774cd", "author": "Ірина С.", "avatar_url": null, "created_at": "2026-06-28", "topic_id": "loneliness", "age": 24, "rating": 5, "verified": true, "text": "Неймовірно м'який та професійний підхід до складних тем."}],
+    "bookings": [],
     "base_slots": {"3": ["17:00"], "6": ["18:00"]},
     "meet_link": "https://meet.google.com/psy-07-meet"
   },
@@ -187,7 +220,16 @@
     "bio_eng": {"about": "Hello! I specialize in working with acute emotional states and quickly calming the nervous system.", "approach": "Igor Sikorsky Kyiv Polytechnic Institute (Medical Psychology). Body-oriented therapy. Education verified.", "scope": "Panic attacks, racing heartbeat from anxiety, outbursts of anger, a recent shock, flashbacks."},
     "certificates": ["КПІ ім. Ігоря Сікорського (Медична психологія)", "Сертифікат з тілесно-орієнтованої терапії"],
     "certificates_eng": ["Igor Sikorsky Kyiv Polytechnic Institute (Medical Psychology)", "Certificate in Body-Oriented Therapy"],
-    "reviews": [{"id": "05a3fdee-3a5f-55cd-bc57-c2c33fef89b4", "author": "Олексій П.", "avatar_url": null, "created_at": "2026-06-15", "topic_id": "anxiety", "age": 29, "rating": 5, "verified": true, "text": "Допоміг впоратися з панічною атакою та навчив дихальним технікам."}],
+    "bookings": [
+      {"id": "psy-08-b1", "client_id": "client-19", "day_offset": -115, "time": "12:00", "status": "completed", "payment_status": "paid", "selection_source": "manual_filter", "saved": false,
+       "review": {"rating": 5, "review_text": "Після кількох зустрічей стало значно легше засинати. Рекомендую!", "review_text_eng": null}},
+      {"id": "psy-08-b2", "client_id": "client-21", "day_offset": -88, "time": "14:00", "status": "completed", "payment_status": "paid", "selection_source": "manual_filter", "saved": false,
+       "review": {"rating": 5, "review_text": "Дуже структурована робота: є мета, план і видимі зміни.", "review_text_eng": "Very structured work: there is a goal, a plan and visible change."}},
+      {"id": "psy-08-b3", "client_id": "client-09", "day_offset": -62, "time": "09:00", "status": "completed", "payment_status": "paid", "selection_source": "ai_recommendation", "saved": true,
+       "review": {"rating": 5, "review_text": "Самооцінка потроху росте, і це помічають навіть близькі.", "review_text_eng": "My self-esteem is slowly growing, and even the people close to me notice it."}},
+      {"id": "psy-08-b4", "client_id": "client-24", "day_offset": -3, "time": "16:00", "status": "completed", "payment_status": "paid", "selection_source": "manual_filter", "saved": false,
+       "review": {"rating": 5, "review_text": null, "review_text_eng": "Comfortable, safe and to the point. The hour flies by."}}
+    ],
     "base_slots": {"5": ["20:00"], "6": ["10:00"], "7": ["12:00"]},
     "meet_link": "https://meet.google.com/psy-08-meet"
   },
@@ -211,7 +253,12 @@
     "bio_eng": {"about": "Good day. I help people overcome deep life crises and find meaning where it seems that everything is lost.", "approach": "Bogomolets National Medical University. Psychoanalytic approach. Education verified.", "scope": "Conflicts with parents or children, pressure from the family, relationship problems, low mood and loss of meaning."},
     "certificates": ["НМУ ім. О.О. Богомольця", "Диплом психотерапевта-психоаналітика"],
     "certificates_eng": ["O.O. Bogomolets National Medical University", "Psychotherapist-Psychoanalyst Diploma"],
-    "reviews": [{"id": "3b1a90b9-ed5e-5b0f-8672-2e664a31eaab", "author": "Марина К.", "avatar_url": null, "created_at": "2026-06-02", "topic_id": "family", "age": 26, "rating": 5, "verified": true, "text": "Глибокий розбір моїх дитячих сценаріїв, дуже вдячна."}],
+    "bookings": [
+      {"id": "psy-09-b1", "client_id": "client-16", "day_offset": -77, "time": "10:00", "status": "completed", "payment_status": "paid", "selection_source": "ai_recommendation", "saved": false,
+       "review": {"rating": 4, "review_text": "Приємне спілкування і слушні поради. Продовжуватиму роботу.", "review_text_eng": "Pleasant communication and sensible advice. I will continue."}},
+      {"id": "psy-09-b2", "client_id": "client-02", "day_offset": -28, "time": "09:00", "status": "completed", "payment_status": "paid", "selection_source": "ai_recommendation", "saved": true, "review": null},
+      {"id": "psy-09-b3", "client_id": "client-10", "day_offset": 3, "time": "18:00", "status": "confirmed", "payment_status": "held", "selection_source": "ai_recommendation", "saved": false, "review": null}
+    ],
     "base_slots": {"1": ["11:00"], "5": ["16:00"], "6": ["19:00"], "7": ["10:00"]},
     "meet_link": "https://meet.google.com/psy-09-meet"
   },
@@ -235,7 +282,14 @@
     "bio_eng": {"about": "Hello. I work with evidence-based methods of therapy. I teach how to turn destructive thoughts into constructive behavior.", "approach": "Oles Honchar Dnipro National University. Accredited CBT specialist. Education verified.", "scope": "Comparing yourself with others, self-criticism, restlessness, procrastination, difficulty finishing what you start."},
     "certificates": ["ДНУ ім. Олеся Гончара", "Сертифікат акредитованого КБТ-фахівця"],
     "certificates_eng": ["Oles Honchar Dnipro National University", "Accredited CBT Practitioner Certificate"],
-    "reviews": [{"id": "2b910fbb-d99c-537f-82f9-59c755164858", "author": "Андрій Т.", "avatar_url": null, "created_at": "2026-05-20", "topic_id": "motivation", "age": 31, "rating": 5, "verified": true, "text": "Поборов прокрастинацію завдяки практичним домашнім завданням."}],
+    "bookings": [
+      {"id": "psy-10-b1", "client_id": "client-06", "day_offset": -51, "time": "17:00", "status": "completed", "payment_status": "paid", "selection_source": "ai_recommendation", "saved": false,
+       "review": {"rating": 5, "review_text": "Вдалося прожити втрату без відчуття самотності. Щиро дякую.", "review_text_eng": null}},
+      {"id": "psy-10-b2", "client_id": "client-03", "day_offset": -37, "time": "10:00", "status": "completed", "payment_status": "paid", "selection_source": "ai_recommendation", "saved": false,
+       "review": {"rating": 1, "review_text": "Не вдалося знайти спільну мову, тому далі шукатиму іншого фахівця.", "review_text_eng": null}},
+      {"id": "psy-10-b3", "client_id": "client-12", "day_offset": -33, "time": "15:00", "status": "completed", "payment_status": "paid", "selection_source": "manual_filter", "saved": true, "review": null},
+      {"id": "psy-10-b4", "client_id": "client-07", "day_offset": 11, "time": "18:00", "status": "confirmed", "payment_status": "held", "selection_source": "manual_filter", "saved": true, "review": null}
+    ],
     "base_slots": {"2": ["13:00"], "7": ["11:00"]},
     "meet_link": "https://meet.google.com/psy-10-meet"
   },
@@ -259,7 +313,12 @@
     "bio_eng": {"about": "Hello! I help you live through difficult emotions here and now, set boundaries in relationships and return love for yourself.", "approach": "Taras Shevchenko National University of Kyiv. Gestalt counselor. Education verified.", "scope": "Difficulty trusting a partner, insecurity, a feeling of loneliness, a lack of social connections."},
     "certificates": ["КНУ ім. Т. Шевченка", "Сертифікат гештальт-консультанта"],
     "certificates_eng": ["Taras Shevchenko National University of Kyiv", "Gestalt Counselor Certificate"],
-    "reviews": [{"id": "38d9d6ef-62d6-51e1-9c8a-ff8f9757851b", "author": "Ірина С.", "avatar_url": null, "created_at": "2026-05-07", "topic_id": "relationship", "age": 24, "rating": 5, "verified": true, "text": "Чудовий спеціаліст, дуже комфортно на сесіях."}],
+    "bookings": [
+      {"id": "psy-11-b1", "client_id": "client-22", "day_offset": -74, "time": "12:00", "status": "completed", "payment_status": "paid", "selection_source": "manual_filter", "saved": false,
+       "review": {"rating": 5, "review_text": "Кожна сесія дає ясність. Складні речі пояснюються простими словами.", "review_text_eng": null}},
+      {"id": "psy-11-b2", "client_id": "client-20", "day_offset": -63, "time": "16:00", "status": "completed", "payment_status": "paid", "selection_source": "ai_recommendation", "saved": false,
+       "review": {"rating": 5, "review_text": "Після кількох зустрічей стало значно легше засинати. Рекомендую!", "review_text_eng": "After a few meetings it became much easier to fall asleep. Highly recommend!"}}
+    ],
     "base_slots": {"2": ["11:00"], "3": ["13:00"], "6": ["12:00"]},
     "meet_link": "https://meet.google.com/psy-11-meet"
   },
@@ -283,7 +342,7 @@
     "bio_eng": {"about": "Good evening. I work with situations that require prompt psychological support and stabilization of your condition.", "approach": "Lesya Ukrainka Volyn National University. Crisis psychology. Education verified.", "scope": "Pressure, many tasks at once, cannot calm down, sleep disorders, waking up at night because of anxiety."},
     "certificates": ["ВНУ ім. Лесі Українки", "Сертифікат з кризового консультування"],
     "certificates_eng": ["Lesya Ukrainka Volyn National University", "Certificate in Crisis Counseling"],
-    "reviews": [{"id": "3db50433-8e3c-5bcd-b303-de86e759e2f8", "author": "Олексій П.", "avatar_url": null, "created_at": "2026-04-24", "topic_id": "sleep", "age": 29, "rating": 5, "verified": true, "text": "Сон нормалізувався вже після кількох зустрічей."}],
+    "bookings": [],
     "base_slots": {"1": ["16:00"], "2": ["20:00"], "3": ["10:00"], "6": ["10:00"]},
     "meet_link": "https://meet.google.com/psy-12-meet"
   },
@@ -307,7 +366,12 @@
     "bio_eng": {"about": "Hello. Working with me will help you find an inner source of strength and break out of the empty circle of fatigue and sadness.", "approach": "Vasyl Stefanyk Precarpathian National University. Schema therapy. Education verified.", "scope": "Nothing brings joy, cynicism about work, \"I don't know who I am\", a search for the meaning of life, a feeling of emptiness."},
     "certificates": ["Прикарпатський НУ ім. В. Стефаника", "Сертифікат зі схема-терапії"],
     "certificates_eng": ["Vasyl Stefanyk Precarpathian National University", "Certificate in Schema Therapy"],
-    "reviews": [{"id": "72f6a666-6fbb-56b6-b27b-f67ea14ddaa0", "author": "Марина К.", "avatar_url": null, "created_at": "2026-04-11", "topic_id": "burnout", "age": 26, "rating": 5, "verified": true, "text": "Дуже допомогла розібратися у власних пріоритетах."}],
+    "bookings": [
+      {"id": "psy-13-b1", "client_id": "client-15", "day_offset": -35, "time": "18:00", "status": "completed", "payment_status": "paid", "selection_source": "manual_filter", "saved": false,
+       "review": {"rating": 5, "review_text": "Вдалося розібратися, звідки береться вигорання, і поставити здорові межі.", "review_text_eng": "We figured out where my burnout comes from and set healthy boundaries."}},
+      {"id": "psy-13-b2", "client_id": "client-09", "day_offset": -15, "time": "19:00", "status": "completed", "payment_status": "paid", "selection_source": "ai_recommendation", "saved": false,
+       "review": {"rating": 5, "review_text": "Чіткі вправи між сесіями справді працюють. Результат відчувається щотижня.", "review_text_eng": "The exercises between sessions really work. I notice progress every week."}}
+    ],
     "base_slots": {"2": ["17:00"], "7": ["15:00"]},
     "meet_link": "https://meet.google.com/psy-13-meet"
   },
@@ -331,7 +395,15 @@
     "bio_eng": {"about": "Hello! I help young professionals cope with their first burnout and learn to work without harming their health.", "approach": "Sumy State University. Cognitive behavioral approach. Education verified.", "scope": "Fear of changing jobs, laziness, lack of motivation, deadlines, overload at the workplace."},
     "certificates": ["СумДУ (Психологія)", "Сертифікат КБТ-практика"],
     "certificates_eng": ["Sumy State University (Psychology)", "CBT Practitioner Certificate"],
-    "reviews": [{"id": "bbf5727f-2e86-551b-965a-fcfd970a012f", "author": "Андрій Т.", "avatar_url": null, "created_at": "2026-09-15", "topic_id": "work_career", "age": 31, "rating": 5, "verified": true, "text": "Чудовий фахівець для тих, хто вигорів на роботі."}],
+    "bookings": [
+      {"id": "psy-14-b1", "client_id": "client-11", "day_offset": -78, "time": "19:00", "status": "completed", "payment_status": "paid", "selection_source": "ai_recommendation", "saved": false,
+       "review": {"rating": 4, "review_text": null, "review_text_eng": "Good support and a calm pace. At times I wanted more specifics."}},
+      {"id": "psy-14-b2", "client_id": "client-04", "day_offset": -52, "time": "09:00", "status": "completed", "payment_status": "paid", "selection_source": "manual_filter", "saved": true,
+       "review": {"rating": 5, "review_text": "Дуже структурована робота: є мета, план і видимі зміни.", "review_text_eng": null}},
+      {"id": "psy-14-b3", "client_id": "client-23", "day_offset": -33, "time": "18:00", "status": "completed", "payment_status": "paid", "selection_source": "ai_recommendation", "saved": false,
+       "review": {"rating": 4, "review_text": "Зміни є, але повільніші, ніж очікувалося. Підхід подобається.", "review_text_eng": "There is progress, slower than I expected. I like the approach."}},
+      {"id": "psy-14-b4", "client_id": "client-01", "day_offset": -116, "time": "10:00", "status": "cancelled", "payment_status": "refunded", "selection_source": "manual_filter", "saved": false, "review": null}
+    ],
     "base_slots": {"1": ["10:00"], "4": ["11:00"], "6": ["20:00"]},
     "meet_link": "https://meet.google.com/psy-14-meet"
   },
@@ -355,7 +427,11 @@
     "bio_eng": {"about": "Good day. I provide support during difficult family and personal breakups.", "approach": "Bohdan Khmelnytsky Cherkasy National University. Systemic family therapy. Education verified.", "scope": "Death of loved ones, breakup of a relationship, experienced violence, difficulty accepting a loss."},
     "certificates": ["ЧНУ ім. Б. Хмельницького", "Сертифікат з системної сімейної терапії"],
     "certificates_eng": ["Bohdan Khmelnytsky Cherkasy National University", "Certificate in Systemic Family Therapy"],
-    "reviews": [{"id": "d41c53ef-494a-5388-9dd1-8796a0241203", "author": "Ірина С.", "avatar_url": null, "created_at": "2026-09-02", "topic_id": "grief", "age": 24, "rating": 5, "verified": true, "text": "Дуже вдячна за емпатію та допомогу у важкий період."}],
+    "bookings": [
+      {"id": "psy-15-b1", "client_id": "client-17", "day_offset": -119, "time": "12:00", "status": "completed", "payment_status": "paid", "selection_source": "ai_recommendation", "saved": false, "review": null},
+      {"id": "psy-15-b2", "client_id": "client-24", "day_offset": -117, "time": "11:00", "status": "completed", "payment_status": "paid", "selection_source": "ai_recommendation", "saved": false,
+       "review": {"rating": 4, "review_text": null, "review_text_eng": "Very good overall. Sometimes there is not enough time to finish a topic."}}
+    ],
     "base_slots": {"2": ["11:00"], "3": ["12:00"], "4": ["20:00"], "7": ["18:00"]},
     "meet_link": "https://meet.google.com/psy-15-meet"
   },
@@ -379,7 +455,10 @@
     "bio_eng": {"about": "Good day. I help you build a rational approach to your own fears and gain confidence in making decisions.", "approach": "Ivan Franko Zhytomyr State University. Certified CBT specialist. Education verified.", "scope": "Anxiety, fear, insecurity, irritability, inability to hold back emotions."},
     "certificates": ["ЖДУ ім. Івана Франка", "Сертифікат КБТ-фахівця"],
     "certificates_eng": ["Ivan Franko Zhytomyr State University", "CBT Specialist Certificate"],
-    "reviews": [{"id": "40565572-02ec-54b6-b558-9c08d44d287f", "author": "Олексій П.", "avatar_url": null, "created_at": "2026-08-20", "topic_id": "anxiety", "age": 29, "rating": 5, "verified": true, "text": "Швидко і по суті. Тривога значно зменшилась."}],
+    "bookings": [
+      {"id": "psy-16-b1", "client_id": "client-13", "day_offset": -44, "time": "12:00", "status": "completed", "payment_status": "paid", "selection_source": "manual_filter", "saved": false, "review": null},
+      {"id": "psy-16-b2", "client_id": "client-08", "day_offset": 10, "time": "11:00", "status": "confirmed", "payment_status": "held", "selection_source": "ai_recommendation", "saved": false, "review": null}
+    ],
     "base_slots": {"3": ["10:00"], "7": ["12:00"]},
     "meet_link": "https://meet.google.com/psy-16-meet"
   },
@@ -403,7 +482,11 @@
     "bio_eng": {"about": "Hello. I specialize in working with inner loneliness and restoring emotional wholeness after a difficult experience.", "approach": "V.G. Korolenko Poltava National Pedagogical University. Gestalt therapy and art therapy. Education verified.", "scope": "Compulsive overeating, fear of gaining weight, not loving yourself, midlife crisis."},
     "certificates": ["ПНПУ ім. В.Г. Короленка", "Сертифікат з гештальт-терапії та арт-терапії"],
     "certificates_eng": ["V.G. Korolenko Poltava National Pedagogical University", "Certificate in Gestalt Therapy and Art Therapy"],
-    "reviews": [{"id": "1051daeb-963a-5dfd-bc6d-4761e9538744", "author": "Марина К.", "avatar_url": null, "created_at": "2026-08-07", "topic_id": "eating", "age": 26, "rating": 5, "verified": true, "text": "Допомогла прийняти своє тіло і зупинити зриви."}],
+    "bookings": [
+      {"id": "psy-17-b1", "client_id": "client-05", "day_offset": -115, "time": "18:00", "status": "completed", "payment_status": "paid", "selection_source": "ai_recommendation", "saved": false,
+       "review": {"rating": 5, "review_text": "Допомога прийшла вчасно. Зараз набагато простіше давати раду стресу на роботі.", "review_text_eng": "The help came at the right time. Handling stress at work is much easier now."}},
+      {"id": "psy-17-b2", "client_id": "client-21", "day_offset": -42, "time": "10:00", "status": "cancelled", "payment_status": "refunded", "selection_source": "manual_filter", "saved": true, "review": null}
+    ],
     "base_slots": {"1": ["20:00"], "2": ["10:00"], "5": ["11:00"]},
     "meet_link": "https://meet.google.com/psy-17-meet"
   },
@@ -427,7 +510,12 @@
     "bio_eng": {"about": "Hello! I provide urgent emotional help during sudden changes in life and severe life shocks.", "approach": "Chernihiv National University of Technology. Emergency and crisis psychology. Education verified.", "scope": "Traumatic experience, difficulty forgetting an event, acute pressure, panic states."},
     "certificates": ["ЧНТУ (Психологія)", "Сертифікат з екстреної психології"],
     "certificates_eng": ["Chernihiv National University of Technology (Psychology)", "Certificate in Emergency Psychology"],
-    "reviews": [{"id": "ebbc962f-af7a-5435-a348-cfa0bed4d3ba", "author": "Андрій Т.", "avatar_url": null, "created_at": "2026-07-25", "topic_id": "trauma", "age": 31, "rating": 5, "verified": true, "text": "Дуже підтримав у кризовій ситуації."}],
+    "bookings": [
+      {"id": "psy-18-b1", "client_id": "client-14", "day_offset": -41, "time": "14:00", "status": "completed", "payment_status": "paid", "selection_source": "ai_recommendation", "saved": true,
+       "review": {"rating": 5, "review_text": "З першої зустрічі з'явилася довіра. Це саме той фахівець, якого хотілося знайти.", "review_text_eng": null}},
+      {"id": "psy-18-b2", "client_id": "client-16", "day_offset": -28, "time": "11:00", "status": "completed", "payment_status": "paid", "selection_source": "ai_recommendation", "saved": false,
+       "review": {"rating": 4, "review_text": "Добра підтримка і спокійний темп. Часом хотілося більше конкретики.", "review_text_eng": "Good support and a calm pace. At times I wanted more specifics."}}
+    ],
     "base_slots": {"1": ["19:00"], "2": ["11:00"], "6": ["14:00"], "7": ["17:00"]},
     "meet_link": "https://meet.google.com/psy-18-meet"
   },
@@ -451,7 +539,10 @@
     "bio_eng": {"about": "Good day. Working with me helps you process deep behavioral scripts that keep you from moving forward.", "approach": "Taras Shevchenko National University of Kyiv. Schema therapy. Education verified.", "scope": "Constant self-criticism, conflicts with relatives, no strength, a feeling of emptiness from work."},
     "certificates": ["КНУ ім. Т. Шевченка", "Сертифікат зі схема-терапії"],
     "certificates_eng": ["Taras Shevchenko National University of Kyiv", "Certificate in Schema Therapy"],
-    "reviews": [{"id": "d3e7d563-a1f9-55b6-aef9-0fed7ef5c2d3", "author": "Ірина С.", "avatar_url": null, "created_at": "2026-07-12", "topic_id": "self_esteem", "age": 24, "rating": 5, "verified": true, "text": "Зрозуміла корінь своїх невпевненостей."}],
+    "bookings": [
+      {"id": "psy-19-b1", "client_id": "client-19", "day_offset": -18, "time": "14:00", "status": "completed", "payment_status": "paid", "selection_source": "ai_recommendation", "saved": false,
+       "review": {"rating": 5, "review_text": "Кожна сесія дає ясність. Складні речі пояснюються простими словами.", "review_text_eng": "Every session brings clarity. Complex things are explained in simple words."}}
+    ],
     "base_slots": {"5": ["16:00"], "7": ["11:00"]},
     "meet_link": "https://meet.google.com/psy-19-meet"
   },
@@ -475,7 +566,14 @@
     "bio_eng": {"about": "Hello. Many years of experience allow me to choose the most precise tools for getting out of the most difficult states.", "approach": "Bogomolets National Medical University. Evidence-based psychotherapy. Education verified.", "scope": "Addictive behavior, difficulty giving up a harmful habit, lack of strength, constant pressure."},
     "certificates": ["НМУ ім. О.О. Богомольця", "Диплом психотерапевта"],
     "certificates_eng": ["O.O. Bogomolets National Medical University", "Psychotherapist Diploma"],
-    "reviews": [{"id": "425ae66c-d0e9-5c89-84c5-3f0d9c850d82", "author": "Олексій П.", "avatar_url": null, "created_at": "2026-06-29", "topic_id": "addiction", "age": 29, "rating": 5, "verified": true, "text": "Високий професіоналізм та результативність."}],
+    "bookings": [
+      {"id": "psy-20-b1", "client_id": "client-02", "day_offset": -96, "time": "10:00", "status": "completed", "payment_status": "paid", "selection_source": "ai_recommendation", "saved": false,
+       "review": {"rating": 4, "review_text": "Уважний фахівець. Сесія почалася на кілька хвилин пізніше, решта чудово.", "review_text_eng": "An attentive specialist. We started a few minutes late, everything else was great."}},
+      {"id": "psy-20-b2", "client_id": "client-18", "day_offset": -93, "time": "12:00", "status": "completed", "payment_status": "paid", "selection_source": "manual_filter", "saved": false,
+       "review": {"rating": 4, "review_text": "Загалом дуже добре. Інколи не вистачає часу, щоб завершити тему.", "review_text_eng": "Very good overall. Sometimes there is not enough time to finish a topic."}},
+      {"id": "psy-20-b3", "client_id": "client-12", "day_offset": -19, "time": "14:00", "status": "completed", "payment_status": "paid", "selection_source": "manual_filter", "saved": false,
+       "review": {"rating": 5, "review_text": "Дякую за терпіння. Панічні атаки тепер трапляються набагато рідше.", "review_text_eng": "Thank you for your patience. Panic attacks now happen far less often."}}
+    ],
     "base_slots": {"2": ["19:00"], "3": ["11:00"], "4": ["15:00"]},
     "meet_link": "https://meet.google.com/psy-20-meet"
   },
@@ -499,7 +597,12 @@
     "bio_eng": {"about": "Hello. I help you explore the deep causes of repeated life mistakes and find your own identity.", "approach": "National University of Kyiv-Mohyla Academy. Psychoanalytic approach. Education verified.", "scope": "Loneliness in relationships, problems with raising children, conflicts with a partner, isolation."},
     "certificates": ["НаУКМА", "Сертифікат з психоаналізу"],
     "certificates_eng": ["National University of Kyiv-Mohyla Academy", "Certificate in Psychoanalysis"],
-    "reviews": [{"id": "836b39e0-70cd-5170-a302-05fc72766c5a", "author": "Марина К.", "avatar_url": null, "created_at": "2026-06-16", "topic_id": "relationship", "age": 26, "rating": 5, "verified": true, "text": "Дуже глибокий підхід, розібралися у старих травмах."}],
+    "bookings": [
+      {"id": "psy-21-b1", "client_id": "client-03", "day_offset": -5, "time": "14:00", "status": "completed", "payment_status": "paid", "selection_source": "ai_recommendation", "saved": false,
+       "review": {"rating": 4, "review_text": "Допомогло поглянути на проблему з іншого боку. Є над чим думати.", "review_text_eng": null}},
+      {"id": "psy-21-b2", "client_id": "client-21", "day_offset": -78, "time": "11:00", "status": "cancelled", "payment_status": "unpaid", "selection_source": "ai_recommendation", "saved": false, "review": null},
+      {"id": "psy-21-b3", "client_id": "client-15", "day_offset": 9, "time": "19:00", "status": "confirmed", "payment_status": "held", "selection_source": "ai_recommendation", "saved": false, "review": null}
+    ],
     "base_slots": {"1": ["17:00"], "3": ["13:00"], "4": ["18:00"], "5": ["10:00"]},
     "meet_link": "https://meet.google.com/psy-21-meet"
   },
@@ -523,7 +626,12 @@
     "bio_eng": {"about": "Hello! I specialize in working with stress in high-tech industries and restoring productivity without harming your health.", "approach": "V.N. Karazin Kharkiv National University. Cognitive behavioral approach. Education verified.", "scope": "\"I don't want to do anything\", fear of changing jobs, procrastination, loss of motivation at work."},
     "certificates": ["ХНУ ім. В.Н. Каразіна", "Сертифікат КБТ-консультанта"],
     "certificates_eng": ["V.N. Karazin Kharkiv National University", "CBT Counselor Certificate"],
-    "reviews": [{"id": "b5f9945d-0f56-511b-93b8-843845e1e3d9", "author": "Андрій Т.", "avatar_url": null, "created_at": "2026-06-03", "topic_id": "burnout", "age": 31, "rating": 5, "verified": true, "text": "Чудово розуміє болі айтівців та працівників сфери послуг."}],
+    "bookings": [
+      {"id": "psy-22-b1", "client_id": "client-10", "day_offset": -90, "time": "17:00", "status": "completed", "payment_status": "paid", "selection_source": "ai_recommendation", "saved": false,
+       "review": {"rating": 5, "review_text": "Спокійна атмосфера і уважне слухання. Нарешті є відчуття, що мене чують.", "review_text_eng": "A calm atmosphere and attentive listening. I finally feel heard."}},
+      {"id": "psy-22-b2", "client_id": "client-07", "day_offset": -70, "time": "10:00", "status": "completed", "payment_status": "paid", "selection_source": "ai_recommendation", "saved": false,
+       "review": {"rating": 4, "review_text": "Приємне спілкування і слушні поради. Продовжуватиму роботу.", "review_text_eng": "Pleasant communication and sensible advice. I will continue."}}
+    ],
     "base_slots": {"1": ["18:00"], "5": ["11:00"]},
     "meet_link": "https://meet.google.com/psy-22-meet"
   },
@@ -547,7 +655,12 @@
     "bio_eng": {"about": "Good day. I create a caring environment for living through difficult feelings and restoring balance in life.", "approach": "Oles Honchar Dnipro National University. Gestalt therapy. Education verified.", "scope": "Constant restlessness, sadness without an obvious reason, sleeping badly, cannot fall asleep because of thoughts."},
     "certificates": ["ДНУ ім. Олеся Гончара", "Сертифікат гештальт-терапевта"],
     "certificates_eng": ["Oles Honchar Dnipro National University", "Gestalt Therapist Certificate"],
-    "reviews": [{"id": "d45acfdb-106e-5a96-b482-d73403343f22", "author": "Ірина С.", "avatar_url": null, "created_at": "2026-05-21", "topic_id": "anxiety", "age": 24, "rating": 5, "verified": true, "text": "Дуже затишна атмосфера на сесіях."}],
+    "bookings": [
+      {"id": "psy-23-b1", "client_id": "client-02", "day_offset": -81, "time": "10:00", "status": "completed", "payment_status": "paid", "selection_source": "manual_filter", "saved": false,
+       "review": {"rating": 5, "review_text": "Щира подяка за сесії! Тривожність помітно зменшилась уже за місяць роботи.", "review_text_eng": "Sincere thanks for the sessions! My anxiety noticeably eased within a month."}},
+      {"id": "psy-23-b2", "client_id": "client-06", "day_offset": -117, "time": "11:00", "status": "cancelled", "payment_status": "refunded", "selection_source": "manual_filter", "saved": true, "review": null},
+      {"id": "psy-23-b3", "client_id": "client-13", "day_offset": 3, "time": "18:00", "status": "confirmed", "payment_status": "held", "selection_source": "ai_recommendation", "saved": false, "review": null}
+    ],
     "base_slots": {"3": ["17:00"], "5": ["12:00"], "6": ["18:00"]},
     "meet_link": "https://meet.google.com/psy-23-meet"
   },
@@ -571,7 +684,16 @@
     "bio_eng": {"about": "Hello! I work with requests that need immediate engagement, stabilization and a lower level of anxiety.", "approach": "Ternopil National Pedagogical University (named after H. Yakubov). Emergency psychology. Education verified.", "scope": "Aggression, anger, severe life shocks, I can't keep up, a feeling that \"everything is falling apart\"."},
     "certificates": ["ТНПУ ім. Г. Якубова", "Сертифікат з екстреної психології"],
     "certificates_eng": ["H. Yakubov Ternopil National Pedagogical University", "Certificate in Emergency Psychology"],
-    "reviews": [{"id": "e627d615-ba7d-567a-9cc6-0ddbfcccda78", "author": "Олексій П.", "avatar_url": null, "created_at": "2026-05-08", "topic_id": "anger", "age": 29, "rating": 5, "verified": true, "text": "Допоміг взяти емоції під контроль."}],
+    "bookings": [
+      {"id": "psy-24-b1", "client_id": "client-01", "day_offset": -119, "time": "14:00", "status": "completed", "payment_status": "paid", "selection_source": "manual_filter", "saved": true,
+       "review": {"rating": 4, "review_text": "Уважний фахівець. Сесія почалася на кілька хвилин пізніше, решта чудово.", "review_text_eng": "An attentive specialist. We started a few minutes late, everything else was great."}},
+      {"id": "psy-24-b2", "client_id": "client-18", "day_offset": -25, "time": "15:00", "status": "completed", "payment_status": "paid", "selection_source": "manual_filter", "saved": false,
+       "review": {"rating": 5, "review_text": "Чіткі вправи між сесіями справді працюють. Результат відчувається щотижня.", "review_text_eng": "The exercises between sessions really work. I notice progress every week."}},
+      {"id": "psy-24-b3", "client_id": "client-04", "day_offset": -21, "time": "15:00", "status": "completed", "payment_status": "paid", "selection_source": "ai_recommendation", "saved": false,
+       "review": {"rating": 5, "review_text": "Повернулося бажання щось робити. Дякую за підтримку в складний період.", "review_text_eng": null}},
+      {"id": "psy-24-b4", "client_id": "client-24", "day_offset": -15, "time": "15:00", "status": "completed", "payment_status": "paid", "selection_source": "manual_filter", "saved": false,
+       "review": {"rating": 4, "review_text": "Приємне спілкування і слушні поради. Продовжуватиму роботу.", "review_text_eng": "Pleasant communication and sensible advice. I will continue."}}
+    ],
     "base_slots": {"2": ["11:00"], "4": ["17:00"], "5": ["11:00"], "6": ["15:00"]},
     "meet_link": "https://meet.google.com/psy-24-meet"
   },
@@ -595,7 +717,7 @@
     "bio_eng": {"about": "Good day. I help you form a healthy attitude toward yourself and learn to choose your own comfort without guilt.", "approach": "Taras Shevchenko National University of Kyiv. Schema therapy. Education verified.", "scope": "I don't love myself, a difficult relationship with food, conflicts with a loved one, trust issues."},
     "certificates": ["КНУ ім. Т. Шевченка", "Сертифікат зі схема-терапії"],
     "certificates_eng": ["Taras Shevchenko National University of Kyiv", "Certificate in Schema Therapy"],
-    "reviews": [{"id": "321408ac-bcd4-5d8b-993c-3c09110270f7", "author": "Марина К.", "avatar_url": null, "created_at": "2026-04-25", "topic_id": "self_esteem", "age": 26, "rating": 5, "verified": true, "text": "Навчилася говорити \"ні\" без почуття провини."}],
+    "bookings": [],
     "base_slots": {"3": ["18:00"], "7": ["11:00"]},
     "meet_link": "https://meet.google.com/psy-25-meet"
   },
@@ -619,7 +741,14 @@
     "bio_eng": {"about": "Hello! A practical approach to overcoming everyday stress and restoring concentration and energy.", "approach": "Yuriy Fedkovych Chernivtsi National University. CBT practitioner. Education verified.", "scope": "Work overload, deadlines, apathy toward work, constant worry and trembling."},
     "certificates": ["ЧНУ ім. Ю. Федьковича", "Сертифікат КБТ-практика"],
     "certificates_eng": ["Yuriy Fedkovych Chernivtsi National University", "CBT Practitioner Certificate"],
-    "reviews": [{"id": "3f3695e0-04d5-5260-ad42-4b6611197b4a", "author": "Андрій Т.", "avatar_url": null, "created_at": "2026-04-12", "topic_id": "stress", "age": 31, "rating": 5, "verified": true, "text": "Дуже практичні поради для зняття щоденного стресу."}],
+    "bookings": [
+      {"id": "psy-26-b1", "client_id": "client-17", "day_offset": -115, "time": "17:00", "status": "completed", "payment_status": "paid", "selection_source": "ai_recommendation", "saved": false,
+       "review": {"rating": 4, "review_text": "Корисні сесії, хоча хотілося б трохи більше практичних завдань.", "review_text_eng": null}},
+      {"id": "psy-26-b2", "client_id": "client-08", "day_offset": -18, "time": "18:00", "status": "completed", "payment_status": "paid", "selection_source": "ai_recommendation", "saved": false,
+       "review": {"rating": 3, "review_text": "Розмова корисна, проте метод виявився не зовсім моїм.", "review_text_eng": "A helpful conversation, but the method was not quite for me."}},
+      {"id": "psy-26-b3", "client_id": "client-20", "day_offset": -4, "time": "11:00", "status": "completed", "payment_status": "paid", "selection_source": "ai_recommendation", "saved": true,
+       "review": {"rating": 4, "review_text": "Допомогло поглянути на проблему з іншого боку. Є над чим думати.", "review_text_eng": "It helped me see the problem from another angle. Plenty to think about."}}
+    ],
     "base_slots": {"5": ["18:00"], "6": ["10:00"], "7": ["12:00"]},
     "meet_link": "https://meet.google.com/psy-26-meet"
   },
@@ -643,7 +772,7 @@
     "bio_eng": {"about": "Hello. I specialize in deep work with the feeling of loneliness and in bringing back interest in life after difficult events.", "approach": "Ukrainian Catholic University (Practical Psychology). Gestalt therapy. Education verified.", "scope": "A feeling of loneliness, death of a loved one, grief, low mood, \"I don't see the point\"."},
     "certificates": ["УКУ (Практична психологія)", "Сертифікат гештальт-терапевта"],
     "certificates_eng": ["Ukrainian Catholic University (Practical Psychology)", "Gestalt Therapist Certificate"],
-    "reviews": [{"id": "74f7f3ca-32d4-5622-abf6-39cfd54189e1", "author": "Ірина С.", "avatar_url": null, "created_at": "2026-09-16", "topic_id": "loneliness", "age": 24, "rating": 5, "verified": true, "text": "Неймовірно підтримлива терапевтка."}],
+    "bookings": [],
     "base_slots": {"1": ["10:00"], "3": ["19:00"], "4": ["10:00"], "5": ["13:00"]},
     "meet_link": "https://meet.google.com/psy-27-meet"
   },
@@ -667,7 +796,14 @@
     "bio_eng": {"about": "Good day. Structured, evidence-based help for overcoming difficult emotional states and anxiety disorders.", "approach": "Drahomanov National Pedagogical University. Certified CBT specialist. Education verified.", "scope": "Fear, panic, insomnia, nightmares, a disrupted sleep pattern, a feeling of pressure and deadlines."},
     "certificates": ["НПУ ім. М.П. Драгоманова", "Сертифікат КБТ-фахівця"],
     "certificates_eng": ["M.P. Drahomanov Ukrainian State University", "CBT Specialist Certificate"],
-    "reviews": [{"id": "69e1454b-443b-54fe-8530-6bb774da6232", "author": "Олексій П.", "avatar_url": null, "created_at": "2026-09-03", "topic_id": "anxiety", "age": 29, "rating": 5, "verified": true, "text": "Чудовий фахівець із роботи з тривогою."}],
+    "bookings": [
+      {"id": "psy-28-b1", "client_id": "client-09", "day_offset": -66, "time": "13:00", "status": "completed", "payment_status": "paid", "selection_source": "manual_filter", "saved": false,
+       "review": {"rating": 5, "review_text": "Після кількох зустрічей стало значно легше засинати. Рекомендую!", "review_text_eng": "After a few meetings it became much easier to fall asleep. Highly recommend!"}},
+      {"id": "psy-28-b2", "client_id": "client-05", "day_offset": -19, "time": "16:00", "status": "completed", "payment_status": "paid", "selection_source": "ai_recommendation", "saved": true,
+       "review": {"rating": 5, "review_text": "Щира подяка за сесії! Тривожність помітно зменшилась уже за місяць роботи.", "review_text_eng": null}},
+      {"id": "psy-28-b3", "client_id": "client-14", "day_offset": -16, "time": "17:00", "status": "completed", "payment_status": "paid", "selection_source": "ai_recommendation", "saved": false,
+       "review": {"rating": 5, "review_text": "Повернулося бажання щось робити. Дякую за підтримку в складний період.", "review_text_eng": "My motivation is back. Thank you for supporting me through a hard period."}}
+    ],
     "base_slots": {"2": ["10:00"], "7": ["18:00"]},
     "meet_link": "https://meet.google.com/psy-28-meet"
   },
@@ -691,7 +827,7 @@
     "bio_eng": {"about": "Hello! I help you find a balance between work and personal life and get rid of impostor syndrome.", "approach": "Ivan Franko National University of Lviv. Cognitive approach. Education verified.", "scope": "Doubts about your abilities, professional self-determination, procrastination, laziness."},
     "certificates": ["ЛНУ ім. Івана Франка", "Сертифікат з когнітивного підходу"],
     "certificates_eng": ["Ivan Franko National University of Lviv", "Certificate in Cognitive Approach"],
-    "reviews": [{"id": "f7eddccb-f775-5b29-8a5d-2411e1565529", "author": "Марина К.", "avatar_url": null, "created_at": "2026-08-21", "topic_id": "self_esteem", "age": 26, "rating": 5, "verified": true, "text": "Позбулася синдрому самозванця завдяки сесіям."}],
+    "bookings": [],
     "base_slots": {"3": ["14:00"], "4": ["20:00"], "7": ["17:00"]},
     "meet_link": "https://meet.google.com/psy-29-meet"
   },
@@ -715,7 +851,14 @@
     "bio_eng": {"about": "Hello. Emergency and short-term help in situations of acute conflict or a difficult life choice.", "approach": "Igor Sikorsky Kyiv Polytechnic Institute. Emergency psychology. Education verified.", "scope": "Family quarrels, outbursts of anger, aggression, divorce, a breakup with a loved one."},
     "certificates": ["КПІ ім. Ігоря Сікорського", "Сертифікат з кризової психології"],
     "certificates_eng": ["Igor Sikorsky Kyiv Polytechnic Institute", "Certificate in Crisis Psychology"],
-    "reviews": [{"id": "bf1a10ce-a8f5-5c6e-8885-c4f0e360f045", "author": "Андрій Т.", "avatar_url": null, "created_at": "2026-08-08", "topic_id": "relationship", "age": 31, "rating": 5, "verified": true, "text": "Допоміг пережити складний розрив."}],
+    "bookings": [
+      {"id": "psy-30-b1", "client_id": "client-22", "day_offset": -105, "time": "19:00", "status": "completed", "payment_status": "paid", "selection_source": "ai_recommendation", "saved": false,
+       "review": {"rating": 5, "review_text": "Чіткі вправи між сесіями справді працюють. Результат відчувається щотижня.", "review_text_eng": "The exercises between sessions really work. I notice progress every week."}},
+      {"id": "psy-30-b2", "client_id": "client-11", "day_offset": -89, "time": "19:00", "status": "completed", "payment_status": "paid", "selection_source": "manual_filter", "saved": true,
+       "review": {"rating": 5, "review_text": "Професійний і дуже людяний підхід. Жодного осуду, тільки підтримка.", "review_text_eng": "A professional and very humane approach. No judgement, only support."}},
+      {"id": "psy-30-b3", "client_id": "client-19", "day_offset": -15, "time": "14:00", "status": "completed", "payment_status": "paid", "selection_source": "ai_recommendation", "saved": false,
+       "review": {"rating": 5, "review_text": "Повернулося бажання щось робити. Дякую за підтримку в складний період.", "review_text_eng": "My motivation is back. Thank you for supporting me through a hard period."}}
+    ],
     "base_slots": {"2": ["11:00"], "4": ["19:00"], "6": ["13:00"], "7": ["20:00"]},
     "meet_link": "https://meet.google.com/psy-30-meet"
   },
@@ -739,7 +882,7 @@
     "bio_eng": {"about": "Hello. Working with me is aimed at deep and lasting change, restoring meaning and love for yourself.", "approach": "Taras Shevchenko National University of Kyiv. Schema therapy and Gestalt approach. Education verified.", "scope": "A depressed state, a difficult life transition, a search for the meaning of life, a feeling of worthlessness."},
     "certificates": ["КНУ ім. Т. Шевченка", "Сертифікат зі схема-терапії"],
     "certificates_eng": ["Taras Shevchenko National University of Kyiv", "Certificate in Schema Therapy"],
-    "reviews": [{"id": "648aded4-55b1-554e-92f4-d82e04cbe6d0", "author": "Марина К.", "avatar_url": null, "created_at": "2026-07-26", "topic_id": "low_mood", "age": 26, "rating": 5, "verified": true, "text": "Неймовірна терапевтка, яка повернула смак до життя."}],
+    "bookings": [],
     "base_slots": {"2": ["11:00"], "4": ["20:00"]},
     "meet_link": "https://meet.google.com/psy-31-meet"
   },
@@ -763,7 +906,13 @@
     "bio_eng": {"about": "Good day! I teach how to work with anxious thoughts and effective algorithms for overcoming burnout.", "approach": "Volodymyr Dahl East Ukrainian National University. Evidence-based psychotherapy. Education verified.", "scope": "Tiredness from work, panic attacks, \"I can't calm down\", lack of motivation, procrastination."},
     "certificates": ["СНУ ім. В. Даля", "Сертифікат КБТ-консультанта"],
     "certificates_eng": ["Volodymyr Dahl East Ukrainian National University", "CBT Counselor Certificate"],
-    "reviews": [{"id": "b43d43c9-f95b-5a8e-a1f5-58d00af4d37f", "author": "Олексій П.", "avatar_url": null, "created_at": "2026-07-13", "topic_id": "burnout", "age": 29, "rating": 5, "verified": true, "text": "Практичний підхід і чіткі плани дій."}],
+    "bookings": [
+      {"id": "psy-32-b1", "client_id": "client-23", "day_offset": -44, "time": "15:00", "status": "completed", "payment_status": "paid", "selection_source": "ai_recommendation", "saved": false,
+       "review": {"rating": 5, "review_text": "Самооцінка потроху росте, і це помічають навіть близькі.", "review_text_eng": "My self-esteem is slowly growing, and even the people close to me notice it."}},
+      {"id": "psy-32-b2", "client_id": "client-16", "day_offset": -21, "time": "16:00", "status": "completed", "payment_status": "paid", "selection_source": "ai_recommendation", "saved": false,
+       "review": {"rating": 5, "review_text": "Повернулося бажання щось робити. Дякую за підтримку в складний період.", "review_text_eng": "My motivation is back. Thank you for supporting me through a hard period."}},
+      {"id": "psy-32-b3", "client_id": "client-02", "day_offset": 3, "time": "11:00", "status": "confirmed", "payment_status": "held", "selection_source": "ai_recommendation", "saved": true, "review": null}
+    ],
     "base_slots": {"2": ["10:00"], "3": ["16:00"], "5": ["10:00"]},
     "meet_link": "https://meet.google.com/psy-32-meet"
   },
@@ -787,7 +936,9 @@
     "bio_eng": {"about": "Hello! I help you build sincere and safe relationships with yourself and your closest circle.", "approach": "I.I. Mechnikov Odesa National University. Gestalt approach. Education verified.", "scope": "Conflicts with a partner, irritability when talking with children, pressure from the family."},
     "certificates": ["ОНУ ім. І.І. Мечникова", "Сертифікат гештальт-терапевта"],
     "certificates_eng": ["I.I. Mechnikov Odesa National University", "Gestalt Therapist Certificate"],
-    "reviews": [{"id": "459ae290-493e-5093-93e5-3d34cb86078f", "author": "Ірина С.", "avatar_url": null, "created_at": "2026-06-30", "topic_id": "relationship", "age": 24, "rating": 5, "verified": true, "text": "Змогла налагодити контакт із батьками."}],
+    "bookings": [
+      {"id": "psy-33-b1", "client_id": "client-14", "day_offset": -74, "time": "13:00", "status": "completed", "payment_status": "paid", "selection_source": "ai_recommendation", "saved": true, "review": null}
+    ],
     "base_slots": {"3": ["15:00"], "4": ["18:00"], "5": ["10:00"], "7": ["17:00"]},
     "meet_link": "https://meet.google.com/psy-33-meet"
   },
@@ -811,7 +962,7 @@
     "bio_eng": {"about": "Hello. Expert help with complex and prolonged emotional states.", "approach": "Bogomolets National Medical University. Psychotherapy. Education verified.", "scope": "Traumatic experience, alcohol or gambling addiction, deep apathy toward everything."},
     "certificates": ["НМУ ім. О.О. Богомольця", "Диплом психотерапевта"],
     "certificates_eng": ["O.O. Bogomolets National Medical University", "Psychotherapist Diploma"],
-    "reviews": [{"id": "4de29785-f34e-58b3-b377-2b1b4e2c1e4d", "author": "Андрій Т.", "avatar_url": null, "created_at": "2026-06-17", "topic_id": "trauma", "age": 31, "rating": 5, "verified": true, "text": "Справжній професіонал із великим досвідом."}],
+    "bookings": [],
     "base_slots": {"1": ["11:00"], "4": ["10:00"]},
     "meet_link": "https://meet.google.com/psy-34-meet"
   },
@@ -835,7 +986,15 @@
     "bio_eng": {"about": "Hello! Gentle support in building self-respect and overcoming everyday tension.", "approach": "Taras Shevchenko National University of Kyiv. Humanistic approach. Education verified.", "scope": "Low self-esteem, fear of being judged by others, work overload, difficulty starting a task."},
     "certificates": ["КНУ ім. Т. Шевченка", "Сертифікат з гуманістичної психології"],
     "certificates_eng": ["Taras Shevchenko National University of Kyiv", "Certificate in Humanistic Psychology"],
-    "reviews": [{"id": "f786b339-952d-58e7-b4d7-5f9d78782c3e", "author": "Марина К.", "avatar_url": null, "created_at": "2026-06-04", "topic_id": "self_esteem", "age": 26, "rating": 5, "verified": true, "text": "Дуже приємна і затишна атмосфера."}],
+    "bookings": [
+      {"id": "psy-35-b1", "client_id": "client-03", "day_offset": -86, "time": "19:00", "status": "completed", "payment_status": "paid", "selection_source": "ai_recommendation", "saved": true,
+       "review": {"rating": 5, "review_text": "Комфортно, безпечно і по суті. Година минає непомітно.", "review_text_eng": "Comfortable, safe and to the point. The hour flies by."}},
+      {"id": "psy-35-b2", "client_id": "client-04", "day_offset": -78, "time": "19:00", "status": "completed", "payment_status": "paid", "selection_source": "ai_recommendation", "saved": false,
+       "review": {"rating": 5, "review_text": "Вдалося прожити втрату без відчуття самотності. Щиро дякую.", "review_text_eng": "I managed to go through my loss without feeling alone. Sincere thanks."}},
+      {"id": "psy-35-b3", "client_id": "client-07", "day_offset": -61, "time": "16:00", "status": "completed", "payment_status": "paid", "selection_source": "manual_filter", "saved": false,
+       "review": {"rating": 4, "review_text": "Загалом дуже добре. Інколи не вистачає часу, щоб завершити тему.", "review_text_eng": "Very good overall. Sometimes there is not enough time to finish a topic."}},
+      {"id": "psy-35-b4", "client_id": "client-13", "day_offset": 2, "time": "15:00", "status": "confirmed", "payment_status": "held", "selection_source": "ai_recommendation", "saved": false, "review": null}
+    ],
     "base_slots": {"2": ["20:00"], "4": ["16:00"], "6": ["10:00"]},
     "meet_link": "https://meet.google.com/psy-35-meet"
   },
@@ -859,7 +1018,15 @@
     "bio_eng": {"about": "Good day. I help restore working capacity and a sense of safety in conditions of uncertainty.", "approach": "V.N. Karazin Kharkiv National University. Crisis psychology. Education verified.", "scope": "Exhaustion, task overload, midlife crisis, \"I don't know where to go\"."},
     "certificates": ["ХНУ ім. В.Н. Каразіна", "Сертифікат з кризової психології"],
     "certificates_eng": ["V.N. Karazin Kharkiv National University", "Certificate in Crisis Psychology"],
-    "reviews": [{"id": "f95940c1-e56c-5830-9b79-4bcb76baec2b", "author": "Олексій П.", "avatar_url": null, "created_at": "2026-05-22", "topic_id": "burnout", "age": 29, "rating": 5, "verified": true, "text": "Допоміг вийти з емоційного глухого кута."}],
+    "bookings": [
+      {"id": "psy-36-b1", "client_id": "client-09", "day_offset": -94, "time": "12:00", "status": "completed", "payment_status": "paid", "selection_source": "ai_recommendation", "saved": true,
+       "review": {"rating": 5, "review_text": "Стосунки в родині стали спокійнішими, ми вчимося говорити без сварок.", "review_text_eng": "Things at home are calmer, we are learning to talk without arguing."}},
+      {"id": "psy-36-b2", "client_id": "client-18", "day_offset": -86, "time": "17:00", "status": "completed", "payment_status": "paid", "selection_source": "manual_filter", "saved": false,
+       "review": {"rating": 3, "review_text": "Було нормально, але поки важко сказати, чи це мені підходить.", "review_text_eng": null}},
+      {"id": "psy-36-b3", "client_id": "client-23", "day_offset": -78, "time": "11:00", "status": "completed", "payment_status": "paid", "selection_source": "ai_recommendation", "saved": false,
+       "review": {"rating": 4, "review_text": null, "review_text_eng": "Pleasant communication and sensible advice. I will continue."}},
+      {"id": "psy-36-b4", "client_id": "client-10", "day_offset": -42, "time": "13:00", "status": "completed", "payment_status": "paid", "selection_source": "manual_filter", "saved": true, "review": null}
+    ],
     "base_slots": {"1": ["12:00"], "4": ["16:00"], "6": ["11:00"], "7": ["15:00"]},
     "meet_link": "https://meet.google.com/psy-36-meet"
   },
@@ -883,7 +1050,14 @@
     "bio_eng": {"about": "Hello! I create a safe space for getting to know your emotions and building healthy boundaries.", "approach": "Bohdan Khmelnytsky Cherkasy National University. Gestalt therapy. Education verified.", "scope": "Difficulties in relationships, feelings of guilt, low self-esteem, worry and anxiety."},
     "certificates": ["ЧНУ ім. Б. Хмельницького", "Сертифікат гештальт-консультанта"],
     "certificates_eng": ["Bohdan Khmelnytsky Cherkasy National University", "Gestalt Counselor Certificate"],
-    "reviews": [{"id": "cf0e27f7-79da-545e-aa90-b279c64beead", "author": "Ірина С.", "avatar_url": null, "created_at": "2026-05-09", "topic_id": "relationship", "age": 24, "rating": 5, "verified": true, "text": "Чудова консультантка, відчувається турбота."}],
+    "bookings": [
+      {"id": "psy-37-b1", "client_id": "client-22", "day_offset": -80, "time": "18:00", "status": "completed", "payment_status": "paid", "selection_source": "ai_recommendation", "saved": false,
+       "review": {"rating": 4, "review_text": "Корисні сесії, хоча хотілося б трохи більше практичних завдань.", "review_text_eng": "Useful sessions, though I would have liked a few more practical tasks."}},
+      {"id": "psy-37-b2", "client_id": "client-06", "day_offset": -40, "time": "18:00", "status": "completed", "payment_status": "paid", "selection_source": "ai_recommendation", "saved": false, "review": null},
+      {"id": "psy-37-b3", "client_id": "client-21", "day_offset": -19, "time": "19:00", "status": "completed", "payment_status": "paid", "selection_source": "ai_recommendation", "saved": true,
+       "review": {"rating": 5, "review_text": "Комфортно, безпечно і по суті. Година минає непомітно.", "review_text_eng": "Comfortable, safe and to the point. The hour flies by."}},
+      {"id": "psy-37-b4", "client_id": "client-08", "day_offset": -14, "time": "12:00", "status": "completed", "payment_status": "paid", "selection_source": "ai_recommendation", "saved": false, "review": null}
+    ],
     "base_slots": {"2": ["12:00"], "4": ["11:00"]},
     "meet_link": "https://meet.google.com/psy-37-meet"
   },
@@ -907,7 +1081,17 @@
     "bio_eng": {"about": "Hello. Evidence-based techniques for overcoming fear of judgment, chronic anxiety and tension.", "approach": "Sumy State University. Accredited CBT specialist. Education verified.", "scope": "Fear of public speaking or changing jobs, stress from deadlines, constant restlessness."},
     "certificates": ["СумДУ", "Сертифікат КБТ-фахівця"],
     "certificates_eng": ["Sumy State University", "CBT Specialist Certificate"],
-    "reviews": [{"id": "4273df87-2481-5f81-a9e8-2732c1e4e2a4", "author": "Андрій Т.", "avatar_url": null, "created_at": "2026-04-26", "topic_id": "anxiety", "age": 31, "rating": 5, "verified": true, "text": "Поборов страх публічних виступів."}],
+    "bookings": [
+      {"id": "psy-38-b1", "client_id": "client-01", "day_offset": -100, "time": "14:00", "status": "completed", "payment_status": "paid", "selection_source": "ai_recommendation", "saved": false,
+       "review": {"rating": 5, "review_text": "Спокійна атмосфера і уважне слухання. Нарешті є відчуття, що мене чують.", "review_text_eng": "A calm atmosphere and attentive listening. I finally feel heard."}},
+      {"id": "psy-38-b2", "client_id": "client-17", "day_offset": -93, "time": "09:00", "status": "completed", "payment_status": "paid", "selection_source": "manual_filter", "saved": false,
+       "review": {"rating": 3, "review_text": "Дещо допомогло, але бракувало чіткого плану подальшої роботи.", "review_text_eng": "Some of it helped, but a clear plan for further work was missing."}},
+      {"id": "psy-38-b3", "client_id": "client-05", "day_offset": -78, "time": "10:00", "status": "completed", "payment_status": "paid", "selection_source": "manual_filter", "saved": true,
+       "review": {"rating": 5, "review_text": "Професійний і дуже людяний підхід. Жодного осуду, тільки підтримка.", "review_text_eng": "A professional and very humane approach. No judgement, only support."}},
+      {"id": "psy-38-b4", "client_id": "client-19", "day_offset": -43, "time": "17:00", "status": "completed", "payment_status": "paid", "selection_source": "manual_filter", "saved": false,
+       "review": {"rating": 5, "review_text": "Дуже структурована робота: є мета, план і видимі зміни.", "review_text_eng": null}},
+      {"id": "psy-38-b5", "client_id": "client-16", "day_offset": 11, "time": "14:00", "status": "confirmed", "payment_status": "held", "selection_source": "manual_filter", "saved": false, "review": null}
+    ],
     "base_slots": {"2": ["17:00"], "3": ["10:00"], "4": ["13:00"]},
     "meet_link": "https://meet.google.com/psy-38-meet"
   },
@@ -931,7 +1115,7 @@
     "bio_eng": {"about": "Good day. I help you change outdated life patterns that lead to apathy and fatigue.", "approach": "Drahomanov National Pedagogical University. Schema therapy. Education verified.", "scope": "Compulsive overeating, dissatisfaction with your body, self-criticism, sadness without a reason."},
     "certificates": ["НПУ ім. М.П. Драгоманова", "Сертифікат зі схема-терапії"],
     "certificates_eng": ["M.P. Drahomanov Ukrainian State University", "Certificate in Schema Therapy"],
-    "reviews": [{"id": "38ed7a2a-c796-533f-93bd-4b034721a9b8", "author": "Марина К.", "avatar_url": null, "created_at": "2026-04-13", "topic_id": "eating", "age": 26, "rating": 5, "verified": true, "text": "Дуже допомогла у питаннях прийняття себе."}],
+    "bookings": [],
     "base_slots": {"1": ["19:00"], "2": ["11:00"], "3": ["13:00"], "5": ["10:00"]},
     "meet_link": "https://meet.google.com/psy-39-meet"
   },
@@ -955,7 +1139,13 @@
     "bio_eng": {"about": "Hello! Practical help for newcomers to therapy: finding resources, working with stress and fatigue.", "approach": "Oles Honchar Dnipro National University. General psychology. Education verified.", "scope": "Tiredness from work, difficulty finishing what you start, anxiety about deadlines."},
     "certificates": ["ДНУ ім. Олеся Гончара", "Диплом психолога"],
     "certificates_eng": ["Oles Honchar Dnipro National University", "Psychologist Diploma"],
-    "reviews": [{"id": "d4b70c35-4b8e-5392-895e-629e87deb086", "author": "Олексій П.", "avatar_url": null, "created_at": "2026-09-17", "topic_id": "burnout", "age": 29, "rating": 5, "verified": true, "text": "Легко та комфортно на сесіях."}],
+    "bookings": [
+      {"id": "psy-40-b1", "client_id": "client-11", "day_offset": -113, "time": "17:00", "status": "completed", "payment_status": "paid", "selection_source": "ai_recommendation", "saved": false,
+       "review": {"rating": 4, "review_text": "Загалом дуже добре. Інколи не вистачає часу, щоб завершити тему.", "review_text_eng": "Very good overall. Sometimes there is not enough time to finish a topic."}},
+      {"id": "psy-40-b2", "client_id": "client-20", "day_offset": -68, "time": "15:00", "status": "completed", "payment_status": "paid", "selection_source": "ai_recommendation", "saved": false,
+       "review": {"rating": 5, "review_text": null, "review_text_eng": "Sincere thanks for the sessions! My anxiety noticeably eased within a month."}},
+      {"id": "psy-40-b3", "client_id": "client-24", "day_offset": 6, "time": "19:00", "status": "confirmed", "payment_status": "held", "selection_source": "ai_recommendation", "saved": false, "review": null}
+    ],
     "base_slots": {"6": ["10:00"], "7": ["16:00"]},
     "meet_link": "https://meet.google.com/psy-40-meet"
   },
@@ -979,7 +1169,14 @@
     "bio_eng": {"about": "Good day. I teach healthy communication with yourself and your partner based on evidence-based methods.", "approach": "Ivan Franko National University of Lviv. Cognitive behavioral therapy. Education verified.", "scope": "Fear of losing a relationship, anxiety in a couple, pressure from parents or relatives."},
     "certificates": ["ЛНУ ім. Івана Франка", "Сертифікат КБТ"],
     "certificates_eng": ["Ivan Franko National University of Lviv", "CBT Certificate"],
-    "reviews": [{"id": "a72a0e67-4cc1-50dd-b7b0-cf71d7e7a91d", "author": "Ірина С.", "avatar_url": null, "created_at": "2026-09-04", "topic_id": "relationship", "age": 24, "rating": 5, "verified": true, "text": "Допомогла розібратися у тривогах у стосунках."}],
+    "bookings": [
+      {"id": "psy-41-b1", "client_id": "client-12", "day_offset": -100, "time": "10:00", "status": "completed", "payment_status": "paid", "selection_source": "ai_recommendation", "saved": false, "review": null},
+      {"id": "psy-41-b2", "client_id": "client-15", "day_offset": -57, "time": "15:00", "status": "completed", "payment_status": "paid", "selection_source": "manual_filter", "saved": false,
+       "review": {"rating": 2, "review_text": "Очікування були іншими: забагато загальних фраз і мало конкретики.", "review_text_eng": "I expected something else: too many general phrases and few specifics."}},
+      {"id": "psy-41-b3", "client_id": "client-22", "day_offset": -30, "time": "12:00", "status": "completed", "payment_status": "paid", "selection_source": "manual_filter", "saved": false,
+       "review": {"rating": 2, "review_text": "Сесії вийшли надто загальними, хотілося більше практичних кроків.", "review_text_eng": "The sessions felt too general, I wanted more practical steps."}},
+      {"id": "psy-41-b4", "client_id": "client-07", "day_offset": 11, "time": "13:00", "status": "confirmed", "payment_status": "held", "selection_source": "manual_filter", "saved": false, "review": null}
+    ],
     "base_slots": {"2": ["19:00"], "3": ["10:00"], "7": ["15:00"]},
     "meet_link": "https://meet.google.com/psy-41-meet"
   },
@@ -1003,7 +1200,10 @@
     "bio_eng": {"about": "Hello! I provide operational psychological support during difficult events and stress.", "approach": "Lesya Ukrainka Volyn National University. Crisis psychology. Education verified.", "scope": "A recent shock, outbursts of anger, a feeling that \"everything is falling apart\", aggression."},
     "certificates": ["ВНУ ім. Лесі Українки", "Сертифікат з кризової психології"],
     "certificates_eng": ["Lesya Ukrainka Volyn National University", "Certificate in Crisis Psychology"],
-    "reviews": [{"id": "0ab77613-8cc9-5816-80f9-1caf257a64e2", "author": "Андрій Т.", "avatar_url": null, "created_at": "2026-08-22", "topic_id": "trauma", "age": 31, "rating": 5, "verified": true, "text": "Дуже чітка та оперативна допомога."}],
+    "bookings": [
+      {"id": "psy-42-b1", "client_id": "client-10", "day_offset": -76, "time": "09:00", "status": "completed", "payment_status": "paid", "selection_source": "ai_recommendation", "saved": false,
+       "review": {"rating": 5, "review_text": "Чіткі вправи між сесіями справді працюють. Результат відчувається щотижня.", "review_text_eng": "The exercises between sessions really work. I notice progress every week."}}
+    ],
     "base_slots": {"1": ["10:00"], "5": ["15:00"], "6": ["18:00"], "7": ["10:00"]},
     "meet_link": "https://meet.google.com/psy-42-meet"
   },
@@ -1027,7 +1227,15 @@
     "bio_eng": {"about": "Hello. Deep support on the way out of an emotional crisis and back to a taste for life.", "approach": "Taras Shevchenko National University of Kyiv. Certified Gestalt therapist. Education verified.", "scope": "Mourning after the loss of a loved one, severe loneliness, no strength for life."},
     "certificates": ["КНУ ім. Т. Шевченка", "Сертифікат гештальт-терапевта"],
     "certificates_eng": ["Taras Shevchenko National University of Kyiv", "Gestalt Therapist Certificate"],
-    "reviews": [{"id": "7c3cb18c-77da-5f65-81f7-37b3cbc8069e", "author": "Марина К.", "avatar_url": null, "created_at": "2026-08-09", "topic_id": "grief", "age": 26, "rating": 5, "verified": true, "text": "Неймовірна підтримка у найтемніші часи."}],
+    "bookings": [
+      {"id": "psy-43-b1", "client_id": "client-02", "day_offset": -60, "time": "19:00", "status": "completed", "payment_status": "paid", "selection_source": "ai_recommendation", "saved": true,
+       "review": {"rating": 5, "review_text": "Стосунки в родині стали спокійнішими, ми вчимося говорити без сварок.", "review_text_eng": "Things at home are calmer, we are learning to talk without arguing."}},
+      {"id": "psy-43-b2", "client_id": "client-06", "day_offset": -28, "time": "09:00", "status": "completed", "payment_status": "paid", "selection_source": "ai_recommendation", "saved": false,
+       "review": {"rating": 3, "review_text": "Дещо допомогло, але бракувало чіткого плану подальшої роботи.", "review_text_eng": null}},
+      {"id": "psy-43-b3", "client_id": "client-21", "day_offset": -17, "time": "10:00", "status": "completed", "payment_status": "paid", "selection_source": "ai_recommendation", "saved": false,
+       "review": {"rating": 3, "review_text": "Розмова корисна, проте метод виявився не зовсім моїм.", "review_text_eng": "A helpful conversation, but the method was not quite for me."}},
+      {"id": "psy-43-b4", "client_id": "client-04", "day_offset": 9, "time": "14:00", "status": "confirmed", "payment_status": "held", "selection_source": "manual_filter", "saved": false, "review": null}
+    ],
     "base_slots": {"2": ["12:00"], "4": ["11:00"]},
     "meet_link": "https://meet.google.com/psy-43-meet"
   },
@@ -1051,7 +1259,15 @@
     "bio_eng": {"about": "Hello! Practical CBT techniques for returning productivity and relieving everyday anxiety.", "approach": "Ivan Franko Zhytomyr State University. Cognitive behavioral therapy. Education verified.", "scope": "A feeling of exhaustion, cannot start work, procrastination, work pressure."},
     "certificates": ["ЖДУ ім. Івана Франка", "Сертифікат КБТ"],
     "certificates_eng": ["Ivan Franko Zhytomyr State University", "CBT Certificate"],
-    "reviews": [{"id": "30e6d5c1-ced9-59a6-bc8c-239dd0060c1c", "author": "Олексій П.", "avatar_url": null, "created_at": "2026-07-27", "topic_id": "stress", "age": 29, "rating": 5, "verified": true, "text": "Чудові інструменти для роботи зі стресом."}],
+    "bookings": [
+      {"id": "psy-44-b1", "client_id": "client-18", "day_offset": -89, "time": "19:00", "status": "completed", "payment_status": "paid", "selection_source": "ai_recommendation", "saved": false,
+       "review": {"rating": 4, "review_text": "Зміни є, але повільніші, ніж очікувалося. Підхід подобається.", "review_text_eng": "There is progress, slower than I expected. I like the approach."}},
+      {"id": "psy-44-b2", "client_id": "client-20", "day_offset": -44, "time": "19:00", "status": "completed", "payment_status": "paid", "selection_source": "ai_recommendation", "saved": false,
+       "review": {"rating": 4, "review_text": "Корисні сесії, хоча хотілося б трохи більше практичних завдань.", "review_text_eng": null}},
+      {"id": "psy-44-b3", "client_id": "client-14", "day_offset": -13, "time": "16:00", "status": "completed", "payment_status": "paid", "selection_source": "manual_filter", "saved": false,
+       "review": {"rating": 5, "review_text": null, "review_text_eng": "Thank you for your patience. Panic attacks now happen far less often."}},
+      {"id": "psy-44-b4", "client_id": "client-23", "day_offset": -40, "time": "09:00", "status": "cancelled", "payment_status": "refunded", "selection_source": "manual_filter", "saved": false, "review": null}
+    ],
     "base_slots": {"5": ["15:00"], "6": ["17:00"], "7": ["10:00"]},
     "meet_link": "https://meet.google.com/psy-44-meet"
   },
@@ -1075,7 +1291,7 @@
     "bio_eng": {"about": "Good day. I help you free yourself from excessive self-criticism and restore trust in yourself.", "approach": "V.G. Korolenko Poltava National Pedagogical University. Schema therapy. Education verified.", "scope": "A feeling of worthlessness, \"I don't know who I am\", breakup of a relationship, jealousy."},
     "certificates": ["ПНПУ ім. В.Г. Короленка", "Сертифікат зі схема-терапії"],
     "certificates_eng": ["V.G. Korolenko Poltava National Pedagogical University", "Certificate in Schema Therapy"],
-    "reviews": [{"id": "a392d81e-a310-5e49-9388-c04c2eec7dfb", "author": "Ірина С.", "avatar_url": null, "created_at": "2026-07-14", "topic_id": "self_esteem", "age": 24, "rating": 5, "verified": true, "text": "Дуже глибокий та дбайливий фахівець."}],
+    "bookings": [],
     "base_slots": {"1": ["14:00"], "2": ["20:00"], "3": ["10:00"], "7": ["12:00"]},
     "meet_link": "https://meet.google.com/psy-45-meet"
   },
@@ -1099,7 +1315,7 @@
     "bio_eng": {"about": "Hello! I work on restoring personal resources and overcoming impostor syndrome.", "approach": "Chernihiv National University of Technology. Practical psychology. Education verified.", "scope": "Dissatisfaction with the profession, choosing a career direction, self-criticism, exhaustion."},
     "certificates": ["ЧНТУ", "Диплом практичного психолога"],
     "certificates_eng": ["Chernihiv National University of Technology", "Practical Psychologist Diploma"],
-    "reviews": [{"id": "6d654975-63bb-5589-8260-f810d9dae0c8", "author": "Андрій Т.", "avatar_url": null, "created_at": "2026-07-01", "topic_id": "work_career", "age": 31, "rating": 5, "verified": true, "text": "Допоміг визначитись із професійним вектором."}],
+    "bookings": [],
     "base_slots": {"2": ["13:00"], "5": ["12:00"]},
     "meet_link": "https://meet.google.com/psy-46-meet"
   },
@@ -1123,7 +1339,13 @@
     "bio_eng": {"about": "Hello. Caring support through difficult family breakups and crises of self-determination.", "approach": "National University of Kyiv-Mohyla Academy. Gestalt therapy. Education verified.", "scope": "Conflicts with family, betrayal, loneliness in relationships, a lack of social contacts."},
     "certificates": ["НаУКМА", "Сертифікат гештальт-терапевта"],
     "certificates_eng": ["National University of Kyiv-Mohyla Academy", "Gestalt Therapist Certificate"],
-    "reviews": [{"id": "21242f92-516b-598d-9e08-85ea78ca9809", "author": "Марина К.", "avatar_url": null, "created_at": "2026-06-18", "topic_id": "relationship", "age": 26, "rating": 5, "verified": true, "text": "Дуже комфортні та результативні сесії."}],
+    "bookings": [
+      {"id": "psy-47-b1", "client_id": "client-15", "day_offset": -111, "time": "12:00", "status": "completed", "payment_status": "paid", "selection_source": "ai_recommendation", "saved": false,
+       "review": {"rating": 5, "review_text": "Кожна сесія дає ясність. Складні речі пояснюються простими словами.", "review_text_eng": "Every session brings clarity. Complex things are explained in simple words."}},
+      {"id": "psy-47-b2", "client_id": "client-05", "day_offset": -61, "time": "18:00", "status": "completed", "payment_status": "paid", "selection_source": "manual_filter", "saved": true,
+       "review": {"rating": 3, "review_text": "Було нормально, але поки важко сказати, чи це мені підходить.", "review_text_eng": "It was fine, but it is too early to say whether this suits me."}},
+      {"id": "psy-47-b3", "client_id": "client-03", "day_offset": 3, "time": "14:00", "status": "confirmed", "payment_status": "held", "selection_source": "ai_recommendation", "saved": false, "review": null}
+    ],
     "base_slots": {"3": ["10:00"], "5": ["19:00"], "6": ["11:00"]},
     "meet_link": "https://meet.google.com/psy-47-meet"
   },
@@ -1147,7 +1369,10 @@
     "bio_eng": {"about": "Good day. Specialized help for acute psycho-emotional tension and panic.", "approach": "Igor Sikorsky Kyiv Polytechnic Institute. Emergency psychology. Education verified.", "scope": "Panic attacks, nightmares, cannot fall asleep from anxiety, a recent shock."},
     "certificates": ["КПІ ім. Ігоря Сікорського", "Сертифікат з екстреної психології"],
     "certificates_eng": ["Igor Sikorsky Kyiv Polytechnic Institute", "Certificate in Emergency Psychology"],
-    "reviews": [{"id": "2cd4f5a7-5574-5312-a3aa-24c98d8ef70f", "author": "Олексій П.", "avatar_url": null, "created_at": "2026-06-05", "topic_id": "anxiety", "age": 29, "rating": 5, "verified": true, "text": "Швидко і ефективно стабілізував мій стан."}],
+    "bookings": [
+      {"id": "psy-48-b1", "client_id": "client-12", "day_offset": -78, "time": "09:00", "status": "completed", "payment_status": "paid", "selection_source": "manual_filter", "saved": false,
+       "review": {"rating": 5, "review_text": "З першої зустрічі з'явилася довіра. Це саме той фахівець, якого хотілося знайти.", "review_text_eng": null}}
+    ],
     "base_slots": {"2": ["10:00"], "5": ["11:00"], "6": ["16:00"], "7": ["18:00"]},
     "meet_link": "https://meet.google.com/psy-48-meet"
   },
@@ -1171,7 +1396,13 @@
     "bio_eng": {"about": "Hello! I teach you to accept yourself and build a stable inner support without constant self-blame.", "approach": "Ternopil National Pedagogical University (named after H. Yakubov). Cognitive approach. Education verified.", "scope": "Comparing yourself with others, deadline pressure, a difficult relationship with food, low self-esteem."},
     "certificates": ["ТНПУ ім. Г. Якубова", "Сертифікат КБТ-консультанта"],
     "certificates_eng": ["H. Yakubov Ternopil National Pedagogical University", "CBT Counselor Certificate"],
-    "reviews": [{"id": "8d2c2133-9e85-5138-a830-ceff8917740e", "author": "Ірина С.", "avatar_url": null, "created_at": "2026-05-23", "topic_id": "self_esteem", "age": 24, "rating": 5, "verified": true, "text": "Чудовий фахівець, дуже допомогла повірити в себе."}],
+    "bookings": [
+      {"id": "psy-49-b1", "client_id": "client-08", "day_offset": -80, "time": "18:00", "status": "completed", "payment_status": "paid", "selection_source": "ai_recommendation", "saved": false, "review": null},
+      {"id": "psy-49-b2", "client_id": "client-01", "day_offset": -29, "time": "14:00", "status": "completed", "payment_status": "paid", "selection_source": "ai_recommendation", "saved": false,
+       "review": {"rating": 5, "review_text": "З першої зустрічі з'явилася довіра. Це саме той фахівець, якого хотілося знайти.", "review_text_eng": "Trust appeared from the very first meeting. Exactly the specialist I hoped to find."}},
+      {"id": "psy-49-b3", "client_id": "client-19", "day_offset": -34, "time": "13:00", "status": "cancelled", "payment_status": "refunded", "selection_source": "ai_recommendation", "saved": true, "review": null},
+      {"id": "psy-49-b4", "client_id": "client-09", "day_offset": 14, "time": "19:00", "status": "confirmed", "payment_status": "held", "selection_source": "manual_filter", "saved": false, "review": null}
+    ],
     "base_slots": {"1": ["10:00"], "7": ["10:00"]},
     "meet_link": "https://meet.google.com/psy-49-meet"
   },
@@ -1195,7 +1426,15 @@
     "bio_eng": {"about": "Hello. Many years of experience working with the most difficult emotional states and restoring resources.", "approach": "Bogomolets National Medical University. Evidence-based psychotherapy. Education verified.", "scope": "No strength for everyday tasks, loss of motivation at work, addictive behavior."},
     "certificates": ["НМУ ім. О.О. Богомольця", "Диплом психотерапевта"],
     "certificates_eng": ["O.O. Bogomolets National Medical University", "Psychotherapist Diploma"],
-    "reviews": [{"id": "c6d44920-fd70-5bf7-ac8f-31eb070b21b9", "author": "Андрій Т.", "avatar_url": null, "created_at": "2026-05-10", "topic_id": "burnout", "age": 31, "rating": 5, "verified": true, "text": "Експертний підхід найвищого рівня."}],
+    "bookings": [
+      {"id": "psy-50-b1", "client_id": "client-17", "day_offset": -58, "time": "09:00", "status": "completed", "payment_status": "paid", "selection_source": "manual_filter", "saved": false,
+       "review": {"rating": 5, "review_text": "Спокійна атмосфера і уважне слухання. Нарешті є відчуття, що мене чують.", "review_text_eng": "A calm atmosphere and attentive listening. I finally feel heard."}},
+      {"id": "psy-50-b2", "client_id": "client-13", "day_offset": -40, "time": "19:00", "status": "completed", "payment_status": "paid", "selection_source": "manual_filter", "saved": false,
+       "review": {"rating": 5, "review_text": null, "review_text_eng": "Things at home are calmer, we are learning to talk without arguing."}},
+      {"id": "psy-50-b3", "client_id": "client-16", "day_offset": -37, "time": "17:00", "status": "completed", "payment_status": "paid", "selection_source": "ai_recommendation", "saved": false,
+       "review": {"rating": 5, "review_text": "Дякую за терпіння. Панічні атаки тепер трапляються набагато рідше.", "review_text_eng": "Thank you for your patience. Panic attacks now happen far less often."}},
+      {"id": "psy-50-b4", "client_id": "client-24", "day_offset": 13, "time": "11:00", "status": "confirmed", "payment_status": "held", "selection_source": "manual_filter", "saved": false, "review": null}
+    ],
     "base_slots": {"2": ["12:00"], "5": ["16:00"], "6": ["18:00"]},
     "meet_link": "https://meet.google.com/psy-50-meet"
   }

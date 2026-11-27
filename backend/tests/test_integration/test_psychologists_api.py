@@ -174,7 +174,7 @@ async def test_get_psychologist_success(client, psychologist, settings):
     assert body["experience_years"] == 5
     assert body["languages"] == ["uk"]
     assert body["certificates"] == [{"title": "Сертифікат"}]
-    for field in ("title", "price_per_hour", "methods", "bio", "reviews",
+    for field in ("title", "price_per_hour", "methods", "bio",
                   "mock_slots", "avatar_url"):
         assert field in body
     for private in ("iban", "tax_id", "meet_link", "account_name"):

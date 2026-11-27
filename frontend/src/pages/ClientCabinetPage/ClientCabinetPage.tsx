@@ -48,7 +48,7 @@ export const ClientCabinetPage = () => {
 
                         {profile && !isError && (
                             <ClientProfileCard
-                                isLoading={false}
+                                isLoading={isLoading}
                                 name={profile.name}
                                 email={profile.email}
                                 telegram={profile.telegram}

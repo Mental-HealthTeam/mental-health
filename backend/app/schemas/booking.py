@@ -71,6 +71,7 @@ class BookingResponse(BaseModel):
     ai_session_id: str | None
     hold_expires_at: datetime.datetime | None
     meet_link: str | None = None
+    has_review: bool
 
 
 class BookingListResponse(BaseModel):
