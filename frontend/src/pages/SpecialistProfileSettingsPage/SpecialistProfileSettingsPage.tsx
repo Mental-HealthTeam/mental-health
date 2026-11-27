@@ -101,7 +101,7 @@ const ProfileEditor = ({ specialist }: ProfileEditorProps) => {
                 scope: initialProfile.bio?.scope ?? '',
             },
             experience_years: values.experience_years,
-            price_per_hour: values.price_per_hour,
+            price_per_hour: Number(values.price_per_hour),
             certificates: values.certificates,
             topics: values.topics,
         }

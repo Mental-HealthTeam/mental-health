@@ -16,7 +16,7 @@ export const specialistProfileSchema = z.object({
         .string()
         .trim()
         .min(1, required)
-        .pipe(z.coerce.number<string>().min(0).max(1_000_000)),
+        .pipe(z.coerce.number<string>().min(1).max(1_000_000)),
 
     approach: z.string().trim().min(1, required).max(100),
 

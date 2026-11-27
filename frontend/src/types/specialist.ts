@@ -81,7 +81,7 @@ export type ProfileFormState = {
   price_per_hour: string
   approach: string
   about: string
-  certificates: { title: string }[]
+  certificates: string[]
   topics: SymptomCode[]
 }
 
@@ -98,6 +98,6 @@ export type SpecialistMe = {
     price_per_hour: number | null
     approach: string | null
     about: string | null
-    certificates: { title: string }[]
+    certificates: string[]
     topics: SymptomCode[]
 }
