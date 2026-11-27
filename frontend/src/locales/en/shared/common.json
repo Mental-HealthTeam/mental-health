@@ -1,4 +1,7 @@
 {
     "loading": "Loading…",
-    "back": "Back"
+    "back": "Back",
+    "badges": {
+        "verified": "Verified"
+    }
 }

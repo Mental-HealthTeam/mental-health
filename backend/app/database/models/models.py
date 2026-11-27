@@ -13,7 +13,7 @@ from sqlalchemy import (
     String,
     func,
     Numeric,
-    UniqueConstraint, Index, text, CheckConstraint
+    UniqueConstraint, Index, text, CheckConstraint, ARRAY
 )
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -425,6 +425,9 @@ class Booking(Base):
     )
     saved: Mapped[bool] = mapped_column(
         default=False
+    )
+    request: Mapped[List[SymptomCode] | None] = mapped_column(
+        ARRAY(SAEnum(SymptomCode, name="symptom_code")).with_variant(JSON(), "sqlite")
     )
 
     __table_args__ = (

@@ -40,6 +40,15 @@ from services.localization import pick
 logger = logging.getLogger(__name__)
 
 
+def snapshot_request(
+    booking: Booking
+) -> None:
+    booking.request = [
+        topic.symptom_code
+        for topic in booking.client.user_symptom_codes
+    ]
+
+
 async def create_booking(
         db: AsyncSession,
         settings: Settings,
@@ -853,17 +862,21 @@ async def complete_session_with_psychologist(
     Route: none, called by the session completion task.
     """
 
-    stmt = select(Booking).where(
+    stmt = (select(Booking).where(
         Booking.status == BookingStatus.CONFIRMED,
         Booking.payment_status == PaymentStatus.HELD,
         Booking.selected_time + timedelta(minutes=session_time_min) <= now
-    ).with_for_update(skip_locked=True)
+    ).options(
+        selectinload(Booking.client)
+        .selectinload(User.user_symptom_codes)
+    ).with_for_update(skip_locked=True))
 
     result = await db.execute(stmt)
     bookings = result.scalars().all()
     for booking in bookings:
         booking.completed_at = now
         booking.status = BookingStatus.COMPLETED
+        snapshot_request(booking=booking)
     await db.commit()
     return len(bookings)
 
@@ -936,6 +949,10 @@ async def mark_completed(
     result = await db.execute(
         select(Booking)
         .where(Booking.id == booking_id)
+        .options(
+            selectinload(Booking.client)
+            .selectinload(User.user_symptom_codes)
+        )
         .with_for_update()
         .execution_options(populate_existing=True)
     )
@@ -964,6 +981,7 @@ async def mark_completed(
 
     booking.status = BookingStatus.COMPLETED
     booking.completed_at = completed_at
+    snapshot_request(booking=booking)
 
     await db.commit()
 

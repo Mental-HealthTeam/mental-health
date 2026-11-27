@@ -1,1 +1,2 @@
-export { SpecialistCard } from './SpecialistCard.tsx'
+export { SpecialistCard } from './SpecialistCard'
+export { SpecialistCardSkeleton } from './SpecialistCardSkeleton'

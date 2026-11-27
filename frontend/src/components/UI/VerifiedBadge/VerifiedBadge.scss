@@ -1,0 +1,17 @@
+@use '../../../styles/abstracts' as a;
+
+.verified-badge {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  padding: 4px 8px;
+
+  border-radius: 8px;
+  background-color: a.$color-optional;
+  color: a.$color-gray-0;
+
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.2;
+  text-transform: uppercase;
+}

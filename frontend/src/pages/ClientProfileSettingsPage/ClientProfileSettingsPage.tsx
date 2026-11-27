@@ -2,15 +2,16 @@ import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useBlocker, useNavigate } from 'react-router-dom'
 
-import { Container } from '../../components/Container'
 import {
     ClientProfileForm,
     type ClientProfileSubmit,
     type ClientProfileValues,
 } from '../../components/ClientProfileForm'
-import { BackButton } from '../../components/UI/Buttons'
-import { Header } from '../../components/Header'
+import { Container } from '../../components/Container'
 import { Footer } from '../../components/Footer'
+import { Header } from '../../components/Header'
+import { BackButton } from '../../components/UI/Buttons'
+import { PageLoadingOverlay } from '../../components/UI/PageLoadingOverlay'
 
 import {
     useUpdateProfileMutation,
@@ -106,33 +107,30 @@ const ProfileEditor = ({ user }: ProfileEditorProps) => {
     }
 
     return (
-        <>
-            <ClientProfileForm
-                initialValues={getInitialValues(initialProfile)}
-                avatarUrl={initialProfile.avatar_url}
-                onDirtyChange={setIsDirty}
-                onSubmit={handleSubmit}
-            />
-        </>
+        <ClientProfileForm
+            initialValues={getInitialValues(initialProfile)}
+            avatarUrl={initialProfile.avatar_url}
+            onDirtyChange={setIsDirty}
+            onSubmit={handleSubmit}
+        />
     )
 }
 
 export const ClientProfileSettingsPage = () => {
     const { t } = useTranslation('clientProfileSettings')
-
     const { data: user, isLoading, isError } = useClientProfileQuery()
+
+    const isProfileLoading = isLoading && !user
 
     return (
         <div className="client-profile-settings-page">
             <Header variant="page" />
 
-            <main className="client-profile-settings-page__main">
+            <main className="client-profile-settings-page__main" aria-busy={isProfileLoading}>
                 <Container className="client-profile-settings-page__container">
                     <BackButton className="client-profile-settings-page__back" />
 
                     <h1 className="client-profile-settings-page__title">{t('title')}</h1>
-
-                    {isLoading && !user && <p role="status">{t('loading')}</p>}
 
                     {isError && !user && <p role="alert">{t('loadError')}</p>}
 
@@ -141,6 +139,8 @@ export const ClientProfileSettingsPage = () => {
             </main>
 
             <Footer variant="page" />
+
+            <PageLoadingOverlay open={isProfileLoading} message={t('loading')} />
         </div>
     )
 }

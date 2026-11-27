@@ -2,6 +2,7 @@ import { useState } from 'react'
 import classNames from 'classnames'
 
 import { AvatarPlaceholderIcon } from '../Icons'
+import { Skeleton } from '../Skeleton'
 
 import './Avatar.scss'
 
@@ -11,26 +12,26 @@ export type AvatarShape = 'rounded' | 'circle' | 'rectangle'
 type Props = {
     src?: string | null
     alt: string
+    isLoading?: boolean
     size?: AvatarSize
     shape?: AvatarShape
     fluid?: boolean
     className?: string
 }
 
-export const Avatar = ({
+const AvatarContent = ({
     src,
     alt,
+    isLoading = false,
     size = 'medium',
     shape = 'rounded',
     fluid = false,
     className,
 }: Props) => {
-    const [loadedSrc, setLoadedSrc] = useState<string | null>(null)
-    const [failedSrc, setFailedSrc] = useState<string | null>(null)
+    const [imageStatus, setImageStatus] = useState<'loading' | 'loaded' | 'error'>('loading')
 
-    const isLoaded = Boolean(src) && loadedSrc === src
-    const hasError = Boolean(src) && failedSrc === src
-    const showFallback = !src || !isLoaded || hasError
+    const showSkeleton = isLoading || (Boolean(src) && imageStatus === 'loading')
+    const showFallback = !showSkeleton && (!src || imageStatus === 'error')
 
     return (
         <span
@@ -46,25 +47,30 @@ export const Avatar = ({
             )}
             role="img"
             aria-label={alt}
+            aria-busy={showSkeleton}
         >
+            {showSkeleton && <Skeleton className="avatar__skeleton" />}
+
             {showFallback && (
                 <span className="avatar__placeholder" aria-hidden="true">
                     <AvatarPlaceholderIcon className="avatar__placeholder-icon" />
                 </span>
             )}
 
-            {src && !hasError && (
+            {src && imageStatus !== 'error' && (
                 <img
                     src={src}
                     alt=""
                     decoding="async"
-                    onLoad={() => setLoadedSrc(src)}
-                    onError={() => setFailedSrc(src)}
+                    onLoad={() => setImageStatus('loaded')}
+                    onError={() => setImageStatus('error')}
                     className={classNames('avatar__image', {
-                        'avatar__image--loaded': isLoaded,
+                        'avatar__image--loaded': !showSkeleton && imageStatus === 'loaded',
                     })}
                 />
             )}
         </span>
     )
 }
+
+export const Avatar = (props: Props) => <AvatarContent key={props.src ?? ''} {...props} />

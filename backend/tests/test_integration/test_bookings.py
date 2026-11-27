@@ -41,6 +41,7 @@ def bookings_client():
     app.dependency_overrides[get_settings] = lambda: SimpleNamespace(
         ACCESS_COOKIE="access_token",
         SECRET_KEY_ACCESS="test-secret-key",
+        SESSION_DURATION_MIN=50,
     )
     app.dependency_overrides[
         auth_dependencies.get_jwt_manager
@@ -451,6 +452,11 @@ def test_psychologist_sessions_localization(
         "get_sessions_for_psychologist",
         sessions_mock,
     )
+    monkeypatch.setattr(
+        session_routes,
+        "get_free_slots_for_psychologist",
+        AsyncMock(return_value=[]),
+    )
 
     response = bookings_client.get(
         "/api/psychologist/sessions",
@@ -459,7 +465,7 @@ def test_psychologist_sessions_localization(
 
     assert response.status_code == 200
 
-    psychologist_data = response.json()["items"][0]["psychologist"]
+    psychologist_data = response.json()["booked_items"][0]["psychologist"]
 
     assert psychologist_data["full_name"] == expected_name
     assert psychologist_data["title"] == expected_title

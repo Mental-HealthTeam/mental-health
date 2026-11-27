@@ -1,8 +1,8 @@
 import { createApi } from '@reduxjs/toolkit/query/react'
 
 import type { Booking, CreateBookingRequest } from '../types/booking'
-import { baseQueryWithReauth } from './baseQueryWithReauth'
 import type { BookingRetryInfo } from '../types/bookingsApi.ts'
+import { baseQueryWithReauth } from './baseQueryWithReauth'
 
 type CreateCheckoutRequest = {
     booking_id: string
@@ -20,11 +20,14 @@ type BookingsResponse = {
     offset: number
 }
 
+type CancelBookingRequest = {
+    bookingId: string
+    confirmNoRefund?: boolean
+}
+
 export const bookingsApi = createApi({
     reducerPath: 'bookingsApi',
-
     baseQuery: baseQueryWithReauth,
-
     tagTypes: ['PendingBookings'],
 
     endpoints: (builder) => ({
@@ -35,6 +38,17 @@ export const bookingsApi = createApi({
                 body,
             }),
             invalidatesTags: ['PendingBookings'],
+        }),
+
+        cancelBooking: builder.mutation<Booking, CancelBookingRequest>({
+            query: ({ bookingId, confirmNoRefund = false }) => ({
+                url: `/bookings/${bookingId}/cancel`,
+                method: 'POST',
+                body: {
+                    confirm_no_refund: confirmNoRefund,
+                },
+            }),
+            invalidatesTags: (_result, error) => (error ? [] : ['PendingBookings']),
         }),
 
         createCheckout: builder.mutation<CreateCheckoutResponse, CreateCheckoutRequest>({
@@ -73,6 +87,7 @@ export const bookingsApi = createApi({
 
 export const {
     useCreateBookingMutation,
+    useCancelBookingMutation,
     useCreateCheckoutMutation,
     useGetPendingBookingsQuery,
     useGetBookingRetryInfoQuery,
