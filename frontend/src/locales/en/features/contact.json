@@ -42,7 +42,7 @@
             "label": "Your question",
             "placeholder": "Describe the situation.."
         },
-        "submit": "SEND QUESTION",
+        "submit": "Send your question",
         "privacy": "By submitting the form, you agree to the processing of personal data.",
         "errors": {
             "nameRequired": "Enter your name",

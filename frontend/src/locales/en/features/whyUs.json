@@ -4,10 +4,10 @@
     "ai": {
         "label": "AI matching",
         "caption": "Instead of tedious 20-question forms",
-        "text": "A live empathetic AI conversation in 1–2 minutes with a generated list of suitable specialists"
+        "text": "An empathetic conversation and a personalized list of specialists who match your needs"
     },
     "specialists": {
-        "value": "500+",
+        "value": "50+",
         "text": "Verified psychotherapists in our database"
     },
     "availability": {
@@ -31,5 +31,5 @@
     "specialist": {
         "imageAlt": "Psychotherapist"
     },
-    "cta": "Try now"
+    "cta": "Choose your specialist"
 }
