@@ -6,7 +6,7 @@
         "loading": "Завантаження...",
         "filtersError": "Не вдалося завантажити фільтри",
         "specialistsError": "Не вдалося завантажити фахівців",
-        "viewAll": "ПЕРЕГЛЯНУТИ ВСІХ",
+        "viewAll": "Переглянути всіх",
         "empty": "Фахівців за цим фільтром не знайдено"
     },
     "card": {
@@ -16,7 +16,7 @@
         "experienceYears_few": "{{count}} роки",
         "experienceYears_many": "{{count}} років",
         "experienceYears_other": "{{count}} років",
-        "sessionDuration": "Вартість 50 хв",
+        "sessionDuration": "Вартість {{minutes}} хв",
         "price": "{{price}} ₴",
         "therapeuticApproach": "Терапевтичний підхід",
         "worksWith": "Працює з темами:",

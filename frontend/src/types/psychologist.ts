@@ -30,6 +30,7 @@ export type Psychologist = {
     methods: string[]
     topics: SymptomCode[]
     mock_slots: PsychologistTimeSlot[]
+    session_minutes: number
 }
 
 export type GetPsychologistsParams = {
