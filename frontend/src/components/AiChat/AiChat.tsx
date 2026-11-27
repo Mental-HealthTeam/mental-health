@@ -8,11 +8,13 @@ import { MessageList } from './MessageList/MessageList'
 import './AiChat.scss'
 import { ChatInput } from './ChatInput/ChatInput'
 import { useTranslation } from 'react-i18next'
+import { useLocation } from 'react-router-dom'
 
 export const AiChat = () => {
     const { t } = useTranslation('aiChat')
     const dispatch = useAppDispatch()
     const { isOpen, status, initialText } = useAppSelector((state) => state.aiChat)
+    const location = useLocation()
 
     const handleClose = useCallback(() => {
         dispatch(closeAiChat())
@@ -21,6 +23,10 @@ export const AiChat = () => {
     const handleSend = (text: string) => {
         dispatch(sendUserMessage({ text }))
     }
+
+    useEffect(() => {
+        dispatch(closeAiChat())
+    }, [location.pathname, dispatch])
 
     useEffect(() => {
         const handleEscape = (event: KeyboardEvent) => {
@@ -51,7 +57,7 @@ export const AiChat = () => {
                 >
                     <div className="ai-chat__content">
                         <ChatHeader onClose={handleClose} />
-                        
+
                         <MessageList className="ai-chat__message-list" />
 
                         <ChatInput
