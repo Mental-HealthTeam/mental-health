@@ -1,4 +1,4 @@
-from datetime import datetime, date
+from datetime import datetime
 from decimal import Decimal
 from uuid import UUID
 
@@ -15,18 +15,6 @@ from database.models.models import SymptomCode, Language
 
 class MockSlot(BaseModel):
     time: datetime
-
-
-class Review(BaseModel):
-    id: UUID
-    author: str
-    avatar_url: str | None = None
-    topic_id: str
-    age: int | None = None
-    rating: int
-    verified: bool
-    text: str
-    created_at: date
 
 
 class Certificate(BaseModel):
@@ -58,7 +46,6 @@ class PsychologistDetailResponse(BaseModel):
     methods: list[str]
     bio: dict[str, str]
     certificates: list[Certificate]
-    reviews: list[Review]
     mock_slots: list[MockSlot]
 
 

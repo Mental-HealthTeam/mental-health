@@ -121,6 +121,10 @@ class User(Base):
         SAEnum(UserRole, name="user_role"),
         default=UserRole.CLIENT,
     )
+    allow_notifications: Mapped[bool] = mapped_column(
+        default=False,
+        server_default=text("false")
+    )
     created_at: Mapped[datetime.datetime] = mapped_column(
         DateTime(timezone=True),
         server_default=func.now(),
@@ -158,6 +162,10 @@ class User(Base):
         "Booking",
         back_populates="dispute_resolved_by",
         foreign_keys="Booking.dispute_resolved_by_id"
+    )
+    reviews: Mapped[list["Review"] | None] = relationship(
+        "Review",
+        back_populates="client"
     )
 
 
@@ -213,9 +221,6 @@ class Psychologist(Base):
     bio_eng: Mapped[dict | None] = mapped_column(
         JSON
     )
-    reviews: Mapped[list[dict] | None] = mapped_column(
-        JSON
-    )
     methods: Mapped[list[str] | None] = mapped_column(
         JSON
     )
@@ -267,6 +272,10 @@ class Psychologist(Base):
 
     booked_slots: Mapped[List["Booking"]] = relationship(
         "Booking",
+        back_populates="psychologist"
+    )
+    reviews: Mapped[list["Review"] | None] = relationship(
+        "Review",
         back_populates="psychologist"
     )
 
@@ -453,12 +462,10 @@ class Booking(Base):
         back_populates="bookings",
         foreign_keys=[client_id]
     )
-
     psychologist: Mapped["Psychologist"] = relationship(
         "Psychologist",
         back_populates="booked_slots"
     )
-
     ai_session: Mapped["AI_Session"] = relationship(
         "AI_Session",
         back_populates="booking"
@@ -466,6 +473,74 @@ class Booking(Base):
     payment_events: Mapped[List["PaymentEvent"]] = relationship(
         "PaymentEvent",
         back_populates="booking"
+    )
+    review: Mapped["Review"] = relationship(
+        "Review",
+        back_populates="booking",
+        lazy="selectin"
+    )
+
+
+class Review(Base):
+    __tablename__ = "reviews"
+
+    booking_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("bookings.id", ondelete="CASCADE"),
+        primary_key=True
+    )
+    client_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("users.id", ondelete="CASCADE")
+    )
+    psychologist_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("psychologists.psychologist_id", ondelete="CASCADE")
+    )
+    rating: Mapped[int]
+    review_text: Mapped[str | None] = mapped_column(
+        String(1000)
+    )
+    review_text_eng: Mapped[str | None] = mapped_column(
+        String(1000)
+    )
+    created_at: Mapped[datetime.datetime] = mapped_column(
+        DateTime(timezone=True),
+        server_default=func.now()
+    )
+
+    __table_args__ = (
+        CheckConstraint(
+            "length(TRIM(review_text)) BETWEEN 10 AND 1000",
+            name="ck_review_text_length"
+        ),
+        CheckConstraint(
+            "length(TRIM(review_text_eng)) BETWEEN 10 AND 1000",
+            name="ck_review_text_eng_length"
+        ),
+        CheckConstraint(
+            "client_id <> psychologist_id",
+            name="ck_review_client_not_psychologist"
+        ),
+        CheckConstraint(
+            "rating BETWEEN 1 AND 5",
+            name="ck_review_rating_range"
+        ),
+        CheckConstraint(
+            "NULLIF(TRIM(review_text), '') IS NOT NULL "
+            "OR NULLIF(TRIM(review_text_eng), '') IS NOT NULL",
+            name="ck_review_text_not_blank"
+        ),
+    )
+
+    client: Mapped["User"] = relationship(
+        "User",
+        back_populates="reviews"
+    )
+    psychologist: Mapped["Psychologist"] = relationship(
+        "Psychologist",
+        back_populates="reviews"
+    )
+    booking: Mapped["Booking"] = relationship(
+        "Booking",
+        back_populates="review"
     )
 
 

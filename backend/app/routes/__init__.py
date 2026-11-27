@@ -7,3 +7,4 @@ from routes.symptom_codes import router as symptom_codes_router  # noqa: F401
 from routes.sessions import router as sessions_router  # noqa: F401
 from routes.users import router as users_router  # noqa: F401
 from routes.contact import router as contact_router  # noqa: F401
+from routes.reviews import router as review_router  # noqa: F401

@@ -10,6 +10,7 @@ class UserProfileResponse(UserPublic):
     meet_link: str | None = None
     telegram: str | None = Field(default=None, max_length=255)
     topics: list[SymptomCode] | None = None
+    allow_notifications: bool
 
 
 class UserProfileUpdate(BaseModel):
@@ -18,6 +19,7 @@ class UserProfileUpdate(BaseModel):
     name: str | None = Field(default=None, max_length=255)
     telegram: str | None = Field(default=None, max_length=255)
     topics: list[SymptomCode] | None = None
+    allow_notifications: bool | None = None
 
     @field_validator("telegram")
     @classmethod
