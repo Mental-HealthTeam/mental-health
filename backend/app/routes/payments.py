@@ -124,7 +124,12 @@ async def wayforpay_return(
         order_reference, transaction_status, reason_code
     )
     if (
-        transaction_status == "Approved"
+        transaction_status in (
+            "Approved",
+            "Pending",
+            "InProcessing",
+            "WaitingAuthComplete"
+        )
         or reason_code == 1100
     ):
         if order_reference:
