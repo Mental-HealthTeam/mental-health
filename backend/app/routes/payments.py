@@ -141,9 +141,7 @@ async def wayforpay_return(
             url=settings.SUCCESS_PAYMENTS_REDIRECT,
             status_code=status.HTTP_303_SEE_OTHER
         )
-    elif (
-        reason_code in (1125, 1108)
-    ):
+    else:
         params = {"lang": lang.value}
         if order_reference:
             now = datetime.now(timezone.utc)
