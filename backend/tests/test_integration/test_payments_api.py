@@ -751,17 +751,33 @@ async def test_return_cancel_keeps_language(
     assert query_of(response)["lang"] == ["en"]
 
 
-async def test_return_unknown_reason_code_returns_null_body(client):
+async def test_return_declined_redirects_to_cancel(
+    client, client_user, psychologist, make_booking, settings
+):
+    booking = await make_booking(client_user, psychologist)
+
     response = await client.post(
-        RETURN, data={"reasonCode": "1101", "orderReference": f"{uuid.uuid4()}_1"}
+        RETURN,
+        data={
+            "transactionStatus": "Declined",
+            "reasonCode": "1122",
+            "orderReference": f"{booking.id}_1",
+        },
     )
 
-    assert response.status_code == 200
-    assert response.json() is None
+    assert response.status_code == 303
+    assert response.headers["location"].startswith(
+        settings.CANCEL_PAYMENTS_REDIRECT + "?"
+    )
+    query = query_of(response)
+    assert query["booking_id"] == [str(booking.id)]
+    assert "reason" not in query
 
 
-async def test_return_get_without_form_data_returns_null_body(client):
+async def test_return_get_without_form_data_redirects(client, settings):
     response = await client.get(RETURN)
 
-    assert response.status_code == 200
-    assert response.json() is None
+    assert response.status_code == 303
+    assert response.headers["location"] == (
+        f"{settings.NO_ORDER_REFERENCE_REDIRECT}?lang=uk"
+    )
