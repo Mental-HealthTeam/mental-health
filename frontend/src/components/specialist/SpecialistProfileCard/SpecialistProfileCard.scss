@@ -133,7 +133,16 @@
 
     &__actions {
         grid-area: button;
+        padding-top: 12px;
         border-top: 1px solid a.$color-gray-10;
+    }
+
+    &__wrapper-button {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 12px;
+        width: 100%;
     }
 
     &__label--mobile {

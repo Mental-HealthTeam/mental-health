@@ -1,4 +1,5 @@
 import { skipToken } from '@reduxjs/toolkit/query'
+import { motion, useReducedMotion } from 'framer-motion'
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
@@ -26,18 +27,21 @@ export const PsychologistProfile = () => {
     const { t, i18n } = useTranslation(['specialistProfile', 'common', 'errors'])
     const { id } = useParams()
     const dispatch = useAppDispatch()
+    const prefersReducedMotion = useReducedMotion()
 
-    const {
-        currentData: profile,
-        isFetching,
-        isError,
-    } = useGetPsychologistByIdQuery(id ? { id, lang: i18n.language } : skipToken, {
-        refetchOnMountOrArgChange: true,
-        refetchOnFocus: true,
-        refetchOnReconnect: true,
-    })
+    const { currentData, data, isFetching } = useGetPsychologistByIdQuery(
+        id ? { id, lang: i18n.language } : skipToken,
+        {
+            refetchOnMountOrArgChange: true,
+            refetchOnFocus: true,
+            refetchOnReconnect: true,
+        },
+    )
 
+    const latestProfile = currentData ?? data
+    const profile = latestProfile?.psychologist_id === id ? latestProfile : undefined
     const isProfileLoading = isFetching && !profile
+    const isLanguageLoading = Boolean(profile) && isFetching && !currentData
 
     useEffect(() => {
         window.scrollTo({ top: 0, behavior: 'instant' })
@@ -69,7 +73,7 @@ export const PsychologistProfile = () => {
             )
         }
 
-        if (isError || !profile || profile.psychologist_id !== id) {
+        if (!profile) {
             return <p role="alert">{t('errors:notFound')}</p>
         }
 
@@ -77,19 +81,31 @@ export const PsychologistProfile = () => {
             <>
                 <h1 className="psychologist-profile__title">{t('page.title')}</h1>
 
-                <SpecialistProfileCard
-                    className="psychologist-profile__specialist-card"
-                    actions={
-                        <>
-                            <BookingModalButton specialist={profile} slots={profile.mock_slots} />
+                <motion.div
+                    initial={false}
+                    animate={{ opacity: isLanguageLoading && !prefersReducedMotion ? 0.75 : 1 }}
+                    transition={{ duration: prefersReducedMotion ? 0 : 0.18, ease: 'easeOut' }}
+                    aria-busy={isLanguageLoading}
+                >
+                    <SpecialistProfileCard
+                        className="psychologist-profile__specialist-card"
+                        specialist={profile}
+                        actions={
+                            <>
+                                <BookingModalButton
+                                    specialist={profile}
+                                    slots={profile.mock_slots}
+                                />
+                                <PendingBookingButton psychologistId={profile.psychologist_id} />
+                            </>
+                        }
+                    />
 
-                            <PendingBookingButton psychologistId={profile.psychologist_id} />
-                        </>
-                    }
-                    specialist={profile}
-                />
-
-                <ProfileTabs className="psychologist-profile__profile-tabs" specialist={profile} />
+                    <ProfileTabs
+                        className="psychologist-profile__profile-tabs"
+                        specialist={profile}
+                    />
+                </motion.div>
             </>
         )
     }
@@ -101,7 +117,6 @@ export const PsychologistProfile = () => {
             <main className="psychologist-profile__content">
                 <Container className="psychologist-profile__container">
                     <BackButton />
-
                     {renderContent()}
                 </Container>
             </main>

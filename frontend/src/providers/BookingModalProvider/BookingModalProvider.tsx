@@ -54,8 +54,8 @@ export const BookingModalProvider = ({ children }: Props) => {
         onUserChange: closeBookingModal,
     })
 
-    const { data: pendingBookingsResponse, refetch: refetchPendingBookings } =
-        useGetPendingBookingsQuery(user && !isCheckingUser ? undefined : skipToken, {
+    const { currentData: pendingBookingsResponse, refetch: refetchPendingBookings } =
+        useGetPendingBookingsQuery(user && !isCheckingUser ? { lang: language } : skipToken, {
             refetchOnMountOrArgChange: true,
             refetchOnFocus: true,
             refetchOnReconnect: true,
