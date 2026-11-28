@@ -59,14 +59,15 @@ export const bookingsApi = createApi({
             }),
         }),
 
-        getPendingBookings: builder.query<BookingsResponse, void>({
-            query: () => ({
+        getPendingBookings: builder.query<BookingsResponse, { lang: 'uk' | 'en' }>({
+            query: ({ lang }) => ({
                 url: '/bookings',
                 method: 'GET',
                 params: {
                     status: 'pending',
                     limit: 100,
                     offset: 0,
+                    lang,
                 },
             }),
             providesTags: ['PendingBookings'],
